@@ -4,7 +4,13 @@
 \alias{evaluate_imputed_values}
 \title{Evaluate imputed values}
 \usage{
-evaluate_imputed_values(imp_ds, orig_ds, criterion = "RMSE", M = NULL)
+evaluate_imputed_values(
+  imp_ds,
+  orig_ds,
+  criterion = "RMSE",
+  M = NULL,
+  tolerance = sqrt(.Machine$double.eps)
+)
 }
 \arguments{
 \item{imp_ds}{a data frame or matrix with imputed values}
@@ -17,6 +23,9 @@ imputed and original values}
 \item{M}{NULL (the default) or a missing data indicator matrix; the missing
 data indicator matrix is normally created via \code{is.na(miss_ds)}, where
 \code{miss_ds} is the dataset after deleting values from \code{orig_ds}}
+
+\item{tolerance}{numeric, numeric differences smaller than tolerance are
+treated as zero/equal}
 }
 \value{
 a numeric vector of length one
@@ -34,6 +43,13 @@ and true values}
 \item{"cor": The correlation between the imputed and true values}
 \item{"MAE": The Mean Absolute Error between the imputed and true values}
 \item{"MSE": The Mean Squared Error between the imputed and true values}
+\item{"NRMSE_tot_mean": RMSE divided by the mean of the true values}
+\item{"NRMSE_tot_mean_sq": RMSE divided by the square root of the mean of
+the squared true values}
+\item{"NRMSE_tot_sd": RMSE divided by the standard deviation of all true values}
+\item{"nr_equal": number of imputed values that are equal to the true values}
+\item{"nr_NA": number of values in imp_ds that are NA (not imputed)}
+\item{"precision": proportion of imputed values that are equal to the true values}
 }
 Additionally there are relative versions of bias and MAE implemented.
 In the relative versions, the differences are divided by the absolute values
