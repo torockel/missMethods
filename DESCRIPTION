@@ -1,0 +1,20 @@
+Package: missMethods
+Title: Methods for Missing Data
+Version: 0.0.1.9000
+Authors@R: c(
+    person(given = "Tobias",
+           family = "Rockel",
+           role = c("aut", "cre"),
+           email = "Rockel.To@gmail.com")
+    )
+Description: Supply functions for the creation and handling of missing data 
+    as well as tools to evaluate missing data methods.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2
+Suggests: 
+    lpSolve,
+    testthat (>= 2.1.0)
+Imports: 
+    stats

@@ -1,0 +1,7 @@
+man-roxygen
+^missMethods\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^README\.Rmd$
+^ToDo\.Rmd$
+^ToDo\.html$
