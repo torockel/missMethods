@@ -15,7 +15,7 @@ the probability that a value is missing}
 \item{miss_cols}{a vector of column names or indices of columns in which
 missing values will be created}
 
-\item{where}{controlls where missing values are created;
+\item{where}{controls where missing values are created;
 one of "lower", "upper" or "both" (see details)}
 
 \item{sorting}{logical; should sorting be used or a quantile as a threshold}

@@ -48,7 +48,7 @@ and true values}
 the squared true values}
 \item{"NRMSE_tot_sd": RMSE divided by the standard deviation of all true values}
 \item{"nr_equal": number of imputed values that are equal to the true values}
-\item{"nr_NA": number of values in imp_ds that are NA (not imputed)}
+\item{"nr_NA": number of values in \code{imp_ds} that are NA (not imputed)}
 \item{"precision": proportion of imputed values that are equal to the true values}
 }
 Additionally there are relative versions of bias and MAE implemented.

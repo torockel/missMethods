@@ -47,7 +47,7 @@ returned (as attribute)}
 \item{prop}{numeric of length one; (minimum) proportion of rows in group 1}
 
 \item{use_lpSolve}{logical; should lpSolve be used for the determination of
-gropus, if \code{ctrl_cols[i]} is an unorderd factor}
+groups, if \code{ctrl_cols[i]} is an unordered factor}
 
 \item{ordered_as_unordered}{logical; should ordered factors be treated like
 unordered factors}
@@ -91,12 +91,12 @@ The group 2 consists of the remaining rows, which are not part of group 1.
 Now the probabilities for the rows in the two groups are set in the way
 that the odds are 1:x against a missing value in \code{miss_cols[i]} for the
 rows in group 1 compared to the rows in group 2.
-That means, the propability for a value to be missing in group 1 divided by
-the propability for a value to be missing in group 2 equals 1 divided
+That means, the probability for a value to be missing in group 1 divided by
+the probability for a value to be missing in group 2 equals 1 divided
 by x.
 For example, for two equal sized groups 1 and 2, ideally the number of NAs in
 group 1 divided by the number of NAs in group 2 should equal 1 divided by x.
-But there are some restrictions, which can lead to some defiations from the
+But there are some restrictions, which can lead to some deviations from the
 odds 1:x (see below).
 
 
@@ -139,9 +139,9 @@ But in a single dataset the odds will be unequal to 1:x most of the time.
 If \code{p} is high and \code{x} is too high or too low, it is possible that
 the odds 1:x and the proportion of missing values \code{p} cannot be
 realized together.
-For example, if p = 0.9, then a maximum of x = 1.25 is possible (assuming that
-exactly 50 \% of the values are below and 50 \% of the values are above the
-cutoff value in ctrl_col).
+For example, if \code{p[i]} = 0.9, then a maximum of \code{x} = 1.25 is possible
+(assuming that  exactly 50 \% of the values are below and 50 \% of the values
+are above the cutoff value in \code{ctrl_cols[i]}).
 If a combination of \code{p} and \code{x} that cannot be realized together
 is given to \code{delete_MAR_1_to_x}, then a warning will be generated and
 \code{x} will be adjusted in such a way that \code{p} can be realized as

@@ -99,7 +99,7 @@ delete_censoring <- function(ds, p, miss_cols, ctrl_cols, where = "lower", sorti
 #' The option \code{sorting = TRUE} will always create exactly
 #' \code{round(nrow(ds) * p[i])} missing values in \code{miss_cols[i]}.
 #' For \code{sorting = FALSE}, the number of missing values will normally be
-#' close to nrow(ds) * p[i].
+#' close to \code{nrow(ds) * p[i]}.
 #' But for \code{ctrl_cols} with many duplicates the choice
 #' \code{sorting = FALSE} can be problematic, because of the calculation of
 #' \code{quantile(ds[, ctrl_cols[i]], p[i])} and setting values \code{NA}
@@ -107,7 +107,7 @@ delete_censoring <- function(ds, p, miss_cols, ctrl_cols, where = "lower", sorti
 #' So, in most cases \code{sorting = TRUE} is recommended.
 #'
 #'
-#' @param where controlls where missing values are created;
+#' @param where controls where missing values are created;
 #' one of "lower", "upper" or "both" (see details)
 #' @param sorting logical; should sorting be used or a quantile as a threshold
 #'

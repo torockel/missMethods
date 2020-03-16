@@ -38,7 +38,7 @@ same length as \code{miss_cols}.}
 \item{prop}{numeric of length one; (minimum) proportion of rows in group 1}
 
 \item{use_lpSolve}{logical; should lpSolve be used for the determination of
-gropus, if \code{ctrl_cols[i]} is an unorderd factor}
+groups, if \code{ctrl_cols[i]} is an unordered factor}
 
 \item{ordered_as_unordered}{logical; should ordered factors be treated like
 unordered factors}
