@@ -5,3 +5,4 @@ man-roxygen
 ^README\.Rmd$
 ^ToDo\.Rmd$
 ^ToDo\.html$
+^\.github$

@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![R build
+status](https://github.com/torockel/missMethods/workflows/R-CMD-check/badge.svg)](https://github.com/torockel/missMethods/actions)
 <!-- badges: end -->
 
 The goal of missMethods is to make the comparison of missing data
@@ -48,5 +50,5 @@ ds_comp <- data.frame(X = rnorm(100), Y = rnorm(100))
 ds_miss <- delete_MCAR(ds_comp, 0.3)
 ds_imp <- impute_mean(ds_miss)
 evaluate_imputed_values(ds_imp, ds_comp, "RMSE")
-#> [1] 0.6728278
+#> [1] 0.5277649
 ```
