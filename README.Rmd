@@ -47,6 +47,7 @@ This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
 library(missMethods)
+set.seed(123)
 ds_comp <- data.frame(X = rnorm(100), Y = rnorm(100))
 ds_miss <- delete_MCAR(ds_comp, 0.3)
 ds_imp <- impute_mean(ds_miss)
