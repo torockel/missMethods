@@ -10,7 +10,7 @@ evaluate_imputation_parameters(
   true_pars = NULL,
   parameter = "mean",
   criterion = "RMSE",
-  which_pars = NULL,
+  which_cols = seq_len(ncol(imp_ds)),
   tolerance = sqrt(.Machine$double.eps),
   ...
 )
@@ -27,8 +27,7 @@ evaluate_imputation_parameters(
 \item{criterion}{a string specifying the used criterion for comparing the
 estimated and true parameters}
 
-\item{which_pars}{indices of estimated parameters to compare or \code{NULL},
-if all parameters should be compared}
+\item{which_cols}{indices or names of columns used for evaluation}
 
 \item{tolerance}{numeric, only used for \code{criterion = "precision"}:
 numeric differences smaller than tolerance are treated as zero/equal}
@@ -57,8 +56,9 @@ argument "probs" (see examples). Otherwise, the default quantiles from
 \code{\link[stats]{quantile}} will be used.}
 }
 
-The argument \code{which_pars} allows the selection of specific parameters
-for comparison (see examples).
+The argument \code{which_cols} allows the selection of columns
+for comparison (see examples). If \code{true_pars} is used,
+it is assumed that only relevant parameters are supplied (see examples).
 }
 \examples{
 # only orig_ds known
@@ -80,7 +80,7 @@ evaluate_imputation_parameters(imp_ds,
 
 # compare only column Y
 evaluate_imputation_parameters(imp_ds,
-  true_pars = c(X = 0, Y = 10), parameter = "mean",
-  which_pars = "Y"
+  true_pars = c(Y = 10), parameter = "mean",
+  which_cols = "Y"
 )
 }

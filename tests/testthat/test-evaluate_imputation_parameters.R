@@ -122,15 +122,15 @@ test_that("evaluate_imputation_parameters() works", {
     )
   )
 
-  # which_pars --------------------------------------------
+  # which_cols --------------------------------------------
   expect_equal(evaluate_imputation_parameters(imp_ds,
     orig_ds = df_XY_20,
-    which_pars = "Y"
+    which_cols = "Y"
   ), 0)
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
       orig_ds = df_XY_20,
-      which_pars = "X"
+      which_cols = "X"
     ),
     evaluate_parameters(mean(imp_ds$X), mean(df_XY_20$X))
   )

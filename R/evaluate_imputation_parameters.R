@@ -17,15 +17,15 @@
 #' \code{\link[stats]{quantile}} will be used.}
 #' }
 #'
-#' The argument \code{which_pars} allows the selection of specific parameters
-#' for comparison (see examples).
+#' The argument \code{which_cols} allows the selection of columns
+#' for comparison (see examples). If \code{true_pars} is used,
+#' it is assumed that only relevant parameters are supplied (see examples).
 #'
 #' @inheritParams evaluate_parameters
 #' @inheritParams evaluate_imputed_values
 #' @param true_pars true parameters, normally a vector
 #' @param parameter a string specifying the estimated parameters for comparison
-#' @param which_pars indices of estimated parameters to compare or \code{NULL},
-#'   if all parameters should be compared
+#' @param which_cols indices or names of columns used for evaluation
 #' @param ... further arguments passed to function for parameter estimation
 #'
 #'
@@ -52,12 +52,12 @@
 #'
 #' # compare only column Y
 #' evaluate_imputation_parameters(imp_ds,
-#'   true_pars = c(X = 0, Y = 10), parameter = "mean",
-#'   which_pars = "Y"
+#'   true_pars = c(Y = 10), parameter = "mean",
+#'   which_cols = "Y"
 #' )
 evaluate_imputation_parameters <- function(imp_ds, orig_ds = NULL, true_pars = NULL,
                                            parameter = "mean", criterion = "RMSE",
-                                           which_pars = NULL,
+                                           which_cols = seq_len(ncol(imp_ds)),
                                            tolerance = sqrt(.Machine$double.eps), ...) {
   if (!xor(is.null(orig_ds), is.null(true_pars))) {
     stop("exactly one of 'orig_ds' or 'true_pars' must be supplied and the
@@ -75,15 +75,10 @@ evaluate_imputation_parameters <- function(imp_ds, orig_ds = NULL, true_pars = N
     cor = stats::cor
   )
 
-  imp_pars <- calc_pars(imp_ds, ...)
+  imp_pars <- calc_pars(imp_ds[, which_cols, drop = FALSE], ...)
 
   if (is.null(true_pars)) { # pars must be calculated
-    true_pars <- calc_pars(orig_ds, ...)
-  }
-
-  if (!is.null(which_pars)) {
-    imp_pars <- imp_pars[which_pars]
-    true_pars <- true_pars[which_pars]
+    true_pars <- calc_pars(orig_ds[, which_cols, drop = FALSE], ...)
   }
 
   evaluate_parameters(imp_pars, true_pars,
