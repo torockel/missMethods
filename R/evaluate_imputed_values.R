@@ -42,8 +42,8 @@
 #' @param M NULL (the default) or a missing data indicator matrix; the missing
 #' data indicator matrix is normally created via \code{is.na(miss_ds)}, where
 #' \code{miss_ds} is the dataset after deleting values from \code{orig_ds}
-#' @param tolerance numeric, numeric differences smaller than tolerance are
-#' treated as zero/equal
+#' @param tolerance numeric, only used for \code{criterion = "precision"}:
+#' numeric differences smaller than tolerance are treated as zero/equal
 #'
 #' @return a numeric vector of length one
 #' @export

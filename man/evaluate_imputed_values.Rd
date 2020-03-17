@@ -24,8 +24,8 @@ imputed and original values}
 data indicator matrix is normally created via \code{is.na(miss_ds)}, where
 \code{miss_ds} is the dataset after deleting values from \code{orig_ds}}
 
-\item{tolerance}{numeric, numeric differences smaller than tolerance are
-treated as zero/equal}
+\item{tolerance}{numeric, only used for \code{criterion = "precision"}:
+numeric differences smaller than tolerance are treated as zero/equal}
 }
 \value{
 a numeric vector of length one

@@ -4,7 +4,12 @@
 \alias{evaluate_parameters}
 \title{Evaluate estimated parameters}
 \usage{
-evaluate_parameters(est_par, true_par, criterion = "RMSE")
+evaluate_parameters(
+  est_par,
+  true_par,
+  criterion = "RMSE",
+  tolerance = sqrt(.Machine$double.eps)
+)
 }
 \arguments{
 \item{est_par}{a vector or matrix of estimated parameters}
@@ -13,6 +18,9 @@ evaluate_parameters(est_par, true_par, criterion = "RMSE")
 
 \item{criterion}{a string specifying the used criterion for comparing the
 estimated and true parameters}
+
+\item{tolerance}{numeric, only used for \code{criterion = "precision"}:
+numeric differences smaller than tolerance are treated as zero/equal}
 }
 \value{
 a numeric vector of length one
