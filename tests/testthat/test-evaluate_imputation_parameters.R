@@ -15,7 +15,7 @@ test_that("evaluate_imputation_parameters() works", {
 
   expect_equal(evaluate_imputation_parameters(imp_ds, orig_ds = df_XY_20,
                                               parameter = "var"),
-               evaluate_parameters(var(imp_ds), var(df_XY_20)))
+               evaluate_parameters(diag(var(imp_ds)), diag(var(df_XY_20))))
 
   expect_equal(evaluate_imputation_parameters(imp_ds, orig_ds = df_XY_20,
                                               parameter = "sd"),
@@ -74,6 +74,11 @@ test_that("evaluate_imputation_parameters() works", {
   expect_equal(evaluate_imputation_parameters(imp_ds, orig_ds = df_XY_20,
                                               which_pars = "X"),
                evaluate_parameters(mean(imp_ds$X), mean(df_XY_20$X)))
+
+  # tolerance
+  expect_equal(evaluate_imputation_parameters(imp_ds, orig_ds = df_XY_20,
+                                              criterion = "precision",
+                                              tolerance = 11), 1)
 
 })
 
