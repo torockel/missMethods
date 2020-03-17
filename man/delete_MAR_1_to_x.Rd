@@ -107,7 +107,8 @@ Instead, a combinations of the levels of the unordered factor is searched that
 \item{guarantees at least a proportion of \code{prop} rows are in group 1}
 \item{minimize the difference between \code{prop} and the proportion of
 rows in group 1.}
-} This can be seen as a binary search problem, which is solved by the solver
+}
+This can be seen as a binary search problem, which is solved by the solver
 from the package \code{lpSolve}, if \code{use_lpSolve = TRUE}.
 If \code{use_lpSolve = FALSE}, a very simple heuristic is applied.
 The heuristic only guarantees that at least a proportion of \code{prop} rows

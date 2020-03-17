@@ -1,10 +1,10 @@
 # helpers for MD patterns ---------------------------------
 find_md_patterns <- function(M) {
-  patterns = list()
-  pattern_obj = list()
-  for(i in seq_len(nrow(M))) {
+  patterns <- list()
+  pattern_obj <- list()
+  for (i in seq_len(nrow(M))) {
     pat_nr <- find_md_pattern_nr(M[i, ], patterns)
-    if(pat_nr > length(patterns)) { # new pattern
+    if (pat_nr > length(patterns)) { # new pattern
       patterns[[pat_nr]] <- M[i, ]
       pattern_obj[[pat_nr]] <- i
     } else { # existing pattern
@@ -29,9 +29,9 @@ find_md_pattern_nr <- function(md_pattern, patterns) {
 
 find_pot_donor_pattern_nrs <- function(pattern_matrix, recep_pattern) {
   possible_pattern_nrs <- integer()
-  for(pat_ind in seq_len(nrow(pattern_matrix))) {
+  for (pat_ind in seq_len(nrow(pattern_matrix))) {
     # possible_pattern: at least in one pattern the variable is observed
-    if(!any(pattern_matrix[pat_ind, ] & recep_pattern)) {
+    if (!any(pattern_matrix[pat_ind, ] & recep_pattern)) {
       possible_pattern_nrs <- c(possible_pattern_nrs, pat_ind)
     }
   }

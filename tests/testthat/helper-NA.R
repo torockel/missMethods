@@ -11,7 +11,8 @@ df_XY_X_one_outlier <- data.frame(X = c(rep(1, 19), 5), Y = 101:120)
 df_XY_X_unequal_dummy <- data.frame(X = c(rep(0, 10), 1), Y = 101:111)
 df_with_ord_factors <- data.frame(X = ordered(letters[1:20]), Y = 1:20)
 df_with_unord_factor <- data.frame(X = factor(letters[1:20],
-                                              ordered = FALSE), Y = 1:20)
+  ordered = FALSE
+), Y = 1:20)
 df_XY_X_binary <- data.frame(X = c(rep(1, 10), rep(0, 10)), Y = 1:20)
 
 # define some incomplete data frames for testing ----------
@@ -45,16 +46,20 @@ df_with_ord_factors_miss[12:15, "Y"] <- NA
 
 # define some special cases -------------------------------
 # one completely missing column
-df_one_comp_missing_col <- data.frame(X = c(rep(NA, 10), 11:20),
-                                      Y = rep(NA, 20))
+df_one_comp_missing_col <- data.frame(
+  X = c(rep(NA, 10), 11:20),
+  Y = rep(NA, 20)
+)
 
 
 # first row comp missing
 df_first_row_comp_missing <- data.frame(X = c(NA, 2:10), Y = c(NA, 102:110))
 
 # no complete obs
-df_no_comp_obs <- data.frame(X = c(rep(NA, 11), 12:20),
-                             Y = c(101:110, rep(NA, 10)))
+df_no_comp_obs <- data.frame(
+  X = c(rep(NA, 11), 12:20),
+  Y = c(101:110, rep(NA, 10))
+)
 # all values NA
 df_all_NA <- data.frame(X = rep(NA, 10), Y = rep(NA, 10))
 

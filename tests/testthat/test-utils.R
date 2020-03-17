@@ -10,6 +10,8 @@ test_that("is_df_or_matrix()", {
 test_that("resample() works", {
   # beware of sample() this!
   expect_equal(replicate(10, resample(30, 1)), rep(30, 10))
-  expect_error(resample(10, 2),
-               "resampling of size 2 not possible without replacement")
+  expect_error(
+    resample(10, 2),
+    "resampling of size 2 not possible without replacement"
+  )
 })

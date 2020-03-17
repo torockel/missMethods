@@ -49,10 +49,9 @@ examples). The following \code{parameter}s are implemented:
 "mean", "median", "var", "sd", "quantile", "cov", "cor".
 Some details follows:
 \itemize{
-\item{"var": only the variances of the
-columns (the diagonal elements of the covariance matrix) are compared.
-The whole covariance matrix can be compared with
-"cov".}
+\item{"var": only the variances of the columns (the diagonal elements of the
+covariance matrix) are compared. The whole covariance matrix can be compared
+with "cov".}
 \item{"quantile": the quantiles can be set via the additional
 argument "probs" (see examples). Otherwise, the default quantiles from
 \code{\link[stats]{quantile}} will be used.}

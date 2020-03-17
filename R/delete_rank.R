@@ -7,7 +7,7 @@ delete_rank <- function(ds, p, miss_cols, ctrl_cols,
 
   p <- adjust_p(p, miss_cols)
 
-  for(i in seq_along(miss_cols)) {
+  for (i in seq_along(miss_cols)) {
     n_mis <- round(nrow(ds) * p[i])
     if (n_mis > 0L) {
       p_ranks <- rank(ds[, ctrl_cols[i]])
@@ -49,12 +49,15 @@ delete_MAR_rank <- function(ds, p, miss_cols, ctrl_cols,
                             ties.method = "average") {
 
   # arg stochastic not used (and method is not stochastic)
-  check_delete_args_MAR(ds = ds, p = p, miss_cols = miss_cols,
-                        ctrl_cols = ctrl_cols, stochastic = FALSE)
+  check_delete_args_MAR(
+    ds = ds, p = p, miss_cols = miss_cols,
+    ctrl_cols = ctrl_cols, stochastic = FALSE
+  )
 
-  delete_rank(ds = ds, p = p, miss_cols = miss_cols, ctrl_cols = ctrl_cols,
-              ties.method = ties.method)
-
+  delete_rank(
+    ds = ds, p = p, miss_cols = miss_cols, ctrl_cols = ctrl_cols,
+    ties.method = ties.method
+  )
 }
 
 #' Create MNAR values using a ranking mechanism
@@ -69,9 +72,13 @@ delete_MAR_rank <- function(ds, p, miss_cols, ctrl_cols,
 delete_MNAR_rank <- function(ds, p, miss_cols, ties.method = "average") {
 
   # arg stochastic not used! (and method is not stochastic)
-  check_delete_args_MNAR(ds = ds, p = p, miss_cols = miss_cols,
-                         stochastic = FALSE)
+  check_delete_args_MNAR(
+    ds = ds, p = p, miss_cols = miss_cols,
+    stochastic = FALSE
+  )
 
-  delete_rank(ds = ds, p = p, miss_cols = miss_cols, ctrl_cols = miss_cols,
-              ties.method = ties.method)
+  delete_rank(
+    ds = ds, p = p, miss_cols = miss_cols, ctrl_cols = miss_cols,
+    ties.method = ties.method
+  )
 }

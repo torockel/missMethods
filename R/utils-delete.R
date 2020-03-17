@@ -11,10 +11,10 @@ check_delete_args <- function(ds, p, miss_cols, stochastic) {
 
   # check p -------------------------------------
   if (is.numeric(p)) {
-    if (length(p) != 1L && length(p) != length(miss_cols) ) {
+    if (length(p) != 1L && length(p) != length(miss_cols)) {
       stop("p must be of length 1 or length must equal miss_cols")
     } else {
-      if(any(p < 0 | p > 1)) {
+      if (any(p < 0 | p > 1)) {
         stop("probabilties in p must be between 0 and 1")
       }
     }
@@ -27,7 +27,7 @@ check_delete_args <- function(ds, p, miss_cols, stochastic) {
     if (any(miss_cols < 1 | miss_cols > ncol(ds))) {
       stop("indices in miss_cols must be in 1:ncol(ds)")
     }
-  } else if(is.character(miss_cols)) {
+  } else if (is.character(miss_cols)) {
     if (!all(miss_cols %in% colnames(ds))) {
       stop("all entries of miss_cols must be in colnames(ds)")
     }
@@ -37,26 +37,28 @@ check_delete_args <- function(ds, p, miss_cols, stochastic) {
 
   if (anyDuplicated(miss_cols) != 0) {
     duplicated_cols <- unique(miss_cols[duplicated(miss_cols)])
-    warning("there are duplicates in miss_cols:\n", duplicated_cols,
-            "\n this may result in a too high percentage of missing values")
+    warning(
+      "there are duplicates in miss_cols:\n", duplicated_cols,
+      "\n this may result in a too high percentage of missing values"
+    )
   }
 
   # check stochastic ----------------------------
-  if(!is.logical(stochastic)) {
+  if (!is.logical(stochastic)) {
     stop("stochastic must be logical")
-  } else if(length(stochastic) != 1L) {
+  } else if (length(stochastic) != 1L) {
     stop("the length of stochastic must be 1")
   }
 }
 
-check_delete_args_MCAR <- function(ds, p, miss_cols, stochastic,  p_overall) {
+check_delete_args_MCAR <- function(ds, p, miss_cols, stochastic, p_overall) {
   # general checking
   check_delete_args(ds = ds, p = p, miss_cols = miss_cols, stochastic = stochastic)
 
   # special case: p_overall
-  if(!is.logical(p_overall) | length(p_overall) != 1L) {
+  if (!is.logical(p_overall) | length(p_overall) != 1L) {
     stop("p_overall must be logical of length 1")
-  } else if(p_overall & !stochastic & length(p) != 1L) {
+  } else if (p_overall & !stochastic & length(p) != 1L) {
     stop("if p_overall = TRUE, then length(p) must be 1")
   }
 }
@@ -72,7 +74,7 @@ check_delete_args_MAR <- function(ds, p, miss_cols, ctrl_cols, stochastic) {
       if (any(ctrl_cols < 1 | ctrl_cols > ncol(ds))) {
         stop("indices in ctrl_cols must be in 1:ncol(ds)")
       }
-    } else if(is.character(ctrl_cols)) {
+    } else if (is.character(ctrl_cols)) {
       if (!all(ctrl_cols %in% colnames(ds))) {
         stop("all entries of ctrl_cols must be in colnames(ds)")
       }
@@ -85,17 +87,18 @@ check_delete_args_MAR <- function(ds, p, miss_cols, ctrl_cols, stochastic) {
     stop("ctrl_cols must be completely observed; no NAs in ds[, ctrl_cols] allowed")
   }
 
-  if(length(miss_cols) != length(ctrl_cols)) {
+  if (length(miss_cols) != length(ctrl_cols)) {
     stop("length(miss_cols) must equal length(ctrl_cols)")
   }
 
   # check if any ctrl_col is in miss_cols
-  if(any(ctrl_cols %in% miss_cols)) {
-    stop("to ensure MAR no ctrl_col is allowed to be in miss_cols;\n",
-                "problematic ctrl_cols:\n",
-                paste(ctrl_cols[ctrl_cols %in% miss_cols], collapse = ", "))
+  if (any(ctrl_cols %in% miss_cols)) {
+    stop(
+      "to ensure MAR no ctrl_col is allowed to be in miss_cols;\n",
+      "problematic ctrl_cols:\n",
+      paste(ctrl_cols[ctrl_cols %in% miss_cols], collapse = ", ")
+    )
   }
-
 }
 
 check_delete_args_MNAR <- function(ds, p, miss_cols, stochastic) {
@@ -117,9 +120,11 @@ check_ctrl_cols_1_to_x <- function(ds, ctrl_cols) {
     }
   }
   if (length(prob_cols) > 0L) {
-    stop("all ctrl_cols must be numeric or ordered factors;\n",
-               "problematic column(s): ",
-               paste(prob_cols, collapse = ", "))
+    stop(
+      "all ctrl_cols must be numeric or ordered factors;\n",
+      "problematic column(s): ",
+      paste(prob_cols, collapse = ", ")
+    )
   }
   TRUE
 }
@@ -164,17 +169,19 @@ find_groups_by_prop <- function(x, prop, use_lpSolve = TRUE) {
   nr_ux <- tabulate(match(x, ux))
   if (use_lpSolve) {
     if (requireNamespace("lpSolve", quietly = TRUE)) {
-      solution <- lpSolve::lp(direction = "min", objective.in = nr_ux,
-                              const.mat = matrix(nr_ux, nrow = 1),
-                              const.dir = ">=",
-                              const.rhs = prop * length(x),
-                              all.bin = TRUE)
+      solution <- lpSolve::lp(
+        direction = "min", objective.in = nr_ux,
+        const.mat = matrix(nr_ux, nrow = 1),
+        const.dir = ">=",
+        const.rhs = prop * length(x),
+        all.bin = TRUE
+      )
       if (solution$status == 0) {
         g1_ux <- ux[solution$solution > 0]
       } else {
         stop("lpSolve found no solution")
       }
-    } else {  # no lpSolve installed
+    } else { # no lpSolve installed
       stop("Package \"lpSolve\" needed. Either install it or use \"use_lpSolve = FALSE\".")
     }
   } else {
@@ -182,7 +189,7 @@ find_groups_by_prop <- function(x, prop, use_lpSolve = TRUE) {
     g1_ux <- ux[g1_ux]
   }
   # g1 should not be empty, but only if there is more than one different value in x
-  if(length(g1_ux) == 0L && length(unique(x)) != 1) {
+  if (length(g1_ux) == 0L && length(unique(x)) != 1) {
     g1_ux <- ux[1]
   }
   find_groups_by_values(x, g1_ux)
@@ -204,7 +211,7 @@ adjust_p <- function(p, miss_cols) {
 }
 
 calc_nr_miss_g1 <- function(nr_g1, p_miss_g1,
-                               nr_g2, nr_miss, x) {
+                            nr_g2, nr_miss, x) {
   if (nr_miss == 0L) {
     nr_miss_g1 <- 0L
   } else if (nr_g2 == 0L) {

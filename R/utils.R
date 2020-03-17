@@ -1,5 +1,5 @@
 is_df_or_matrix <- function(ds) {
-  is.data.frame(ds)| is.matrix(ds)
+  is.data.frame(ds) | is.matrix(ds)
 }
 
 # define resample to evade the "feature" of sample(x, ...),

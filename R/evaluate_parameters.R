@@ -20,9 +20,11 @@
 evaluate_parameters <- function(est_par, true_par, criterion = "RMSE",
                                 tolerance = sqrt(.Machine$double.eps)) {
   if (!isTRUE(all.equal(dim(est_par), dim(true_par))) ||
-      length(est_par) != length(true_par)) {
+    length(est_par) != length(true_par)) {
     stop("the dimensions of est_par and true_par must be equal")
   }
-  calc_evaluation_criterion(est_par, true_par, criterion, M = NULL,
-                            tolerance = tolerance)
+  calc_evaluation_criterion(est_par, true_par, criterion,
+    M = NULL,
+    tolerance = tolerance
+  )
 }

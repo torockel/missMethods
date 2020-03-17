@@ -5,7 +5,7 @@ delete_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
                           add_realized_x = FALSE,
                           prop = 0.5,
                           use_lpSolve = TRUE,
-                          ordered_as_unordered = FALSE,...) {
+                          ordered_as_unordered = FALSE, ...) {
 
   # general checking is done in calling functions delete_MAR_1_to_x and
   # delete_MNAR_1_to_x, only special cases are checked here
@@ -15,7 +15,7 @@ delete_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
   # match cutoff_fun
   cutoff_fun <- match.fun(cutoff_fun)
 
-  #check x
+  # check x
   if (length(x) != 1L || !is.numeric(x)) {
     stop("x must be a single number")
   } else if (x <= 0 || is.infinite(x)) {
@@ -27,9 +27,11 @@ delete_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
   # create missing values -----------------------
   n <- nrow(ds)
   true_odds <- numeric(length(miss_cols))
-  for(i in seq_along(miss_cols)) {
-    groups <- find_groups(ds[, ctrl_cols[i]], cutoff_fun, prop, use_lpSolve,
-                          ordered_as_unordered, ...)
+  for (i in seq_along(miss_cols)) {
+    groups <- find_groups(
+      ds[, ctrl_cols[i]], cutoff_fun, prop, use_lpSolve,
+      ordered_as_unordered, ...
+    )
     if (is.null(groups$g2)) {
       warning("column ", ctrl_cols[i], " is constant, effectively MCAR")
       ds[, miss_cols[i]] <- delete_MCAR_vec(ds[, miss_cols[i]], p[i], stochastic)
@@ -44,32 +46,40 @@ delete_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
       # check if p_miss_g1 or p_miss_g2 is out of range (>1)
       if (p_miss_g2 > 1) {
         x_max_i <- nr_g2 / (n * p[i] - nr_g1)
-        warning("p (or x) is too high; x is set to ", x_max_i,
-                " to get expected n * p missing values")
+        warning(
+          "p (or x) is too high; x is set to ", x_max_i,
+          " to get expected n * p missing values"
+        )
         p_miss_g2 <- 1 # setting x = x_max_i results in p_miss_g2 = 1
-        p_miss_g1 <- (p[i] * n  - nr_g2)  / nr_g1
+        p_miss_g1 <- (p[i] * n - nr_g2) / nr_g1
       } else if (p_miss_g1 > 1) {
         x_min_i <- (n * p[i] - nr_g2) / nr_g1
-        warning("p is too high or x to low; x is set to ", x_min_i,
-                " to get expected n * p missing values")
+        warning(
+          "p is too high or x to low; x is set to ", x_min_i,
+          " to get expected n * p missing values"
+        )
         p_miss_g1 <- 1
-        p_miss_g2 <- (p[i] * n  - nr_g1)  / nr_g2
+        p_miss_g2 <- (p[i] * n - nr_g1) / nr_g2
       }
 
       # delete values
-      if(stochastic) { # stochastic = TRUE ------------------
+      if (stochastic) { # stochastic = TRUE ------------------
         na_indices_g1 <- groups$g1[sample(c(TRUE, FALSE),
-                                         nr_g1 ,
-                                         replace = TRUE,
-                                         prob = c(p_miss_g1,
-                                                  1 - p_miss_g1))]
+          nr_g1,
+          replace = TRUE,
+          prob = c(
+            p_miss_g1,
+            1 - p_miss_g1
+          )
+        )]
         na_indices_g2 <- groups$g2[sample(c(TRUE, FALSE),
-                                          nr_g2 ,
-                                          replace = TRUE,
-                                          prob = c(p_miss_g2,
-                                                   1 - p_miss_g2))]
-
-
+          nr_g2,
+          replace = TRUE,
+          prob = c(
+            p_miss_g2,
+            1 - p_miss_g2
+          )
+        )]
       } else { # stochastic = FALSE ------------------
         nr_miss <- round(p[i] * n)
         nr_miss_g1 <- calc_nr_miss_g1(nr_g1, p_miss_g1, nr_g2, nr_miss, x)
@@ -136,7 +146,8 @@ delete_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
 #' \item{guarantees at least a proportion of \code{prop} rows are in group 1}
 #' \item{minimize the difference between \code{prop} and the proportion of
 #' rows in group 1.}
-#' } This can be seen as a binary search problem, which is solved by the solver
+#' }
+#' This can be seen as a binary search problem, which is solved by the solver
 #' from the package \code{lpSolve}, if \code{use_lpSolve = TRUE}.
 #' If \code{use_lpSolve = FALSE}, a very simple heuristic is applied.
 #' The heuristic only guarantees that at least a proportion of \code{prop} rows
@@ -225,14 +236,17 @@ delete_MAR_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
                               prop = 0.5,
                               use_lpSolve = TRUE,
                               ordered_as_unordered = FALSE, ...) {
-
-  check_delete_args_MAR(ds = ds, p = p, miss_cols = miss_cols,
-                          ctrl_cols = ctrl_cols, stochastic = stochastic)
+  check_delete_args_MAR(
+    ds = ds, p = p, miss_cols = miss_cols,
+    ctrl_cols = ctrl_cols, stochastic = stochastic
+  )
 
   delete_1_to_x(ds, p, x, miss_cols, ctrl_cols, cutoff_fun, stochastic,
-                add_realized_x, prop = prop,
-                use_lpSolve = use_lpSolve,
-                ordered_as_unordered = ordered_as_unordered, ...)
+    add_realized_x,
+    prop = prop,
+    use_lpSolve = use_lpSolve,
+    ordered_as_unordered = ordered_as_unordered, ...
+  )
 }
 
 
@@ -244,20 +258,24 @@ delete_MAR_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
 #'
 #' @eval MNAR_documentation("1_to_x")
 #'
-#' @examples delete_MNAR_1_to_x(ds, 0.2, 3, "X")
-delete_MNAR_1_to_x <-function(ds, p, x, miss_cols,
-                              cutoff_fun = median,
-                              stochastic = FALSE,
-                              add_realized_x = FALSE,
-                              prop = 0.5,
-                              use_lpSolve = TRUE,
-                              ordered_as_unordered = FALSE,...) {
+#' @examples
+#' delete_MNAR_1_to_x(ds, 0.2, 3, "X")
+delete_MNAR_1_to_x <- function(ds, p, x, miss_cols,
+                               cutoff_fun = median,
+                               stochastic = FALSE,
+                               add_realized_x = FALSE,
+                               prop = 0.5,
+                               use_lpSolve = TRUE,
+                               ordered_as_unordered = FALSE, ...) {
+  check_delete_args_MNAR(
+    ds = ds, p = p, miss_cols = miss_cols,
+    stochastic = stochastic
+  )
 
-  check_delete_args_MNAR(ds = ds, p = p, miss_cols = miss_cols,
-                         stochastic = stochastic)
-
-  delete_1_to_x(ds, p, x, miss_cols, ctrl_cols = miss_cols, cutoff_fun,
-                stochastic, add_realized_x, prop = prop,
-                use_lpSolve = use_lpSolve,
-                ordered_as_unordered = ordered_as_unordered, ...)
+  delete_1_to_x(ds, p, x, miss_cols,
+    ctrl_cols = miss_cols, cutoff_fun,
+    stochastic, add_realized_x, prop = prop,
+    use_lpSolve = use_lpSolve,
+    ordered_as_unordered = ordered_as_unordered, ...
+  )
 }

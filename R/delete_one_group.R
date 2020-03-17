@@ -1,7 +1,7 @@
 # the workhorse for delete_MAR_groups and delete_MNAR_groups
 delete_one_group <- function(ds, p, miss_cols, ctrl_cols, stochastic = FALSE,
-                          cutoff_fun = median, prop = 0.5, use_lpSolve = TRUE,
-                          ordered_as_unordered = FALSE, ...) {
+                             cutoff_fun = median, prop = 0.5, use_lpSolve = TRUE,
+                             ordered_as_unordered = FALSE, ...) {
 
   # General checking is done in calling functions.
   # Only special cases are checked here.
@@ -10,8 +10,10 @@ delete_one_group <- function(ds, p, miss_cols, ctrl_cols, stochastic = FALSE,
   p <- adjust_p(p, miss_cols)
 
   for (i in seq_along(miss_cols)) {
-    groups <- find_groups(ds[, ctrl_cols[i]], cutoff_fun, prop, use_lpSolve,
-                          ordered_as_unordered, ...)
+    groups <- find_groups(
+      ds[, ctrl_cols[i]], cutoff_fun, prop, use_lpSolve,
+      ordered_as_unordered, ...
+    )
     if (is.null(groups$g2)) {
       warning("column ", ctrl_cols[i], " is constant, effectively MCAR")
       ds[, miss_cols[i]] <- delete_MCAR_vec(ds[, miss_cols[i]], p[i], stochastic)
@@ -94,18 +96,20 @@ delete_one_group <- function(ds, p, miss_cols, ctrl_cols, stochastic = FALSE,
 #' @examples
 #' ds <- data.frame(X = 1:20, Y = 101:120)
 #' delete_MAR_one_group(ds, 0.2, "X", "Y")
-delete_MAR_one_group <-function(ds, p, miss_cols, ctrl_cols, stochastic = FALSE,
-                             cutoff_fun = median, prop = 0.5, use_lpSolve = TRUE,
-                             ordered_as_unordered = FALSE, ...) {
+delete_MAR_one_group <- function(ds, p, miss_cols, ctrl_cols, stochastic = FALSE,
+                                 cutoff_fun = median, prop = 0.5, use_lpSolve = TRUE,
+                                 ordered_as_unordered = FALSE, ...) {
+  check_delete_args_MAR(
+    ds = ds, p = p, miss_cols = miss_cols,
+    ctrl_cols = ctrl_cols, stochastic = stochastic
+  )
 
-  check_delete_args_MAR(ds = ds, p = p, miss_cols = miss_cols,
-                        ctrl_cols = ctrl_cols, stochastic = stochastic)
-
-  delete_one_group(ds = ds, p = p, miss_cols = miss_cols, ctrl_cols = ctrl_cols,
-                stochastic = stochastic, cutoff_fun = cutoff_fun, prop = prop,
-                use_lpSolve = use_lpSolve,
-                ordered_as_unordered = ordered_as_unordered, ...)
-
+  delete_one_group(
+    ds = ds, p = p, miss_cols = miss_cols, ctrl_cols = ctrl_cols,
+    stochastic = stochastic, cutoff_fun = cutoff_fun, prop = prop,
+    use_lpSolve = use_lpSolve,
+    ordered_as_unordered = ordered_as_unordered, ...
+  )
 }
 
 
@@ -118,16 +122,18 @@ delete_MAR_one_group <-function(ds, p, miss_cols, ctrl_cols, stochastic = FALSE,
 #'
 #' @examples
 #' delete_MNAR_one_group(ds, 0.2, "X")
-delete_MNAR_one_group <-function(ds, p, miss_cols, stochastic = FALSE,
-                                cutoff_fun = median, prop = 0.5, use_lpSolve = TRUE,
-                                ordered_as_unordered = FALSE, ...) {
+delete_MNAR_one_group <- function(ds, p, miss_cols, stochastic = FALSE,
+                                  cutoff_fun = median, prop = 0.5, use_lpSolve = TRUE,
+                                  ordered_as_unordered = FALSE, ...) {
+  check_delete_args_MNAR(
+    ds = ds, p = p, miss_cols = miss_cols,
+    stochastic = stochastic
+  )
 
-  check_delete_args_MNAR(ds = ds, p = p, miss_cols = miss_cols,
-                         stochastic = stochastic)
-
-  delete_one_group(ds = ds, p = p, miss_cols = miss_cols, ctrl_cols = miss_cols,
-                stochastic = stochastic, cutoff_fun = cutoff_fun, prop = prop,
-                use_lpSolve = use_lpSolve,
-                ordered_as_unordered = ordered_as_unordered, ...)
-
+  delete_one_group(
+    ds = ds, p = p, miss_cols = miss_cols, ctrl_cols = miss_cols,
+    stochastic = stochastic, cutoff_fun = cutoff_fun, prop = prop,
+    use_lpSolve = use_lpSolve,
+    ordered_as_unordered = ordered_as_unordered, ...
+  )
 }

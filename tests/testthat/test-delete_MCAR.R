@@ -1,13 +1,14 @@
 # check if delete_MCAR() calls check_delete_args_MCAR -----
 test_that("delete_MCAR() calls check_delete_args_MCAR()", {
   # special error only from check_delete_args_MCAR:
-  expect_error(delete_MCAR(df_XY_100, 0.1, p_overall = "A"),
-               "p_overall must be logical of length 1")
+  expect_error(
+    delete_MCAR(df_XY_100, 0.1, p_overall = "A"),
+    "p_overall must be logical of length 1"
+  )
 })
 
 # delete_MCAR ---------------------------------------------
 test_that("delete_MCAR() creates MCAR", {
-
   set.seed(123454)
 
   # check stochastic = FALSE (default) --------------------
@@ -39,10 +40,10 @@ test_that("delete_MCAR() creates MCAR", {
 
   N <- 1000
   res <- 0
-  for(i in seq_len(N)) {
+  for (i in seq_len(N)) {
     res <- res + sum(count_NA(delete_MCAR(df_XY_100, p = 0.2, stochastic = TRUE)))
   }
-  expect_true(res / prod(dim(df_XY_100), N)  < 0.3 & res / prod(dim(df_XY_100), N) > 0.1)
+  expect_true(res / prod(dim(df_XY_100), N) < 0.3 & res / prod(dim(df_XY_100), N) > 0.1)
 
   # check p_overall = TRUE --------------------------------
   df_MCAR <- delete_MCAR(df_XY_100, p = 0.2, p_overall = TRUE)
@@ -63,5 +64,4 @@ test_that("delete_MCAR() creates MCAR", {
 
   ds_m_MCAR <- delete_MCAR(matrix_20_10, p = c(0.1, 0.2, 0.3), miss_cols = 2:4)
   expect_equal(count_NA(ds_m_MCAR), c(0, 2, 4, 6, rep(0, 6)))
-
 })

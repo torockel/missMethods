@@ -18,50 +18,68 @@ test_that("calc_evaluation_criterion()", {
 
   # check criterion --------------------------------------
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "bias"), -0.5)
-  expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "bias_rel"), -2/(3*4))
-  expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "cor"),
-               cor(estimate_vec, true_val_vec))
+  expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "bias_rel"), -2 / (3 * 4))
+  expect_equal(
+    calc_evaluation_criterion(estimate_vec, true_val_vec, "cor"),
+    cor(estimate_vec, true_val_vec)
+  )
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "MAE"), 0.5)
-  expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "MAE_rel"), 2/(3*4))
+  expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "MAE_rel"), 2 / (3 * 4))
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "MSE"), 1)
-  expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "NRMSE_tot_mean"),
-               calc_evaluation_criterion(estimate_vec, true_val_vec, "RMSE") / mean(true_val_vec))
-  expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "NRMSE_tot_mean_sq"),
-               calc_evaluation_criterion(estimate_vec, true_val_vec, "RMSE") / sqrt(mean(true_val_vec^2)))
-  expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "NRMSE_tot_sd"),
-               calc_evaluation_criterion(estimate_vec, true_val_vec, "RMSE") / sd(true_val_vec))
+  expect_equal(
+    calc_evaluation_criterion(estimate_vec, true_val_vec, "NRMSE_tot_mean"),
+    calc_evaluation_criterion(estimate_vec, true_val_vec, "RMSE") / mean(true_val_vec)
+  )
+  expect_equal(
+    calc_evaluation_criterion(estimate_vec, true_val_vec, "NRMSE_tot_mean_sq"),
+    calc_evaluation_criterion(estimate_vec, true_val_vec, "RMSE") / sqrt(mean(true_val_vec^2))
+  )
+  expect_equal(
+    calc_evaluation_criterion(estimate_vec, true_val_vec, "NRMSE_tot_sd"),
+    calc_evaluation_criterion(estimate_vec, true_val_vec, "RMSE") / sd(true_val_vec)
+  )
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "nr_equal"), 3)
-  expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "precision"), 3/4)
+  expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "precision"), 3 / 4)
 
   # error: not implemented
-  expect_error(calc_evaluation_criterion(estimate_vec, true_val_vec,
-                                         "notImplementedCriterion"),
-               "'arg' should be one of")
+  expect_error(
+    calc_evaluation_criterion(
+      estimate_vec, true_val_vec,
+      "notImplementedCriterion"
+    ),
+    "'arg' should be one of"
+  )
 
 
   # check M -----------------------------------------------
   # atomic vectors that are not matrices
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec,
-                                         M = c(TRUE, rep(FALSE, 3))), 2)
+    M = c(TRUE, rep(FALSE, 3))
+  ), 2)
 
   # M for matrices and data frames
   M1 <- matrix(c(TRUE, TRUE, FALSE, FALSE), nrow = 2)
   M_11_22 <- matrix(c(TRUE, FALSE, FALSE, TRUE), nrow = 2)
   # matrices
   expect_equal(calc_evaluation_criterion(estimate_matrix, true_val_matrix, M = M1), 0)
-  expect_equal(calc_evaluation_criterion(estimate_matrix, true_val_matrix, M = M_11_22),
-               1 / sqrt(2))
+  expect_equal(
+    calc_evaluation_criterion(estimate_matrix, true_val_matrix, M = M_11_22),
+    1 / sqrt(2)
+  )
   # data frames
   expect_equal(calc_evaluation_criterion(estimate_df, true_val_df, M = M1), 3)
-  expect_equal(calc_evaluation_criterion(estimate_df, true_val_df, M = M_11_22),
-               5 / sqrt(2))
+  expect_equal(
+    calc_evaluation_criterion(estimate_df, true_val_df, M = M_11_22),
+    5 / sqrt(2)
+  )
 
   # check tolerance -----------------------------------------------------------
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "nr_equal",
-                                         tolerance = 0.5), 3)
+    tolerance = 0.5
+  ), 3)
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "nr_equal",
-                                         tolerance = 3), 4) # diff is 2
-
+    tolerance = 3
+  ), 4) # diff is 2
 })
 
 test_that("count_equals() works", {

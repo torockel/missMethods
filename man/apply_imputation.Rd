@@ -23,32 +23,28 @@ Apply a function for imputation over rows, columns or combinations of both
 }
 \details{
 The functionality of \code{apply_imputation} is inspired by the
-\code{\link[base]{apply}} function.
-The function applies a function \code{FUN} to impute the missing values in
-\code{ds}.
-\code{FUN} must be a function, which takes a vector as input and returns
-exactly one value.
-The argument \code{type} is comparable to \code{\link[base]{apply}}'s
-\code{MARGIN} argument.
-It specifies the values that are used for the calculation of the imputation
-values.
-For example, \code{type = "columnwise"} and \code{FUN = mean} will impute
-the mean of the observed values in a column for all missing values in this
-column.
-In contrast, \code{type = "rowwise"} and \code{FUN = mean} will impute
-the mean of the observed values in a row for all missing values in this row.
+\code{\link[base]{apply}} function. The function applies a function
+\code{FUN} to impute the missing values in \code{ds}. \code{FUN} must be a
+function, which takes a vector as input and returns exactly one value. The
+argument \code{type} is comparable to \code{\link[base]{apply}}'s
+\code{MARGIN} argument. It specifies the values that are used for the
+calculation of the imputation values. For example, \code{type = "columnwise"}
+and \code{FUN = mean} will impute the mean of the observed values in a column
+for all missing values in this column. In contrast, \code{type = "rowwise"}
+and \code{FUN = mean} will impute the mean of the observed values in a row
+for all missing values in this row.
 
 List of all implemented \code{types}:
 \itemize{
 \item{"columnwise" (the default): imputes column by column; all observed
-values of a column are given to \code{FUN} and the returned value is used
-as the imputation value for all  missing values of the column.}
+values of a column are given  to \code{FUN} and the returned value is used
+as the imputation value for all missing values of the column.}
 \item{"rowwise": imputes row by row; all observed values of a row are given
- to \code{FUN} and the returned value is used as the imputation value for all
- missing values of the row.}
+to \code{FUN} and the returned value is used as the imputation value for all
+missing values of the row.}
 \item{"total": All observed values of \code{ds} are given to \code{FUN} and
- the returned value is used as the imputation value for all missing values of
- \code{ds}.}
+the returned value is used as the imputation value for all missing values of
+\code{ds}.}
 \item{"Winer": The mean value from "columnwise" and "rowwise" is used as the
 imputation value.}
 \item{"Two-way": The sum of the values from "columnwise" and "rowwise" minus
@@ -69,6 +65,7 @@ all.equal(ds_imp_app, ds_imp_mean)
 }
 \seealso{
 A convenient interface exists for common cases like mean imputation:
-\code{\link{impute_mean}}, \code{\link{impute_median}}, \code{\link{impute_mode}}.
-All these functions call \code{apply_imputation}.
+  \code{\link{impute_mean}}, \code{\link{impute_median}},
+  \code{\link{impute_mode}}. All these functions call
+  \code{apply_imputation}.
 }
