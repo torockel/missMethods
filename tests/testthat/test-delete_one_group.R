@@ -140,11 +140,26 @@ test_that("delete_MAR_one_group() (and delete_one_group(), which is called by
   set.seed(12345)
   mat_miss <- delete_MAR_one_group(matrix_100_2, 0.2, 1, 2)
   expect_equal(count_NA(mat_miss), c(20, 0))
-  expect_true(isTRUE(all.equal(count_NA(mat_miss[1:20, ]), c(20, 0))) ||
-    isTRUE(all.equal(count_NA(mat_miss[1:20, ]), c(0, 0))))
+  expect_true(isTRUE(all.equal(count_NA(mat_miss[1:50, ]), c(20, 0))) ||
+    isTRUE(all.equal(count_NA(mat_miss[1:50, ]), c(0, 0))))
 
   mat_miss <- delete_MAR_one_group(matrix_20_10, c(0.1, 0.2, 0.3), 1:3, 8:10)
   expect_equal(count_NA(mat_miss), c(2, 4, 6, rep(0, 7)))
   expect_true(isTRUE(all.equal(count_NA(mat_miss[1:10, 3:4]), c(6, 0))) ||
     isTRUE(all.equal(count_NA(mat_miss[1:10, 3:4]), c(0, 0))))
 })
+
+test_that("delete_MAR_one_group() (and delete_one_group(), which is called by
+          delete_MAR_one_group()) works for tibbles", {
+  set.seed(12345)
+  tbl_miss <- delete_MAR_one_group(tbl_XY_100, 0.2, 1, 2)
+  expect_equal(count_NA(tbl_miss), c(X = 20, Y = 0))
+  expect_true(isTRUE(all.equal(count_NA(tbl_miss[1:50, ]), c(X = 20, Y = 0))) ||
+                isTRUE(all.equal(count_NA(tbl_miss[1:50, ]), c(X = 0, Y = 0))))
+
+  tbl_miss <- delete_MAR_one_group(tbl_XYZ_100, c(0.1, 0.2), 2:3, c(1, 1))
+  expect_equal(count_NA(tbl_miss), c(X = 0, Y = 10, Z = 20))
+  expect_true(isTRUE(all.equal(count_NA(tbl_miss[1:50, 2]), c(Y = 10))) ||
+                isTRUE(all.equal(count_NA(tbl_miss[1:50, 2]), c(Y = 00))))
+})
+

@@ -11,12 +11,12 @@ delete_one_group <- function(ds, p, miss_cols, ctrl_cols, stochastic = FALSE,
 
   for (i in seq_along(miss_cols)) {
     groups <- find_groups(
-      ds[, ctrl_cols[i]], cutoff_fun, prop, use_lpSolve,
+      ds[, ctrl_cols[i], drop = TRUE], cutoff_fun, prop, use_lpSolve,
       ordered_as_unordered, ...
     )
     if (is.null(groups$g2)) {
       warning("column ", ctrl_cols[i], " is constant, effectively MCAR")
-      ds[, miss_cols[i]] <- delete_MCAR_vec(ds[, miss_cols[i]], p[i], stochastic)
+      ds[, miss_cols[i]] <- delete_MCAR_vec(ds[, miss_cols[i], drop = TRUE], p[i], stochastic)
     } else {
       miss_group <- groups[[sample.int(2, 1)]]
       if (length(miss_group) < round(nrow(ds) * p[i], 0)) {
@@ -24,7 +24,7 @@ delete_one_group <- function(ds, p, miss_cols, ctrl_cols, stochastic = FALSE,
         ds[miss_group, miss_cols[i]] <- NA
       } else {
         eff_p <- p[i] * nrow(ds) / length(miss_group)
-        ds[miss_group, miss_cols[i]] <- delete_MCAR_vec(ds[miss_group, miss_cols[i]], eff_p, stochastic)
+        ds[miss_group, miss_cols[i]] <- delete_MCAR_vec(ds[miss_group, miss_cols[i], drop = TRUE], eff_p, stochastic)
       }
     }
   }
