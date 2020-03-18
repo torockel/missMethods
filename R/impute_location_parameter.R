@@ -24,6 +24,7 @@
 #' "Two-way" imputes the sum of rowwise and columnwise mean minus the total mean.
 #' This method was suggested by D.B Rubin to Bernaards & Sijtsma, K. (2000).
 #'
+#'
 #' @export
 #'
 #' @references

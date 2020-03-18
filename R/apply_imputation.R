@@ -35,6 +35,13 @@
 #' is observed and \code{type = "columnwise"}), then a warning will be issued
 #' and no value will be imputed in the corresponding column or row.
 #'
+#' @section Warning for tibble users:
+#'   The types "total" and "Two-way" are currently not supported for tibbles
+#'   (package version 2.1.3). This issue is due to the way subsetting in
+#'   tibbles works right now. It will be fixed with an update of the package
+#'   tibble (for details see:
+#'   \url{https://github.com/tidyverse/tibble/pull/687})
+#'
 #' @seealso A convenient interface exists for common cases like mean imputation:
 #'   \code{\link{impute_mean}}, \code{\link{impute_median}},
 #'   \code{\link{impute_mode}}. All these functions call

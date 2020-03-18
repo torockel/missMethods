@@ -31,6 +31,15 @@ They are documented in \code{\link{impute_mean}} and
 The function \code{\link[stats]{median}} is used for the calculation of
 the median values for imputation.
 }
+\section{Warning for tibble users}{
+
+  The types "total" and "Two-way" are currently not supported for tibbles
+  (package version 2.1.3). This issue is due to the way subsetting in
+  tibbles works right now. It will be fixed with an update of the package
+  tibble (for details see:
+  \url{https://github.com/tidyverse/tibble/pull/687})
+}
+
 \examples{
 ds <- data.frame(X = 1:20, Y = ordered(LETTERS[1:20]))
 ds_miss <- delete_MCAR(ds, 0.2)

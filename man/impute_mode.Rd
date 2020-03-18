@@ -29,6 +29,15 @@ A mode value of a vector \emph{x} is a most frequent value of \emph{x}.
 If this value is not unique, the first occurring mode value in \emph{x} will
 be used as imputation value.
 }
+\section{Warning for tibble users}{
+
+  The types "total" and "Two-way" are currently not supported for tibbles
+  (package version 2.1.3). This issue is due to the way subsetting in
+  tibbles works right now. It will be fixed with an update of the package
+  tibble (for details see:
+  \url{https://github.com/tidyverse/tibble/pull/687})
+}
+
 \examples{
 ds <- data.frame(X = c(1:12, rep(8, 8)), Y = 101:120)
 ds_miss <- delete_MCAR(ds, 0.2)
