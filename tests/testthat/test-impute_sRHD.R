@@ -48,12 +48,13 @@ test_that("impute_sRHD() simple random Hot-Deck imputation", {
     donor_limit = "min"
   )
   expect_false(anyNA(df_XY_X_miss_one_comp_obs_min))
+
   df_XY_X_miss_one_comp_obs_99 <- impute_sRHD(df_XY_X_miss_one_comp_obs,
     type = "cols_seq",
     donor_limit = 99
   )
   expect_equal(df_XY_X_miss_one_comp_obs_min, df_XY_X_miss_one_comp_obs_99)
-  expect_equal(df_XY_X_miss_one_comp_obs_min[, "X"], rep(100, 100))
+  expect_equal(df_XY_X_miss_one_comp_obs_min[, "X", drop = TRUE], rep(100, 100))
   expect_error(
     impute_sRHD(df_XY_X_miss_one_comp_obs,
       type = "cols_seq",
@@ -98,7 +99,7 @@ test_that("impute_sRHD() simple random Hot-Deck imputation", {
     donor_limit = 99
   )
   expect_equal(df_XY_X_miss_one_comp_obs_min, df_XY_X_miss_one_comp_obs_99)
-  expect_equal(df_XY_X_miss_one_comp_obs_min[, "X"], rep(100, 100))
+  expect_equal(df_XY_X_miss_one_comp_obs_min[, "X", drop = TRUE], rep(100, 100))
   expect_error(
     impute_sRHD(df_XY_X_miss_one_comp_obs,
       type = "sim_comp",
@@ -161,6 +162,21 @@ test_that("impute_sRHD() works with matrices", {
   expect_false(anyNA(impute_sRHD(matrix_100_2_miss, type = "sim_comp", donor_limit = 2)))
   expect_error(
     impute_sRHD(matrix_100_2_miss, type = "sim_part", donor_limit = 2),
+    "donor_limit is not implemented for type = sim_part"
+  )
+})
+
+test_that("impute_sRHD() works with tibbles", {
+  # check types
+  expect_false(anyNA(impute_sRHD(tbl_XY_100, type = "cols_seq")))
+  expect_false(anyNA(impute_sRHD(tbl_XY_100, type = "sim_comp")))
+  expect_false(anyNA(impute_sRHD(tbl_XY_100, type = "sim_part")))
+
+  # check donor limit with types
+  expect_false(anyNA(impute_sRHD(tbl_XY_100, type = "cols_seq", donor_limit = 2)))
+  expect_false(anyNA(impute_sRHD(tbl_XY_100, type = "sim_comp", donor_limit = 2)))
+  expect_error(
+    impute_sRHD(tbl_XY_100, type = "sim_part", donor_limit = 2),
     "donor_limit is not implemented for type = sim_part"
   )
 })

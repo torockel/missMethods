@@ -119,7 +119,7 @@ impute_sRHD_cols_seq <- function(ds, M = is.na(ds), donor_limit) {
   }
   if (is.infinite(donor_limit)) { # Inf donor_limit -> easy/faster implementation
     for (k in seq_len(ncol(ds))) {
-      ds[M[, k], k] <- sample(ds[!M[, k], k], sum(M[, k]), replace = TRUE)
+      ds[M[, k], k] <- sample(ds[!M[, k], k, drop = TRUE], sum(M[, k]), replace = TRUE)
     }
   } else { # finite donor_limit ----------------------------
     for (k in seq_len(ncol(ds))) {
@@ -154,11 +154,15 @@ impute_sRHD_sim_comp <- function(ds, M = is.na(ds), donor_limit) {
   # if (length(pot_donors) == 0) { # error is thrown in fun min_donor_limit
   #   stop("imputation not possible: there is no completely observed object")
   # }
-  if (is.infinite(donor_limit) | isTRUE(all.equal(donor_limit, 1))) {
+  if (is.infinite(donor_limit) || isTRUE(all.equal(donor_limit, 1))) {
     # important special cases: no donor limit and sampling without replacement
     replace_donors <- ifelse(is.infinite(donor_limit), TRUE, FALSE)
     donors_match <- resample(pot_donors, length(recipients), replace = replace_donors)
-    ds[recipients, ][M[recipients, ]] <- ds[donors_match, ][M[recipients, ]] # vectorized but ugly?
+    for(i in seq_along(recipients)) {
+      ds[recipients[i], M[recipients[i], ]] <- ds[donors_match[i], M[recipients[i], ]]
+    }
+    # vectorized but ugly and does not work for tibbles!
+    # ds[recipients, ][M[recipients, ]] <- ds[donors_match, ][M[recipients, ]]
   } else {
     donor_limit_obj <- rep(donor_limit, nrow(ds))
     for (i in seq_along(recipients)) {
@@ -192,8 +196,9 @@ impute_sRHD_sim_part <- function(ds, M = is.na(ds)) {
       pot_donors <- unlist(pattern_obj[pot_donor_pattern_nrs])
       recipients <- pattern_obj[[pat_ind]]
       donors_match <- resample(pot_donors, length(recipients), replace = TRUE)
-      ds[recipients, ][M[recipients, ]] <- ds[donors_match, ][M[recipients, ]]
-      # vectorized but ugly?
+      for(i in seq_along(recipients)) {
+        ds[recipients[i], M[recipients[i], ]] <- ds[donors_match[i], M[recipients[i], ]]
+      }
     }
   }
   ds
