@@ -124,6 +124,20 @@ test_that("delete_MAR_censoring() (and delete_censoring(), which is called by
   expect_equal(count_NA(mat_miss[1:10, ]), c(2, 4, 6, rep(0, 7)))
 })
 
+test_that("delete_MAR_censoring() (and delete_censoring(), which is called by
+          delete_MAR_censoring()) works for tibbles", {
+  set.seed(12345)
+  tbl_miss <- delete_MAR_censoring(tbl_XY_100, 0.2, 1, 2)
+  expect_equal(count_NA(tbl_miss), c(X = 20, Y = 0))
+  expect_equal(count_NA(tbl_miss[1:20, ]), c(X = 20, Y = 0))
+
+  tbl_miss <- delete_MAR_censoring(tbl_XYZ_100, c(0.1, 0.2), 1:2, c(3, 3),
+                                   where = "upper"
+  )
+  expect_equal(count_NA(tbl_miss), c(X = 10, Y = 20, Z = 0))
+  expect_equal(count_NA(tbl_miss[1:20, ]), c(X = 10, Y = 20, Z = 0))
+})
+
 # check delete_MNAR_censoring -----------------------------
 test_that("delete_MNAR_censoring() works", {
 

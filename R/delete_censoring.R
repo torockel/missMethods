@@ -9,10 +9,11 @@ delete_censoring <- function(ds, p, miss_cols, ctrl_cols, where = "lower", sorti
 
   # create missing values ---------------------------------
   for (i in seq_along(miss_cols)) {
+    ds_ctrl_cols_i <- ds[, ctrl_cols[i], drop = TRUE]
     if (sorting) {
       n_mis <- round(nrow(ds) * p[i], 0)
       if (n_mis > 0) { # to avoid problems with seq and n_mis == 0
-        ordered_indices <- order(ds[, ctrl_cols[i]])
+        ordered_indices <- order(ds_ctrl_cols_i)
         na_indices <- switch(where,
           lower = ordered_indices[seq_len(n_mis)],
           upper = ordered_indices[seq(
@@ -31,14 +32,14 @@ delete_censoring <- function(ds, p, miss_cols, ctrl_cols, where = "lower", sorti
         na_indices <- rep(FALSE, nrow(ds))
       }
     } else { # no sorting -> using quantile()
-      if (length(unique(ds[, ctrl_cols[i]])) == 1L) {
+      if (length(unique(ds_ctrl_cols_i)) == 1L) {
         warning(
           "the column ", ctrl_cols[i], " is constant; no missing values ",
           "created with/in this column"
         )
         na_indices <- rep(FALSE, nrow(ds))
       } else {
-        if (is.ordered(ds[, ctrl_cols[i]])) {
+        if (is.ordered(ds_ctrl_cols_i)) {
           type <- 1 # better than 3, because of
           # quantile(ordered(1:5), 0.21, type = 1) -> 2
           # quantile(ordered(1:5), 0.21, type = 3) -> 1
@@ -46,21 +47,21 @@ delete_censoring <- function(ds, p, miss_cols, ctrl_cols, where = "lower", sorti
           type <- 7 # the default for quantile{stats}
         }
         if (where == "lower") {
-          na_indices <- ds[, ctrl_cols[i]] < stats::quantile(ds[, ctrl_cols[i]],
+          na_indices <- ds_ctrl_cols_i < stats::quantile(ds_ctrl_cols_i,
             p[i],
             type = type
           )
         } else if (where == "upper") {
-          na_indices <- ds[, ctrl_cols[i]] > stats::quantile(ds[, ctrl_cols[i]],
+          na_indices <- ds_ctrl_cols_i > stats::quantile(ds_ctrl_cols_i,
             1 - p[i],
             type = type
           )
         } else if (where == "both") {
-          na_indices_lower <- ds[, ctrl_cols[i]] < stats::quantile(ds[, ctrl_cols[i]],
+          na_indices_lower <- ds_ctrl_cols_i < stats::quantile(ds_ctrl_cols_i,
             p[i] / 2,
             type = type
           )
-          na_indices_upper <- ds[, ctrl_cols[i]] > stats::quantile(ds[, ctrl_cols[i]],
+          na_indices_upper <-ds_ctrl_cols_i > stats::quantile(ds_ctrl_cols_i,
             1 - p[i] / 2,
             type = type
           )
