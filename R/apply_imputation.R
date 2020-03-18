@@ -65,8 +65,9 @@ apply_imputation <- function(ds, FUN = mean, type = "columnwise", ...) {
   FUN <- match.fun(FUN)
   type <- match.arg(type, c("columnwise", "rowwise", "total", "Two-Way", "Winer"))
 
-  # check all NA
-  if (all(is.na(ds))) {
+  # define M and check all NA
+  M <- is.na(ds)
+  if (all(M)) {
     warning("all values in ds are NA, no imputation possible")
     return(ds)
   }
@@ -74,34 +75,35 @@ apply_imputation <- function(ds, FUN = mean, type = "columnwise", ...) {
   # impute ------------------------------------------------
   if (type == "columnwise") { # columnwise ---------------
     for (k in seq_len(ncol(ds))) {
-      M_k <- is.na(ds[, k])
+      M_k <- M[, k]
       if (all(M_k)) { # only missing values in column
         warning(
           "in column ", k,
           " all values are NA; the column cannot be imputed"
         )
       } else if (any(M_k)) { # only for columns with missing values FUN is used
-        ds[M_k, k] <- FUN(ds[!M_k, k], ...)
+        ds[M_k, k] <- FUN(ds[!M_k, k, drop = TRUE], ...)
       }
     }
   } else if (type == "rowwise") { # rowwise ---------------
     for (i in seq_len(nrow(ds))) {
-      M_i <- is.na(ds[i, ])
+      M_i <- M[i, ]
       if (all(M_i)) { # only missing values in row
         warning(
           "in row ", i,
           " all values are NA; the row cannot be imputed"
         )
       } else if (any(M_i)) {
-        ds[i, M_i] <- FUN(ds[i, !M_i], ...)
+        ds[i, M_i] <- FUN(ds[i, !M_i, drop = TRUE], ...)
       }
     }
   } else if (type == "total") { # total -------------------
-    M <- is.na(ds)
     ds[M] <- FUN(ds[!M], ...)
   } else if (type == "Two-Way" || type == "Winer") { # Two-Way and Winer ------
     M <- is.na(ds)
-    total <- FUN(ds[!M], ...)
+    if (type == "Two-Way") { # total only needed for Two-Way
+      total <- FUN(ds[!M], ...)
+    }
     for (k in seq_len(ncol(ds))) {
       M_k <- M[, k]
       if (all(M_k)) {
@@ -109,8 +111,8 @@ apply_imputation <- function(ds, FUN = mean, type = "columnwise", ...) {
           "in column ", k,
           " all values are NA; the column cannot be imputed"
         )
-      } else if (any(M_k)) { # any missing values in column k ?
-        imp_k <- FUN(ds[!M_k, k], ...)
+      } else if (any(M_k)) { # any missing values in column k?
+        imp_k <- FUN(ds[!M_k, k, drop = TRUE], ...)
         for (i in which(M_k)) {
           if (all(M[i, ])) {
             if (k == 1) { # warn only once per row
@@ -120,7 +122,7 @@ apply_imputation <- function(ds, FUN = mean, type = "columnwise", ...) {
               )
             }
           } else {
-            imp_i <- FUN(ds[i, !M[i, ]], ...)
+            imp_i <- FUN(ds[i, !M[i, ], drop = TRUE], ...)
             if (type == "Two-Way") {
               ds[i, k] <- imp_i + imp_k - total
             } else if (type == "Winer") {

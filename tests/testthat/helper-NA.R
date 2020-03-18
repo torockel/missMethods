@@ -72,3 +72,16 @@ matrix_20_10 <- matrix(c(1:100, 200:101), nrow = 20)
 # define some incomplete matrices for testing ------------------------
 matrix_100_2_miss <- matrix_100_2
 matrix_100_2_miss[is.na(df_XY_XY_miss)] <- NA
+
+
+# define some complete tibbles for testing ------------
+tbl_XY_100 <- tibble::tibble(X = 1:100, Y = 101:200)
+
+
+# define some incomplete tibbles for testing ----------
+
+tbl_XY_X_miss <- tbl_XY_100
+tbl_XY_X_miss[c(1, 3, 5, 20:40), "X"] <- NA
+
+tbl_XY_XY_miss <- tbl_XY_X_miss
+tbl_XY_XY_miss[c(2, 4, 5, 30:50), "Y"] <- NA

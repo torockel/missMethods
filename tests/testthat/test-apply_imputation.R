@@ -1,6 +1,6 @@
 # apply_imputation() -----------------------------
 # most of the time apply_imputation() is called via impute_mean()
-test_that("apply_imputation()", {
+test_that("apply_imputation() works with data.frames", {
   # errors
   expect_error(
     apply_imputation(c(1, 2), FUN = mean),
@@ -165,6 +165,19 @@ test_that("apply_imputation() works with matrices", {
   expect_false(anyNA(impute_mean(matrix_100_2_miss, type = "total")))
   expect_false(anyNA(impute_mean(matrix_100_2_miss[-c(5, 30:40), ], type = "Two-Way")))
   expect_false(anyNA(impute_mean(matrix_100_2_miss[-c(5, 30:40), ], type = "Winer")))
+})
+
+test_that("apply_imputation() works with tibbles", {
+  # check types
+  expect_false(anyNA(impute_mean(tbl_XY_XY_miss, type = "columnwise")))
+  expect_false(anyNA(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "rowwise")))
+  # the types total and Two-Way are not supported until a newer version as 2.1.3
+  # of tibble is released, because subsetting by logical matrices is not available
+  # in version 2.1.3:
+  # https://github.com/tidyverse/tibble/pull/687
+  # expect_false(anyNA(impute_mean(tbl_XY_XY_miss, type = "total")))
+  # expect_false(anyNA(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Two-Way")))
+  expect_false(anyNA(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Winer")))
 })
 
 # mean imputation -----------------------------------------
