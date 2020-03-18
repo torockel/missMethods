@@ -93,7 +93,7 @@ make_col_fun <- function(FUN, unlist = TRUE) {
   function(ds, ...) {
     res <- list()
     for (k in seq_len(ncol(ds))) {
-      res[[k]] <- FUN(ds[, k], ...)
+      res[[k]] <- FUN(ds[, k, drop = TRUE], ...)
     }
     if (!is.null(colnames(ds))) {
       names(res) <- colnames(ds)

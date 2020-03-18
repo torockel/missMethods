@@ -67,6 +67,7 @@ df_all_NA <- data.frame(X = rep(NA, 10), Y = rep(NA, 10))
 
 # define some matrices for testing ------------------------
 matrix_100_2 <- matrix(1:200, nrow = 100)
+matrix_20_2 <- matrix(c(1:20, 101:120), ncol = 2)
 matrix_20_10 <- matrix(c(1:100, 200:101), nrow = 20)
 
 # define some incomplete matrices for testing ------------------------
@@ -76,6 +77,7 @@ matrix_100_2_miss[is.na(df_XY_XY_miss)] <- NA
 
 # define some complete tibbles for testing ------------
 tbl_XY_100 <- tibble::tibble(X = 1:100, Y = 101:200)
+tbl_XY_20 <- tibble::tibble(X = 1:20, Y = 101:120)
 tbl_XYZ_100 <- tibble::tibble(X = 1:100, Y = 101:200, Z = 300:201)
 
 
