@@ -29,12 +29,12 @@ delete_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
   true_odds <- numeric(length(miss_cols))
   for (i in seq_along(miss_cols)) {
     groups <- find_groups(
-      ds[, ctrl_cols[i]], cutoff_fun, prop, use_lpSolve,
+      ds[, ctrl_cols[i], drop = TRUE], cutoff_fun, prop, use_lpSolve,
       ordered_as_unordered, ...
     )
     if (is.null(groups$g2)) {
       warning("column ", ctrl_cols[i], " is constant, effectively MCAR")
-      ds[, miss_cols[i]] <- delete_MCAR_vec(ds[, miss_cols[i]], p[i], stochastic)
+      ds[, miss_cols[i]] <- delete_MCAR_vec(ds[, miss_cols[i], drop = TRUE], p[i], stochastic)
       true_odds[i] <- 0
     } else {
 

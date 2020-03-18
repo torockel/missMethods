@@ -220,6 +220,25 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   # pbinom(25, 50, 0.1, lower.tail = FALSE) # 1.074847e-13
 })
 
+test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
+          delete_MAR_1_to_x()) works for tibbles", {
+  set.seed(12345)
+  tbl_miss <- delete_MAR_1_to_x(tbl_XY_100, 0.2, 4, 1, 2)
+  expect_equal(count_NA(tbl_miss), c(X = 20, Y = 0))
+  expect_equal(count_NA(tbl_miss[1:50, ]), c(X = 4, Y = 0))
+
+  tbl_miss <- delete_MAR_1_to_x(tbl_XYZ_100, c(0.1, 0.2), 9, 1:2, c(3, 3))
+  expect_equal(count_NA(tbl_miss), c(X = 10, Y = 20, Z = 0))
+  expect_equal(count_NA(tbl_miss[1:50, ]), c(X = 9, Y = 18, Z = 0))
+
+  # stochastic = TRUE
+  tbl_miss <- delete_MAR_1_to_x(tbl_XY_100, 0.6, 5, 1, 2, stochastic = TRUE)
+  expect_equal(count_NA(tbl_miss[51:100, ]), c(X = 50, Y = 0))
+  expect_true(count_NA(tbl_miss[1:50, 1, drop = FALSE]) <= 25)
+  # prob for false:
+  # pbinom(25, 50, 0.1, lower.tail = FALSE) # 1.074847e-13
+})
+
 # delete_MNAR_1_to_x --------------------------------------
 # delete_MNAR_1_to_x only calls delete_1_to_x() with ctrl_cols = miss_cols
 # so we only test if the missing values are in the correct variables.

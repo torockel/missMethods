@@ -115,7 +115,7 @@ check_ctrl_cols_1_to_x <- function(ds, ctrl_cols) {
   # check if ctrl_cols are numeric or ordered factor
   prob_cols <- integer(0)
   for (k in seq_along(ctrl_cols)) {
-    if (!(is.ordered(ds[, ctrl_cols[k]]) | is.numeric(ds[, ctrl_cols[k]]))) {
+    if (!(is.ordered(ds[, ctrl_cols[k], drop = TRUE]) | is.numeric(ds[, ctrl_cols[k], drop = TRUE]))) {
       prob_cols <- c(prob_cols, ctrl_cols[k])
     }
   }

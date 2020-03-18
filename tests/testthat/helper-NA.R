@@ -76,6 +76,7 @@ matrix_100_2_miss[is.na(df_XY_XY_miss)] <- NA
 
 # define some complete tibbles for testing ------------
 tbl_XY_100 <- tibble::tibble(X = 1:100, Y = 101:200)
+tbl_XYZ_100 <- tibble::tibble(X = 1:100, Y = 101:200, Z = 300:201)
 
 
 # define some incomplete tibbles for testing ----------
