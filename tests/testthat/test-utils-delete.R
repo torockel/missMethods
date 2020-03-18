@@ -234,11 +234,11 @@ test_that("find_groups_by_cutoff_val()", {
 # check find_groups_by_prop -------------------------
 test_that("find_groups_by_prop()", {
   expect_equal(
-    find_groups_by_prop(df_with_ord_factors[, "X"], 0.25),
+    find_groups_by_prop(ordered(letters[1:20]), 0.25),
     list(g1 = 1:5, g2 = 6:20)
   )
   expect_equal(
-    find_groups_by_prop(df_XY_100[, "X"], 0.4),
+    find_groups_by_prop(1:100, 0.4),
     list(g1 = 1:40, g2 = 41:100)
   )
   expect_equal(
@@ -249,19 +249,19 @@ test_that("find_groups_by_prop()", {
 
   # check lpSolve -----------------------------------------
   expect_equal(
-    find_groups_by_prop(df_with_ord_factors[, "X"], 0.25,
+    find_groups_by_prop(ordered(letters[1:20]), 0.25,
       use_lpSolve = TRUE
     ),
     list(g1 = 1:5, g2 = 6:20)
   )
   expect_equal(
-    find_groups_by_prop(df_with_ord_factors[, "X"], 0.25,
+    find_groups_by_prop(ordered(letters[1:20]), 0.25,
       use_lpSolve = FALSE
     ),
     list(g1 = 1:5, g2 = 6:20)
   )
   expect_equal(
-    find_groups_by_prop(df_XY_100[, "X"], 0.4,
+    find_groups_by_prop(1:100, 0.4,
       use_lpSolve = TRUE
     ),
     list(g1 = 1:40, g2 = 41:100)
@@ -290,13 +290,13 @@ test_that("find_groups_by_prop()", {
 
   # g1 not empty, if x not constant
   expect_equal(
-    find_groups_by_prop(df_with_ord_factors[, "X"], 0.0005,
+    find_groups_by_prop(ordered(letters[1:20]), 0.0005,
       use_lpSolve = TRUE
     ),
     list(g1 = 1, g2 = 2:20)
   )
   expect_equal(
-    find_groups_by_prop(df_with_ord_factors[, "X"], 0.0005,
+    find_groups_by_prop(ordered(letters[1:20]), 0.0005,
       use_lpSolve = FALSE
     ),
     list(g1 = 1, g2 = 2:20)
@@ -309,14 +309,14 @@ test_that("find_groups_by_prop()", {
 test_that("find_groups_by_values()", {
   expect_equal(
     find_groups_by_values(
-      df_with_ord_factors[, "X"],
+      ordered(letters[1:20]),
       c("a", "b", "e")
     ),
     list(g1 = c(1, 2, 5), g2 = c(3, 4, 6:20))
   )
   expect_equal(
     find_groups_by_values(
-      df_XY_100[, "X"],
+      1:100,
       c(5:10, 25)
     ),
     list(g1 = c(5:10, 25), g2 = c(1:4, 11:24, 26:100))

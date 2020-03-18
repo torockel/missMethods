@@ -14,9 +14,10 @@ df_with_unord_factor <- data.frame(X = factor(letters[1:20],
   ordered = FALSE
 ), Y = 1:20)
 df_XY_X_binary <- data.frame(X = c(rep(1, 10), rep(0, 10)), Y = 1:20)
+df_ordered <- data.frame(let = ordered(letters), LET = ordered(LETTERS))
+
 
 # define some incomplete data frames for testing ----------
-
 df_XY_X_miss <- df_XY_100
 df_XY_X_miss[c(1, 3, 5, 20:40), "X"] <- NA
 
@@ -34,7 +35,6 @@ df_XY_no_comp_obs[c(1:31, 50:100), "X"] <- NA
 
 df_XY_miss_with_comp_chars <- cbind(df_XY_XY_miss, char_col = rep("a", 100))
 
-df_ordered <- data.frame(let = ordered(letters), LET = ordered(LETTERS))
 df_ordered_miss <- df_ordered
 df_ordered_miss[1:10, "let"] <- NA
 df_ordered_miss[5:20, "LET"] <- NA
@@ -51,7 +51,6 @@ df_one_comp_missing_col <- data.frame(
   Y = rep(NA, 20)
 )
 
-
 # first row comp missing
 df_first_row_comp_missing <- data.frame(X = c(NA, 2:10), Y = c(NA, 102:110))
 
@@ -60,6 +59,7 @@ df_no_comp_obs <- data.frame(
   X = c(rep(NA, 11), 12:20),
   Y = c(101:110, rep(NA, 10))
 )
+
 # all values NA
 df_all_NA <- data.frame(X = rep(NA, 10), Y = rep(NA, 10))
 
@@ -82,7 +82,6 @@ tbl_XYZ_100 <- tibble::tibble(X = 1:100, Y = 101:200, Z = 300:201)
 
 
 # define some incomplete tibbles for testing ----------
-
 tbl_XY_X_miss <- tbl_XY_100
 tbl_XY_X_miss[c(1, 3, 5, 20:40), "X"] <- NA
 
