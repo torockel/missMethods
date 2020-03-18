@@ -61,6 +61,16 @@ test_that("delete_MAR_rank() (and delete_rank(), which is called by
   expect_equal(count_NA(mat_miss), c(2, 4, 6, rep(0, 7)))
 })
 
+test_that("delete_MAR_rank() (and delete_rank(), which is called by
+          delete_MAR_rank()) works for tibbles", {
+  set.seed(12345)
+  tbl_miss <- delete_MAR_rank(tbl_XY_100, 0.2, 1, 2)
+  expect_equal(count_NA(tbl_miss), c(X = 20, Y = 0))
+
+  tbl_miss <- delete_MAR_rank(tbl_XYZ_100, c(0.1, 0.2), 1:2, c(3, 3))
+  expect_equal(count_NA(tbl_miss), c(X = 10, Y = 20, Z = 0))
+})
+
 # check delete_MNAR_rank -----------------------------
 test_that("delete_MNAR_rank() works", {
   # check that delete_MNAR_rank() calls check_delete_args_MNAR()
