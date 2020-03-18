@@ -70,7 +70,7 @@ delete_MCAR <- function(ds, p, miss_cols = seq_len(ncol(ds)),
   n <- nrow(ds)
   if (!p_overall || stochastic) {
     for (i in seq_along((miss_cols))) {
-      ds[, miss_cols[i]] <- delete_MCAR_vec(ds[, miss_cols[i]], p[i], stochastic)
+      ds[, miss_cols[i]] <- delete_MCAR_vec(ds[, miss_cols[i], drop = TRUE], p[i], stochastic)
     }
   } else { # p_overall = FALSE && stochastich = FALSE
     na_indices_overall <- sample.int(

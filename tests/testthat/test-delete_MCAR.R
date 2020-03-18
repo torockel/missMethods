@@ -55,7 +55,10 @@ test_that("delete_MCAR() creates MCAR", {
   df_MCAR <- delete_MCAR(df_XY_100, p = 0, p_overall = TRUE)
   expect_equal(sum(count_NA(df_MCAR)), 0)
 
-  # check matrix ------------------------------------------
+})
+
+test_that("delete_MCAR() works with matrices", {
+  set.seed(123454)
   ds_m_MCAR <- delete_MCAR(matrix_100_2, p = 0.4)
   expect_equal(count_NA(ds_m_MCAR), c(40, 40))
 
@@ -64,4 +67,17 @@ test_that("delete_MCAR() creates MCAR", {
 
   ds_m_MCAR <- delete_MCAR(matrix_20_10, p = c(0.1, 0.2, 0.3), miss_cols = 2:4)
   expect_equal(count_NA(ds_m_MCAR), c(0, 2, 4, 6, rep(0, 6)))
+})
+
+test_that("delete_MCAR() works with tibbles", {
+  set.seed(123454)
+
+  tbl_MCAR <- delete_MCAR(tbl_XY_100, p = 0.4)
+  expect_equal(count_NA(tbl_MCAR), c(X = 40, Y = 40))
+
+  tbl_MCAR <- delete_MCAR(tbl_XY_100, p = 0.4, miss_cols = 2)
+  expect_equal(count_NA(tbl_MCAR), c(X = 0, Y = 40))
+
+  tbl_MCAR <- delete_MCAR(tbl_XYZ_100, p = c(0.1, 0.2, 0.3), miss_cols = 1:3)
+  expect_equal(count_NA(tbl_MCAR), c(X = 10, Y = 20, Z = 30))
 })
