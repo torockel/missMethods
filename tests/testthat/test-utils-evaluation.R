@@ -1,4 +1,4 @@
-test_that("calc_evaluation_criterion()", {
+test_that("calc_evaluation_criterion() works", {
   # define some vectors, matrices and data frames --------
   estimate_vec <- c(1:4)
   true_val_vec <- c(3, 2:4)
@@ -6,6 +6,8 @@ test_that("calc_evaluation_criterion()", {
   true_val_matrix <- matrix(c(1:2, 4:5), nrow = 2)
   estimate_df <- data.frame(X = 1:2, Y = 11:12)
   true_val_df <- data.frame(X = 4:5, Y = 15:16)
+  est_mixed_df <- data.frame(X = 4:6, Y = factor(letters[4:6]))
+  true_mixed_df <- data.frame(X = c(4, 1, 2), Y = factor(letters[1:3]))
 
   # check for atomic vectors that are not matrices --------
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec), 1)
@@ -40,6 +42,7 @@ test_that("calc_evaluation_criterion()", {
   )
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "nr_equal"), 3)
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "precision"), 3 / 4)
+  expect_equal(calc_evaluation_criterion(est_mixed_df, true_mixed_df, "precision"), 1 / 6)
 
   # error: not implemented
   expect_error(
