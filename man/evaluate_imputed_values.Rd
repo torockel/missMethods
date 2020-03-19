@@ -9,6 +9,7 @@ evaluate_imputed_values(
   orig_ds,
   criterion = "RMSE",
   M = NULL,
+  which_cols = seq_len(ncol(imp_ds)),
   tolerance = sqrt(.Machine$double.eps)
 )
 }
@@ -23,6 +24,8 @@ imputed and original values}
 \item{M}{NULL (the default) or a missing data indicator matrix; the missing
 data indicator matrix is normally created via \code{is.na(miss_ds)}, where
 \code{miss_ds} is the dataset after deleting values from \code{orig_ds}}
+
+\item{which_cols}{indices or names of columns used for evaluation}
 
 \item{tolerance}{numeric, only used for \code{criterion = "precision"}:
 numeric differences smaller than tolerance are treated as zero/equal}
@@ -56,6 +59,8 @@ In the relative versions, the differences are divided by the absolute values
 of the true values.
 These relative versions can be selected via "bias_rel" and "MAE_rel".
 
+The argument \code{which_cols} allows the selection of columns
+for comparison (see examples).
 
 If \code{M = NULL} (the default), then all values of \code{imp_ds} and
 \code{orig_ds} will be used for the calculation of the evaluation criterion.
@@ -66,6 +71,7 @@ If you want to provide \code{M}, \code{M} must be a logical matrix of the
 same dimensions as \code{orig_ds} and missing values must be coded as TRUE.
 This is the standard behavior, if you use \code{\link[base]{is.na}} on a
 dataset with missing values to generate \code{M} (see examples).
+It is possible to combine \code{M} and \code{which_cols}.
 }
 \examples{
 orig_ds <- data.frame(X = 1:10, Y = 101:110)
@@ -73,4 +79,6 @@ miss_ds <- delete_MCAR(orig_ds, 0.3)
 M <- is.na(miss_ds)
 imp_ds <- impute_mean(miss_ds)
 evaluate_imputed_values(imp_ds, orig_ds, M = M)
+# compare only the imputed values in column X
+evaluate_imputed_values(imp_ds, orig_ds, M = M, which_cols = "X")
 }

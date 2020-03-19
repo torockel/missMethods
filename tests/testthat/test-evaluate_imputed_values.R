@@ -9,6 +9,17 @@ test_that("evaluate_imputed_values()", {
     ),
     1 / 40
   )
+
+  expect_equal(
+    evaluate_imputed_values(df_XY_20_imp,
+                            df_XY_20,
+                            criterion = "MAE",
+                            M = matrix(c(TRUE, rep(FALSE, 39)), nrow = 20),
+                            which_cols = 1
+    ),
+    1
+  )
+
   expect_error(
     evaluate_imputed_values(df_XY_20_imp, df_XY_100),
     "the dimensions of imp_ds and orig_ds must be equal"

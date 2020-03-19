@@ -25,7 +25,6 @@
 #' @inheritParams evaluate_imputed_values
 #' @param true_pars true parameters, normally a vector
 #' @param parameter a string specifying the estimated parameters for comparison
-#' @param which_cols indices or names of columns used for evaluation
 #' @param ... further arguments passed to function for parameter estimation
 #'
 #'
