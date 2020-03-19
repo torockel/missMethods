@@ -174,9 +174,16 @@ test_that("apply_imputation() works with tibbles", {
   # the types total and Two-Way are not supported until a newer version as 2.1.3
   # of tibble is released, because subsetting by logical matrices is not available
   # in version 2.1.3:
-  # https://github.com/tidyverse/tibble/pull/687
-  # expect_false(anyNA(impute_mean(tbl_XY_XY_miss, type = "total")))
-  # expect_false(anyNA(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Two-Way")))
+  # https://github.com/tidyverse/tibble/releases/tag/v2.99.99.9012
+  if (utils::packageVersion("tibble") < package_version("2.99.99.9012")) {
+    expect_error(impute_mean(tbl_XY_XY_miss, type = "total"),
+                 "ds is a tibble and logical subsetting, which is needed for")
+    expect_error(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Two-Way"),
+                 "ds is a tibble and logical subsetting, which is needed for")
+  } else {
+    expect_false(anyNA(impute_mean(tbl_XY_XY_miss, type = "total")))
+    expect_false(anyNA(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Two-Way")))
+  }
   expect_false(anyNA(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Winer")))
 })
 

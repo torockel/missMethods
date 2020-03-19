@@ -76,6 +76,10 @@ test_that("calc_evaluation_criterion() works", {
     5 / sqrt(2)
   )
 
+  # M for tibbles not implemented
+  expect_error(calc_evaluation_criterion(tbl_XY_20, tbl_XY_20, M = TRUE),
+               "logical subsetting by 'M' for tibbles is only supported for")
+
   # check tolerance -----------------------------------------------------------
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "nr_equal",
     tolerance = 0.5

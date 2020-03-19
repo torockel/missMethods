@@ -8,6 +8,18 @@ calc_evaluation_criterion <- function(estimate, true_val, criterion = "RMSE", M 
     "nr_equal", "nr_NA", "precision"
   ))
 
+  if (requireNamespace("tibble", quietly = TRUE)) {
+    if ((tibble::is_tibble(estimate) || tibble::is_tibble(estimate)) &&
+        utils::packageVersion("tibble") < package_version("2.99.99.9012") &&
+        !is.null(M)) {
+      stop("logical subsetting by 'M' for tibbles is only supported for package tibble versions >= 2.99.99.9012;
+            possible solutions:
+            * convert inputs via as.data.frame
+            * update package tibble
+            * set 'M = NULL'", call. = FALSE)
+    } # for more details see: https://github.com/tidyverse/tibble/releases/tag/v2.99.99.9012
+  }
+
   if ((criterion %in% c("nr_equal", "precision") &&
        is_df_or_matrix(estimate))) { # handle col by col
     if(is.null(M)) {

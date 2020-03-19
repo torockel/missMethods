@@ -72,6 +72,18 @@ apply_imputation <- function(ds, FUN = mean, type = "columnwise", ...) {
   FUN <- match.fun(FUN)
   type <- match.arg(type, c("columnwise", "rowwise", "total", "Two-Way", "Winer"))
 
+  if (requireNamespace("tibble", quietly = TRUE)) {
+    if (tibble::is_tibble(ds) && type %in% c("total", "Two-Way") &&
+        utils::packageVersion("tibble") < package_version("2.99.99.9012")) {
+      stop("ds is a tibble and logical subsetting, which is needed for 'total' and 'Two-Way',
+      is only supported for tibbles with package versions >= 2.99.99.9012;
+      possible solutions:
+      * convert ds to data frame via as.data.frame
+      * update package tibble
+      * do not use 'total' or 'Two-Way' ", call. = FALSE)
+    } # for more details see: https://github.com/tidyverse/tibble/releases/tag/v2.99.99.9012
+  }
+
   # define M and check all NA
   M <- is.na(ds)
   if (all(M)) {
