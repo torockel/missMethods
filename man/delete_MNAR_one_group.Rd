@@ -48,7 +48,7 @@ Create missing not at random (MNAR) values by deleting values in one of two
 groups in a data frame or a matrix
 }
 \details{
-The functions \code{delete_MNAR_one_group} and \code{\link{delete_MAR_one_group}} are sisters. The only difference between these two functions is the column that controls the generation of missing values. In \code{\link{delete_MAR_one_group}} a separate column \code{ctrl_cols[i]} controls the generation of missing values in \code{miss_cols[i]}. In contrast, in \code{delete_MNAR_1_one_group} the generation of missing values in \code{miss_cols[i]} is controlled by \code{miss_cols[i]} itself. All other aspects are identical for both functions. Therefore, further details can be found in \code{\link{delete_MAR_one_group}}.
+The functions \code{delete_MNAR_one_group} and \code{\link{delete_MAR_one_group}} are sisters. The only difference between these two functions is the column that controls the generation of missing values. In \code{\link{delete_MAR_one_group}} a separate column \code{ctrl_cols[i]} controls the generation of missing values in \code{miss_cols[i]}. In contrast, in \code{delete_MNAR_one_group} the generation of missing values in \code{miss_cols[i]} is controlled by \code{miss_cols[i]} itself. All other aspects are identical for both functions. Therefore, further details can be found in \code{\link{delete_MAR_one_group}}.
 }
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)
