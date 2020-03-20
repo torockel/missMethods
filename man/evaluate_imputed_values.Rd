@@ -46,18 +46,30 @@ and true values}
 \item{"cor": The correlation between the imputed and true values}
 \item{"MAE": The Mean Absolute Error between the imputed and true values}
 \item{"MSE": The Mean Squared Error between the imputed and true values}
-\item{"NRMSE_tot_mean": RMSE divided by the mean of the true values}
+\item{"NRMSE_col_mean": For every column the RMSE divided by the mean of the
+true values is calculated. Then these columnwise values are squared and
+averaged. Finally, the square root of this average is returned.}
+\item{"NRMSE_col_mean_sq": For every column the RMSE divided by the square
+root of the mean of the squared true values is calculated. Then these
+columnwise values are squared and averaged. Finally, the square root of this
+average is returned.}
+\item{"NRMSE_col_sd": For every column the RMSE divided by the standard
+deviation of all true values is calculated. Then these columnwise values are
+squared and averaged. Finally, the square root of this average is returned.}
+\item{"NRMSE_tot_mean": RMSE divided by the mean of all true values}
 \item{"NRMSE_tot_mean_sq": RMSE divided by the square root of the mean of
-the squared true values}
+all squared true values}
 \item{"NRMSE_tot_sd": RMSE divided by the standard deviation of all true values}
 \item{"nr_equal": number of imputed values that are equal to the true values}
 \item{"nr_NA": number of values in \code{imp_ds} that are NA (not imputed)}
 \item{"precision": proportion of imputed values that are equal to the true values}
 }
-Additionally there are relative versions of bias and MAE implemented.
-In the relative versions, the differences are divided by the absolute values
-of the true values.
-These relative versions can be selected via "bias_rel" and "MAE_rel".
+Additionally there are relative versions of bias and MAE implemented. In the
+relative versions, the differences are divided by the absolute values of the
+true values. These relative versions can be selected via "bias_rel" and
+"MAE_rel". The "NRMSE_tot_*" and "NRMSE_col_*" are equal if the columnwise
+normalization values are equal to the total normalization value (see
+examples).
 
 The argument \code{which_cols} allows the selection of columns
 for comparison (see examples).
@@ -66,12 +78,12 @@ If \code{M = NULL} (the default), then all values of \code{imp_ds} and
 \code{orig_ds} will be used for the calculation of the evaluation criterion.
 If a missing data indicator matrix is given via \code{M}, only the truly
 imputed values (values that are marked as missing via \code{M}) will be used
-for the calculation.
-If you want to provide \code{M}, \code{M} must be a logical matrix of the
-same dimensions as \code{orig_ds} and missing values must be coded as TRUE.
-This is the standard behavior, if you use \code{\link[base]{is.na}} on a
-dataset with missing values to generate \code{M} (see examples).
-It is possible to combine \code{M} and \code{which_cols}.
+for the calculation. If you want to provide \code{M}, \code{M} must be a
+logical matrix of the same dimensions as \code{orig_ds} and missing values
+must be coded as TRUE. This is the standard behavior, if you use
+\code{\link[base]{is.na}} on a dataset with missing values to generate
+\code{M} (see examples). It is possible to combine \code{M} and
+\code{which_cols}.
 }
 \examples{
 orig_ds <- data.frame(X = 1:10, Y = 101:110)
@@ -81,4 +93,11 @@ imp_ds <- impute_mean(miss_ds)
 evaluate_imputed_values(imp_ds, orig_ds, M = M)
 # compare only the imputed values in column X
 evaluate_imputed_values(imp_ds, orig_ds, M = M, which_cols = "X")
+
+# NRMSE_tot_mean and NRMSE_col_mean are equal, if columnwise means are equal
+orig_ds <- data.frame(X = 1:10, Y = 10:1)
+miss_ds <- delete_MCAR(orig_ds, 0.3)
+imp_ds <- impute_mean(miss_ds)
+evaluate_imputed_values(imp_ds, orig_ds, "NRMSE_tot_mean")
+evaluate_imputed_values(imp_ds, orig_ds, "NRMSE_col_mean")
 }

@@ -2,9 +2,9 @@
 calc_evaluation_criterion <- function(estimate, true_val, criterion = "RMSE", M = NULL,
                                       tolerance = sqrt(.Machine$double.eps)) {
   criterion <- match.arg(criterion, c(
-    "RMSE", "bias", "bias_rel", "cor", "MAE",
-    "MAE_rel", "MSE", "NRMSE_tot_mean",
-    "NRMSE_tot_mean_sq", "NRMSE_tot_sd",
+    "RMSE", "bias", "bias_rel", "cor", "MAE", "MAE_rel", "MSE",
+    "NRMSE_col_mean", "NRMSE_col_mean_sq", "NRMSE_col_sd",
+    "NRMSE_tot_mean", "NRMSE_tot_mean_sq", "NRMSE_tot_sd",
     "nr_equal", "nr_NA", "precision"
   ))
 
@@ -28,19 +28,32 @@ calc_evaluation_criterion <- function(estimate, true_val, criterion = "RMSE", M 
     }
   }
 
-  if ((criterion %in% c("nr_equal", "nr_NA", "precision") &&
+  colwise_crit <- c("NRMSE_col_mean", "NRMSE_col_mean_sq", "NRMSE_col_sd","nr_equal", "nr_NA", "precision")
+  if ((criterion %in% colwise_crit &&
        is_df_or_matrix(estimate))) { # handle col by col
-    crit_by_col <- numeric(length(ncol(estimate)))
+    crit_by_col <- numeric(ncol(estimate))
+    any_M_col <- rep(TRUE, ncol(estimate))
     for(k in seq_len(ncol(estimate))) {
-      crit_by_col[k] <- calc_evaluation_criterion_vec(estimate[, k, drop = TRUE],
-                                                      true_val[, k, drop = TRUE],
-                                                      criterion = criterion,
-                                                      m_k = M[, k], tolerance = tolerance)
+      m_k <- M[, k]
+      if (any(m_k)) { # check if any value for calculation is available
+        crit_by_col[k] <- calc_evaluation_criterion_vec(estimate[, k, drop = TRUE],
+                                                        true_val[, k, drop = TRUE],
+                                                        criterion = criterion,
+                                                        m_k = m_k, tolerance = tolerance)
+      } else { # no value for calculation is available
+        any_M_col[k] <- FALSE
+      }
     }
-    return(switch(criterion,
-                  nr_equal = sum(crit_by_col),
-                  nr_NA = sum(crit_by_col),
-                  precision = mean(crit_by_col)))
+    crit_by_col <- crit_by_col[any_M_col] # only columns with available values
+    if(grepl("^NRMSE", criterion)) {
+      return(sqrt(mean(crit_by_col^2)))
+    } else {
+      return(switch(criterion,
+                    nr_equal = sum(crit_by_col),
+                    nr_NA = sum(crit_by_col),
+                    precision = mean(crit_by_col)))
+    }
+
   } else { # handle all elements of estimate and true_val in one call
     if (is.matrix(estimate)) {
       estimate <- as.vector(estimate)

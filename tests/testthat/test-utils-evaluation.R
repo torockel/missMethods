@@ -40,8 +40,27 @@ test_that("calc_evaluation_criterion() works", {
     calc_evaluation_criterion(estimate_vec, true_val_vec, "NRMSE_tot_sd"),
     calc_evaluation_criterion(estimate_vec, true_val_vec, "RMSE") / sd(true_val_vec)
   )
+
+  # check equality for NRMSE_tot and NRMSE_col for special cases (mean and mean_sq)
+  df_NRMSE_est <- data.frame(X = c(3, 2, 3), Y = 3:1)
+  df_NRMSE_true <- data.frame(X = 1:3, Y = 3:1)
+  # mean(X) == mean(Y) == mean(c(X, Y)) # for df_NRMSE_true
+  expect_equal(
+    calc_evaluation_criterion(df_NRMSE_est, df_NRMSE_true, "NRMSE_tot_mean"),
+    calc_evaluation_criterion(df_NRMSE_est, df_NRMSE_true, "NRMSE_col_mean")
+  )
+
+  expect_equal(
+    calc_evaluation_criterion(df_NRMSE_est, df_NRMSE_true, "NRMSE_tot_mean_sq"),
+    calc_evaluation_criterion(df_NRMSE_est, df_NRMSE_true, "NRMSE_col_mean_sq")
+  )
+
+  calc_evaluation_criterion(df_NRMSE_est, df_NRMSE_true, "NRMSE_tot_sd")
+  calc_evaluation_criterion(df_NRMSE_est, df_NRMSE_true, "NRMSE_col_sd")
+
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "nr_equal"), 3)
 
+  # check mixed data frame with nr_NA
   mixed_df <- data.frame(1:3, 5:3)
   mixed_miss_df <- data.frame(factor(c(NA, 1:2)), c(5, NA, 3))
   expect_equal(calc_evaluation_criterion(mixed_miss_df, mixed_df, criterion = "nr_NA"), 2)
@@ -89,6 +108,18 @@ test_that("calc_evaluation_criterion() works", {
   expect_equal(
     calc_evaluation_criterion(estimate_df, true_val_df, "precision", M = M_11_22),
     0
+  )
+
+  # data frames columnwise with one column only FALSE in M
+  M_NRMSE <- matrix(c(TRUE, TRUE, rep(FALSE, 4)), ncol = 2)
+  expect_equal(
+    calc_evaluation_criterion(df_NRMSE_est, df_NRMSE_true, "NRMSE_tot_mean", M = M_NRMSE),
+    calc_evaluation_criterion(df_NRMSE_est, df_NRMSE_true, "NRMSE_col_mean", M = M_NRMSE)
+  )
+
+  expect_equal(
+    calc_evaluation_criterion(df_NRMSE_est, df_NRMSE_true, "NRMSE_tot_mean_sq", M = M_NRMSE),
+    calc_evaluation_criterion(df_NRMSE_est, df_NRMSE_true, "NRMSE_col_mean_sq", M = M_NRMSE)
   )
 
   # M for tibbles not implemented, if package_version < 2.99.99.9012
