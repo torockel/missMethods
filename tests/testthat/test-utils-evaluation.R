@@ -41,6 +41,13 @@ test_that("calc_evaluation_criterion() works", {
     calc_evaluation_criterion(estimate_vec, true_val_vec, "RMSE") / sd(true_val_vec)
   )
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "nr_equal"), 3)
+
+  mixed_df <- data.frame(1:3, 5:3)
+  mixed_miss_df <- data.frame(factor(c(NA, 1:2)), c(5, NA, 3))
+  expect_equal(calc_evaluation_criterion(mixed_miss_df, mixed_df, criterion = "nr_NA"), 2)
+  expect_equal(calc_evaluation_criterion(mixed_miss_df, mixed_df, criterion = "nr_NA",
+                                         M = is.na(mixed_miss_df)), 2)
+
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "precision"), 3 / 4)
   expect_equal(calc_evaluation_criterion(est_mixed_df, true_mixed_df, "precision"), 1 / 6)
 
@@ -69,16 +76,26 @@ test_that("calc_evaluation_criterion() works", {
     calc_evaluation_criterion(estimate_matrix, true_val_matrix, M = M_11_22),
     1 / sqrt(2)
   )
+  expect_equal(
+    calc_evaluation_criterion(estimate_matrix, true_val_matrix, "precision", M = M_11_22),
+    1 / 2
+  )
   # data frames
   expect_equal(calc_evaluation_criterion(estimate_df, true_val_df, M = M1), 3)
   expect_equal(
     calc_evaluation_criterion(estimate_df, true_val_df, M = M_11_22),
     5 / sqrt(2)
   )
+  expect_equal(
+    calc_evaluation_criterion(estimate_df, true_val_df, "precision", M = M_11_22),
+    0
+  )
 
-  # M for tibbles not implemented
-  expect_error(calc_evaluation_criterion(tbl_XY_20, tbl_XY_20, M = TRUE),
-               "logical subsetting by 'M' for tibbles is only supported for")
+  # M for tibbles not implemented, if package_version < 2.99.99.9012
+  if (utils::packageVersion("tibble") < package_version("2.99.99.9012")) {
+    expect_error(calc_evaluation_criterion(tbl_XY_20, tbl_XY_20, M = TRUE),
+                 "logical subsetting by 'M' for tibbles is only supported for")
+  }
 
   # check tolerance -----------------------------------------------------------
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "nr_equal",
@@ -86,6 +103,111 @@ test_that("calc_evaluation_criterion() works", {
   ), 3)
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "nr_equal",
     tolerance = 3
+  ), 4) # diff is 2
+})
+
+test_that("calc_evaluation_criterion_vec() works", {
+  # define some vectors -----------------------------------
+  estimate_vec <- c(1:4)
+  true_val_vec <- c(3, 2:4)
+  m_k <- c(TRUE, TRUE, FALSE, FALSE)
+
+  # check error / warning:
+  expect_error(calc_evaluation_criterion_vec(1:3, 1:4),
+               "estimate and true_val must be of same length")
+  # NA not allowed if criterion != "nr_NA"
+  expect_warning(calc_evaluation_criterion_vec(c(NA, 1), c(1, 1), criterion = "RMSE"),
+                 "NAs in estimate or true_val may lead to NA")
+  expect_equal(calc_evaluation_criterion_vec(c(NA, 1), c(1, 1), criterion = "nr_NA"),
+               1)
+
+  # check criterion --------------------------------------
+  # every criterion with and without m_k
+
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "RMSE"), 1)
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "RMSE", m_k), sqrt(4/2))
+
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "bias"), -0.5)
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "bias", m_k), -1)
+
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "bias_rel"), -2 / (3 * 4))
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "bias_rel", m_k), -2 / (3 * 2))
+
+  expect_equal(
+    calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "cor"),
+    cor(estimate_vec, true_val_vec)
+  )
+  expect_equal(
+    calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "cor", m_k),
+    cor(estimate_vec[m_k], true_val_vec[m_k])
+  )
+
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "MAE"), 0.5)
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "MAE", m_k), 1)
+
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "MAE_rel"), 2 / (3 * 4))
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "MAE_rel", m_k), 2 / (3 * 2))
+
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "MSE"), 4 / 4)
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "MSE", m_k), 4 / 2)
+
+  expect_equal(
+    calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "NRMSE_tot_mean"),
+    calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "RMSE") / mean(true_val_vec)
+  )
+  expect_equal(
+    calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "NRMSE_tot_mean", m_k),
+    calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "RMSE", m_k) / mean(true_val_vec)
+  )
+
+
+  expect_equal(
+    calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "NRMSE_tot_mean_sq"),
+    calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "RMSE") / sqrt(mean(true_val_vec^2))
+  )
+  expect_equal(
+    calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "NRMSE_tot_mean_sq", m_k),
+    calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "RMSE", m_k) / sqrt(mean(true_val_vec^2))
+  )
+
+  expect_equal(
+    calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "NRMSE_tot_sd"),
+    calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "RMSE") / sd(true_val_vec)
+  )
+  expect_equal(
+    calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "NRMSE_tot_sd", m_k),
+    calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "RMSE", m_k) / sd(true_val_vec)
+  )
+
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "nr_equal"), 3)
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "nr_equal", m_k), 1)
+
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "nr_NA"), 0)
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "nr_NA", m_k), 0)
+
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "nr_NA"), 0)
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "nr_NA", m_k), 0)
+  expect_equal(calc_evaluation_criterion_vec(c(NA, 1:3), criterion = "nr_NA"), 1)
+  expect_equal(calc_evaluation_criterion_vec(c(NA, 1:3), criterion = "nr_NA", m_k = m_k), 1)
+
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "precision"), 3 / 4)
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "precision", m_k), 1 / 2)
+
+  # error: not implemented
+  expect_error(
+    calc_evaluation_criterion_vec(
+      estimate_vec, true_val_vec,
+      "notImplementedCriterion"
+    ),
+    "criterion notImplementedCriterion is not implemented"
+  )
+
+  # check tolerance -----------------------------------------------------------
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "nr_equal",
+                                         tolerance = 0.5
+  ), 3)
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "nr_equal",
+                                         tolerance = 3
   ), 4) # diff is 2
 })
 
