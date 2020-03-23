@@ -1,4 +1,5 @@
 test_that("calc_evaluation_criterion() works", {
+  # calc_evaluation_criterion -----------------------------
   # define some vectors, matrices and data frames --------
   estimate_vec <- c(1:4)
   true_val_vec <- c(3, 2:4)
@@ -6,6 +7,8 @@ test_that("calc_evaluation_criterion() works", {
   true_val_matrix <- matrix(c(1:2, 4:5), nrow = 2)
   estimate_df <- data.frame(X = 1:2, Y = 11:12)
   true_val_df <- data.frame(X = 4:5, Y = 15:16)
+  estimate_tbl <- tibble::as_tibble(estimate_df)
+  true_val_tbl <- tibble::as_tibble(true_val_df)
   est_mixed_df <- data.frame(X = 4:6, Y = factor(letters[4:6]))
   true_mixed_df <- data.frame(X = c(4, 1, 2), Y = factor(letters[1:3]))
 
@@ -17,6 +20,11 @@ test_that("calc_evaluation_criterion() works", {
 
   # check for data frames ---------------------------------
   expect_equal(calc_evaluation_criterion(estimate_df, true_val_df), 5 / sqrt(2))
+
+  # check for tibbles -------------------------------------
+  expect_equal(calc_evaluation_criterion(estimate_tbl, true_val_tbl), 5 / sqrt(2))
+  expect_equal(calc_evaluation_criterion(estimate_tbl, true_val_tbl, criterion = "NRMSE_col_mean"),
+               calc_evaluation_criterion(estimate_df, true_val_df, criterion = "NRMSE_col_mean"))
 
   # check criterion --------------------------------------
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "bias"), -0.5)
@@ -122,12 +130,6 @@ test_that("calc_evaluation_criterion() works", {
     calc_evaluation_criterion(df_NRMSE_est, df_NRMSE_true, "NRMSE_col_mean_sq", M = M_NRMSE)
   )
 
-  # M for tibbles not implemented, if package_version < 2.99.99.9012
-  if (utils::packageVersion("tibble") < package_version("2.99.99.9012")) {
-    expect_error(calc_evaluation_criterion(tbl_XY_20, tbl_XY_20, M = TRUE),
-                 "logical subsetting by 'M' for tibbles is only supported for")
-  }
-
   # check tolerance -----------------------------------------------------------
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "nr_equal",
     tolerance = 0.5
@@ -138,6 +140,7 @@ test_that("calc_evaluation_criterion() works", {
 })
 
 test_that("calc_evaluation_criterion_vec() works", {
+  # calc_evaluation_criterion_vec -------------------------
   # define some vectors -----------------------------------
   estimate_vec <- c(1:4)
   true_val_vec <- c(3, 2:4)
@@ -243,6 +246,7 @@ test_that("calc_evaluation_criterion_vec() works", {
 })
 
 test_that("count_equals() works", {
+  # count_equals ------------------------------------------
   expect_equal(count_equals(1:10, 1:10), 10)
   expect_equal(count_equals(1:10, c(1, 20, 3, 40, 5, 6, 70, 8:10)), 7)
   expect_equal(count_equals(1:10, 10:1), 0)
