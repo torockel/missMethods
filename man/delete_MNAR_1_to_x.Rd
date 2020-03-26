@@ -24,9 +24,9 @@ delete_MNAR_1_to_x(
 \item{p}{a numeric vector with length one or equal to length \code{miss_cols};
 the probability that a value is missing}
 
-\item{x}{numeric with length one (0 < x < \code{Inf}); odds are 1 to x  for a missing in group 1
-against a missing in group 2
-(see details)}
+\item{x}{numeric with length one (0 < x < \code{Inf}); odds are 1 to x for
+the probability of a value to be missing in group 1 against the probability
+of a value to be missing  in group 2 (see details)}
 
 \item{miss_cols}{a vector of column names or indices of columns in which
 missing values will be created}
@@ -36,15 +36,15 @@ missing values will be created}
 
 \item{stochastic}{logical; see details}
 
-\item{add_realized_x}{logical; if TRUE the realized odds for miss_cols will be
-returned (as attribute)}
+\item{add_realized_x}{logical; if TRUE the realized odds for miss_cols will
+be returned (as attribute)}
 
 \item{prop}{numeric of length one; (minimum) proportion of rows in group 1}
 
 \item{use_lpSolve}{logical; should lpSolve be used for the determination of
 groups, if \code{ctrl_cols[i]} is an unordered factor}
 
-\item{ordered_as_unordered}{logical; should ordered factors be treated like
+\item{ordered_as_unordered}{logical; should ordered factors be treated as
 unordered factors}
 
 \item{...}{further arguments passed to \code{cutoff_fun}}

@@ -19,11 +19,11 @@ An object of the same class as \code{ds} with imputed missing values
 Impute an observed mode value for every missing value
 }
 \details{
-This function behaves exactly like \code{\link{impute_mean}}.
-The only difference is that it imputes a mode instead of a mean.
-All \code{type}s from \code{\link{impute_mean}} are also implemented for
-\code{impute_mode}.
-They are documented in \code{\link{impute_mean}}.
+This function behaves exactly like \code{\link{impute_mean}}. The only
+difference is that it imputes a mode instead of a mean. All \code{type}s from
+\code{\link{impute_mean}} are also implemented for \code{impute_mode}. They
+are documented in \code{\link{impute_mean}} and
+\code{\link{apply_imputation}}.
 
 A mode value of a vector \emph{x} is a most frequent value of \emph{x}.
 If this value is not unique, the first occurring mode value in \emph{x} will

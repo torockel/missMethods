@@ -40,7 +40,7 @@ same length as \code{miss_cols}.}
 \item{use_lpSolve}{logical; should lpSolve be used for the determination of
 groups, if \code{ctrl_cols[i]} is an unordered factor}
 
-\item{ordered_as_unordered}{logical; should ordered factors be treated like
+\item{ordered_as_unordered}{logical; should ordered factors be treated as
 unordered factors}
 
 \item{...}{further arguments passed to \code{cutoff_fun}}
@@ -70,7 +70,7 @@ The position of the missing values in \code{miss_cols[i]} is controlled by
 The following procedure is applied for each pair of \code{ctrl_cols[i]} and
 \code{miss_cols[i]} to determine the positions of missing values:
 
-At first, the rows of \code{ds} are divided in two groups.
+At first, the rows of \code{ds} are divided into two groups.
 Therefore, the \code{cutoff_fun} calculates a cutoff value for
 \code{ctrl_cols[i]} (via \code{cutoff_fun(ds[, ctrl_cols[i]], ...)}.
 The group 1 consists of the rows, whose values in
@@ -83,27 +83,6 @@ Now one of these two groups is chosen randomly.
 In the chosen group, values are deleted in \code{miss_cols[i]}.
 In the other group, no missing values will be created in \code{miss_cols[i]}.
 
-
-If \code{ds[, ctrl_cols[i]]} is an unordered factor, then the concept of a
-cutoff value is not meaningful and cannot be applied.
-Instead, a combinations of the levels of the unordered factor is searched that
-\itemize{
-\item{guarantees at least a proportion of \code{prop} rows are in group 1}
-\item{minimize the difference between \code{prop} and the proportion of
-rows in group 1.}
-} This can be seen as a binary search problem, which is solved by the solver
-from the package \code{lpSolve}, if \code{use_lpSolve = TRUE}.
-If \code{use_lpSolve = FALSE}, a very simple heuristic is applied.
-The heuristic only guarantees that at least a proportion of \code{prop} rows
-are in group 1.
-The choice \code{use_lpSolve = FALSE} is not recommend and should only be
-considered, if lpSolve fails.
-If \code{ordered_as_unordered = TRUE}, then ordered factors will be treated
-like unordered factors and the same binary search problem will be solved for
-both types of factors.
-If \code{ordered_as_unordered = FALSE} (the default), then ordered factors
-will be grouped via \code{cutoff_fun} as described above.
-
 If \code{stochastic = FALSE} (the default), then \code{floor(nrow(ds) * p[i])}
 or \code{ceiling(nrow(ds) * p[i])} values will be set \code{NA} in
 column \code{miss_cols[i]} (depending on the grouping).
@@ -113,6 +92,32 @@ will have a probability to be missing, to meet a proportion of
 The effect of \code{stochastic} is further discussed in
 \code{\link{delete_MCAR}}.
 }
+\section{Treatment of factors}{
+
+
+If \code{ds[, ctrl_cols[i]]} is an unordered factor, then the concept of a
+cutoff value is not meaningful and cannot be applied.
+Instead, a combinations of the levels of the unordered factor is searched that
+\itemize{
+\item{guarantees at least a proportion of \code{prop} rows are in group 1}
+\item{minimize the difference between \code{prop} and the proportion of
+rows in group 1.}
+}
+This can be seen as a binary search problem, which is solved by the solver
+from the package \code{lpSolve}, if \code{use_lpSolve = TRUE}.
+If \code{use_lpSolve = FALSE}, a very simple heuristic is applied.
+The heuristic only guarantees that at least a proportion of \code{prop} rows
+are in group 1.
+The choice \code{use_lpSolve = FALSE} is not recommend and should only be
+considered, if the solver of lpSolve fails.
+
+If \code{ordered_as_unordered = TRUE}, then ordered factors will be treated
+like unordered factors and the same binary search problem will be solved for
+both types of factors.
+If \code{ordered_as_unordered = FALSE} (the default), then ordered factors
+will be grouped via \code{cutoff_fun} as described in Details.
+}
+
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)
 delete_MAR_one_group(ds, 0.2, "X", "Y")

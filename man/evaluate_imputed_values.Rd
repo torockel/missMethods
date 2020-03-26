@@ -67,7 +67,7 @@ all squared true values}
 Additionally there are relative versions of bias and MAE implemented. In the
 relative versions, the differences are divided by the absolute values of the
 true values. These relative versions can be selected via "bias_rel" and
-"MAE_rel". The "NRMSE_tot_*" and "NRMSE_col_*" are equal if the columnwise
+"MAE_rel". The "NRMSE_tot_*" and "NRMSE_col_*" are equal, if the columnwise
 normalization values are equal to the total normalization value (see
 examples).
 
@@ -88,8 +88,11 @@ must be coded as TRUE. This is the standard behavior, if you use
 \examples{
 orig_ds <- data.frame(X = 1:10, Y = 101:110)
 miss_ds <- delete_MCAR(orig_ds, 0.3)
-M <- is.na(miss_ds)
 imp_ds <- impute_mean(miss_ds)
+# compare all values from orig_ds and imp_ds
+evaluate_imputed_values(imp_ds, orig_ds)
+# compare only the imputed values
+M <- is.na(miss_ds)
 evaluate_imputed_values(imp_ds, orig_ds, M = M)
 # compare only the imputed values in column X
 evaluate_imputed_values(imp_ds, orig_ds, M = M, which_cols = "X")
@@ -101,3 +104,9 @@ imp_ds <- impute_mean(miss_ds)
 evaluate_imputed_values(imp_ds, orig_ds, "NRMSE_tot_mean")
 evaluate_imputed_values(imp_ds, orig_ds, "NRMSE_col_mean")
 }
+\seealso{
+Other evaluation functions: 
+\code{\link{evaluate_imputation_parameters}()},
+\code{\link{evaluate_parameters}()}
+}
+\concept{evaluation functions}

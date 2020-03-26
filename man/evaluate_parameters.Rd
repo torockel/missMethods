@@ -5,19 +5,19 @@
 \title{Evaluate estimated parameters}
 \usage{
 evaluate_parameters(
-  est_par,
-  true_par,
+  est_pars,
+  true_pars,
   criterion = "RMSE",
   tolerance = sqrt(.Machine$double.eps)
 )
 }
 \arguments{
-\item{est_par}{a vector or matrix of estimated parameters}
+\item{est_pars}{a vector or matrix of estimated parameters}
 
-\item{true_par}{a vector or matrix of true parameters}
+\item{true_pars}{true parameters, normally a vector or a matrix}
 
 \item{criterion}{a string specifying the used criterion for comparing the
-estimated and true parameters}
+imputed and original values}
 
 \item{tolerance}{numeric, only used for \code{criterion = "precision"}:
 numeric differences smaller than tolerance are treated as zero/equal}
@@ -36,3 +36,9 @@ The possible choices are documented in \code{\link{evaluate_imputed_values}}.
 \examples{
 evaluate_parameters(1:4, 2:5, "RMSE")
 }
+\seealso{
+Other evaluation functions: 
+\code{\link{evaluate_imputation_parameters}()},
+\code{\link{evaluate_imputed_values}()}
+}
+\concept{evaluation functions}

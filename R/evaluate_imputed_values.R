@@ -2,7 +2,9 @@
 #'
 #' Compare imputed to true values
 #'
-#' The following \code{criterion}s are implemented to compare the imputed values
+#' @template evaluation
+#'
+#' @details The following \code{criterion}s are implemented to compare the imputed values
 #' to the true values:
 #' \itemize{
 #' \item{"RMSE" (the default): The Root Mean Squared Error between the imputed
@@ -32,7 +34,7 @@
 #' Additionally there are relative versions of bias and MAE implemented. In the
 #' relative versions, the differences are divided by the absolute values of the
 #' true values. These relative versions can be selected via "bias_rel" and
-#' "MAE_rel". The "NRMSE_tot_*" and "NRMSE_col_*" are equal if the columnwise
+#' "MAE_rel". The "NRMSE_tot_*" and "NRMSE_col_*" are equal, if the columnwise
 #' normalization values are equal to the total normalization value (see
 #' examples).
 #'
@@ -52,23 +54,21 @@
 #'
 #' @param imp_ds a data frame or matrix with imputed values
 #' @param orig_ds a data frame or matrix with original (true) values
-#' @param criterion a string specifying the used criterion for comparing the
-#'   imputed and original values
 #' @param which_cols indices or names of columns used for evaluation
 #' @param M NULL (the default) or a missing data indicator matrix; the missing
 #'   data indicator matrix is normally created via \code{is.na(miss_ds)}, where
 #'   \code{miss_ds} is the dataset after deleting values from \code{orig_ds}
-#' @param tolerance numeric, only used for \code{criterion = "precision"}:
-#'   numeric differences smaller than tolerance are treated as zero/equal
 #'
-#' @return a numeric vector of length one
 #' @export
 #'
 #' @examples
 #' orig_ds <- data.frame(X = 1:10, Y = 101:110)
 #' miss_ds <- delete_MCAR(orig_ds, 0.3)
-#' M <- is.na(miss_ds)
 #' imp_ds <- impute_mean(miss_ds)
+#' # compare all values from orig_ds and imp_ds
+#' evaluate_imputed_values(imp_ds, orig_ds)
+#' # compare only the imputed values
+#' M <- is.na(miss_ds)
 #' evaluate_imputed_values(imp_ds, orig_ds, M = M)
 #' # compare only the imputed values in column X
 #' evaluate_imputed_values(imp_ds, orig_ds, M = M, which_cols = "X")

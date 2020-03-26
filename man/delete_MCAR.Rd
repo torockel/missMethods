@@ -48,12 +48,6 @@ number \code{p}.) Otherwise, \code{p} must be of the same length as
 \code{miss_cols}. In this case, the overall probability for a value to be
 missing will be \code{p[i]} in the column \code{miss_cols[i]}.
 
-The probability for missing values is controlled by \code{p}. If \code{p} is
-a single number, then the same proportion \emph{p} of values is removed in
-every column of \code{miss_cols}. Otherwise, \code{p} must be of the same
-length as \code{miss_cols}. In this case, the proportion of \code{p[i]}
-values will be deleted in column \code{miss_cols[i]}.
-
 If \code{stochastic = FALSE} and \code{p_overall = FALSE} (the default), then
 exactly \code{round(nrow(ds) * p[i])} values will be set \code{NA} in column
 \code{miss_cols[i]}. If \code{stochastic = FALSE} and \code{p_overall =
@@ -61,15 +55,15 @@ TRUE}, then \code{p} must be of length one and exactly \code{round(nrow(ds) *
 p * length(miss_cols))} values will be set NA (over all columns in
 \code{miss_cols}). This can result in a proportion of missing values in every
 \code{miss_col} unequal to \code{p}, but the proportion of missing values in
-all columns together will be "close" to \code{p}.
+all columns together will be close to \code{p}.
 
-If \code{stochastic = TRUE}, then each value has the probability \code{p} to
-be missing. In this case, the number of missing values in \code{miss_cols[i]}
-is a random variable with a binomial distribution \emph{B(nrow(ds), p[i])} or
-\emph{B(nrow(ds), p)} (if \code{length(p) == 1}). This can (and will most of
-the time) lead to more or less missing values than \code{round(nrow(ds) *
-p[i])} in each column. If \code{stochastic = TRUE}, then the argument
-\code{p_overall} is ignored because it is superfluous.
+If \code{stochastic = TRUE}, then each value in column \code{miss_cols[i]}
+has the probability \code{p[i]} to be missing. In this case, the number of
+missing values in \code{miss_cols[i]} is a random variable with a binomial
+distribution \emph{B(nrow(ds), p[i])}. This can (and will most of the time)
+lead to more or less missing values than \code{round(nrow(ds) * p[i])} in
+each column. If \code{stochastic = TRUE}, then the argument \code{p_overall}
+is ignored because it is superfluous.
 }
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)

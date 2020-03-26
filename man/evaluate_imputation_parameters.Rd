@@ -20,12 +20,12 @@ evaluate_imputation_parameters(
 
 \item{orig_ds}{a data frame or matrix with original (true) values}
 
-\item{true_pars}{true parameters, normally a vector}
+\item{true_pars}{true parameters, normally a vector or a matrix}
 
 \item{parameter}{a string specifying the estimated parameters for comparison}
 
 \item{criterion}{a string specifying the used criterion for comparing the
-estimated and true parameters}
+imputed and original values}
 
 \item{which_cols}{indices or names of columns used for evaluation}
 
@@ -56,9 +56,12 @@ argument "probs" (see examples). Otherwise, the default quantiles from
 \code{\link[stats]{quantile}} will be used.}
 }
 
-The argument \code{which_cols} allows the selection of columns
-for comparison (see examples). If \code{true_pars} is used,
-it is assumed that only relevant parameters are supplied (see examples).
+The argument \code{which_cols} allows the selection of columns for comparison
+(see examples). If \code{true_pars} is used, it is assumed that only relevant
+parameters are supplied (see examples).
+
+Possible choices for the argument \code{criterion} are documented in
+\code{\link{evaluate_imputed_values}}
 }
 \examples{
 # only orig_ds known
@@ -84,3 +87,9 @@ evaluate_imputation_parameters(imp_ds,
   which_cols = "Y"
 )
 }
+\seealso{
+Other evaluation functions: 
+\code{\link{evaluate_imputed_values}()},
+\code{\link{evaluate_parameters}()}
+}
+\concept{evaluation functions}

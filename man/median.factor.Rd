@@ -32,7 +32,7 @@ function name is median.factor and not median.ordered).
 If the length of \code{x} is even, then the median will be the middle value
 of the sorted list of elements from \code{x}. If the length of \code{x} is
 odd and the two middle values of the sorted list of elements from \code{x}
-are equal, then the median is one of these middle values. The only
+are equal, then the median is one of these (equal) middle values. The only
 problematic case is an odd length \code{x} with unequal middle values. In
 this case, the median of a numeric vector is normally defined as the mean of
 the two middle values. However, for ordered factors the mean is not defined.

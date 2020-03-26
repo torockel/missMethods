@@ -28,9 +28,9 @@ This is normally meant, if someone speaks of "imputing the mean" or
 
 Other options for \code{type} are: "rowwise", "total", "Winer" and
 "Two-way".
-The option "rowwise" imputes all missing value in a row with the mean of the
+The option "rowwise" imputes all missing values in a row with the mean of the
 observed values in the same row.
-"total" will impute every missing values with the mean of all observed values
+"total" will impute every missing value with the mean of all observed values
 in \code{ds}.
 "Winer" imputes the mean of the rowwise and columnwise mean.
 Beland et al. (2016) called this method "Winer" and they attributed the

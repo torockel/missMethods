@@ -3,7 +3,9 @@
 #' Compares estimated parameters after imputation to true parameters or
 #' estimates based on the original dataset
 #'
-#' Either \code{orig_ds} or \code{true_pars} must be supplied and the other one
+#' @template evaluation
+#'
+#' @details Either \code{orig_ds} or \code{true_pars} must be supplied and the other one
 #' must be \code{NULL} (default: both are \code{NULL}, just supply one, see
 #' examples). The following \code{parameter}s are implemented:
 #' "mean", "median", "var", "sd", "quantile", "cov", "cor".
@@ -17,18 +19,18 @@
 #' \code{\link[stats]{quantile}} will be used.}
 #' }
 #'
-#' The argument \code{which_cols} allows the selection of columns
-#' for comparison (see examples). If \code{true_pars} is used,
-#' it is assumed that only relevant parameters are supplied (see examples).
+#' The argument \code{which_cols} allows the selection of columns for comparison
+#' (see examples). If \code{true_pars} is used, it is assumed that only relevant
+#' parameters are supplied (see examples).
+#'
+#' Possible choices for the argument \code{criterion} are documented in
+#' \code{\link{evaluate_imputed_values}}
 #'
 #' @inheritParams evaluate_parameters
 #' @inheritParams evaluate_imputed_values
-#' @param true_pars true parameters, normally a vector
 #' @param parameter a string specifying the estimated parameters for comparison
 #' @param ... further arguments passed to function for parameter estimation
 #'
-#'
-#' @return a numeric vector of length one
 #' @export
 #'
 #' @examples

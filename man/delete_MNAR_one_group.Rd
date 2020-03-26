@@ -35,7 +35,7 @@ missing values will be created}
 \item{use_lpSolve}{logical; should lpSolve be used for the determination of
 groups, if \code{ctrl_cols[i]} is an unordered factor}
 
-\item{ordered_as_unordered}{logical; should ordered factors be treated like
+\item{ordered_as_unordered}{logical; should ordered factors be treated as
 unordered factors}
 
 \item{...}{further arguments passed to \code{cutoff_fun}}

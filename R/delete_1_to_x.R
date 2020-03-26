@@ -115,14 +115,15 @@ delete_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
 #' @template delete
 #' @template delete-stochastic
 #' @template MAR
+#' @template factor-grouping
 #'
 #' @details
-#' At first, the rows of \code{ds} are divided in two groups.
+#' At first, the rows of \code{ds} are divided into two groups.
 #' Therefore, the \code{cutoff_fun} calculates a cutoff value for
-#' \code{ctrl_cols[i]} (via \code{cutoff_fun(ds[, ctrl_cols[i]], ...)}.
+#' \code{ctrl_cols[i]} (via \code{cutoff_fun(ds[, ctrl_cols[i]], ...)}).
 #' The group 1 consists of the rows, whose values in
 #' \code{ctrl_cols[i]} are below the calculated cutoff value.
-#' If the so defined group 1 is empty, the rows that are equal to the
+#' If the so defined group 1 is empty, the rows that have a value equal to the
 #' cutoff value will be added to this group (otherwise, these rows will
 #' belong to group 2).
 #' The group 2 consists of the remaining rows, which are not part of group 1.
@@ -136,29 +137,6 @@ delete_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
 #' group 1 divided by the number of NAs in group 2 should equal 1 divided by x.
 #' But there are some restrictions, which can lead to some deviations from the
 #' odds 1:x (see below).
-#'
-# copy and paste to delete_MAR_1_to_x !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#'
-#' If \code{ds[, ctrl_cols[i]]} is an unordered factor, then the concept of a
-#' cutoff value is not meaningful and cannot be applied.
-#' Instead, a combinations of the levels of the unordered factor is searched that
-#' \itemize{
-#' \item{guarantees at least a proportion of \code{prop} rows are in group 1}
-#' \item{minimize the difference between \code{prop} and the proportion of
-#' rows in group 1.}
-#' }
-#' This can be seen as a binary search problem, which is solved by the solver
-#' from the package \code{lpSolve}, if \code{use_lpSolve = TRUE}.
-#' If \code{use_lpSolve = FALSE}, a very simple heuristic is applied.
-#' The heuristic only guarantees that at least a proportion of \code{prop} rows
-#' are in group 1.
-#' The choice \code{use_lpSolve = FALSE} is not recommend and should only be
-#' considered, if lpSolve fails.
-#' If \code{ordered_as_unordered = TRUE}, then ordered factors will be treated
-#' like unordered factors and the same binary search problem will be solved for
-#' both types of factors.
-#' If \code{ordered_as_unordered = FALSE} (the default), then ordered factors
-#' will be grouped via \code{cutoff_fun} as described above.
 #'
 #' If \code{stochastic = FALSE} (the default),
 #' then exactly \code{round(nrow(ds) * p[i])} values will be set \code{NA} in
@@ -189,27 +167,27 @@ delete_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
 #'
 #' The argument \code{add_realized_x} controls whether the x of the realized
 #' odds are added to the return value or not.
-#' If \code{add_realized_x = TRUE}, then the x values for all \code{miss_cols}
-#' will be added as an attribute to the returned object.
+#' If \code{add_realized_x = TRUE}, then the realized x values for all
+#' \code{miss_cols} will be added as an attribute to the returned object.
 #' For \code{stochastic = TRUE} these realized x will differ from the given
-#' \code{p} most of the time and will change if the function is rerun without
+#' \code{x} most of the time and will change if the function is rerun without
 #' setting a seed.
 #' For \code{stochastic = FALSE}, it is also possible that the realized odds
 #' differ (see above). However, the realized odds will be constant over multiple
 #' runs.
 #'
-#' @param x numeric with length one (0 < x < \code{Inf}); odds are 1 to x  for a missing in group 1
-#' against a missing in group 2
-#' (see details)
+#' @param x numeric with length one (0 < x < \code{Inf}); odds are 1 to x for
+#'   the probability of a value to be missing in group 1 against the probability
+#'   of a value to be missing  in group 2 (see details)
 #' @param cutoff_fun function that calculates the cutoff values in the
-#' \code{ctrl_cols}
-#' @param add_realized_x logical; if TRUE the realized odds for miss_cols will be
-#' returned (as attribute)
+#'   \code{ctrl_cols}
+#' @param add_realized_x logical; if TRUE the realized odds for miss_cols will
+#'   be returned (as attribute)
 #' @param prop numeric of length one; (minimum) proportion of rows in group 1
 #' @param use_lpSolve logical; should lpSolve be used for the determination of
-#' groups, if \code{ctrl_cols[i]} is an unordered factor
-#' @param ordered_as_unordered logical; should ordered factors be treated like
-#' unordered factors
+#'   groups, if \code{ctrl_cols[i]} is an unordered factor
+#' @param ordered_as_unordered logical; should ordered factors be treated as
+#'   unordered factors
 #' @param ... further arguments passed to \code{cutoff_fun}
 #'
 #' @export
