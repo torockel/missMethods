@@ -52,7 +52,7 @@ Some details follows:
 covariance matrix) are compared. The whole covariance matrix can be compared
 with "cov".}
 \item{"quantile": the quantiles can be set via the additional
-argument "probs" (see examples). Otherwise, the default quantiles from
+argument \code{probs} (see examples). Otherwise, the default quantiles from
 \code{\link[stats]{quantile}} will be used.}
 }
 

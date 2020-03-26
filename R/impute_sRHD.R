@@ -33,10 +33,11 @@
 #' \code{donor_limit} times. For example \code{donor_limit = 1} ensures that
 #' every object donates at most one time. If there are only few complete objects
 #' and \code{donor_limit} is set too low, then an imputation might not be
-#' possible (see examples). Setting \code{donor_limit = "min"} chooses
-#' automatically the minimum value for \code{donor_limit} that allows imputation
-#' of all missing values. For \code{type = "cols_seq"} the donor limit is
-#' applied for every column separately.
+#' possible with the chosen \code{donor_limit}. In this case, the
+#' \code{donor_limit} will be adjusted (see examples). Setting \code{donor_limit
+#' = "min"} chooses automatically the minimum value for \code{donor_limit} that
+#' allows imputation of all missing values. For \code{type = "cols_seq"} the
+#' donor limit is applied for every column separately.
 #'
 #'
 #' @param ds a data frame or matrix with missing values
@@ -48,7 +49,7 @@
 #'   completely observed objects can be donors. "sim_part": all objects that
 #'   have no missing values in the missing parts of a recipient can be donors.
 #' @param donor_limit numeric of length one or "min"; how many times an object
-#'   can be a donor. default is \code{Inf}, so there is no restriction.
+#'   can be a donor. default is \code{Inf} (no restriction).
 #'
 #' @return An object of the same class as \code{ds} with imputed missing values
 #' @export
@@ -58,7 +59,7 @@
 #' ds_miss <- delete_MCAR(ds, 0.2)
 #' ds_imp <- impute_sRHD(ds_miss)
 #' \dontrun{
-#' # Error: donor limit to low
+#' # Warning: donor limit to low
 #' ds_miss_one_donor <- ds
 #' ds_miss_one_donor[1:19, "X"] <- NA
 #' impute_sRHD(ds_miss_one_donor, donor_limit = 3)
@@ -83,12 +84,22 @@ impute_sRHD <- function(ds, type = "cols_seq", donor_limit = Inf) {
     if (length(donor_limit) != 1 | !is.infinite(donor_limit)) {
       stop("donor_limit is not implemented for type = sim_part")
     }
-  } else {
+  } else { # types: cols_seq or sim_comp
     if (is.numeric(donor_limit)) {
       if (length(donor_limit) != 1L) {
         stop("donor_limit must be of length 1")
       } else if (donor_limit < 1) {
         stop("donor_limit must be a number >= 1 or the string 'min'")
+      } else { # donor_limit high enough?
+        theo_min_donor_lim <-  min_donor_limit(M, type)
+        if (donor_limit < theo_min_donor_lim) {
+          warning(
+            "donor_limit = ", donor_limit, " is to low to impute all missing values; ",
+            "it was set to ",
+            theo_min_donor_lim
+          )
+          donor_limit <- theo_min_donor_lim
+        }
       }
     } else if (is.character(donor_limit) & donor_limit == "min") {
       donor_limit <- min_donor_limit(M, type) # convert "min"
@@ -111,12 +122,6 @@ impute_sRHD <- function(ds, type = "cols_seq", donor_limit = Inf) {
 
 
 impute_sRHD_cols_seq <- function(ds, M = is.na(ds), donor_limit) {
-  if (donor_limit < min_donor_limit(M, "cols_seq")) {
-    stop(
-      "donor_limit = ", donor_limit, " is to low! It must be at least ",
-      min_donor_limit(M, "cols_seq")
-    )
-  }
   if (is.infinite(donor_limit)) { # Inf donor_limit -> easy/faster implementation
     for (k in seq_len(ncol(ds))) {
       ds[M[, k], k] <- sample(ds[!M[, k], k, drop = TRUE], sum(M[, k]), replace = TRUE)
@@ -142,12 +147,6 @@ impute_sRHD_cols_seq <- function(ds, M = is.na(ds), donor_limit) {
 
 
 impute_sRHD_sim_comp <- function(ds, M = is.na(ds), donor_limit) {
-  if (donor_limit < min_donor_limit(M, "sim_comp")) {
-    stop(
-      "donor_limit = ", donor_limit, " is to low! It must be at least ",
-      min_donor_limit(M, "sim_comp")
-    )
-  }
   recipients <- apply(M, 1, any)
   pot_donors <- which(!recipients)
   recipients <- which(recipients)

@@ -18,7 +18,7 @@ completely observed objects can be donors. "sim_part": all objects that
 have no missing values in the missing parts of a recipient can be donors.}
 
 \item{donor_limit}{numeric of length one or "min"; how many times an object
-can be a donor. default is \code{Inf}, so there is no restriction.}
+can be a donor. default is \code{Inf} (no restriction).}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values
@@ -58,17 +58,18 @@ than \code{Inf} is chosen, then every object can be a donor at most
 \code{donor_limit} times. For example \code{donor_limit = 1} ensures that
 every object donates at most one time. If there are only few complete objects
 and \code{donor_limit} is set too low, then an imputation might not be
-possible (see examples). Setting \code{donor_limit = "min"} chooses
-automatically the minimum value for \code{donor_limit} that allows imputation
-of all missing values. For \code{type = "cols_seq"} the donor limit is
-applied for every column separately.
+possible with the chosen \code{donor_limit}. In this case, the
+\code{donor_limit} will be adjusted (see examples). Setting \code{donor_limit
+= "min"} chooses automatically the minimum value for \code{donor_limit} that
+allows imputation of all missing values. For \code{type = "cols_seq"} the
+donor limit is applied for every column separately.
 }
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)
 ds_miss <- delete_MCAR(ds, 0.2)
 ds_imp <- impute_sRHD(ds_miss)
 \dontrun{
-# Error: donor limit to low
+# Warning: donor limit to low
 ds_miss_one_donor <- ds
 ds_miss_one_donor[1:19, "X"] <- NA
 impute_sRHD(ds_miss_one_donor, donor_limit = 3)

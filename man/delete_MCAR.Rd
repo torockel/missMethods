@@ -60,7 +60,7 @@ all columns together will be close to \code{p}.
 If \code{stochastic = TRUE}, then each value in column \code{miss_cols[i]}
 has the probability \code{p[i]} to be missing. In this case, the number of
 missing values in \code{miss_cols[i]} is a random variable with a binomial
-distribution \emph{B(nrow(ds), p[i])}. This can (and will most of the time)
+distribution \emph{B}(\code{nrow(ds)}, \code{p[i]}). This can (and will most of the time)
 lead to more or less missing values than \code{round(nrow(ds) * p[i])} in
 each column. If \code{stochastic = TRUE}, then the argument \code{p_overall}
 is ignored because it is superfluous.
