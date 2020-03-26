@@ -38,15 +38,6 @@ method to Winer (1971).
 "Two-way" imputes the sum of rowwise and columnwise mean minus the total mean.
 This method was suggested by D.B Rubin to Bernaards & Sijtsma, K. (2000).
 }
-\section{Warning for tibble users}{
-
-  The types "total" and "Two-way" are currently not supported for tibbles
-  (package version 2.1.3). This issue is due to the way subsetting in
-  tibbles works right now. It will be fixed with an update of the package
-  tibble (for details see:
-  \url{https://github.com/tidyverse/tibble/pull/687})
-}
-
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)
 ds_miss <- delete_MCAR(ds, 0.2)

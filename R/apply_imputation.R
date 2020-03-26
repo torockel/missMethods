@@ -35,13 +35,6 @@
 #' is observed and \code{type = "columnwise"}), then a warning will be issued
 #' and no value will be imputed in the corresponding column or row.
 #'
-#' @section Warning for tibble users:
-#'   The types "total" and "Two-way" are currently not supported for tibbles
-#'   (package version 2.1.3). This issue is due to the way subsetting in
-#'   tibbles works right now. It will be fixed with an update of the package
-#'   tibble (for details see:
-#'   \url{https://github.com/tidyverse/tibble/pull/687})
-#'
 #' @seealso A convenient interface exists for common cases like mean imputation:
 #'   \code{\link{impute_mean}}, \code{\link{impute_median}},
 #'   \code{\link{impute_mode}}. All these functions call
@@ -74,13 +67,15 @@ apply_imputation <- function(ds, FUN = mean, type = "columnwise", ...) {
 
   if (requireNamespace("tibble", quietly = TRUE)) {
     if (tibble::is_tibble(ds) && type %in% c("total", "Two-Way") &&
-        utils::packageVersion("tibble") < package_version("2.99.99.9012")) {
+      utils::packageVersion("tibble") < package_version("2.99.99.9012")) {
       stop("ds is a tibble and logical subsetting, which is needed for 'total' and 'Two-Way',
       is only supported for tibbles with package versions >= 2.99.99.9012;
       possible solutions:
       * convert ds to data frame via as.data.frame
       * update package tibble
-      * do not use 'total' or 'Two-Way' ", call. = FALSE)
+      * do not use 'total' or 'Two-Way' ",
+           call. = FALSE
+      )
     } # for more details see: https://github.com/tidyverse/tibble/releases/tag/v2.99.99.9012
   }
 
