@@ -59,7 +59,7 @@ An object of the same class as \code{ds} with missing values
 }
 \description{
 Create missing at random (MAR) values using MAR1:x in a data frame or
-a matrix.
+a matrix
 }
 \details{
 This function creates missing at random (MAR) values in the columns

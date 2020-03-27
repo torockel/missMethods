@@ -1,0 +1,90 @@
+---
+title: "Generating missing values"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Generating-missing-values}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7, 
+  fig.height = 4, 
+  fig.align = "center"
+)
+```
+
+To generate missing values in dataset with missMethods you can use one of the `delete_*` functions. The names of these functions always starts with `delete_` and the next part of the name shows the used missing data mechanism. There are three basic types of missing data mechanisms: missing completely at random (`MCAR`), missing at random (`MAR`) and missing not at random (`MNAR`). A list of all available functions for the different mechanisms is given below:
+
+**MCAR**
+
+* `delete_MCAR()`
+
+**MAR**
+
+* `delete_MAR_1_to_x()`
+* `delete_MAR_censoring()`
+* `delete_MAR_one_group()`
+* `delete_MAR_rank()`
+
+**MNAR**
+
+* `delete_MNAR_1_to_x()`
+* `delete_MNAR_censoring()`
+* `delete_MNAR_one_group()`
+* `delete_MNAR_rank()`
+
+All these functions share a common interface. The first argument `ds` takes the dataset in which missing values should be generated. The next argument `p` specifies the proportion of missing values to include in every column with missing value. These columns are specified with the third argument `miss_cols`. The further arguments depend on the chosen function and are documented for every function separately. In most cases, reasonable defaults are set for these further arguments. Only the `MAR` functions need one additional argument with no default: `ctrl_cols`. The argument `ctrl_cols` specifies the columns that control the generation of missing data in a MAR settings. 
+
+One further remark: All `MAR` functions have a `MNAR` twin. These twins behave exactly the same way. The only difference is the columns that controls the generation of missing values. In the `MAR` functions separate  `ctrl_cols` columns controls the generation of missing values in the `miss_cols` columns. In contrast, in the `MNAR` functions the generation of missing values in the `miss_cols` columns is controlled by the `miss_cols` columns themselves.
+
+## Examples for the generation of missing values
+
+The examples below show the use of some `delete_` functions in a 2-dimensional dataset. Missing values are always generated in the variable "X" and 30 % of the values are deleted. At first, a basic set-up:
+
+```{r setup}
+library(missMethods)
+library(ggplot2)
+
+set.seed(123)
+
+make_simple_MDplot <- function(ds_comp, ds_miss) {
+  ds_comp$missX <- is.na(ds_miss$X)
+  ggplot(ds_comp, aes(x = X, y = Y, col = missX)) +
+    geom_point()
+}
+
+# generate complete data frame
+ds_comp <- data.frame(X = rnorm(100), Y = rnorm(100))
+```
+
+### MCAR
+
+Generate MCAR values:
+
+```{r MCAR}
+ds_mcar <- delete_MCAR(ds_comp, 0.3, "X")
+make_simple_MDplot(ds_comp, ds_mcar)
+```
+
+
+### MAR
+
+Generate MAR values using a censoring mechanism. This leads to a missing value in "X", if the y-value is below the 30 % quantile of "Y":
+
+```{r MAR}
+ds_mar <- delete_MAR_censoring(ds_comp, 0.3, "X", ctrl_cols = "Y")
+make_simple_MDplot(ds_comp, ds_mar)
+```
+
+### MNAR
+
+Generate MAR values using a censoring mechanism. This leads to a missing value in "X", if the x-value is below the 30 % quantile of "X":
+
+```{r MNAR}
+ds_mnar <- delete_MNAR_censoring(ds_comp, 0.3, "X")
+make_simple_MDplot(ds_comp, ds_mnar)
+```

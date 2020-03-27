@@ -110,7 +110,7 @@ delete_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
 #' Create MAR values using MAR1:x
 #'
 #' Create missing at random (MAR) values using MAR1:x in a data frame or
-#' a matrix.
+#' a matrix
 #'
 #' @template delete
 #' @template delete-stochastic
