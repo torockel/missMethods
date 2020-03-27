@@ -9,8 +9,8 @@
 status](https://github.com/torockel/missMethods/workflows/R-CMD-check/badge.svg)](https://github.com/torockel/missMethods/actions)
 <!-- badges: end -->
 
-The goal of missMethods is to make the comparison of missing data
-methods via simulation easier.
+The goal of missMethods is to make the creation and handling of missing
+data as well as the evaluation of missing data methods easier.
 
 ## Installation
 
@@ -40,9 +40,22 @@ devtools::install_github("torockel/missMethods")
 
 <!-- ``` -->
 
+## Usage
+
+missMethods mainly provides three types of functions:
+
+  - `delete_*` functions for generating missing values
+  - `impute_*` functions for imputing missing values
+  - `evaluate_*` functions for evaluating missing data methods
+
+Run `help(package = "missMethods")` to see all functions. More details
+for the `delete_*` functions are given in a vignette (run
+`vignette("Generating-missing-values")`).
+
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a very basic workflow to generate missing values, impute the
+generated missing values and evaluate the imputation result:
 
 ``` r
 library(missMethods)
