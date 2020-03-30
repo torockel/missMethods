@@ -44,12 +44,12 @@ devtools::install_github("torockel/missMethods")
 
 missMethods mainly provides three types of functions:
 
-  - `delete_*` functions for generating missing values
-  - `impute_*` functions for imputing missing values
-  - `evaluate_*` functions for evaluating missing data methods
+  - `delete_` functions for generating missing values
+  - `impute_` functions for imputing missing values
+  - `evaluate_` functions for evaluating missing data methods
 
 Run `help(package = "missMethods")` to see all functions. More details
-for the `delete_*` functions are given in a vignette (run
+for the `delete_` functions are given in a vignette (run
 `vignette("Generating-missing-values")`).
 
 ## Example
