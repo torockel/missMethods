@@ -7,8 +7,8 @@
 delete_MNAR_1_to_x(
   ds,
   p,
-  x,
   miss_cols,
+  x,
   cutoff_fun = median,
   stochastic = FALSE,
   add_realized_x = FALSE,
@@ -24,12 +24,12 @@ delete_MNAR_1_to_x(
 \item{p}{a numeric vector with length one or equal to length \code{miss_cols};
 the probability that a value is missing}
 
+\item{miss_cols}{a vector of column names or indices of columns in which
+missing values will be created}
+
 \item{x}{numeric with length one (0 < x < \code{Inf}); odds are 1 to x for
 the probability of a value to be missing in group 1 against the probability
 of a value to be missing  in group 2 (see details)}
-
-\item{miss_cols}{a vector of column names or indices of columns in which
-missing values will be created}
 
 \item{cutoff_fun}{function that calculates the cutoff values in the
 \code{ctrl_cols}}
@@ -61,7 +61,7 @@ The functions \code{delete_MNAR_1_to_x} and \code{\link{delete_MAR_1_to_x}} are 
 }
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)
-delete_MNAR_1_to_x(ds, 0.2, 3, "X")
+delete_MNAR_1_to_x(ds, 0.2, "X", x = 3)
 }
 \seealso{
 \code{\link{delete_MAR_1_to_x}}

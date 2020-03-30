@@ -1,5 +1,5 @@
 # the workhorse for delete_MAR_1_to_x and delete_MNAR_1_to_x
-delete_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
+delete_1_to_x <- function(ds, p, miss_cols, ctrl_cols, x,
                           cutoff_fun = median,
                           stochastic = FALSE,
                           add_realized_x = FALSE,
@@ -195,19 +195,19 @@ delete_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
 #'
 #' @examples
 #' ds <- data.frame(X = 1:20, Y = 101:120)
-#' delete_MAR_1_to_x(ds, 0.2, 3, "X", "Y")
+#' delete_MAR_1_to_x(ds, 0.2, "X", "Y", 3)
 #' # beware of small datasets and stochastic = FALSE
-#' attr(delete_MAR_1_to_x(ds, 0.4, 3, "X", "Y", add_realized_x = TRUE), "realized_x")
-#' attr(delete_MAR_1_to_x(ds, 0.4, 4, "X", "Y", add_realized_x = TRUE), "realized_x")
-#' attr(delete_MAR_1_to_x(ds, 0.4, 5, "X", "Y", add_realized_x = TRUE), "realized_x")
-#' attr(delete_MAR_1_to_x(ds, 0.4, 7, "X", "Y", add_realized_x = TRUE), "realized_x")
+#' attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 3, add_realized_x = TRUE), "realized_x")
+#' attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 4, add_realized_x = TRUE), "realized_x")
+#' attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 5, add_realized_x = TRUE), "realized_x")
+#' attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 7, add_realized_x = TRUE), "realized_x")
 #' # p = 0.4 and 20 values -> 8 missing values, possible combinations:
 #' # either 6 above 2 below (x = 3) or
 #' # 7 above and 1 below (x = 7)
 #' # Too high combination of p and x:
-#' delete_MAR_1_to_x(ds, 0.9, 3, "X", "Y")
-#' delete_MAR_1_to_x(ds, 0.9, 3, "X", "Y", stochastic = TRUE)
-delete_MAR_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
+#' delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3)
+#' delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3, stochastic = TRUE)
+delete_MAR_1_to_x <- function(ds, p, miss_cols, ctrl_cols, x,
                               cutoff_fun = median,
                               stochastic = FALSE,
                               add_realized_x = FALSE,
@@ -219,7 +219,8 @@ delete_MAR_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
     ctrl_cols = ctrl_cols, stochastic = stochastic
   )
 
-  delete_1_to_x(ds, p, x, miss_cols, ctrl_cols, cutoff_fun, stochastic,
+  delete_1_to_x(ds, p, miss_cols, ctrl_cols,
+    x = x, cutoff_fun = cutoff_fun, stochastic = stochastic,
     add_realized_x,
     prop = prop,
     use_lpSolve = use_lpSolve,
@@ -237,8 +238,8 @@ delete_MAR_1_to_x <- function(ds, p, x, miss_cols, ctrl_cols,
 #' @eval MNAR_documentation("1_to_x")
 #'
 #' @examples
-#' delete_MNAR_1_to_x(ds, 0.2, 3, "X")
-delete_MNAR_1_to_x <- function(ds, p, x, miss_cols,
+#' delete_MNAR_1_to_x(ds, 0.2, "X", x = 3)
+delete_MNAR_1_to_x <- function(ds, p, miss_cols, x,
                                cutoff_fun = median,
                                stochastic = FALSE,
                                add_realized_x = FALSE,
@@ -250,9 +251,9 @@ delete_MNAR_1_to_x <- function(ds, p, x, miss_cols,
     stochastic = stochastic
   )
 
-  delete_1_to_x(ds, p, x, miss_cols,
-    ctrl_cols = miss_cols, cutoff_fun,
-    stochastic, add_realized_x, prop = prop,
+  delete_1_to_x(ds, p, miss_cols,
+    ctrl_cols = miss_cols, x = x, cutoff_fun = cutoff_fun,
+    stochastic = stochastic, add_realized_x = add_realized_x, prop = prop,
     use_lpSolve = use_lpSolve,
     ordered_as_unordered = ordered_as_unordered, ...
   )

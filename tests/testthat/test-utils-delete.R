@@ -78,30 +78,30 @@ test_that("check_delete_args_MAR() works", {
 
   # ctrl_cols (special errors) ----------------------------
   expect_error(
-    delete_MAR_1_to_x(df_XY_100, 0.1, 2, 1, ctrl_cols = 3),
+    delete_MAR_1_to_x(df_XY_100, 0.1, 1, ctrl_cols = 3, x = 2),
     "indices in ctrl_cols must be in 1:ncol\\(ds)"
   )
   expect_error(
-    delete_MAR_1_to_x(df_XY_100, 0.1, 2, 1, ctrl_cols = "Z"),
+    delete_MAR_1_to_x(df_XY_100, 0.1, 1, ctrl_cols = "Z", x = 2),
     "all entries of ctrl_cols must be in colnames\\(ds)"
   )
   expect_error(
-    delete_MAR_1_to_x(df_XY_100, 0.1, 2, 1, ctrl_cols = factor("X")),
+    delete_MAR_1_to_x(df_XY_100, 0.1, 1, ctrl_cols = factor("X"), x = 2),
     "ctrl_cols must be a vector of column names or indices of ds"
   )
 
   expect_error(
-    delete_MAR_1_to_x(df_XY_X_miss, 0.1, 3, "Y", ctrl_cols = "X"),
+    delete_MAR_1_to_x(df_XY_X_miss, 0.1, "Y", ctrl_cols = "X", x = 3),
     "ctrl_cols must be completely observed; no NAs in ds\\[, ctrl_cols\\] allowed"
   )
   expect_error(
-    delete_MAR_1_to_x(df_XYZ_100, 0.1, 3, miss_cols = "X", ctrl_cols = c("Y", "Z")),
+    delete_MAR_1_to_x(df_XYZ_100, 0.1, miss_cols = "X", ctrl_cols = c("Y", "Z"), x = 3),
     "length\\(miss_cols) must equal length"
   )
 
   # special errors for check_delete_args_MAR:
   expect_error(
-    delete_MAR_1_to_x(df_XYZ_100, 0.1, 4, miss_cols = "X", ctrl_cols = "X"),
+    delete_MAR_1_to_x(df_XYZ_100, 0.1, miss_cols = "X", ctrl_cols = "X", x = 4),
     "to ensure MAR no ctrl_col is allowed to be in miss_cols"
   )
 })
@@ -110,13 +110,13 @@ test_that("check_delete_args_MAR() works", {
 test_that("check_delete_args_MCAR() works", {
   # check_delete_args_MNAR calls check_delete_args:
   expect_error(
-    delete_MNAR_1_to_x(1:5, 0.3, "X", "Y"),
+    delete_MNAR_1_to_x(1:5, 0.3, "X", x = 3),
     "ds must be a data.frame or a matrix"
   )
 
   # special errors for check_delete_args_MNAR:
   expect_error(
-    delete_MNAR_1_to_x(df_XY_X_miss, 0.1, 3, "X"),
+    delete_MNAR_1_to_x(df_XY_X_miss, 0.1, "X", x = 3),
     "miss_cols must be completely observed; no NAs in ds\\[, miss_cols\\] allowed"
   )
 })

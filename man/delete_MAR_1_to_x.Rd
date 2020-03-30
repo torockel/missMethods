@@ -7,9 +7,9 @@
 delete_MAR_1_to_x(
   ds,
   p,
-  x,
   miss_cols,
   ctrl_cols,
+  x,
   cutoff_fun = median,
   stochastic = FALSE,
   add_realized_x = FALSE,
@@ -25,16 +25,16 @@ delete_MAR_1_to_x(
 \item{p}{a numeric vector with length one or equal to length \code{miss_cols};
 the probability that a value is missing}
 
-\item{x}{numeric with length one (0 < x < \code{Inf}); odds are 1 to x for
-the probability of a value to be missing in group 1 against the probability
-of a value to be missing  in group 2 (see details)}
-
 \item{miss_cols}{a vector of column names or indices of columns in which
 missing values will be created}
 
 \item{ctrl_cols}{a vector of column names or indices of columns, which
 controls the creation of missing values in \code{miss_cols}. Must be of the
 same length as \code{miss_cols}.}
+
+\item{x}{numeric with length one (0 < x < \code{Inf}); odds are 1 to x for
+the probability of a value to be missing in group 1 against the probability
+of a value to be missing  in group 2 (see details)}
 
 \item{cutoff_fun}{function that calculates the cutoff values in the
 \code{ctrl_cols}}
@@ -165,18 +165,18 @@ will be grouped via \code{cutoff_fun} as described in Details.
 
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)
-delete_MAR_1_to_x(ds, 0.2, 3, "X", "Y")
+delete_MAR_1_to_x(ds, 0.2, "X", "Y", 3)
 # beware of small datasets and stochastic = FALSE
-attr(delete_MAR_1_to_x(ds, 0.4, 3, "X", "Y", add_realized_x = TRUE), "realized_x")
-attr(delete_MAR_1_to_x(ds, 0.4, 4, "X", "Y", add_realized_x = TRUE), "realized_x")
-attr(delete_MAR_1_to_x(ds, 0.4, 5, "X", "Y", add_realized_x = TRUE), "realized_x")
-attr(delete_MAR_1_to_x(ds, 0.4, 7, "X", "Y", add_realized_x = TRUE), "realized_x")
+attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 3, add_realized_x = TRUE), "realized_x")
+attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 4, add_realized_x = TRUE), "realized_x")
+attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 5, add_realized_x = TRUE), "realized_x")
+attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 7, add_realized_x = TRUE), "realized_x")
 # p = 0.4 and 20 values -> 8 missing values, possible combinations:
 # either 6 above 2 below (x = 3) or
 # 7 above and 1 below (x = 7)
 # Too high combination of p and x:
-delete_MAR_1_to_x(ds, 0.9, 3, "X", "Y")
-delete_MAR_1_to_x(ds, 0.9, 3, "X", "Y", stochastic = TRUE)
+delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3)
+delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3, stochastic = TRUE)
 }
 \seealso{
 \code{\link{delete_MNAR_1_to_x}}

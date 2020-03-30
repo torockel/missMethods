@@ -1,7 +1,7 @@
 # delete_1_to_x and delete_MAR_1_to_x ---------------------
 test_that("delete_MAR_1_to_x() calls check_delete_args_MAR()", {
   expect_error(
-    delete_MAR_1_to_x(df_XY_100, 0.1, 2, 1, ctrl_cols = 3),
+    delete_MAR_1_to_x(df_XY_100, 0.1, 1, ctrl_cols = 3, x = 2),
     "indices in ctrl_cols must be in 1:ncol\\(ds)"
   )
 })
@@ -10,15 +10,15 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
           delete_MAR_1_to_x()) works for data.frames", {
   set.seed(12345)
   # check p -----------------------------------------------
-  df_miss <- delete_MAR_1_to_x(df_XYZ_100, c(0.2, 0.4), 4, c("X", "Z"), c("Y", "Y"))
+  df_miss <- delete_MAR_1_to_x(df_XYZ_100, c(0.2, 0.4), c("X", "Z"), c("Y", "Y"), x = 4)
   expect_equal(count_NA(df_miss), c(X = 20, Y = 0, Z = 40))
   expect_equal(count_NA(df_miss[1:50, ]), c(X = 4, Y = 0, Z = 8))
   expect_equal(count_NA(df_miss[51:100, ]), c(X = 16, Y = 0, Z = 32))
 
   # p too low to get missing values
   expect_equal(
-    count_NA(delete_MAR_1_to_x(df_XY_100, 0.001, 3,
-      miss_cols = "Y", ctrl_cols = "X"
+    count_NA(delete_MAR_1_to_x(df_XY_100, 0.001,
+      miss_cols = "Y", ctrl_cols = "X", x = 3
     )),
     c(X = 0, Y = 0)
   )
@@ -26,48 +26,48 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   # check x -----------------------------------------------
   # x errors
   expect_error(
-    delete_MAR_1_to_x(df_XY_100, 0.2, x = 1:2, "X", "Y"),
+    delete_MAR_1_to_x(df_XY_100, 0.2, "X", "Y", x = 1:2),
     "x must be a single number"
   )
   expect_error(
-    delete_MAR_1_to_x(df_XY_100, 0.2, x = "asdf", "X", "Y"),
+    delete_MAR_1_to_x(df_XY_100, 0.2, "X", "Y", x = "asdf"),
     "x must be a single number"
   )
   expect_error(
-    delete_MAR_1_to_x(df_XY_100, 0.2, x = 0, "X", "Y"),
+    delete_MAR_1_to_x(df_XY_100, 0.2, "X", "Y", x = 0),
     "x must be greater than 0 and finite"
   )
   expect_error(
-    delete_MAR_1_to_x(df_XY_100, 0.2, x = Inf, "X", "Y"),
+    delete_MAR_1_to_x(df_XY_100, 0.2, "X", "Y", x = Inf),
     "x must be greater than 0 and finite"
   )
 
   # normal x, p combination
-  df_miss <- delete_MAR_1_to_x(df_XYZ_100, 0.2, 4, "X", "Y")
+  df_miss <- delete_MAR_1_to_x(df_XYZ_100, 0.2, "X", "Y", x = 4)
   expect_equal(count_NA(df_miss), c(X = 20, Y = 0, Z = 0))
   expect_equal(count_NA(df_miss[1:50, ]), c(X = 4, Y = 0, Z = 0))
   expect_equal(count_NA(df_miss[51:100, ]), c(X = 16, Y = 0, Z = 0))
 
 
   # very small x
-  df_small_x <- delete_MAR_1_to_x(df_XYZ_100, 0.2, 1e-5, "X", "Y")
+  df_small_x <- delete_MAR_1_to_x(df_XYZ_100, 0.2, "X", "Y", x = 1e-5)
   expect_equal(count_NA(df_small_x), c(X = 20, Y = 0, Z = 0))
   expect_equal(count_NA(df_small_x[1:50, ]), c(X = 19, Y = 0, Z = 0))
 
   expect_warning(
-    df_small_x <- delete_MAR_1_to_x(df_XYZ_100, 0.6, 1e-5, "X", "Y"),
+    df_small_x <- delete_MAR_1_to_x(df_XYZ_100, 0.6, "X", "Y", x = 1e-5),
     "p is too high or x to low; x is set to 0.2 to get expected"
   )
   expect_equal(count_NA(df_small_x), c(X = 60, Y = 0, Z = 0))
   expect_equal(count_NA(df_small_x[1:50, ]), c(X = 50, Y = 0, Z = 0))
 
   # very huge x
-  df_big_x <- delete_MAR_1_to_x(df_XYZ_100, 0.2, 1e10, "X", "Y")
+  df_big_x <- delete_MAR_1_to_x(df_XYZ_100, 0.2, "X", "Y", x = 1e10)
   expect_equal(count_NA(df_big_x), c(X = 20, Y = 0, Z = 0))
   expect_equal(count_NA(df_big_x[51:100, ]), c(X = 20, Y = 0, Z = 0))
 
   expect_warning(
-    df_big_x <- delete_MAR_1_to_x(df_XYZ_100, 0.6, 1e10, "X", "Y"),
+    df_big_x <- delete_MAR_1_to_x(df_XYZ_100, 0.6, "X", "Y", x = 1e10),
     "p \\(or x) is too high; x is set to 5 to get expected"
   )
   expect_equal(count_NA(df_big_x), c(X = 60, Y = 0, Z = 0))
@@ -75,7 +75,7 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 
   # too high x, p combination:
   expect_warning(
-    df_miss <- delete_MAR_1_to_x(df_XY_100, 0.9, 3, "X", "Y"),
+    df_miss <- delete_MAR_1_to_x(df_XY_100, 0.9, "X", "Y", x = 3),
     "p \\(or x) is too high; x is set to 1.25"
   )
   expect_equal(count_NA(df_miss), c(X = 90, Y = 0))
@@ -83,7 +83,7 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 
   # too low x (for high p):
   expect_warning(
-    df_miss <- delete_MAR_1_to_x(df_XY_100, 0.9, 0.1, "X", "Y"),
+    df_miss <- delete_MAR_1_to_x(df_XY_100, 0.9, "X", "Y", x = 0.1),
     "p is too high or x to low; x is set to 0.8"
   )
   expect_equal(count_NA(df_miss), c(X = 90, Y = 0))
@@ -91,7 +91,8 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 
   # check cutoff_fun --------------------------------------
   # median via stats::quantile()
-  df_miss <- delete_MAR_1_to_x(df_XYZ_100, 0.2, 4, "X", "Y",
+  df_miss <- delete_MAR_1_to_x(df_XYZ_100, 0.2, "X", "Y",
+    x = 4,
     cutoff_fun = stats::quantile,
     probs = 0.5
   )
@@ -99,7 +100,8 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   expect_equal(count_NA(df_miss[1:50, ]), c(X = 4, Y = 0, Z = 0))
   expect_equal(count_NA(df_miss[51:100, ]), c(X = 16, Y = 0, Z = 0))
 
-  df_miss <- delete_MAR_1_to_x(df_XYZ_100, 0.2, 4, "X", "Y",
+  df_miss <- delete_MAR_1_to_x(df_XYZ_100, 0.2, "X", "Y",
+    x = 4,
     cutoff_fun = stats::quantile,
     probs = 0.2
   )
@@ -108,10 +110,12 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   expect_equal(count_NA(df_miss[21:100, ]), c(X = 19, Y = 0, Z = 0))
 
   # check stochastic = TRUE -------------------------------
-  expect_false(anyNA(delete_MAR_1_to_x(df_XYZ_100, 0, 3, "X", "Y",
+  expect_false(anyNA(delete_MAR_1_to_x(df_XYZ_100, 0, "X", "Y",
+    x = 3,
     stochastic = TRUE
   )))
-  miss_09 <- delete_MAR_1_to_x(df_XYZ_100, 0.9, 1.2, "X", "Y",
+  miss_09 <- delete_MAR_1_to_x(df_XYZ_100, 0.9, "X", "Y",
+    x = 1.2,
     stochastic = TRUE
   )
   expect_true(anyNA(miss_09))
@@ -122,7 +126,8 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   res <- matrix(nrow = N, ncol = 3)
   colnames(res) <- c("X1", "X2", "Y")
   for (i in seq_len(N)) {
-    miss_ds <- delete_MAR_1_to_x(df_XY_100, 0.5, 4, "X", "Y",
+    miss_ds <- delete_MAR_1_to_x(df_XY_100, 0.5, "X", "Y",
+      x = 4,
       stochastic = TRUE
     )
     res[i, "Y"] <- sum(is.na(miss_ds[, "Y"]))
@@ -140,7 +145,8 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   # adjusting x correctly, a warning will be generated each time and suppressed
   test_max_x <- suppressWarnings(replicate(
     1000,
-    sum(is.na(delete_MAR_1_to_x(df_XY_20, 0.9, 3, "X", "Y",
+    sum(is.na(delete_MAR_1_to_x(df_XY_20, 0.9, "X", "Y",
+      x = 3,
       stochastic = TRUE
     )[1:10, "X"]))
   ))
@@ -149,24 +155,22 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   # check special ctrl_col cases --------------------------
   # ctrl_col constant
   expect_warning(
-    df_miss <- delete_MAR_1_to_x(df_XY_X_constant, 0.2, 3,
-      miss_cols = "Y", ctrl_cols = "X"
-    ),
+    df_miss <- delete_MAR_1_to_x(df_XY_X_constant, 0.2, miss_cols = "Y", ctrl_cols = "X", x = 3),
     "is constant"
   )
   expect_equal(count_NA(df_miss), c(X = 0, Y = 4))
   # ctr_col nearly constant
   expect_equal(
-    count_NA(delete_MAR_1_to_x(df_XY_X_one_outlier, 0.2, 3,
-      miss_cols = "Y", ctrl_cols = "X"
+    count_NA(delete_MAR_1_to_x(df_XY_X_one_outlier, 0.2,
+      miss_cols = "Y", ctrl_cols = "X", x = 3
     )),
     c(X = 0, Y = 4)
   )
 
   # ctr_col nearly constant: expected odds are 1:x?
-  test <- replicate(1000, is.na(delete_MAR_1_to_x(df_XY_X_unequal_dummy, 0.1, 3,
+  test <- replicate(1000, is.na(delete_MAR_1_to_x(df_XY_X_unequal_dummy, 0.1,
     miss_cols = "Y",
-    ctrl_cols = "X",
+    ctrl_cols = "X", x = 3,
     stochastic = TRUE
   )[11, "Y"]))
   realized_x <- sum(test) / ((nrow(df_XY_X_unequal_dummy) * 1000 * 0.1 - sum(test)) / 10)
@@ -176,7 +180,8 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 
   # check add_realized_x = TRUE ------------------------
   expect_equal(
-    attr(delete_MAR_1_to_x(df_XYZ_100, 0.2, 4, "X", "Y",
+    attr(delete_MAR_1_to_x(df_XYZ_100, 0.2, "X", "Y",
+      x = 4,
       add_realized_x = TRUE
     ),
     "realized_x",
@@ -185,13 +190,15 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
     c(X = 4)
   )
 
-  df_miss <- delete_MAR_1_to_x(df_XYZ_100, 0.3, 3, "X", "Y",
+  df_miss <- delete_MAR_1_to_x(df_XYZ_100, 0.3, "X", "Y",
+    x = 3,
     add_realized_x = TRUE
   )
   count_NA(df_miss[1:50, ])
   count_NA(df_miss[51:100, ])
   expect_equal(
-    attr(delete_MAR_1_to_x(df_XYZ_100, 0.3, 3, "X", "Y",
+    attr(delete_MAR_1_to_x(df_XYZ_100, 0.3, "X", "Y",
+      x = 3,
       add_realized_x = TRUE
     ),
     "realized_x",
@@ -204,16 +211,16 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
           delete_MAR_1_to_x()) works for matrices", {
   set.seed(12345)
-  mat_miss <- delete_MAR_1_to_x(matrix_100_2, 0.2, 4, 1, 2)
+  mat_miss <- delete_MAR_1_to_x(matrix_100_2, 0.2, 1, 2, x = 4)
   expect_equal(count_NA(mat_miss), c(20, 0))
   expect_equal(count_NA(mat_miss[1:50, ]), c(4, 0))
 
-  mat_miss <- delete_MAR_1_to_x(matrix_20_10, c(0.1, 0.2, 0.3), 3, 1:3, 8:10)
+  mat_miss <- delete_MAR_1_to_x(matrix_20_10, c(0.1, 0.2, 0.3), 1:3, 8:10, x = 3)
   expect_equal(count_NA(mat_miss), c(2, 4, 6, rep(0, 7)))
   expect_equal(count_NA(mat_miss[1:10, ]), c(2, 3, 5, rep(0, 7)))
 
   # stochastic = TRUE
-  mat_miss <- delete_MAR_1_to_x(matrix_100_2, 0.6, 5, 1, 2, stochastic = TRUE)
+  mat_miss <- delete_MAR_1_to_x(matrix_100_2, 0.6, 1, 2, x = 5, stochastic = TRUE)
   expect_equal(count_NA(mat_miss[51:100, ]), c(50, 0))
   expect_true(count_NA(mat_miss[1:50, 1, drop = FALSE]) <= 25)
   # prob for false:
@@ -223,16 +230,16 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
           delete_MAR_1_to_x()) works for tibbles", {
   set.seed(12345)
-  tbl_miss <- delete_MAR_1_to_x(tbl_XY_100, 0.2, 4, 1, 2)
+  tbl_miss <- delete_MAR_1_to_x(tbl_XY_100, 0.2, 1, 2, x = 4)
   expect_equal(count_NA(tbl_miss), c(X = 20, Y = 0))
   expect_equal(count_NA(tbl_miss[1:50, ]), c(X = 4, Y = 0))
 
-  tbl_miss <- delete_MAR_1_to_x(tbl_XYZ_100, c(0.1, 0.2), 9, 1:2, c(3, 3))
+  tbl_miss <- delete_MAR_1_to_x(tbl_XYZ_100, c(0.1, 0.2), 1:2, c(3, 3), x = 9)
   expect_equal(count_NA(tbl_miss), c(X = 10, Y = 20, Z = 0))
   expect_equal(count_NA(tbl_miss[1:50, ]), c(X = 9, Y = 18, Z = 0))
 
   # stochastic = TRUE
-  tbl_miss <- delete_MAR_1_to_x(tbl_XY_100, 0.6, 5, 1, 2, stochastic = TRUE)
+  tbl_miss <- delete_MAR_1_to_x(tbl_XY_100, 0.6, 1, 2, stochastic = TRUE, x = 5)
   expect_equal(count_NA(tbl_miss[51:100, ]), c(X = 50, Y = 0))
   expect_true(count_NA(tbl_miss[1:50, 1, drop = FALSE]) <= 25)
   # prob for false:
@@ -246,16 +253,17 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 test_that("delete_MNAR_1_to_x", {
   # check that delete_MNAR_1_to_x() calls check_delete_args_MNAR()
   expect_error(
-    delete_MNAR_1_to_x(df_XY_X_miss, 0.1, 3, "X"),
+    delete_MNAR_1_to_x(df_XY_X_miss, 0.1, "X", x = 3),
     "miss_cols must be completely observed; no NAs in ds\\[, miss_cols\\] allowed"
   )
 
   expect_equal(
-    count_NA(delete_MNAR_1_to_x(df_XYZ_100, 0.1, 3, c("X", "Z"))),
+    count_NA(delete_MNAR_1_to_x(df_XYZ_100, 0.1, c("X", "Z"), x = 3)),
     c("X" = 10, "Y" = 0, "Z" = 10)
   )
   expect_equal(
-    attr(delete_MNAR_1_to_x(df_XYZ_100, 0.1, 3.5, c("X", "Z"),
+    attr(delete_MNAR_1_to_x(df_XYZ_100, 0.1, c("X", "Z"),
+      x = 3.5,
       add_realized_x = TRUE
     ),
     "realized_x",
