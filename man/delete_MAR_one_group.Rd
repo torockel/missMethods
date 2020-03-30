@@ -9,11 +9,11 @@ delete_MAR_one_group(
   p,
   miss_cols,
   ctrl_cols,
-  stochastic = FALSE,
   cutoff_fun = median,
   prop = 0.5,
   use_lpSolve = TRUE,
   ordered_as_unordered = FALSE,
+  stochastic = FALSE,
   ...
 )
 }
@@ -30,8 +30,6 @@ missing values will be created}
 controls the creation of missing values in \code{miss_cols}. Must be of the
 same length as \code{miss_cols}.}
 
-\item{stochastic}{logical; see details}
-
 \item{cutoff_fun}{function that calculates the cutoff values in the
 \code{ctrl_cols}}
 
@@ -42,6 +40,8 @@ groups, if \code{ctrl_cols[i]} is an unordered factor}
 
 \item{ordered_as_unordered}{logical; should ordered factors be treated as
 unordered factors}
+
+\item{stochastic}{logical; see details}
 
 \item{...}{further arguments passed to \code{cutoff_fun}}
 }

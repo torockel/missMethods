@@ -11,8 +11,8 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
   # check p too low to get missing values with stochastic = FALSE -----
   expect_equal(
     count_NA(delete_MAR_one_group(df_XY_100, 0.001,
-      stochastic = FALSE,
-      miss_cols = "Y", ctrl_cols = "X"
+      miss_cols = "Y", ctrl_cols = "X",
+      stochastic = FALSE
     )),
     c(X = 0, Y = 0)
   )

@@ -1,11 +1,10 @@
 # the workhorse for delete_MAR_1_to_x and delete_MNAR_1_to_x
 delete_1_to_x <- function(ds, p, miss_cols, ctrl_cols, x,
                           cutoff_fun = median,
+                          prop = 0.5, use_lpSolve = TRUE,
+                          ordered_as_unordered = FALSE,
                           stochastic = FALSE,
-                          add_realized_x = FALSE,
-                          prop = 0.5,
-                          use_lpSolve = TRUE,
-                          ordered_as_unordered = FALSE, ...) {
+                          add_realized_x = FALSE, ...) {
 
   # general checking is done in calling functions delete_MAR_1_to_x and
   # delete_MNAR_1_to_x, only special cases are checked here
@@ -209,22 +208,24 @@ delete_1_to_x <- function(ds, p, miss_cols, ctrl_cols, x,
 #' delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3, stochastic = TRUE)
 delete_MAR_1_to_x <- function(ds, p, miss_cols, ctrl_cols, x,
                               cutoff_fun = median,
-                              stochastic = FALSE,
-                              add_realized_x = FALSE,
                               prop = 0.5,
                               use_lpSolve = TRUE,
-                              ordered_as_unordered = FALSE, ...) {
+                              ordered_as_unordered = FALSE,
+                              stochastic = FALSE,
+                              add_realized_x = FALSE, ...) {
   check_delete_args_MAR(
     ds = ds, p = p, miss_cols = miss_cols,
     ctrl_cols = ctrl_cols, stochastic = stochastic
   )
 
   delete_1_to_x(ds, p, miss_cols, ctrl_cols,
-    x = x, cutoff_fun = cutoff_fun, stochastic = stochastic,
-    add_realized_x,
+    x = x,
+    cutoff_fun = cutoff_fun,
     prop = prop,
     use_lpSolve = use_lpSolve,
-    ordered_as_unordered = ordered_as_unordered, ...
+    ordered_as_unordered = ordered_as_unordered,
+    stochastic = stochastic,
+    add_realized_x = add_realized_x, ...
   )
 }
 
@@ -241,20 +242,23 @@ delete_MAR_1_to_x <- function(ds, p, miss_cols, ctrl_cols, x,
 #' delete_MNAR_1_to_x(ds, 0.2, "X", x = 3)
 delete_MNAR_1_to_x <- function(ds, p, miss_cols, x,
                                cutoff_fun = median,
-                               stochastic = FALSE,
-                               add_realized_x = FALSE,
                                prop = 0.5,
                                use_lpSolve = TRUE,
-                               ordered_as_unordered = FALSE, ...) {
+                               ordered_as_unordered = FALSE,
+                               stochastic = FALSE,
+                               add_realized_x = FALSE, ...) {
   check_delete_args_MNAR(
     ds = ds, p = p, miss_cols = miss_cols,
     stochastic = stochastic
   )
 
   delete_1_to_x(ds, p, miss_cols,
-    ctrl_cols = miss_cols, x = x, cutoff_fun = cutoff_fun,
-    stochastic = stochastic, add_realized_x = add_realized_x, prop = prop,
+    ctrl_cols = miss_cols, x = x,
+    cutoff_fun = cutoff_fun,
+    prop = prop,
     use_lpSolve = use_lpSolve,
-    ordered_as_unordered = ordered_as_unordered, ...
+    ordered_as_unordered = ordered_as_unordered,
+    stochastic = stochastic, add_realized_x = add_realized_x,
+    ...
   )
 }

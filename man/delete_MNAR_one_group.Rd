@@ -8,11 +8,11 @@ delete_MNAR_one_group(
   ds,
   p,
   miss_cols,
-  stochastic = FALSE,
   cutoff_fun = median,
   prop = 0.5,
   use_lpSolve = TRUE,
   ordered_as_unordered = FALSE,
+  stochastic = FALSE,
   ...
 )
 }
@@ -25,8 +25,6 @@ the probability that a value is missing}
 \item{miss_cols}{a vector of column names or indices of columns in which
 missing values will be created}
 
-\item{stochastic}{logical; see details}
-
 \item{cutoff_fun}{function that calculates the cutoff values in the
 \code{ctrl_cols}}
 
@@ -37,6 +35,8 @@ groups, if \code{ctrl_cols[i]} is an unordered factor}
 
 \item{ordered_as_unordered}{logical; should ordered factors be treated as
 unordered factors}
+
+\item{stochastic}{logical; see details}
 
 \item{...}{further arguments passed to \code{cutoff_fun}}
 }

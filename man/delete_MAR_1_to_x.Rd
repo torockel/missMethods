@@ -11,11 +11,11 @@ delete_MAR_1_to_x(
   ctrl_cols,
   x,
   cutoff_fun = median,
-  stochastic = FALSE,
-  add_realized_x = FALSE,
   prop = 0.5,
   use_lpSolve = TRUE,
   ordered_as_unordered = FALSE,
+  stochastic = FALSE,
+  add_realized_x = FALSE,
   ...
 )
 }
@@ -39,11 +39,6 @@ of a value to be missing  in group 2 (see details)}
 \item{cutoff_fun}{function that calculates the cutoff values in the
 \code{ctrl_cols}}
 
-\item{stochastic}{logical; see details}
-
-\item{add_realized_x}{logical; if TRUE the realized odds for miss_cols will
-be returned (as attribute)}
-
 \item{prop}{numeric of length one; (minimum) proportion of rows in group 1}
 
 \item{use_lpSolve}{logical; should lpSolve be used for the determination of
@@ -51,6 +46,11 @@ groups, if \code{ctrl_cols[i]} is an unordered factor}
 
 \item{ordered_as_unordered}{logical; should ordered factors be treated as
 unordered factors}
+
+\item{stochastic}{logical; see details}
+
+\item{add_realized_x}{logical; if TRUE the realized odds for miss_cols will
+be returned (as attribute)}
 
 \item{...}{further arguments passed to \code{cutoff_fun}}
 }
