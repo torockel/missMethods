@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-To generate missing values in dataset with missMethods you can use one of the `delete_*` functions. The names of these functions always starts with `delete_` and the next part of the name shows the used missing data mechanism. There are three basic types of missing data mechanisms: missing completely at random (`MCAR`), missing at random (`MAR`) and missing not at random (`MNAR`). A list of all available functions for the different mechanisms is given below:
+To generate missing values in dataset with missMethods you can use one of the `delete_` functions. The names of these functions always starts with `delete_` and the next part of the name shows the used missing data mechanism. There are three basic types of missing data mechanisms: missing completely at random (`MCAR`), missing at random (`MAR`) and missing not at random (`MNAR`). A list of all available functions for the different mechanisms is given below:
 
 **MCAR**
 
@@ -75,8 +75,22 @@ make_simple_MDplot(ds_comp, ds_mcar)
 
 Generate MAR values using a censoring mechanism. This leads to a missing value in "X", if the y-value is below the 30 % quantile of "Y":
 
-```{r MAR}
+```{r MAR censoring}
 ds_mar <- delete_MAR_censoring(ds_comp, 0.3, "X", ctrl_cols = "Y")
+make_simple_MDplot(ds_comp, ds_mar)
+```
+
+The censoring mechanism is a rather strong form of MAR. A function that allows to control the strength of the MAR mechanism is `delete_MAR_1_to_x`. The strength is controlled through the argument `x`: the bigger `x`, the stronger the simulated `MAR` mechanism:
+
+```{r MAR_1_to_2}
+# x = 2
+ds_mar <- delete_MAR_1_to_x(ds_comp, 0.3, "X", ctrl_cols = "Y", x = 2)
+make_simple_MDplot(ds_comp, ds_mar)
+```
+
+```{r MAR_1_to_10}
+# x = 10
+ds_mar <- delete_MAR_1_to_x(ds_comp, 0.3, "X", ctrl_cols = "Y", x = 10)
 make_simple_MDplot(ds_comp, ds_mar)
 ```
 
@@ -84,7 +98,7 @@ make_simple_MDplot(ds_comp, ds_mar)
 
 Generate MAR values using a censoring mechanism. This leads to a missing value in "X", if the x-value is below the 30 % quantile of "X":
 
-```{r MNAR}
+```{r MNAR censoring}
 ds_mnar <- delete_MNAR_censoring(ds_comp, 0.3, "X")
 make_simple_MDplot(ds_comp, ds_mnar)
 ```
