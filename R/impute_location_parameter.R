@@ -4,6 +4,7 @@
 #'
 #' @template location-par
 #' @template impute
+#' @template tibble-cast
 #'
 #' @details For every missing value the mean of some observed values is imputed.
 #' The observed values to be used are specified via \code{type}.
@@ -57,6 +58,7 @@ impute_mean <- function(ds, type = "columnwise") {
 #'
 #' @template location-par
 #' @template impute
+#' @template tibble-cast
 #'
 #' @details This function behaves exactly like \code{\link{impute_mean}}.
 #' The only difference is that it imputes a median instead of a mean.

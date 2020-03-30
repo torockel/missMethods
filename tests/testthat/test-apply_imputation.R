@@ -168,8 +168,15 @@ test_that("apply_imputation() works with matrices", {
 })
 
 test_that("apply_imputation() works with tibbles", {
-  # check types
-  expect_false(anyNA(impute_mean(tbl_XY_XY_miss, type = "columnwise")))
+  # tibbles with integer columns are rather problematic, because `<-` will throw
+  # an error, if FUN returns a double value!
+  expect_error(impute_mean(tbl_XY_XY_miss, type = "columnwise"),
+               class = "tibble_error_assign_incompatible_type")
+  # possible solution: convert columns to doubles
+  tbl_XY_XY_miss_dbl <- tbl_XY_XY_miss
+  tbl_XY_XY_miss_dbl$X <- as.double(tbl_XY_XY_miss_dbl$X)
+  tbl_XY_XY_miss_dbl$Y <- as.double(tbl_XY_XY_miss_dbl$Y)
+  expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl)))
   expect_false(anyNA(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "rowwise")))
   # the types total and Two-Way are not supported until a newer version as 2.1.3
   # of tibble is released, because subsetting by logical matrices is not available
@@ -181,10 +188,16 @@ test_that("apply_imputation() works with tibbles", {
     expect_error(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Two-Way"),
                  "ds is a tibble and logical subsetting, which is needed for")
   } else {
-    expect_false(anyNA(impute_mean(tbl_XY_XY_miss, type = "total")))
-    expect_false(anyNA(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Two-Way")))
+    expect_error(impute_mean(tbl_XY_XY_miss, type = "total"),
+                 class = "vctrs_error_cast_lossy")
+    expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl, type = "total")))
+    expect_error(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Two-Way"),
+                 class = "tibble_error_assign_incompatible_type")
+    expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl[-c(5, 30:40), ], type = "Two-Way")))
   }
-  expect_false(anyNA(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Winer")))
+  expect_error(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Winer"),
+               class = "tibble_error_assign_incompatible_type")
+  expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl[-c(5, 30:40), ], type = "Winer")))
 })
 
 # mean imputation -----------------------------------------

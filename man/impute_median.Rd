@@ -31,6 +31,15 @@ They are documented in \code{\link{impute_mean}} and
 The function \code{\link[stats]{median}} is used for the calculation of
 the median values for imputation.
 }
+\section{A Note for tibble users}{
+
+If you use tibbles and an error like \sQuote{Lossy cast from `value` <double>
+to `x` <integer>} occurs, you will first need to convert all integer columns
+with missing values to double. Another solution is to convert the tibble with
+as.data.frame() to a data frame. The data frame will automatically convert
+integer columns to double columns, if needed.
+}
+
 \examples{
 ds <- data.frame(X = 1:20, Y = ordered(LETTERS[1:20]))
 ds_miss <- delete_MCAR(ds, 0.2)

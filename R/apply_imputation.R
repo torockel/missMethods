@@ -2,7 +2,10 @@
 #'
 #' Apply a function for imputation over rows, columns or combinations of both
 #'
-#' The functionality of \code{apply_imputation} is inspired by the
+#' @template impute
+#' @template tibble-cast
+#'
+#' @details  The functionality of \code{apply_imputation} is inspired by the
 #' \code{\link[base]{apply}} function. The function applies a function
 #' \code{FUN} to impute the missing values in \code{ds}. \code{FUN} must be a
 #' function, which takes a vector as input and returns exactly one value. The
@@ -40,12 +43,10 @@
 #'   \code{\link{impute_mode}}. All these functions call
 #'   \code{apply_imputation}.
 #'
-#' @param ds a data frame or matrix with missing values
 #' @param FUN the function to be applied for imputation
 #' @param type a string specifying the values used for imputation, see details
 #' @param ... further arguments passed to \code{FUN}
-
-#' @return An object of the same class as \code{ds} with imputed missing values
+#'
 #' @export
 #'
 #' @examples

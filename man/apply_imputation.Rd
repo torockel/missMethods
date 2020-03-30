@@ -55,6 +55,15 @@ If no value can be given to \code{FUN} (for example, if no value in a column
 is observed and \code{type = "columnwise"}), then a warning will be issued
 and no value will be imputed in the corresponding column or row.
 }
+\section{A Note for tibble users}{
+
+If you use tibbles and an error like \sQuote{Lossy cast from `value` <double>
+to `x` <integer>} occurs, you will first need to convert all integer columns
+with missing values to double. Another solution is to convert the tibble with
+as.data.frame() to a data frame. The data frame will automatically convert
+integer columns to double columns, if needed.
+}
+
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)
 ds_miss <- delete_MCAR(ds, 0.2)
