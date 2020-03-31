@@ -91,7 +91,7 @@ impute_sRHD <- function(ds, type = "cols_seq", donor_limit = Inf) {
       } else if (donor_limit < 1) {
         stop("donor_limit must be a number >= 1 or the string 'min'")
       } else { # donor_limit high enough?
-        theo_min_donor_lim <-  min_donor_limit(M, type)
+        theo_min_donor_lim <- min_donor_limit(M, type)
         if (donor_limit < theo_min_donor_lim) {
           warning(
             "donor_limit = ", donor_limit, " is to low to impute all missing values; ",
@@ -157,7 +157,7 @@ impute_sRHD_sim_comp <- function(ds, M = is.na(ds), donor_limit) {
     # important special cases: no donor limit and sampling without replacement
     replace_donors <- ifelse(is.infinite(donor_limit), TRUE, FALSE)
     donors_match <- resample(pot_donors, length(recipients), replace = replace_donors)
-    for(i in seq_along(recipients)) {
+    for (i in seq_along(recipients)) {
       ds[recipients[i], M[recipients[i], ]] <- ds[donors_match[i], M[recipients[i], ]]
     }
     # vectorized but ugly and does not work for tibbles!
@@ -195,7 +195,7 @@ impute_sRHD_sim_part <- function(ds, M = is.na(ds)) {
       pot_donors <- unlist(pattern_obj[pot_donor_pattern_nrs])
       recipients <- pattern_obj[[pat_ind]]
       donors_match <- resample(pot_donors, length(recipients), replace = TRUE)
-      for(i in seq_along(recipients)) {
+      for (i in seq_along(recipients)) {
         ds[recipients[i], M[recipients[i], ]] <- ds[donors_match[i], M[recipients[i], ]]
       }
     }

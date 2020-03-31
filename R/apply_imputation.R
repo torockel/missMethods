@@ -75,7 +75,7 @@ apply_imputation <- function(ds, FUN = mean, type = "columnwise", ...) {
       * convert ds to data frame via as.data.frame
       * update package tibble
       * do not use 'total' or 'Two-Way' ",
-           call. = FALSE
+        call. = FALSE
       )
     } # for more details see: https://github.com/tidyverse/tibble/releases/tag/v2.99.99.9012
   }

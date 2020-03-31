@@ -70,7 +70,7 @@ impute_mean <- function(ds, type = "columnwise") {
 #' the median values for imputation.
 #'
 #' @param ordered_low logical; used for the calculation of ordered factors (for
-#' details see: \link{median.factor})
+#'   details see: \link{median.factor})
 #'
 #' @export
 #' @seealso

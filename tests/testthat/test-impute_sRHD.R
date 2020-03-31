@@ -36,11 +36,12 @@ test_that("impute_sRHD() simple random Hot-Deck imputation", {
     donor_limit = 3
   )
   expect_true(all(table(df_XY_X_miss_50_obs_imp_dl_3[, "X"]) <= 4))
-  expect_message(df_XY_X_miss_one_comp_obs_min <-
-    impute_sRHD(df_XY_X_miss_one_comp_obs,
-      type = "cols_seq",
-      donor_limit = "min"
-    ),
+  expect_message(
+    df_XY_X_miss_one_comp_obs_min <-
+      impute_sRHD(df_XY_X_miss_one_comp_obs,
+        type = "cols_seq",
+        donor_limit = "min"
+      ),
     "donor_limit is set to: 99"
   )
 
@@ -101,10 +102,10 @@ test_that("impute_sRHD() simple random Hot-Deck imputation", {
   expect_equal(df_XY_X_miss_one_comp_obs_min[, "X", drop = TRUE], rep(100, 100))
   expect_warning(
     df_to_low_donor_limit <-
-    impute_sRHD(df_XY_X_miss_one_comp_obs,
-      type = "sim_comp",
-      donor_limit = 20
-    ),
+      impute_sRHD(df_XY_X_miss_one_comp_obs,
+        type = "sim_comp",
+        donor_limit = 20
+      ),
     "donor_limit = 20 is to low to impute all missing values; it was set to 99"
   )
   expect_equal(df_to_low_donor_limit, df_XY_X_miss_one_comp_obs_min)

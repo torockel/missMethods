@@ -61,7 +61,7 @@ delete_censoring <- function(ds, p, miss_cols, ctrl_cols, where = "lower", sorti
             p[i] / 2,
             type = type
           )
-          na_indices_upper <-ds_ctrl_cols_i > stats::quantile(ds_ctrl_cols_i,
+          na_indices_upper <- ds_ctrl_cols_i > stats::quantile(ds_ctrl_cols_i,
             1 - p[i] / 2,
             type = type
           )

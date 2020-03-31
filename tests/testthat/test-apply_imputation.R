@@ -171,7 +171,8 @@ test_that("apply_imputation() works with tibbles", {
   # tibbles with integer columns are rather problematic, because `<-` will throw
   # an error, if FUN returns a double value!
   expect_error(impute_mean(tbl_XY_XY_miss, type = "columnwise"),
-               class = "tibble_error_assign_incompatible_type")
+    class = "tibble_error_assign_incompatible_type"
+  )
   # possible solution: convert columns to doubles
   tbl_XY_XY_miss_dbl <- tbl_XY_XY_miss
   tbl_XY_XY_miss_dbl$X <- as.double(tbl_XY_XY_miss_dbl$X)
@@ -183,20 +184,27 @@ test_that("apply_imputation() works with tibbles", {
   # in version 2.1.3:
   # https://github.com/tidyverse/tibble/releases/tag/v2.99.99.9012
   if (utils::packageVersion("tibble") < package_version("2.99.99.9012")) {
-    expect_error(impute_mean(tbl_XY_XY_miss, type = "total"),
-                 "ds is a tibble and logical subsetting, which is needed for")
-    expect_error(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Two-Way"),
-                 "ds is a tibble and logical subsetting, which is needed for")
+    expect_error(
+      impute_mean(tbl_XY_XY_miss, type = "total"),
+      "ds is a tibble and logical subsetting, which is needed for"
+    )
+    expect_error(
+      impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Two-Way"),
+      "ds is a tibble and logical subsetting, which is needed for"
+    )
   } else {
     expect_error(impute_mean(tbl_XY_XY_miss, type = "total"),
-                 class = "vctrs_error_cast_lossy")
+      class = "vctrs_error_cast_lossy"
+    )
     expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl, type = "total")))
     expect_error(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Two-Way"),
-                 class = "tibble_error_assign_incompatible_type")
+      class = "tibble_error_assign_incompatible_type"
+    )
     expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl[-c(5, 30:40), ], type = "Two-Way")))
   }
   expect_error(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Winer"),
-               class = "tibble_error_assign_incompatible_type")
+    class = "tibble_error_assign_incompatible_type"
+  )
   expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl[-c(5, 30:40), ], type = "Winer")))
 })
 

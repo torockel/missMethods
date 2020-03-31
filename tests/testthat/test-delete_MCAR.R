@@ -54,7 +54,6 @@ test_that("delete_MCAR() creates MCAR", {
 
   df_MCAR <- delete_MCAR(df_XY_100, p = 0, p_overall = TRUE)
   expect_equal(sum(count_NA(df_MCAR)), 0)
-
 })
 
 test_that("delete_MCAR() works with matrices", {

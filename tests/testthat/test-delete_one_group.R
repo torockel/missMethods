@@ -155,11 +155,10 @@ test_that("delete_MAR_one_group() (and delete_one_group(), which is called by
   tbl_miss <- delete_MAR_one_group(tbl_XY_100, 0.2, 1, 2)
   expect_equal(count_NA(tbl_miss), c(X = 20, Y = 0))
   expect_true(isTRUE(all.equal(count_NA(tbl_miss[1:50, ]), c(X = 20, Y = 0))) ||
-                isTRUE(all.equal(count_NA(tbl_miss[1:50, ]), c(X = 0, Y = 0))))
+    isTRUE(all.equal(count_NA(tbl_miss[1:50, ]), c(X = 0, Y = 0))))
 
   tbl_miss <- delete_MAR_one_group(tbl_XYZ_100, c(0.1, 0.2), 2:3, c(1, 1))
   expect_equal(count_NA(tbl_miss), c(X = 0, Y = 10, Z = 20))
   expect_true(isTRUE(all.equal(count_NA(tbl_miss[1:50, 2]), c(Y = 10))) ||
-                isTRUE(all.equal(count_NA(tbl_miss[1:50, 2]), c(Y = 00))))
+    isTRUE(all.equal(count_NA(tbl_miss[1:50, 2]), c(Y = 00))))
 })
-

@@ -132,7 +132,7 @@ test_that("delete_MAR_censoring() (and delete_censoring(), which is called by
   expect_equal(count_NA(tbl_miss[1:20, ]), c(X = 20, Y = 0))
 
   tbl_miss <- delete_MAR_censoring(tbl_XYZ_100, c(0.1, 0.2), 1:2, c(3, 3),
-                                   where = "upper"
+    where = "upper"
   )
   expect_equal(count_NA(tbl_miss), c(X = 10, Y = 20, Z = 0))
   expect_equal(count_NA(tbl_miss[1:20, ]), c(X = 10, Y = 20, Z = 0))

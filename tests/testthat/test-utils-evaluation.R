@@ -23,8 +23,10 @@ test_that("calc_evaluation_criterion() works", {
 
   # check for tibbles -------------------------------------
   expect_equal(calc_evaluation_criterion(estimate_tbl, true_val_tbl), 5 / sqrt(2))
-  expect_equal(calc_evaluation_criterion(estimate_tbl, true_val_tbl, criterion = "NRMSE_col_mean"),
-               calc_evaluation_criterion(estimate_df, true_val_df, criterion = "NRMSE_col_mean"))
+  expect_equal(
+    calc_evaluation_criterion(estimate_tbl, true_val_tbl, criterion = "NRMSE_col_mean"),
+    calc_evaluation_criterion(estimate_df, true_val_df, criterion = "NRMSE_col_mean")
+  )
 
   # check criterion --------------------------------------
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "bias"), -0.5)
@@ -72,8 +74,10 @@ test_that("calc_evaluation_criterion() works", {
   mixed_df <- data.frame(1:3, 5:3)
   mixed_miss_df <- data.frame(factor(c(NA, 1:2)), c(5, NA, 3))
   expect_equal(calc_evaluation_criterion(mixed_miss_df, mixed_df, criterion = "nr_NA"), 2)
-  expect_equal(calc_evaluation_criterion(mixed_miss_df, mixed_df, criterion = "nr_NA",
-                                         M = is.na(mixed_miss_df)), 2)
+  expect_equal(calc_evaluation_criterion(mixed_miss_df, mixed_df,
+    criterion = "nr_NA",
+    M = is.na(mixed_miss_df)
+  ), 2)
 
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "precision"), 3 / 4)
   expect_equal(calc_evaluation_criterion(est_mixed_df, true_mixed_df, "precision"), 1 / 6)
@@ -147,19 +151,25 @@ test_that("calc_evaluation_criterion_vec() works", {
   m_k <- c(TRUE, TRUE, FALSE, FALSE)
 
   # check error / warning:
-  expect_error(calc_evaluation_criterion_vec(1:3, 1:4),
-               "estimate and true_val must be of same length")
+  expect_error(
+    calc_evaluation_criterion_vec(1:3, 1:4),
+    "estimate and true_val must be of same length"
+  )
   # NA not allowed if criterion != "nr_NA"
-  expect_warning(calc_evaluation_criterion_vec(c(NA, 1), c(1, 1), criterion = "RMSE"),
-                 "NAs in estimate or true_val may lead to NA")
-  expect_equal(calc_evaluation_criterion_vec(c(NA, 1), c(1, 1), criterion = "nr_NA"),
-               1)
+  expect_warning(
+    calc_evaluation_criterion_vec(c(NA, 1), c(1, 1), criterion = "RMSE"),
+    "NAs in estimate or true_val may lead to NA"
+  )
+  expect_equal(
+    calc_evaluation_criterion_vec(c(NA, 1), c(1, 1), criterion = "nr_NA"),
+    1
+  )
 
   # check criterion --------------------------------------
   # every criterion with and without m_k
 
   expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "RMSE"), 1)
-  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "RMSE", m_k), sqrt(4/2))
+  expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "RMSE", m_k), sqrt(4 / 2))
 
   expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "bias"), -0.5)
   expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "bias", m_k), -1)
@@ -238,10 +248,10 @@ test_that("calc_evaluation_criterion_vec() works", {
 
   # check tolerance -----------------------------------------------------------
   expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "nr_equal",
-                                         tolerance = 0.5
+    tolerance = 0.5
   ), 3)
   expect_equal(calc_evaluation_criterion_vec(estimate_vec, true_val_vec, "nr_equal",
-                                         tolerance = 3
+    tolerance = 3
   ), 4) # diff is 2
 })
 

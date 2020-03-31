@@ -209,9 +209,9 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 
   # add_realized_x with stochastic = TRUE
   df_miss <- delete_MAR_1_to_x(df_XYZ_100, 0.4, "X", "Y",
-                               x = 3,
-                               stochastic = TRUE,
-                               add_realized_x = TRUE
+    x = 3,
+    stochastic = TRUE,
+    add_realized_x = TRUE
   )
   expect_true(attributes(df_miss)$realized_x > 0)
 })

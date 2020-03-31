@@ -12,10 +12,10 @@ test_that("evaluate_imputed_values()", {
 
   expect_equal(
     evaluate_imputed_values(df_XY_20_imp,
-                            df_XY_20,
-                            criterion = "MAE",
-                            M = matrix(c(TRUE, rep(FALSE, 39)), nrow = 20),
-                            which_cols = 1
+      df_XY_20,
+      criterion = "MAE",
+      M = matrix(c(TRUE, rep(FALSE, 39)), nrow = 20),
+      which_cols = 1
     ),
     1
   )

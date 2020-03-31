@@ -155,40 +155,40 @@ test_that("evaluate_imputation_parameters() works with matrices", {
   # check parameter ---------------------------------------
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "mean"
+      orig_ds = orig_ds,
+      parameter = "mean"
     ),
     evaluate_parameters(colMeans(imp_ds), colMeans(orig_ds))
   )
 
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "median"
+      orig_ds = orig_ds,
+      parameter = "median"
     ),
     evaluate_parameters(apply(imp_ds, 2, median), apply(orig_ds, 2, median))
   )
 
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "var"
+      orig_ds = orig_ds,
+      parameter = "var"
     ),
     evaluate_parameters(diag(var(imp_ds)), diag(var(orig_ds)))
   )
 
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "sd"
+      orig_ds = orig_ds,
+      parameter = "sd"
     ),
     evaluate_parameters(apply(imp_ds, 2, sd), apply(orig_ds, 2, sd))
   )
 
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "quantile", probs = 0.3
+      orig_ds = orig_ds,
+      parameter = "quantile", probs = 0.3
     ),
     evaluate_parameters(
       apply(imp_ds, 2, stats::quantile, probs = 0.3),
@@ -198,27 +198,27 @@ test_that("evaluate_imputation_parameters() works with matrices", {
 
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "quantile"
+      orig_ds = orig_ds,
+      parameter = "quantile"
     ),
     evaluate_parameters(
-      apply(imp_ds, 2,  stats::quantile),
+      apply(imp_ds, 2, stats::quantile),
       apply(orig_ds, 2, stats::quantile)
     )
   )
 
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "cov"
+      orig_ds = orig_ds,
+      parameter = "cov"
     ),
     evaluate_parameters(cov(imp_ds), cov(orig_ds))
   )
 
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "cor"
+      orig_ds = orig_ds,
+      parameter = "cor"
     ),
     evaluate_parameters(cor(imp_ds), cor(orig_ds))
   )
@@ -226,7 +226,7 @@ test_that("evaluate_imputation_parameters() works with matrices", {
   # check parameter error
   expect_error(
     evaluate_imputation_parameters(imp_ds, orig_ds,
-                                   parameter = "asdf"
+      parameter = "asdf"
     ),
     "'arg' should be one of "
   )
@@ -242,8 +242,8 @@ test_that("evaluate_imputation_parameters() works with matrices", {
   # both supplied
   expect_error(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   true_pars = c(10, 100)
+      orig_ds = orig_ds,
+      true_pars = c(10, 100)
     ),
     "exactly one of 'orig_ds' or 'true_pars' must be supplied"
   )
@@ -257,32 +257,32 @@ test_that("evaluate_imputation_parameters() works with matrices", {
   # criterion ---------------------------------------------
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   criterion = "MAE"
+      orig_ds = orig_ds,
+      criterion = "MAE"
     ),
     evaluate_parameters(colMeans(imp_ds), colMeans(orig_ds),
-                        criterion = "MAE"
+      criterion = "MAE"
     )
   )
 
   # which_cols --------------------------------------------
   expect_equal(evaluate_imputation_parameters(imp_ds,
-                                              orig_ds = orig_ds,
-                                              which_cols = 2
+    orig_ds = orig_ds,
+    which_cols = 2
   ), 0)
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   which_cols = 1
+      orig_ds = orig_ds,
+      which_cols = 1
     ),
     evaluate_parameters(mean(imp_ds[, 1]), mean(orig_ds[, 1]))
   )
 
   # tolerance
   expect_equal(evaluate_imputation_parameters(imp_ds,
-                                              orig_ds = orig_ds,
-                                              criterion = "precision",
-                                              tolerance = 11
+    orig_ds = orig_ds,
+    criterion = "precision",
+    tolerance = 11
   ), 1)
 })
 
@@ -299,40 +299,40 @@ test_that("evaluate_imputation_parameters() works with tibbles", {
   # check parameter ---------------------------------------
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "mean"
+      orig_ds = orig_ds,
+      parameter = "mean"
     ),
     evaluate_parameters(colMeans(imp_ds), colMeans(orig_ds))
   )
 
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "median"
+      orig_ds = orig_ds,
+      parameter = "median"
     ),
     evaluate_parameters(sapply(imp_ds, median), sapply(orig_ds, median))
   )
 
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "var"
+      orig_ds = orig_ds,
+      parameter = "var"
     ),
     evaluate_parameters(diag(var(imp_ds)), diag(var(orig_ds)))
   )
 
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "sd"
+      orig_ds = orig_ds,
+      parameter = "sd"
     ),
     evaluate_parameters(sapply(imp_ds, sd), sapply(orig_ds, sd))
   )
 
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "quantile", probs = 0.3
+      orig_ds = orig_ds,
+      parameter = "quantile", probs = 0.3
     ),
     evaluate_parameters(
       sapply(imp_ds, stats::quantile, probs = 0.3),
@@ -342,8 +342,8 @@ test_that("evaluate_imputation_parameters() works with tibbles", {
 
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "quantile"
+      orig_ds = orig_ds,
+      parameter = "quantile"
     ),
     evaluate_parameters(
       sapply(imp_ds, stats::quantile),
@@ -353,16 +353,16 @@ test_that("evaluate_imputation_parameters() works with tibbles", {
 
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "cov"
+      orig_ds = orig_ds,
+      parameter = "cov"
     ),
     evaluate_parameters(cov(imp_ds), cov(orig_ds))
   )
 
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   parameter = "cor"
+      orig_ds = orig_ds,
+      parameter = "cor"
     ),
     evaluate_parameters(cor(imp_ds), cor(orig_ds))
   )
@@ -370,7 +370,7 @@ test_that("evaluate_imputation_parameters() works with tibbles", {
   # check parameter error
   expect_error(
     evaluate_imputation_parameters(imp_ds, orig_ds,
-                                   parameter = "asdf"
+      parameter = "asdf"
     ),
     "'arg' should be one of "
   )
@@ -386,8 +386,8 @@ test_that("evaluate_imputation_parameters() works with tibbles", {
   # both supplied
   expect_error(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   true_pars = c(10, 100)
+      orig_ds = orig_ds,
+      true_pars = c(10, 100)
     ),
     "exactly one of 'orig_ds' or 'true_pars' must be supplied"
   )
@@ -401,32 +401,32 @@ test_that("evaluate_imputation_parameters() works with tibbles", {
   # criterion ---------------------------------------------
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   criterion = "MAE"
+      orig_ds = orig_ds,
+      criterion = "MAE"
     ),
     evaluate_parameters(colMeans(imp_ds), colMeans(orig_ds),
-                        criterion = "MAE"
+      criterion = "MAE"
     )
   )
 
   # which_cols --------------------------------------------
   expect_equal(evaluate_imputation_parameters(imp_ds,
-                                              orig_ds = orig_ds,
-                                              which_cols = "Y"
+    orig_ds = orig_ds,
+    which_cols = "Y"
   ), 0)
   expect_equal(
     evaluate_imputation_parameters(imp_ds,
-                                   orig_ds = orig_ds,
-                                   which_cols = "X"
+      orig_ds = orig_ds,
+      which_cols = "X"
     ),
     evaluate_parameters(mean(imp_ds$X), mean(orig_ds$X))
   )
 
   # tolerance
   expect_equal(evaluate_imputation_parameters(imp_ds,
-                                              orig_ds = orig_ds,
-                                              criterion = "precision",
-                                              tolerance = 11
+    orig_ds = orig_ds,
+    criterion = "precision",
+    tolerance = 11
   ), 1)
 })
 
