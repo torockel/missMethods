@@ -6,3 +6,4 @@ man-roxygen
 ^ToDo\.Rmd$
 ^ToDo\.html$
 ^\.github$
+^cran-comments\.md$
