@@ -1,4 +1,4 @@
-# missMethods (development version)
+# missMethods 0.1.0
 
 ## New functions
 
