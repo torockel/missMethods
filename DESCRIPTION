@@ -6,7 +6,14 @@ Authors@R: person(given = "Tobias",
            role = c("aut", "cre"),
            email = "Rockel.To@gmail.com")
 Description: Supply functions for the creation and handling of missing data 
-    as well as tools to evaluate missing data methods.
+    as well as tools to evaluate missing data methods. Nearly all possibilities
+    of creating missing data discussed by Santos et. al (2019) 
+    <doi:10.1109/ACCESS.2019.2891360> and some additional are implemented. 
+    Functions are supplied to compare parameter estimates and imputed values to 
+    true values to evaluate missing data methods. Evaluations of these types 
+    are done, for example, by Cetin-Berber et al. (2019) 
+    <doi:10.1177/0013164418805532>  and Faisal and Tutz (2017) 
+    <doi:10.1515/sagmb-2015-0098>.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

@@ -1,7 +1,9 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
+* added some details and references in the description.
 * replaced \dontrun{} by \donttest{} in my Rd-file.
+
 
 ## Test environments
 * local windows 10, R 3.6.3
