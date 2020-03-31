@@ -72,9 +72,9 @@ apply_imputation <- function(ds, FUN = mean, type = "columnwise", ...) {
       stop("ds is a tibble and logical subsetting, which is needed for 'total' and 'Two-Way',
       is only supported for tibbles with package versions >= 2.99.99.9012;
       possible solutions:
-      * convert ds to data frame via as.data.frame
       * update package tibble
-      * do not use 'total' or 'Two-Way' ",
+      * convert ds to data frame via as.data.frame
+      * do not use 'total' or 'Two-Way'",
         call. = FALSE
       )
     } # for more details see: https://github.com/tidyverse/tibble/releases/tag/v2.99.99.9012

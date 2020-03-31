@@ -168,21 +168,35 @@ test_that("apply_imputation() works with matrices", {
 })
 
 test_that("apply_imputation() works with tibbles", {
-  # tibbles with integer columns are rather problematic, because `<-` will throw
-  # an error, if FUN returns a double value!
-  expect_error(impute_mean(tbl_XY_XY_miss, type = "columnwise"),
-    class = "tibble_error_assign_incompatible_type"
-  )
-  # possible solution: convert columns to doubles
+  # apply_imputation is rather tricky with tibbles
+  # before tibble version 3.0.0 subsetting with logical matrices was not supported,
+  # but integer columns were converted to doubles without even a warning, if needed.
+  # Now with tibble version >= 3.0.0 subsetting with logical matrices work,
+  # but now integer columns throw an error, if a double is imputed..
+  # So, testing highly depends on the used version of tibbles.
+
+  # If columns are first converted to doubles, all versions of tibble should
+  # work with the types "columnwise", "rowwise" and "Winer"
+
   tbl_XY_XY_miss_dbl <- tbl_XY_XY_miss
   tbl_XY_XY_miss_dbl$X <- as.double(tbl_XY_XY_miss_dbl$X)
   tbl_XY_XY_miss_dbl$Y <- as.double(tbl_XY_XY_miss_dbl$Y)
-  expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl)))
-  expect_false(anyNA(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "rowwise")))
-  # the types total and Two-Way are not supported until a newer version as 2.1.3
-  # of tibble is released, because subsetting by logical matrices is not available
-  # in version 2.1.3:
+
+  expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl, type = "columnwise")))
+  expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl[-c(5, 30:40), ], type = "rowwise")))
+  expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl[-c(5, 30:40), ], type = "Winer")))
+
+  # Furthermore, if tibble version >= these solution should also work for the
+  # tpyes "total" and "Two-Way":
+  if (utils::packageVersion("tibble") >= package_version("3.0.0")) {
+    expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl, type = "total")))
+    expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl[-c(5, 30:40), ], type = "Two-Way")))
+  }
+
+  # Check that a meaningfull error is thrown for the types "total" and "Two-Way",
+  # if version of tibble < 2.99.99.9012
   # https://github.com/tidyverse/tibble/releases/tag/v2.99.99.9012
+
   if (utils::packageVersion("tibble") < package_version("2.99.99.9012")) {
     expect_error(
       impute_mean(tbl_XY_XY_miss, type = "total"),
@@ -192,20 +206,10 @@ test_that("apply_imputation() works with tibbles", {
       impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Two-Way"),
       "ds is a tibble and logical subsetting, which is needed for"
     )
-  } else {
-    expect_error(impute_mean(tbl_XY_XY_miss, type = "total"),
-      class = "vctrs_error_cast_lossy"
-    )
-    expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl, type = "total")))
-    expect_error(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Two-Way"),
-      class = "tibble_error_assign_incompatible_type"
-    )
-    expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl[-c(5, 30:40), ], type = "Two-Way")))
   }
-  expect_error(impute_mean(tbl_XY_XY_miss[-c(5, 30:40), ], type = "Winer"),
-    class = "tibble_error_assign_incompatible_type"
-  )
-  expect_false(anyNA(impute_mean(tbl_XY_XY_miss_dbl[-c(5, 30:40), ], type = "Winer")))
+
+  # All other tests and there possible errors would highly depend on the version of tibble
+  # and are omitted.
 })
 
 # mean imputation -----------------------------------------
