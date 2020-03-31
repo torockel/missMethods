@@ -15,12 +15,13 @@ Functions for evaluation:
 ## New features
 
 * `delete_MAR_1_to_x()` and `delete_MNAR_1_to_x()` can now handle (unordered) factors
-* new criteria for `evaluate_imputed_values()` and `evaluate_parameters()`: three forms of NRMSE, nr_equal, nr_NA and precision
+* new criteria for `evaluate_imputed_values()` and `evaluate_parameters()`: six forms of NRMSE, nr_equal, nr_NA and precision
 * `evaluate_imputed_values()`: add argument `which_cols` to select columns for evaluation. 
 
 ## Miscellaneous
 
-* now on GitHub
+* all `delete_` functions now take the same first three arguments: `ds`, `p`, `miss_cols`
+* package now on GitHub and CRAN
 
 # missMethods 0.0.1
 
