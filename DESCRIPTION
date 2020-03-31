@@ -17,7 +17,7 @@ Suggests:
     lpSolve,
     rmarkdown,
     testthat (>= 2.1.0),
-    tibble,
+    tibble
 Imports: 
     stats
 URL: https://github.com/torockel/missMethods

@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* replaced \dontrun{} by \donttest{} in my Rd-file.
+
 ## Test environments
 * local windows 10, R 3.6.3
 * local Linux Mint 19.3, R 3.6.3

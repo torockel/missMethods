@@ -35,7 +35,7 @@
 #' @examples
 #' ord_factor_odd <- ordered(letters[1:5])
 #' median(ord_factor_odd) # calls median.factor, if package is loaded
-#' \dontrun{
+#' \donttest{
 #' # if only base R is loaded, median.default will be called and will throw an error:
 #' median.default(ord_factor_odd)
 #' }

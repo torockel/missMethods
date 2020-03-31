@@ -58,7 +58,7 @@
 #' ds <- data.frame(X = 1:20, Y = 101:120)
 #' ds_miss <- delete_MCAR(ds, 0.2)
 #' ds_imp <- impute_sRHD(ds_miss)
-#' \dontrun{
+#' \donttest{
 #' # Warning: donor limit to low
 #' ds_miss_one_donor <- ds
 #' ds_miss_one_donor[1:19, "X"] <- NA
