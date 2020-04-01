@@ -4,6 +4,13 @@ This is a resubmission. In this version I have:
 * added some details and references in the description.
 * replaced \dontrun{} by \donttest{} in my Rd-file.
 
+R-hub generated one new note, which occured on no other test environment:
+  Found the following (possibly) invalid DOIs:
+    DOI: 10.1093/bioinformatics/bth499
+   
+I checked the DOI (on https://www.doi.org/). It is valid: 
+https://doi.org/10.1093/bioinformatics/bth499
+    
 
 ## Test environments
 * local windows 10, R 3.6.3
@@ -19,3 +26,4 @@ This is a resubmission. In this version I have:
 0 errors | 0 warnings | 1 note
 
 * This is a new release.
+
