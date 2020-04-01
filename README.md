@@ -7,6 +7,8 @@
 
 [![R build
 status](https://github.com/torockel/missMethods/workflows/R-CMD-check/badge.svg)](https://github.com/torockel/missMethods/actions)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/missMethods)](https://CRAN.R-project.org/package=missMethods)
 <!-- badges: end -->
 
 The goal of missMethods is to make the creation and handling of missing
@@ -14,31 +16,19 @@ data as well as the evaluation of missing data methods easier.
 
 ## Installation
 
-You can install the development version from
-[GitHub](https://github.com/) with:
+You can install the released version of missMethods from
+[CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("missMethods")
+```
+
+And the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("torockel/missMethods")
 ```
-
-<!-- You can install the released version of missMethods from [CRAN](https://CRAN.R-project.org) with: -->
-
-<!-- ``` r -->
-
-<!-- install.packages("missMethods") -->
-
-<!-- ``` -->
-
-<!-- And the development version from [GitHub](https://github.com/) with: -->
-
-<!-- ``` r -->
-
-<!-- # install.packages("devtools") -->
-
-<!-- devtools::install_github("torockel/missMethods") -->
-
-<!-- ``` -->
 
 ## Usage
 
