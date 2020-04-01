@@ -72,6 +72,11 @@ ds_imp_app <- apply_imputation(ds_miss, FUN = mean, type = "total")
 ds_imp_mean <- impute_mean(ds_miss, type = "total")
 all.equal(ds_imp_app, ds_imp_mean)
 }
+\references{
+Beland, S., Pichette, F., & Jolani, S. (2016). Impact on
+  Cronbach's \eqn{\alpha}{alpha} of simple treatment methods for missing
+  data. \emph{The Quantitative Methods for Psychology}, 12(1), 57-73.
+}
 \seealso{
 A convenient interface exists for common cases like mean imputation:
   \code{\link{impute_mean}}, \code{\link{impute_median}},

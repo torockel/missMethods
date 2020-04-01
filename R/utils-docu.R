@@ -1,6 +1,7 @@
 MNAR_documentation <- function(ending) {
   c(
     "@template MNAR",
+    "@template delete",
     paste0(
       "@details The functions \\code{delete_MNAR_", ending, "} and ",
       "\\code{\\link{delete_MAR_", ending, "}} are sisters. ",
@@ -16,7 +17,7 @@ MNAR_documentation <- function(ending) {
       "Therefore, further details can be found in ",
       "\\code{\\link{delete_MAR_", ending, "}}. "
     ),
-    paste0("@inherit delete_MAR_", ending, " return params"),
+    paste0("@inheritParams delete_MAR_", ending),
     paste0("@seealso \\code{\\link{delete_MAR_", ending, "}}"),
     "@export",
     paste0(

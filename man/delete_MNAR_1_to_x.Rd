@@ -63,6 +63,11 @@ The functions \code{delete_MNAR_1_to_x} and \code{\link{delete_MAR_1_to_x}} are 
 ds <- data.frame(X = 1:20, Y = 101:120)
 delete_MNAR_1_to_x(ds, 0.2, "X", x = 3)
 }
+\references{
+Santos, M. S., Pereira, R. C., Costa, A. F., Soares, J. P.,
+  Santos, J., & Abreu, P. H. (2019). Generating Synthetic Missing Data: A
+  Review by Missing Mechanism. \emph{IEEE Access}, 7, 11651-11667
+}
 \seealso{
 \code{\link{delete_MAR_1_to_x}}
 

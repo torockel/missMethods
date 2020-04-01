@@ -178,6 +178,11 @@ attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 7, add_realized_x = TRUE), "realized_x
 delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3)
 delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3, stochastic = TRUE)
 }
+\references{
+Santos, M. S., Pereira, R. C., Costa, A. F., Soares, J. P.,
+  Santos, J., & Abreu, P. H. (2019). Generating Synthetic Missing Data: A
+  Review by Missing Mechanism. \emph{IEEE Access}, 7, 11651-11667
+}
 \seealso{
 \code{\link{delete_MNAR_1_to_x}}
 

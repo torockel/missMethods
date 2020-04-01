@@ -104,6 +104,11 @@ imp_ds <- impute_mean(miss_ds)
 evaluate_imputed_values(imp_ds, orig_ds, "NRMSE_tot_mean")
 evaluate_imputed_values(imp_ds, orig_ds, "NRMSE_col_mean")
 }
+\references{
+Kim, H., Golub, G. H., & Park, H. (2005). Missing value
+  estimation for DNA microarray gene expression data: local least squares
+  imputation. \emph{Bioinformatics}, 21(2), 187-198.
+}
 \seealso{
 Other evaluation functions: 
 \code{\link{evaluate_imputation_parameters}()},

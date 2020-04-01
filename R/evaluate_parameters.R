@@ -3,6 +3,7 @@
 #' Compare estimated parameters to true parameters
 #'
 #' @template evaluation
+#' @template evaluate-parameter
 #'
 #' @details The same \code{criterion}s are implemented for \code{evaluate_parameters}
 #' and \code{\link{evaluate_imputed_values}}.

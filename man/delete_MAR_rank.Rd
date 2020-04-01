@@ -59,6 +59,11 @@ Possible choices for \code{ties.method} are documented in
 ds <- data.frame(X = 1:20, Y = 101:120)
 delete_MAR_rank(ds, 0.2, "X", "Y")
 }
+\references{
+Santos, M. S., Pereira, R. C., Costa, A. F., Soares, J. P.,
+  Santos, J., & Abreu, P. H. (2019). Generating Synthetic Missing Data: A
+  Review by Missing Mechanism. \emph{IEEE Access}, 7, 11651-11667
+}
 \seealso{
 \code{\link[base]{rank}}, \code{\link{delete_MNAR_rank}}
 

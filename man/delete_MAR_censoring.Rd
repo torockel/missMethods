@@ -103,6 +103,11 @@ quantile(ds_many_dup$Y, 0.2) # 0
 # No value is BELOW 0 in ds_many_dup$Y, so no missing values will be created:
 delete_MAR_censoring(ds_many_dup, 0.2, "X", "Y", sorting = FALSE) # No NA!
 }
+\references{
+Santos, M. S., Pereira, R. C., Costa, A. F., Soares, J. P.,
+  Santos, J., & Abreu, P. H. (2019). Generating Synthetic Missing Data: A
+  Review by Missing Mechanism. \emph{IEEE Access}, 7, 11651-11667
+}
 \seealso{
 \code{\link{delete_MNAR_censoring}}
 

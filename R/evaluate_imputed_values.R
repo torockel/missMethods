@@ -61,6 +61,10 @@
 #'
 #' @export
 #'
+#' @references Kim, H., Golub, G. H., & Park, H. (2005). Missing value
+#'   estimation for DNA microarray gene expression data: local least squares
+#'   imputation. \emph{Bioinformatics}, 21(2), 187-198.
+#'
 #' @examples
 #' orig_ds <- data.frame(X = 1:10, Y = 101:110)
 #' miss_ds <- delete_MCAR(orig_ds, 0.3)

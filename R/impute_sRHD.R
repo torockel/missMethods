@@ -52,6 +52,10 @@
 #'   can be a donor. default is \code{Inf} (no restriction).
 #'
 #' @return An object of the same class as \code{ds} with imputed missing values
+#' @references Andridge, R. R., & Little, R. J. (2010). A review of hot deck
+#'   imputation for survey non-response. \emph{International statistical review},
+#'   78(1), 40-64.
+#'
 #' @export
 #'
 #' @examples

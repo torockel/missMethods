@@ -48,6 +48,11 @@ ds_imp <- impute_median(ds_miss)
 ds_miss_char <- cbind(ds_miss, letters[1:20])
 ds_imp_char <- impute_median(ds_miss_char)
 }
+\references{
+Beland, S., Pichette, F., & Jolani, S. (2016). Impact on Cronbach's
+\eqn{\alpha}{alpha} of simple treatment methods for missing data.
+\emph{The Quantitative Methods for Psychology}, 12(1), 57-73.
+}
 \seealso{
 \code{\link{apply_imputation}} the workhorse for this function
 

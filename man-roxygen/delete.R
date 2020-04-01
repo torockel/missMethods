@@ -6,3 +6,7 @@
 #'
 #'
 #' @return An object of the same class as \code{ds} with missing values
+#'
+#' @references Santos, M. S., Pereira, R. C., Costa, A. F., Soares, J. P.,
+#'   Santos, J., & Abreu, P. H. (2019). Generating Synthetic Missing Data: A
+#'   Review by Missing Mechanism. \emph{IEEE Access}, 7, 11651-11667

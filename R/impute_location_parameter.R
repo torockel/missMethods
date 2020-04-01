@@ -29,10 +29,6 @@
 #' @export
 #'
 #' @references
-#' Beland, S., Pichette, F., & Jolani, S. (2016). Impact on Cronbach's
-#' \eqn{\alpha}{alpha} of simple treatment methods for missing data.
-#' \emph{The Quantitative Methods for Psychology}, 12(1), 57-73.
-#'
 #' Bernaards, C. A., & Sijtsma, K. (2000). Influence of imputation and EM
 #' methods on factor analysis when item nonresponse in questionnaire data is
 #' nonignorable. \emph{Multivariate Behavioral Research}, 35(3), 321-364.

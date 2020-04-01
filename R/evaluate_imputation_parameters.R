@@ -4,6 +4,7 @@
 #' estimates based on the original dataset
 #'
 #' @template evaluation
+#' @template evaluate-parameter
 #'
 #' @details Either \code{orig_ds} or \code{true_pars} must be supplied and the other one
 #' must be \code{NULL} (default: both are \code{NULL}, just supply one, see

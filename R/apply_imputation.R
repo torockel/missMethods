@@ -47,6 +47,10 @@
 #' @param type a string specifying the values used for imputation, see details
 #' @param ... further arguments passed to \code{FUN}
 #'
+#' @references Beland, S., Pichette, F., & Jolani, S. (2016). Impact on
+#'   Cronbach's \eqn{\alpha}{alpha} of simple treatment methods for missing
+#'   data. \emph{The Quantitative Methods for Psychology}, 12(1), 57-73.
+#'
 #' @export
 #'
 #' @examples

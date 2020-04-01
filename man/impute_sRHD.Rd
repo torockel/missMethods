@@ -75,3 +75,8 @@ ds_miss_one_donor[1:19, "X"] <- NA
 impute_sRHD(ds_miss_one_donor, donor_limit = 3)
 }
 }
+\references{
+Andridge, R. R., & Little, R. J. (2010). A review of hot deck
+  imputation for survey non-response. \emph{International statistical review},
+  78(1), 40-64.
+}
