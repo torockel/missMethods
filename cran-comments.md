@@ -4,7 +4,7 @@ This is a resubmission. In this version I have:
 * added some details and references in the description.
 * replaced \dontrun{} by \donttest{} in my Rd-file.
 
-R-hub generated one new note, which occured on no other test environment:
+R-hub generated one new note, which occurred on no other test environment:
   Found the following (possibly) invalid DOIs:
     DOI: 10.1093/bioinformatics/bth499
    
