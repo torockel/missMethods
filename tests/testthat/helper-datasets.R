@@ -16,6 +16,8 @@ df_with_unord_factor <- data.frame(X = factor(letters[1:20],
 df_XY_X_binary <- data.frame(X = c(rep(1, 10), rep(0, 10)), Y = 1:20)
 df_ordered <- data.frame(let = ordered(letters), LET = ordered(LETTERS))
 
+df_classes_test <- data.frame(X = c(1, 1, 2, 2, 2), Y = c(5, 3, 3, 4, 3))
+
 
 # define some incomplete data frames for testing ----------
 df_XY_X_miss <- df_XY_100
@@ -70,6 +72,8 @@ matrix_100_2 <- matrix(1:200, nrow = 100)
 matrix_20_2 <- matrix(c(1:20, 101:120), ncol = 2)
 matrix_20_10 <- matrix(c(1:100, 200:101), nrow = 20)
 
+matrix_classes_test <- as.matrix(df_classes_test)
+
 # define some incomplete matrices for testing ------------------------
 matrix_100_2_miss <- matrix_100_2
 matrix_100_2_miss[is.na(df_XY_XY_miss)] <- NA
@@ -79,6 +83,8 @@ matrix_100_2_miss[is.na(df_XY_XY_miss)] <- NA
 tbl_XY_100 <- tibble::tibble(X = 1:100, Y = 101:200)
 tbl_XY_20 <- tibble::tibble(X = 1:20, Y = 101:120)
 tbl_XYZ_100 <- tibble::tibble(X = 1:100, Y = 101:200, Z = 300:201)
+
+tbl_classes_test <- tibble::as_tibble(df_classes_test)
 
 
 # define some incomplete tibbles for testing ----------
