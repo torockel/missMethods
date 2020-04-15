@@ -100,3 +100,112 @@ test_that("get_split_indices() argument breaks works", {
     get_split_indices(df_classes_test, "Y", breaks = 2)
   )
 })
+
+
+test_that("find_classes_recursive() works with breaks = Inf", {
+  expect_identical(
+    find_classes_recursive(df_classes_test, integer()),
+    list(everything = 1:5)
+  )
+
+  expect_identical(
+    find_classes_recursive(df_classes_test, "X", breaks = Inf),
+    list(`1` = 1:2, `2` = 3:5)
+  )
+
+  expect_identical(
+    find_classes_recursive(df_classes_test, "Y", breaks = Inf),
+    list(`3` = c(2:3, 5L), `4` = 4L, `5` = 1L)
+  )
+
+  expect_identical(
+    find_classes_recursive(df_classes_test, c("X", "Y"), breaks = Inf),
+    list(`1.3` = 2L, `1.5` = 1L, `2.3` = c(3L, 5L), `2.4` = 4L)
+  )
+
+})
+
+test_that("cut_vector() works with numeric vectors", {
+
+  # Inf breaks
+  expect_identical(
+    cut_vector(1:10, Inf),
+    as.factor(1:10)
+  )
+
+  # finite breaks
+  expect_identical(
+    cut_vector(1:10, 3, use_quantiles = FALSE),
+    cut(1:10, 3, ordered_result = TRUE)
+  )
+
+  expect_identical(
+    length(levels(cut_vector(1:10, 3, use_quantiles = FALSE))),
+    3L
+  )
+
+  expect_identical(
+    cut_vector(1:10, 3, use_quantiles = TRUE),
+    cut(1:10, breaks = quantile(1:10, seq(from = 0, to = 1, length.out = 4)),
+        include.lowest = TRUE, ordered_result = TRUE)
+  )
+
+  expect_identical(
+    length(levels(cut_vector(1:10, 3, use_quantiles = TRUE))),
+    3L
+  )
+})
+
+test_that("cut_vector() works with unordered factor vectors", {
+  test_f <- factor(letters[c(1:5, 2:5, 1, 1, 3:4)], ordered = FALSE)
+
+  expect_identical(
+    cut_vector(test_f, Inf),
+    test_f
+  )
+
+  expect_identical(
+    cut_vector(test_f, 3),
+    factor(c("a_and_c", "b_and_e", "a_and_c", "d", "b_and_e", "b_and_e",
+           "a_and_c", "d", "b_and_e", "a_and_c", "a_and_c", "a_and_c", "d"))
+  )
+
+})
+
+test_that("cut_vector() works with ordered factor vectors", {
+  test_f <- factor(letters[c(1:5, 2:5, 1, 1, 3:4)], ordered = TRUE)
+
+  expect_identical(
+    cut_vector(test_f, Inf),
+    test_f
+  )
+
+  expect_identical(
+    cut_vector(test_f, 3),
+    ordered(c("a", "b_and_c", "b_and_c", "e_and_d", "e_and_d", "b_and_c", "b_and_c",
+             "e_and_d", "e_and_d", "a", "a", "b_and_c", "e_and_d"))
+  )
+
+})
+
+test_that("merge_lvls() works with unorderd factors", {
+  test_f <- factor(letters[c(1:5, 2:5, 1, 1, 3:4)], ordered = FALSE)
+  levels(test_f) <- merge_lvls(test_f, NULL)
+  expect_identical(levels(test_f), c("a", "b_and_e", "c", "d"))
+  levels(test_f) <- merge_lvls(test_f, "d")
+  expect_identical(levels(test_f), c("d_and_a", "b_and_e", "c"))
+})
+
+
+test_that("merge_lvls() works with orderd factors", {
+  test_f <- factor(letters[c(1:5, 2:5, 1, 1, 3:4)], ordered = TRUE)
+  levels(test_f) <- merge_lvls(test_f, NULL)
+  expect_identical(levels(test_f), c("a", "b_and_c", "d", "e"))
+  levels(test_f) <- merge_lvls(test_f, "a")
+  expect_identical(levels(test_f), c("a_and_b_and_c", "d", "e"))
+  levels(test_f) <- merge_lvls(test_f, "e")
+  expect_identical(levels(test_f), c("a_and_b_and_c", "e_and_d"))
+  levels(test_f) <- merge_lvls(test_f)
+  expect_identical(levels(test_f), c("e_and_d_and_a_and_b_and_c"))
+  expect_error(merge_lvls(test_f), "merging only possible for two or more levels")
+})

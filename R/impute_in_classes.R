@@ -11,11 +11,12 @@ find_classes <- function(ds, class_cols, breaks, donor_limit, type) {
 
 get_split_indices <- function(ds, class_cols, breaks = Inf) {
   ds <- as.data.frame(ds) # to get indices by split and easier cutting
-  if(!is.null(row.names(ds))) # to get always indices and not names from rows
+  if (!is.null(row.names(ds))) { # to get always indices and not names from rows
     row.names(ds) <- NULL
+  }
   group_factors <- list()
   for (i in seq_along(class_cols)) {
-    if (is.numeric(ds[, class_cols[i]]) && is.finite(breaks)) { # first cut into intervalls
+    if (is.numeric(ds[, class_cols[i]]) && is.finite(breaks)) { # first cut into intervals
       ds[, class_cols[i]] <- cut(ds[, class_cols[i], drop = TRUE], breaks)
     }
     group_factors[[i]] <- as.factor(ds[, class_cols[i]])
@@ -24,7 +25,129 @@ get_split_indices <- function(ds, class_cols, breaks = Inf) {
   lapply(ds_split, function(x) as.integer(rownames(x)))
 }
 
+find_classes_recursive <- function(ds, class_cols, breaks = 3, use_quantiles = FALSE,
+                                   donor_limit = Inf, type = "cols_seq",
+                                   act_cols = seq_len(nrow(ds)),
+                                   act_lvls = NULL,
+                                   imp_classes = list()) {
 
-is_split_okay <- function(ds, split_indices, donor_limit, type) {
-  # to be done
+  # first check for fast return (no columns in act_cols or no more class_cols)
+  if (length(act_cols) == 0L) { # no object in new class -> eliminate class
+    return(imp_classes)
+  } else if (length(class_cols) == 0L) { # no more columns to form classes
+    if (is.null(act_lvls)) { # just one class for all
+      act_lvls <- "everything"
+    }
+    imp_classes[[act_lvls]] <- act_cols
+    return(imp_classes)
+  }
+
+  # no fast return:
+  # we have objects and at least one column to form classes:
+  grouping_factor <- cut_vector(ds[, class_cols[1], drop = TRUE],
+    breaks = breaks,
+    use_quantiles = use_quantiles
+  )
+
+
+  # check if all new formed classes are okay
+  # if not -> join the problematic class(es)
+  repeat {
+    lvls <- levels(grouping_factor)
+    new_classes <- list()
+    new_lvls <- list()
+    for (i in seq_along(lvls)) {
+      new_classes[[i]] <- which(grouping_factor == lvls[i])
+      new_classes[[i]] <- intersect(new_classes[[i]], act_cols)
+      new_lvls[[i]] <- ifelse(is.null(act_lvls), as.character(lvls[i]),
+        paste(act_lvls, lvls[i], sep = ".")
+      )
+    }
+
+    # okay_classes <- are_classes_okay(ds, new_classes,
+    #                                       donor_limit, type)
+    okay_classes <- TRUE
+    if (all(okay_classes)) { # everything okay -> leave repeat loop
+      break
+    } else { # join first not okay_class and try again
+      levels(grouping_factor) <- merge_lvls(
+        grouping_factor,
+        lvls[which(!okay_classes)[1]]
+      )
+    }
+  }
+
+  # call find_classes_recursive() for all new formed classes
+  for (i in seq_along(new_classes)) {
+    imp_classes <- find_classes_recursive(ds, class_cols[-1],
+      breaks = breaks,
+      donor_limit = donor_limit, type = type,
+      act_cols = new_classes[[i]],
+      act_lvls = new_lvls[[i]],
+      imp_classes = imp_classes
+    )
+  }
+  imp_classes
+}
+
+cut_vector <- function(x, breaks, use_quantiles = FALSE) {
+  if (!is.finite(breaks)) { # breaks is infinite, no merging of lvls or cutting
+    return(as.factor(x))
+  }
+
+  if (is.numeric(x)) { # cuts are ordered for possible later merging
+    if (use_quantiles) {
+      x <- cut(x,
+        breaks = stats::quantile(x, seq(from = 0, to = 1, length.out = breaks + 1)),
+        include.lowest = TRUE, ordered_result = TRUE
+      )
+    } else { # equal-sized classes
+      x <- cut(x, breaks, ordered_result = TRUE)
+    }
+  } else { # not a numeric vector
+    x <- as.factor(x)
+    while (length(levels(x)) > breaks) {
+      levels(x) <- merge_lvls(x)
+    }
+  }
+  x
+}
+
+are_classes_okay <- function(ds, new_classes, donor_limit, type) {
+  FALSE
+}
+
+merge_lvls <- function(grouping_factor, merging_lvl_1 = NULL) {
+  lvls <- levels(grouping_factor)
+  if (length(lvls) < 2L) {
+    stop("merging only possible for two or more levels")
+  }
+
+  lvls_freq <- tabulate(match(grouping_factor, lvls))
+
+  if (is.null(merging_lvl_1)) {
+    merging_lvl_1 <- lvls[which.min(lvls_freq)]
+  }
+
+  if (is.ordered(grouping_factor)) { # join left or right, if possible
+    pos_lvl_1 <- which(merging_lvl_1 == lvls)
+    if (pos_lvl_1 == 1L) { # first level -> merge with second
+      merging_lvl_2 <- lvls[2L]
+    } else if (pos_lvl_1 == length(lvls)) { # last level -> merge with second to last
+      merging_lvl_2 <- lvls[length(lvls) - 1L]
+    } else { # neither first nor last level -> left or right
+      lvls_freq_left <- lvls_freq[pos_lvl_1 - 1L]
+      lvls_freq_right <- lvls_freq[pos_lvl_1 + 1L]
+      merging_lvl_2 <- pos_lvl_1 + ifelse(lvls_freq_left < lvls_freq_right, -1L, +1L)
+      merging_lvl_2 <- lvls[merging_lvl_2]
+    }
+  } else { # unordered factor
+    lvls_freq_without_lvl_1 <- lvls_freq[-which(merging_lvl_1 == lvls)]
+    lvls_without_lvl_1 <- lvls[-which(merging_lvl_1 == lvls)]
+    merging_lvl_2 <- lvls_without_lvl_1[which.min(lvls_freq_without_lvl_1)]
+  }
+
+  new_lvl <- paste(merging_lvl_1, merging_lvl_2, sep = "_and_")
+  lvls[lvls %in% c(merging_lvl_1, merging_lvl_2)] <- new_lvl
+  lvls
 }
