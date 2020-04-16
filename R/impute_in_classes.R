@@ -27,6 +27,8 @@ get_split_indices <- function(ds, class_cols, breaks = Inf) {
 
 find_classes_recursive <- function(ds, class_cols, breaks = 3, use_quantiles = FALSE,
                                    donor_limit = Inf, type = "cols_seq",
+                                   min_objs_in_class = 0,
+                                   min_comp = 0,
                                    act_cols = seq_len(nrow(ds)),
                                    act_lvls = NULL,
                                    imp_classes = list()) {
@@ -64,9 +66,13 @@ find_classes_recursive <- function(ds, class_cols, breaks = 3, use_quantiles = F
       )
     }
 
-    # okay_classes <- are_classes_okay(ds, new_classes,
-    #                                       donor_limit, type)
-    okay_classes <- TRUE
+    # remove empty classes
+    empty_classes <- 0L == vapply(new_classes, length, integer(1))
+    new_classes[empty_classes] <- NULL
+    new_lvls[empty_classes] <- NULL
+    okay_classes <- are_classes_okay(ds, new_classes,
+                                     donor_limit, type, min_objs_in_class,
+                                     min_comp)
     if (all(okay_classes)) { # everything okay -> leave repeat loop
       break
     } else { # join first not okay_class and try again
@@ -113,8 +119,39 @@ cut_vector <- function(x, breaks, use_quantiles = FALSE) {
   x
 }
 
-are_classes_okay <- function(ds, new_classes, donor_limit, type) {
-  FALSE
+are_classes_okay <- function(ds, new_classes, donor_limit = Inf,
+                             type = "cols_seq", min_objs_in_class = 0,
+                             min_comp = 0) {
+  res <- rep(TRUE, length(new_classes))
+
+  for(i in seq_along(new_classes)) {
+    M_class_i  <- is.na(ds[new_classes[[i]], , drop = FALSE])
+
+    if(is.finite(donor_limit)) { # check donor_limit, if donor_limit is finite
+      if (min_donor_limit(M_class_i, type) > donor_limit)
+        res[i] <- FALSE
+    }
+
+    if (min_objs_in_class > 1) { # check min_objs_in_class, if > 1
+      if (length(new_classes[[i]]) < min_objs_in_class) {
+        res[i] <- FALSE
+      }
+    }
+
+    if (min_comp > 0) { # check min_comp, if > 0
+
+      if (type == "cols_seq") {
+        if(any(apply(M_class_i, 2, function(x) sum(!x)) < min_comp)) {
+          res[i] <- FALSE
+        }
+      } else if (type == "sim_comp") {
+        if (length(new_classes[[i]]) - sum(apply(M_class_i, 1, any)) < min_comp) {
+          res[i] <- FALSE
+        }
+      }
+    }
+  }
+  res
 }
 
 merge_lvls <- function(grouping_factor, merging_lvl_1 = NULL) {

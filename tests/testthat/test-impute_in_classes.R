@@ -188,6 +188,109 @@ test_that("cut_vector() works with ordered factor vectors", {
 
 })
 
+test_that("are_classes_okay() works with donor_limit", {
+  test_df <- data.frame(X = 1:100, Y = 101:200)
+  test_df[1:10, "X"] <- NA
+  expect_identical(
+    are_classes_okay(test_df, list(1:15, 16:100), Inf, "cols_seq"),
+    c(TRUE, TRUE)
+  )
+
+  expect_identical(
+    are_classes_okay(test_df, list(1:15, 16:100), 2, "cols_seq"),
+    c(TRUE, TRUE)
+  )
+
+  expect_identical(
+    are_classes_okay(test_df, list(1:15, 16:100), 1, "cols_seq"),
+    c(FALSE, TRUE)
+  )
+
+  expect_identical(
+    are_classes_okay(test_df, list(1:12, 16:100), 2, "cols_seq"),
+    c(FALSE, TRUE)
+  )
+})
+
+test_that("are_classes_okay() works with min_objs_in_class", {
+  test_df <- data.frame(X = 1:100, Y = 101:200)
+  test_df[1:10, "X"] <- NA
+  expect_identical(
+    are_classes_okay(test_df, list(1:15, 16:100), min_objs_in_class = 10),
+    c(TRUE, TRUE)
+  )
+
+  expect_identical(
+    are_classes_okay(test_df, list(1:15, 16:100), min_objs_in_class = 16),
+    c(FALSE, TRUE)
+  )
+
+  expect_identical(
+    are_classes_okay(test_df, list(1:15, 16:100), min_objs_in_class = 99),
+    c(FALSE, FALSE)
+  )
+})
+
+
+test_that("are_classes_okay() works with min_comp and cols_seq", {
+  test_df <- data.frame(X = 1:100, Y = 101:200)
+  test_df[1:10, "X"] <- NA
+  expect_identical(
+    are_classes_okay(test_df, list(1:15, 16:100), type = "cols_seq", min_comp = 1),
+    c(TRUE, TRUE)
+  )
+
+  expect_identical(
+    are_classes_okay(test_df, list(1:15, 16:100), type = "cols_seq", min_comp = 6),
+    c(FALSE, TRUE)
+  )
+
+  expect_identical(
+    are_classes_okay(test_df, list(1:15, 16:100), type = "cols_seq", min_comp = 90),
+    c(FALSE, FALSE)
+  )
+
+  test_df2 <- test_df
+  test_df2[5:50, "Y"] <- NA
+  expect_identical(
+    are_classes_okay(test_df2, list(1:15, 16:100), type = "cols_seq", min_comp = 1),
+    c(TRUE, TRUE)
+  )
+})
+
+test_that("are_classes_okay() works with min_comp and sim_comp", {
+  test_df <- data.frame(X = 1:100, Y = 101:200)
+  test_df[1:10, "X"] <- NA
+  expect_identical(
+    are_classes_okay(test_df, list(1:15, 16:100), type = "sim_comp", min_comp = 1),
+    c(TRUE, TRUE)
+  )
+
+  expect_identical(
+    are_classes_okay(test_df, list(1:15, 16:100), type = "sim_comp", min_comp = 6),
+    c(FALSE, TRUE)
+  )
+
+  expect_identical(
+    are_classes_okay(test_df, list(1:15, 16:100), type = "sim_comp", min_comp = 90),
+    c(FALSE, FALSE)
+  )
+
+  test_df2 <- test_df
+  test_df2[5:50, "Y"] <- NA
+  expect_identical(
+    are_classes_okay(test_df2, list(1:15, 16:100), type = "sim_comp", min_comp = 1),
+    c(FALSE, TRUE)
+  )
+
+  expect_identical(
+    are_classes_okay(test_df2, list(1:15, 16:100), type = "sim_comp", min_comp = 0),
+    c(TRUE, TRUE)
+  )
+
+})
+
+
 test_that("merge_lvls() works with unorderd factors", {
   test_f <- factor(letters[c(1:5, 2:5, 1, 1, 3:4)], ordered = FALSE)
   levels(test_f) <- merge_lvls(test_f, NULL)
