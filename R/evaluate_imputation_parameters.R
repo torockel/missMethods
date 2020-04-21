@@ -70,7 +70,7 @@ evaluate_imputation_parameters <- function(imp_ds, orig_ds = NULL, true_pars = N
   calc_pars <- switch(parameter,
     mean = colMeans,
     median = make_col_fun(median),
-    var = function(x) diag(stats::var(x)),
+    var = function(x, ...) diag(stats::var(x, ...)),
     sd = make_col_fun(stats::sd),
     quantile = make_col_fun(stats::quantile),
     cov = stats::cov,
