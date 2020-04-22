@@ -25,13 +25,14 @@ get_split_indices <- function(ds, class_cols, breaks = Inf) {
   lapply(ds_split, function(x) as.integer(rownames(x)))
 }
 
-find_classes_recursive <- function(ds, class_cols, breaks = 3, use_quantiles = FALSE,
+find_classes_recursive <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
                                    donor_limit = Inf, type = "cols_seq",
                                    min_objs_in_class = 0,
                                    min_comp = 0,
                                    act_cols = seq_len(nrow(ds)),
                                    act_lvls = NULL,
-                                   imp_classes = list()) {
+                                   imp_classes = list(),
+                                   M = is.na(ds)) {
 
   # first check for fast return (no columns in act_cols or no more class_cols)
   if (length(act_cols) == 0L) { # no object in new class -> eliminate class
@@ -72,7 +73,7 @@ find_classes_recursive <- function(ds, class_cols, breaks = 3, use_quantiles = F
     new_lvls[empty_classes] <- NULL
     okay_classes <- are_classes_okay(ds, new_classes,
                                      donor_limit, type, min_objs_in_class,
-                                     min_comp)
+                                     min_comp, M)
     if (all(okay_classes)) { # everything okay -> leave repeat loop
       break
     } else { # join first not okay_class and try again
@@ -90,7 +91,8 @@ find_classes_recursive <- function(ds, class_cols, breaks = 3, use_quantiles = F
       donor_limit = donor_limit, type = type,
       act_cols = new_classes[[i]],
       act_lvls = new_lvls[[i]],
-      imp_classes = imp_classes
+      imp_classes = imp_classes,
+      M = M
     )
   }
   imp_classes
@@ -121,11 +123,12 @@ cut_vector <- function(x, breaks, use_quantiles = FALSE) {
 
 are_classes_okay <- function(ds, new_classes, donor_limit = Inf,
                              type = "cols_seq", min_objs_in_class = 0,
-                             min_comp = 0) {
+                             min_comp = 0, M = is.na(ds)) {
   res <- rep(TRUE, length(new_classes))
 
   for(i in seq_along(new_classes)) {
-    M_class_i  <- is.na(ds[new_classes[[i]], , drop = FALSE])
+    # M_class_i  <- is.na(ds[new_classes[[i]], , drop = FALSE])
+    M_class_i <- M[new_classes[[i]], ]
 
     if(is.finite(donor_limit)) { # check donor_limit, if donor_limit is finite
       if (min_donor_limit(M_class_i, type) > donor_limit)
