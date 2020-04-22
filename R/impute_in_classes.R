@@ -1,11 +1,14 @@
 
-find_classes <- function(ds, class_cols, breaks, donor_limit, type) {
-  okay <- FALSE
-  while (!okay) {
-    split_indices <- get_split_indices(ds, class_cols, breaks)
-    okay <- is_split_okay(ds, split_indices, donor_limit, type)
-  }
-  split_indices
+find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
+                         donor_limit = Inf, type = "cols_seq",
+                         min_objs_in_class = 0,
+                         min_comp = 0) {
+
+  find_classes_recursive(ds, class_cols, breaks = breaks, use_quantiles = use_quantiles,
+                         donor_limit = donor_limit, type = type,
+                         min_objs_in_class = min_objs_in_class,
+                         min_comp = min_comp,
+                         M = is.na(ds))
 }
 
 

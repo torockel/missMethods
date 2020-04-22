@@ -102,24 +102,24 @@ test_that("get_split_indices() argument breaks works", {
 })
 
 
-test_that("find_classes_recursive() works with breaks = Inf", {
+test_that("find_classes() works with breaks = Inf", {
   expect_identical(
-    find_classes_recursive(df_classes_test, integer()),
+    find_classes(df_classes_test, integer()),
     list(everything = 1:5)
   )
 
   expect_identical(
-    find_classes_recursive(df_classes_test, "X", breaks = Inf),
+    find_classes(df_classes_test, "X", breaks = Inf),
     list(`1` = 1:2, `2` = 3:5)
   )
 
   expect_identical(
-    find_classes_recursive(df_classes_test, "Y", breaks = Inf),
+    find_classes(df_classes_test, "Y", breaks = Inf),
     list(`3` = c(2:3, 5L), `4` = 4L, `5` = 1L)
   )
 
   expect_identical(
-    find_classes_recursive(df_classes_test, c("X", "Y"), breaks = Inf),
+    find_classes(df_classes_test, c("X", "Y"), breaks = Inf),
     list(`1.3` = 2L, `1.5` = 1L, `2.3` = c(3L, 5L), `2.4` = 4L)
   )
 
