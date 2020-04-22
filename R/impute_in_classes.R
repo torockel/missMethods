@@ -46,8 +46,9 @@ find_classes_recursive <- function(ds, class_cols, breaks = Inf, use_quantiles =
   }
 
   # no fast return:
-  # we have objects and at least one column to form classes:
-  grouping_factor <- cut_vector(ds[, class_cols[1], drop = TRUE],
+  # we have objects and at least one column to form classes
+  # we select only the objects from the act_cols
+  grouping_factor <- cut_vector(ds[act_cols, class_cols[1], drop = TRUE],
     breaks = breaks,
     use_quantiles = use_quantiles
   )
@@ -60,8 +61,7 @@ find_classes_recursive <- function(ds, class_cols, breaks = Inf, use_quantiles =
     new_classes <- list()
     new_lvls <- list()
     for (i in seq_along(lvls)) {
-      new_classes[[i]] <- which(grouping_factor == lvls[i])
-      new_classes[[i]] <- intersect(new_classes[[i]], act_cols)
+      new_classes[[i]] <- act_cols[grouping_factor == lvls[i]]
       new_lvls[[i]] <- ifelse(is.null(act_lvls), as.character(lvls[i]),
         paste(act_lvls, lvls[i], sep = ".")
       )
