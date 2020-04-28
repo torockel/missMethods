@@ -157,7 +157,7 @@ delete_1_to_x <- function(ds, p, miss_cols, ctrl_cols, x,
 #' the odds 1:x and the proportion of missing values \code{p} cannot be
 #' realized together.
 #' For example, if \code{p[i]} = 0.9, then a maximum of \code{x} = 1.25 is possible
-#' (assuming that  exactly 50 \% of the values are below and 50 \% of the values
+#' (assuming that  exactly 50 % of the values are below and 50 % of the values
 #' are above the cutoff value in \code{ctrl_cols[i]}).
 #' If a combination of \code{p} and \code{x} that cannot be realized together
 #' is given to \code{delete_MAR_1_to_x}, then a warning will be generated and

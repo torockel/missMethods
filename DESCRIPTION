@@ -17,6 +17,7 @@ Description: Supply functions for the creation and handling of missing data
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 Suggests: 
     ggplot2,

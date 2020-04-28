@@ -57,8 +57,8 @@ and no value will be imputed in the corresponding column or row.
 }
 \section{A Note for tibble users}{
 
-If you use tibbles and an error like \sQuote{Lossy cast from `value` <double>
-to `x` <integer>} occurs, you will first need to convert all integer columns
+If you use tibbles and an error like \sQuote{Lossy cast from \code{value} double
+to integer} occurs, you will first need to convert all integer columns
 with missing values to double. Another solution is to convert the tibble with
 as.data.frame() to a data frame. The data frame will automatically convert
 integer columns to double columns, if needed.
@@ -74,12 +74,12 @@ all.equal(ds_imp_app, ds_imp_mean)
 }
 \references{
 Beland, S., Pichette, F., & Jolani, S. (2016). Impact on
-  Cronbach's \eqn{\alpha}{alpha} of simple treatment methods for missing
-  data. \emph{The Quantitative Methods for Psychology}, 12(1), 57-73.
+Cronbach's \eqn{\alpha}{alpha} of simple treatment methods for missing
+data. \emph{The Quantitative Methods for Psychology}, 12(1), 57-73.
 }
 \seealso{
 A convenient interface exists for common cases like mean imputation:
-  \code{\link{impute_mean}}, \code{\link{impute_median}},
-  \code{\link{impute_mode}}. All these functions call
-  \code{apply_imputation}.
+\code{\link{impute_mean}}, \code{\link{impute_median}},
+\code{\link{impute_mode}}. All these functions call
+\code{apply_imputation}.
 }

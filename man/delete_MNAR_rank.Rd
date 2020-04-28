@@ -33,8 +33,8 @@ delete_MNAR_rank(ds, 0.2, "X")
 }
 \references{
 Santos, M. S., Pereira, R. C., Costa, A. F., Soares, J. P.,
-  Santos, J., & Abreu, P. H. (2019). Generating Synthetic Missing Data: A
-  Review by Missing Mechanism. \emph{IEEE Access}, 7, 11651-11667
+Santos, J., & Abreu, P. H. (2019). Generating Synthetic Missing Data: A
+Review by Missing Mechanism. \emph{IEEE Access}, 7, 11651-11667
 }
 \seealso{
 \code{\link{delete_MAR_rank}}

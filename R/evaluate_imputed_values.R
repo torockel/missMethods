@@ -34,7 +34,7 @@
 #' Additionally there are relative versions of bias and MAE implemented. In the
 #' relative versions, the differences are divided by the absolute values of the
 #' true values. These relative versions can be selected via "bias_rel" and
-#' "MAE_rel". The "NRMSE_tot_*" and "NRMSE_col_*" are equal, if the columnwise
+#' "MAE_rel". The "NRMSE_tot_" and "NRMSE_col_" are equal, if the columnwise
 #' normalization values are equal to the total normalization value (see
 #' examples).
 #'
