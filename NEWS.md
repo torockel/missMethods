@@ -1,5 +1,7 @@
 # missMethods (development version)
 
+* improve vignette "Generating missing values" (add connections to Santos et al. (2019))
+
 # missMethods 0.1.0
 
 ## New functions
