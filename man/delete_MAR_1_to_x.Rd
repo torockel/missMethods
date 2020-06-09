@@ -39,7 +39,8 @@ of a value to be missing  in group 2 (see details)}
 \item{cutoff_fun}{function that calculates the cutoff values in the
 \code{ctrl_cols}}
 
-\item{prop}{numeric of length one; (minimum) proportion of rows in group 1}
+\item{prop}{numeric of length one; (minimum) proportion of rows in group 1
+(only used for unordered factors)}
 
 \item{use_lpSolve}{logical; should lpSolve be used for the determination of
 groups, if \code{ctrl_cols[i]} is an unordered factor}

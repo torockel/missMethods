@@ -183,6 +183,7 @@ delete_1_to_x <- function(ds, p, miss_cols, ctrl_cols, x,
 #' @param add_realized_x logical; if TRUE the realized odds for miss_cols will
 #'   be returned (as attribute)
 #' @param prop numeric of length one; (minimum) proportion of rows in group 1
+#'   (only used for unordered factors)
 #' @param use_lpSolve logical; should lpSolve be used for the determination of
 #'   groups, if \code{ctrl_cols[i]} is an unordered factor
 #' @param ordered_as_unordered logical; should ordered factors be treated as
