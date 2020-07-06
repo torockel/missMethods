@@ -1,3 +1,8 @@
+test_that("find_classes() check for NA in ds[, class_cols]", {
+  expect_error(find_classes(matrix(c(NA, 1), ncol = 2), 1),
+               "No NAs in ds[, class_cols] allowed", fixed = TRUE)
+})
+
 test_that("find_classes() works with breaks = Inf and data frames", {
   expect_identical(
     find_classes(df_classes_test, integer()),

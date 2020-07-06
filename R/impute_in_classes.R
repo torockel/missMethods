@@ -4,6 +4,11 @@ find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
                          min_objs_in_class = 0,
                          min_comp = 0) {
 
+  # check for NA in class_cols
+  if (anyNA(ds[, class_cols])) {
+    stop("No NAs in ds[, class_cols] allowed")
+  }
+
   find_classes_recursive(ds, class_cols, breaks = breaks, use_quantiles = use_quantiles,
                          donor_limit = donor_limit, type = type,
                          min_objs_in_class = min_objs_in_class,
