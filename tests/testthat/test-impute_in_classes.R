@@ -169,6 +169,23 @@ test_that("find_classes() works with tibbles", {
   )
 })
 
+test_that("find_classes() argument breaks works", {
+  expect_identical(
+    find_classes(df_classes_test, "Y", breaks = 2),
+    list(`(3,4]` = c(2L, 3L, 4L, 5L), `(4,5]` = 1L)
+  )
+
+  expect_identical(
+    find_classes(tbl_classes_test, "Y", breaks = 2),
+    find_classes(matrix_classes_test, "Y", breaks = 2)
+  )
+
+  expect_identical(
+    find_classes(tbl_classes_test, "Y", breaks = 2),
+    find_classes(df_classes_test, "Y", breaks = 2)
+  )
+})
+
 test_that("cut_vector() works with numeric vectors", {
 
   # Inf breaks
