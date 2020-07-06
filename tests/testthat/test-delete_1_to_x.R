@@ -126,13 +126,13 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   res <- matrix(nrow = N, ncol = 3)
   colnames(res) <- c("X1", "X2", "Y")
   for (i in seq_len(N)) {
-    miss_ds <- delete_MAR_1_to_x(df_XY_100, 0.5, "X", "Y",
+    ds_miss <- delete_MAR_1_to_x(df_XY_100, 0.5, "X", "Y",
       x = 4,
       stochastic = TRUE
     )
-    res[i, "Y"] <- sum(is.na(miss_ds[, "Y"]))
-    res[i, "X1"] <- sum(is.na(miss_ds[1:50, "X"]))
-    res[i, "X2"] <- sum(is.na(miss_ds[51:100, "X"]))
+    res[i, "Y"] <- sum(is.na(ds_miss[, "Y"]))
+    res[i, "X1"] <- sum(is.na(ds_miss[1:50, "X"]))
+    res[i, "X2"] <- sum(is.na(ds_miss[51:100, "X"]))
   }
   sum_X1 <- sum(res[, "X1"])
   sum_X2 <- sum(res[, "X2"])

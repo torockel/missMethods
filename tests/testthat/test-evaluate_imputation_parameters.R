@@ -1,142 +1,142 @@
 test_that("evaluate_imputation_parameters() works with data frames", {
   # check data frames ---------------------------------------
-  orig_ds <- df_XY_20
-  imp_ds <- orig_ds
-  imp_ds[1:10, 1] <- 1
+  ds_orig <- df_XY_20
+  ds_imp <- ds_orig
+  ds_imp[1:10, 1] <- 1
   expect_equal(
-    evaluate_imputation_parameters(imp_ds, orig_ds = orig_ds),
-    evaluate_parameters(colMeans(imp_ds), colMeans(orig_ds))
+    evaluate_imputation_parameters(ds_imp, ds_orig = ds_orig),
+    evaluate_parameters(colMeans(ds_imp), colMeans(ds_orig))
   )
 
   # check parameter ---------------------------------------
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "mean"
     ),
-    evaluate_parameters(colMeans(imp_ds), colMeans(orig_ds))
+    evaluate_parameters(colMeans(ds_imp), colMeans(ds_orig))
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "median"
     ),
-    evaluate_parameters(sapply(imp_ds, median), sapply(orig_ds, median))
+    evaluate_parameters(sapply(ds_imp, median), sapply(ds_orig, median))
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "var"
     ),
-    evaluate_parameters(diag(var(imp_ds)), diag(var(orig_ds)))
+    evaluate_parameters(diag(var(ds_imp)), diag(var(ds_orig)))
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "sd"
     ),
-    evaluate_parameters(sapply(imp_ds, sd), sapply(orig_ds, sd))
+    evaluate_parameters(sapply(ds_imp, sd), sapply(ds_orig, sd))
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "quantile", probs = 0.3
     ),
     evaluate_parameters(
-      sapply(imp_ds, stats::quantile, probs = 0.3),
-      sapply(orig_ds, stats::quantile, probs = 0.3)
+      sapply(ds_imp, stats::quantile, probs = 0.3),
+      sapply(ds_orig, stats::quantile, probs = 0.3)
     )
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "quantile"
     ),
     evaluate_parameters(
-      sapply(imp_ds, stats::quantile),
-      sapply(orig_ds, stats::quantile)
+      sapply(ds_imp, stats::quantile),
+      sapply(ds_orig, stats::quantile)
     )
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "cov"
     ),
-    evaluate_parameters(cov(imp_ds), cov(orig_ds))
+    evaluate_parameters(cov(ds_imp), cov(ds_orig))
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "cor"
     ),
-    evaluate_parameters(cor(imp_ds), cor(orig_ds))
+    evaluate_parameters(cor(ds_imp), cor(ds_orig))
   )
 
   # check parameter error
   expect_error(
-    evaluate_imputation_parameters(imp_ds, orig_ds,
+    evaluate_imputation_parameters(ds_imp, ds_orig,
       parameter = "asdf"
     ),
     "'arg' should be one of "
   )
 
-  # check conflict orig_ds, true_pars ---------------------
+  # check conflict ds_orig, true_pars ---------------------
 
   # nothing supplied
   expect_error(
-    evaluate_imputation_parameters(imp_ds),
-    "exactly one of 'orig_ds' or 'true_pars' must be supplied"
+    evaluate_imputation_parameters(ds_imp),
+    "exactly one of 'ds_orig' or 'true_pars' must be supplied"
   )
 
   # both supplied
   expect_error(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       true_pars = c(10, 100)
     ),
-    "exactly one of 'orig_ds' or 'true_pars' must be supplied"
+    "exactly one of 'ds_orig' or 'true_pars' must be supplied"
   )
 
   # true_pars ---------------------------------------------
   expect_equal(
-    evaluate_imputation_parameters(imp_ds, true_pars = c(10, 100)),
-    evaluate_parameters(colMeans(imp_ds), c(10, 100))
+    evaluate_imputation_parameters(ds_imp, true_pars = c(10, 100)),
+    evaluate_parameters(colMeans(ds_imp), c(10, 100))
   )
 
   # criterion ---------------------------------------------
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       criterion = "MAE"
     ),
-    evaluate_parameters(colMeans(imp_ds), colMeans(orig_ds),
+    evaluate_parameters(colMeans(ds_imp), colMeans(ds_orig),
       criterion = "MAE"
     )
   )
 
   # which_cols --------------------------------------------
-  expect_equal(evaluate_imputation_parameters(imp_ds,
-    orig_ds = orig_ds,
+  expect_equal(evaluate_imputation_parameters(ds_imp,
+    ds_orig = ds_orig,
     which_cols = "Y"
   ), 0)
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       which_cols = "X"
     ),
-    evaluate_parameters(mean(imp_ds$X), mean(orig_ds$X))
+    evaluate_parameters(mean(ds_imp$X), mean(ds_orig$X))
   )
 
   # tolerance
-  expect_equal(evaluate_imputation_parameters(imp_ds,
-    orig_ds = orig_ds,
+  expect_equal(evaluate_imputation_parameters(ds_imp,
+    ds_orig = ds_orig,
     criterion = "precision",
     tolerance = 11
   ), 1)
@@ -144,143 +144,143 @@ test_that("evaluate_imputation_parameters() works with data frames", {
 
 test_that("evaluate_imputation_parameters() works with matrices", {
   # check matrices -----------------------------------------
-  orig_ds <- matrix_20_2
-  imp_ds <- orig_ds
-  imp_ds[1:10, 1] <- 1
+  ds_orig <- matrix_20_2
+  ds_imp <- ds_orig
+  ds_imp[1:10, 1] <- 1
   expect_equal(
-    evaluate_imputation_parameters(imp_ds, orig_ds = orig_ds),
-    evaluate_parameters(colMeans(imp_ds), colMeans(orig_ds))
+    evaluate_imputation_parameters(ds_imp, ds_orig = ds_orig),
+    evaluate_parameters(colMeans(ds_imp), colMeans(ds_orig))
   )
 
   # check parameter ---------------------------------------
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "mean"
     ),
-    evaluate_parameters(colMeans(imp_ds), colMeans(orig_ds))
+    evaluate_parameters(colMeans(ds_imp), colMeans(ds_orig))
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "median"
     ),
-    evaluate_parameters(apply(imp_ds, 2, median), apply(orig_ds, 2, median))
+    evaluate_parameters(apply(ds_imp, 2, median), apply(ds_orig, 2, median))
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "var"
     ),
-    evaluate_parameters(diag(var(imp_ds)), diag(var(orig_ds)))
+    evaluate_parameters(diag(var(ds_imp)), diag(var(ds_orig)))
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "sd"
     ),
-    evaluate_parameters(apply(imp_ds, 2, sd), apply(orig_ds, 2, sd))
+    evaluate_parameters(apply(ds_imp, 2, sd), apply(ds_orig, 2, sd))
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "quantile", probs = 0.3
     ),
     evaluate_parameters(
-      apply(imp_ds, 2, stats::quantile, probs = 0.3),
-      apply(orig_ds, 2, stats::quantile, probs = 0.3)
+      apply(ds_imp, 2, stats::quantile, probs = 0.3),
+      apply(ds_orig, 2, stats::quantile, probs = 0.3)
     )
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "quantile"
     ),
     evaluate_parameters(
-      apply(imp_ds, 2, stats::quantile),
-      apply(orig_ds, 2, stats::quantile)
+      apply(ds_imp, 2, stats::quantile),
+      apply(ds_orig, 2, stats::quantile)
     )
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "cov"
     ),
-    evaluate_parameters(cov(imp_ds), cov(orig_ds))
+    evaluate_parameters(cov(ds_imp), cov(ds_orig))
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "cor"
     ),
-    evaluate_parameters(cor(imp_ds), cor(orig_ds))
+    evaluate_parameters(cor(ds_imp), cor(ds_orig))
   )
 
   # check parameter error
   expect_error(
-    evaluate_imputation_parameters(imp_ds, orig_ds,
+    evaluate_imputation_parameters(ds_imp, ds_orig,
       parameter = "asdf"
     ),
     "'arg' should be one of "
   )
 
-  # check conflict orig_ds, true_pars ---------------------
+  # check conflict ds_orig, true_pars ---------------------
 
   # nothing supplied
   expect_error(
-    evaluate_imputation_parameters(imp_ds),
-    "exactly one of 'orig_ds' or 'true_pars' must be supplied"
+    evaluate_imputation_parameters(ds_imp),
+    "exactly one of 'ds_orig' or 'true_pars' must be supplied"
   )
 
   # both supplied
   expect_error(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       true_pars = c(10, 100)
     ),
-    "exactly one of 'orig_ds' or 'true_pars' must be supplied"
+    "exactly one of 'ds_orig' or 'true_pars' must be supplied"
   )
 
   # true_pars ---------------------------------------------
   expect_equal(
-    evaluate_imputation_parameters(imp_ds, true_pars = c(10, 100)),
-    evaluate_parameters(colMeans(imp_ds), c(10, 100))
+    evaluate_imputation_parameters(ds_imp, true_pars = c(10, 100)),
+    evaluate_parameters(colMeans(ds_imp), c(10, 100))
   )
 
   # criterion ---------------------------------------------
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       criterion = "MAE"
     ),
-    evaluate_parameters(colMeans(imp_ds), colMeans(orig_ds),
+    evaluate_parameters(colMeans(ds_imp), colMeans(ds_orig),
       criterion = "MAE"
     )
   )
 
   # which_cols --------------------------------------------
-  expect_equal(evaluate_imputation_parameters(imp_ds,
-    orig_ds = orig_ds,
+  expect_equal(evaluate_imputation_parameters(ds_imp,
+    ds_orig = ds_orig,
     which_cols = 2
   ), 0)
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       which_cols = 1
     ),
-    evaluate_parameters(mean(imp_ds[, 1]), mean(orig_ds[, 1]))
+    evaluate_parameters(mean(ds_imp[, 1]), mean(ds_orig[, 1]))
   )
 
   # tolerance
-  expect_equal(evaluate_imputation_parameters(imp_ds,
-    orig_ds = orig_ds,
+  expect_equal(evaluate_imputation_parameters(ds_imp,
+    ds_orig = ds_orig,
     criterion = "precision",
     tolerance = 11
   ), 1)
@@ -288,143 +288,143 @@ test_that("evaluate_imputation_parameters() works with matrices", {
 
 test_that("evaluate_imputation_parameters() works with tibbles", {
   # check tibbles ---------------------------------------
-  orig_ds <- tbl_XY_20
-  imp_ds <- orig_ds
-  imp_ds[1:10, 1] <- 1
+  ds_orig <- tbl_XY_20
+  ds_imp <- ds_orig
+  ds_imp[1:10, 1] <- 1
   expect_equal(
-    evaluate_imputation_parameters(imp_ds, orig_ds = orig_ds),
-    evaluate_parameters(colMeans(imp_ds), colMeans(orig_ds))
+    evaluate_imputation_parameters(ds_imp, ds_orig = ds_orig),
+    evaluate_parameters(colMeans(ds_imp), colMeans(ds_orig))
   )
 
   # check parameter ---------------------------------------
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "mean"
     ),
-    evaluate_parameters(colMeans(imp_ds), colMeans(orig_ds))
+    evaluate_parameters(colMeans(ds_imp), colMeans(ds_orig))
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "median"
     ),
-    evaluate_parameters(sapply(imp_ds, median), sapply(orig_ds, median))
+    evaluate_parameters(sapply(ds_imp, median), sapply(ds_orig, median))
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "var"
     ),
-    evaluate_parameters(diag(var(imp_ds)), diag(var(orig_ds)))
+    evaluate_parameters(diag(var(ds_imp)), diag(var(ds_orig)))
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "sd"
     ),
-    evaluate_parameters(sapply(imp_ds, sd), sapply(orig_ds, sd))
+    evaluate_parameters(sapply(ds_imp, sd), sapply(ds_orig, sd))
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "quantile", probs = 0.3
     ),
     evaluate_parameters(
-      sapply(imp_ds, stats::quantile, probs = 0.3),
-      sapply(orig_ds, stats::quantile, probs = 0.3)
+      sapply(ds_imp, stats::quantile, probs = 0.3),
+      sapply(ds_orig, stats::quantile, probs = 0.3)
     )
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "quantile"
     ),
     evaluate_parameters(
-      sapply(imp_ds, stats::quantile),
-      sapply(orig_ds, stats::quantile)
+      sapply(ds_imp, stats::quantile),
+      sapply(ds_orig, stats::quantile)
     )
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "cov"
     ),
-    evaluate_parameters(cov(imp_ds), cov(orig_ds))
+    evaluate_parameters(cov(ds_imp), cov(ds_orig))
   )
 
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       parameter = "cor"
     ),
-    evaluate_parameters(cor(imp_ds), cor(orig_ds))
+    evaluate_parameters(cor(ds_imp), cor(ds_orig))
   )
 
   # check parameter error
   expect_error(
-    evaluate_imputation_parameters(imp_ds, orig_ds,
+    evaluate_imputation_parameters(ds_imp, ds_orig,
       parameter = "asdf"
     ),
     "'arg' should be one of "
   )
 
-  # check conflict orig_ds, true_pars ---------------------
+  # check conflict ds_orig, true_pars ---------------------
 
   # nothing supplied
   expect_error(
-    evaluate_imputation_parameters(imp_ds),
-    "exactly one of 'orig_ds' or 'true_pars' must be supplied"
+    evaluate_imputation_parameters(ds_imp),
+    "exactly one of 'ds_orig' or 'true_pars' must be supplied"
   )
 
   # both supplied
   expect_error(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       true_pars = c(10, 100)
     ),
-    "exactly one of 'orig_ds' or 'true_pars' must be supplied"
+    "exactly one of 'ds_orig' or 'true_pars' must be supplied"
   )
 
   # true_pars ---------------------------------------------
   expect_equal(
-    evaluate_imputation_parameters(imp_ds, true_pars = c(10, 100)),
-    evaluate_parameters(colMeans(imp_ds), c(10, 100))
+    evaluate_imputation_parameters(ds_imp, true_pars = c(10, 100)),
+    evaluate_parameters(colMeans(ds_imp), c(10, 100))
   )
 
   # criterion ---------------------------------------------
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       criterion = "MAE"
     ),
-    evaluate_parameters(colMeans(imp_ds), colMeans(orig_ds),
+    evaluate_parameters(colMeans(ds_imp), colMeans(ds_orig),
       criterion = "MAE"
     )
   )
 
   # which_cols --------------------------------------------
-  expect_equal(evaluate_imputation_parameters(imp_ds,
-    orig_ds = orig_ds,
+  expect_equal(evaluate_imputation_parameters(ds_imp,
+    ds_orig = ds_orig,
     which_cols = "Y"
   ), 0)
   expect_equal(
-    evaluate_imputation_parameters(imp_ds,
-      orig_ds = orig_ds,
+    evaluate_imputation_parameters(ds_imp,
+      ds_orig = ds_orig,
       which_cols = "X"
     ),
-    evaluate_parameters(mean(imp_ds$X), mean(orig_ds$X))
+    evaluate_parameters(mean(ds_imp$X), mean(ds_orig$X))
   )
 
   # tolerance
-  expect_equal(evaluate_imputation_parameters(imp_ds,
-    orig_ds = orig_ds,
+  expect_equal(evaluate_imputation_parameters(ds_imp,
+    ds_orig = ds_orig,
     criterion = "precision",
     tolerance = 11
   ), 1)

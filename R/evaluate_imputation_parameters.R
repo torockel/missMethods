@@ -6,7 +6,7 @@
 #' @template evaluation
 #' @template evaluate-parameter
 #'
-#' @details Either \code{orig_ds} or \code{true_pars} must be supplied and the other one
+#' @details Either \code{ds_orig} or \code{true_pars} must be supplied and the other one
 #' must be \code{NULL} (default: both are \code{NULL}, just supply one, see
 #' examples). The following \code{parameter}s are implemented:
 #' "mean", "median", "var", "sd", "quantile", "cov", "cor".
@@ -35,34 +35,34 @@
 #' @export
 #'
 #' @examples
-#' # only orig_ds known
-#' orig_ds <- data.frame(X = 1:10, Y = 101:101)
-#' imp_ds <- impute_mean(delete_MCAR(orig_ds, 0.4))
-#' evaluate_imputation_parameters(imp_ds, orig_ds = orig_ds)
+#' # only ds_orig known
+#' ds_orig <- data.frame(X = 1:10, Y = 101:101)
+#' ds_imp <- impute_mean(delete_MCAR(ds_orig, 0.4))
+#' evaluate_imputation_parameters(ds_imp, ds_orig = ds_orig)
 #'
 #' # true parameters known
-#' orig_ds <- data.frame(X = rnorm(100), Y = rnorm(100, mean = 10))
-#' imp_ds <- impute_mean(delete_MCAR(orig_ds, 0.3))
-#' evaluate_imputation_parameters(imp_ds, true_pars = c(0, 10), parameter = "mean")
-#' evaluate_imputation_parameters(imp_ds, true_pars = c(1, 1), parameter = "var")
+#' ds_orig <- data.frame(X = rnorm(100), Y = rnorm(100, mean = 10))
+#' ds_imp <- impute_mean(delete_MCAR(ds_orig, 0.3))
+#' evaluate_imputation_parameters(ds_imp, true_pars = c(0, 10), parameter = "mean")
+#' evaluate_imputation_parameters(ds_imp, true_pars = c(1, 1), parameter = "var")
 #'
 #' # set quantiles
-#' evaluate_imputation_parameters(imp_ds,
+#' evaluate_imputation_parameters(ds_imp,
 #'   true_pars = c(qnorm(0.3), qnorm(0.3, mean = 10)),
 #'   parameter = "quantile", probs = 0.3
 #' )
 #'
 #' # compare only column Y
-#' evaluate_imputation_parameters(imp_ds,
+#' evaluate_imputation_parameters(ds_imp,
 #'   true_pars = c(Y = 10), parameter = "mean",
 #'   which_cols = "Y"
 #' )
-evaluate_imputation_parameters <- function(imp_ds, orig_ds = NULL, true_pars = NULL,
+evaluate_imputation_parameters <- function(ds_imp, ds_orig = NULL, true_pars = NULL,
                                            parameter = "mean", criterion = "RMSE",
-                                           which_cols = seq_len(ncol(imp_ds)),
+                                           which_cols = seq_len(ncol(ds_imp)),
                                            tolerance = sqrt(.Machine$double.eps), ...) {
-  if (!xor(is.null(orig_ds), is.null(true_pars))) {
-    stop("exactly one of 'orig_ds' or 'true_pars' must be supplied and the
+  if (!xor(is.null(ds_orig), is.null(true_pars))) {
+    stop("exactly one of 'ds_orig' or 'true_pars' must be supplied and the
          other one must be NULL")
   }
   match.arg(parameter, c("mean", "median", "var", "sd", "quantile", "cov", "cor"))
@@ -77,10 +77,10 @@ evaluate_imputation_parameters <- function(imp_ds, orig_ds = NULL, true_pars = N
     cor = stats::cor
   )
 
-  imp_pars <- calc_pars(imp_ds[, which_cols, drop = FALSE], ...)
+  imp_pars <- calc_pars(ds_imp[, which_cols, drop = FALSE], ...)
 
   if (is.null(true_pars)) { # pars must be calculated
-    true_pars <- calc_pars(orig_ds[, which_cols, drop = FALSE], ...)
+    true_pars <- calc_pars(ds_orig[, which_cols, drop = FALSE], ...)
   }
 
   evaluate_parameters(imp_pars, true_pars,

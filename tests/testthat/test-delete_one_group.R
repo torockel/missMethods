@@ -79,12 +79,12 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
   res <- matrix(nrow = N, ncol = 3)
   colnames(res) <- c("X1", "X2", "Y")
   for (i in seq_len(N)) {
-    miss_ds <- delete_MAR_one_group(df_XY_100, 0.2, "X", "Y",
+    ds_miss <- delete_MAR_one_group(df_XY_100, 0.2, "X", "Y",
       stochastic = TRUE
     )
-    res[i, "Y"] <- sum(is.na(miss_ds[, "Y"]))
-    res[i, "X1"] <- sum(is.na(miss_ds[1:50, "X"]))
-    res[i, "X2"] <- sum(is.na(miss_ds[51:100, "X"]))
+    res[i, "Y"] <- sum(is.na(ds_miss[, "Y"]))
+    res[i, "X1"] <- sum(is.na(ds_miss[1:50, "X"]))
+    res[i, "X2"] <- sum(is.na(ds_miss[51:100, "X"]))
   }
   sum_X1 <- sum(res[, "X1"])
   sum_X2 <- sum(res[, "X2"])

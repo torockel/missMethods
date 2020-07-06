@@ -1,6 +1,7 @@
 # missMethods (development version)
 
 * improve vignette "Generating missing values" (add connections to Santos et al. (2019))
+* rename of `ds` variables, now all should be named `ds_imp`, `ds_orig` etc.
 
 # missMethods 0.1.0
 

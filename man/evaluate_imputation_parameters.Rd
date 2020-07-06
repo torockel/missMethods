@@ -5,20 +5,20 @@
 \title{Evaluate estimated parameters after imputation}
 \usage{
 evaluate_imputation_parameters(
-  imp_ds,
-  orig_ds = NULL,
+  ds_imp,
+  ds_orig = NULL,
   true_pars = NULL,
   parameter = "mean",
   criterion = "RMSE",
-  which_cols = seq_len(ncol(imp_ds)),
+  which_cols = seq_len(ncol(ds_imp)),
   tolerance = sqrt(.Machine$double.eps),
   ...
 )
 }
 \arguments{
-\item{imp_ds}{a data frame or matrix with imputed values}
+\item{ds_imp}{a data frame or matrix with imputed values}
 
-\item{orig_ds}{a data frame or matrix with original (true) values}
+\item{ds_orig}{a data frame or matrix with original (true) values}
 
 \item{true_pars}{true parameters, normally a vector or a matrix}
 
@@ -42,7 +42,7 @@ Compares estimated parameters after imputation to true parameters or
 estimates based on the original dataset
 }
 \details{
-Either \code{orig_ds} or \code{true_pars} must be supplied and the other one
+Either \code{ds_orig} or \code{true_pars} must be supplied and the other one
 must be \code{NULL} (default: both are \code{NULL}, just supply one, see
 examples). The following \code{parameter}s are implemented:
 "mean", "median", "var", "sd", "quantile", "cov", "cor".
@@ -64,25 +64,25 @@ Possible choices for the argument \code{criterion} are documented in
 \code{\link{evaluate_imputed_values}}
 }
 \examples{
-# only orig_ds known
-orig_ds <- data.frame(X = 1:10, Y = 101:101)
-imp_ds <- impute_mean(delete_MCAR(orig_ds, 0.4))
-evaluate_imputation_parameters(imp_ds, orig_ds = orig_ds)
+# only ds_orig known
+ds_orig <- data.frame(X = 1:10, Y = 101:101)
+ds_imp <- impute_mean(delete_MCAR(ds_orig, 0.4))
+evaluate_imputation_parameters(ds_imp, ds_orig = ds_orig)
 
 # true parameters known
-orig_ds <- data.frame(X = rnorm(100), Y = rnorm(100, mean = 10))
-imp_ds <- impute_mean(delete_MCAR(orig_ds, 0.3))
-evaluate_imputation_parameters(imp_ds, true_pars = c(0, 10), parameter = "mean")
-evaluate_imputation_parameters(imp_ds, true_pars = c(1, 1), parameter = "var")
+ds_orig <- data.frame(X = rnorm(100), Y = rnorm(100, mean = 10))
+ds_imp <- impute_mean(delete_MCAR(ds_orig, 0.3))
+evaluate_imputation_parameters(ds_imp, true_pars = c(0, 10), parameter = "mean")
+evaluate_imputation_parameters(ds_imp, true_pars = c(1, 1), parameter = "var")
 
 # set quantiles
-evaluate_imputation_parameters(imp_ds,
+evaluate_imputation_parameters(ds_imp,
   true_pars = c(qnorm(0.3), qnorm(0.3, mean = 10)),
   parameter = "quantile", probs = 0.3
 )
 
 # compare only column Y
-evaluate_imputation_parameters(imp_ds,
+evaluate_imputation_parameters(ds_imp,
   true_pars = c(Y = 10), parameter = "mean",
   which_cols = "Y"
 )
