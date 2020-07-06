@@ -87,26 +87,26 @@ test_that("evaluate_imputation_parameters() works with data frames", {
     "'arg' should be one of "
   )
 
-  # check conflict ds_orig, true_pars ---------------------
+  # check conflict ds_orig, pars_true ---------------------
 
   # nothing supplied
   expect_error(
     evaluate_imputation_parameters(ds_imp),
-    "exactly one of 'ds_orig' or 'true_pars' must be supplied"
+    "exactly one of 'ds_orig' or 'pars_true' must be supplied"
   )
 
   # both supplied
   expect_error(
     evaluate_imputation_parameters(ds_imp,
       ds_orig = ds_orig,
-      true_pars = c(10, 100)
+      pars_true = c(10, 100)
     ),
-    "exactly one of 'ds_orig' or 'true_pars' must be supplied"
+    "exactly one of 'ds_orig' or 'pars_true' must be supplied"
   )
 
-  # true_pars ---------------------------------------------
+  # pars_true ---------------------------------------------
   expect_equal(
-    evaluate_imputation_parameters(ds_imp, true_pars = c(10, 100)),
+    evaluate_imputation_parameters(ds_imp, pars_true = c(10, 100)),
     evaluate_parameters(colMeans(ds_imp), c(10, 100))
   )
 
@@ -231,26 +231,26 @@ test_that("evaluate_imputation_parameters() works with matrices", {
     "'arg' should be one of "
   )
 
-  # check conflict ds_orig, true_pars ---------------------
+  # check conflict ds_orig, pars_true ---------------------
 
   # nothing supplied
   expect_error(
     evaluate_imputation_parameters(ds_imp),
-    "exactly one of 'ds_orig' or 'true_pars' must be supplied"
+    "exactly one of 'ds_orig' or 'pars_true' must be supplied"
   )
 
   # both supplied
   expect_error(
     evaluate_imputation_parameters(ds_imp,
       ds_orig = ds_orig,
-      true_pars = c(10, 100)
+      pars_true = c(10, 100)
     ),
-    "exactly one of 'ds_orig' or 'true_pars' must be supplied"
+    "exactly one of 'ds_orig' or 'pars_true' must be supplied"
   )
 
-  # true_pars ---------------------------------------------
+  # pars_true ---------------------------------------------
   expect_equal(
-    evaluate_imputation_parameters(ds_imp, true_pars = c(10, 100)),
+    evaluate_imputation_parameters(ds_imp, pars_true = c(10, 100)),
     evaluate_parameters(colMeans(ds_imp), c(10, 100))
   )
 
@@ -375,26 +375,26 @@ test_that("evaluate_imputation_parameters() works with tibbles", {
     "'arg' should be one of "
   )
 
-  # check conflict ds_orig, true_pars ---------------------
+  # check conflict ds_orig, pars_true ---------------------
 
   # nothing supplied
   expect_error(
     evaluate_imputation_parameters(ds_imp),
-    "exactly one of 'ds_orig' or 'true_pars' must be supplied"
+    "exactly one of 'ds_orig' or 'pars_true' must be supplied"
   )
 
   # both supplied
   expect_error(
     evaluate_imputation_parameters(ds_imp,
       ds_orig = ds_orig,
-      true_pars = c(10, 100)
+      pars_true = c(10, 100)
     ),
-    "exactly one of 'ds_orig' or 'true_pars' must be supplied"
+    "exactly one of 'ds_orig' or 'pars_true' must be supplied"
   )
 
-  # true_pars ---------------------------------------------
+  # pars_true ---------------------------------------------
   expect_equal(
-    evaluate_imputation_parameters(ds_imp, true_pars = c(10, 100)),
+    evaluate_imputation_parameters(ds_imp, pars_true = c(10, 100)),
     evaluate_parameters(colMeans(ds_imp), c(10, 100))
   )
 

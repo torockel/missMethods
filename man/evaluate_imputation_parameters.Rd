@@ -7,7 +7,7 @@
 evaluate_imputation_parameters(
   ds_imp,
   ds_orig = NULL,
-  true_pars = NULL,
+  pars_true = NULL,
   parameter = "mean",
   criterion = "RMSE",
   which_cols = seq_len(ncol(ds_imp)),
@@ -20,7 +20,7 @@ evaluate_imputation_parameters(
 
 \item{ds_orig}{a data frame or matrix with original (true) values}
 
-\item{true_pars}{true parameters, normally a vector or a matrix}
+\item{pars_true}{true parameters, normally a vector or a matrix}
 
 \item{parameter}{a string specifying the estimated parameters for comparison}
 
@@ -42,7 +42,7 @@ Compares estimated parameters after imputation to true parameters or
 estimates based on the original dataset
 }
 \details{
-Either \code{ds_orig} or \code{true_pars} must be supplied and the other one
+Either \code{ds_orig} or \code{pars_true} must be supplied and the other one
 must be \code{NULL} (default: both are \code{NULL}, just supply one, see
 examples). The following \code{parameter}s are implemented:
 "mean", "median", "var", "sd", "quantile", "cov", "cor".
@@ -57,7 +57,7 @@ argument \code{probs} (see examples). Otherwise, the default quantiles from
 }
 
 The argument \code{which_cols} allows the selection of columns for comparison
-(see examples). If \code{true_pars} is used, it is assumed that only relevant
+(see examples). If \code{pars_true} is used, it is assumed that only relevant
 parameters are supplied (see examples).
 
 Possible choices for the argument \code{criterion} are documented in
@@ -72,18 +72,18 @@ evaluate_imputation_parameters(ds_imp, ds_orig = ds_orig)
 # true parameters known
 ds_orig <- data.frame(X = rnorm(100), Y = rnorm(100, mean = 10))
 ds_imp <- impute_mean(delete_MCAR(ds_orig, 0.3))
-evaluate_imputation_parameters(ds_imp, true_pars = c(0, 10), parameter = "mean")
-evaluate_imputation_parameters(ds_imp, true_pars = c(1, 1), parameter = "var")
+evaluate_imputation_parameters(ds_imp, pars_true = c(0, 10), parameter = "mean")
+evaluate_imputation_parameters(ds_imp, pars_true = c(1, 1), parameter = "var")
 
 # set quantiles
 evaluate_imputation_parameters(ds_imp,
-  true_pars = c(qnorm(0.3), qnorm(0.3, mean = 10)),
+  pars_true = c(qnorm(0.3), qnorm(0.3, mean = 10)),
   parameter = "quantile", probs = 0.3
 )
 
 # compare only column Y
 evaluate_imputation_parameters(ds_imp,
-  true_pars = c(Y = 10), parameter = "mean",
+  pars_true = c(Y = 10), parameter = "mean",
   which_cols = "Y"
 )
 }

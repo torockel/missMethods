@@ -1,9 +1,9 @@
 test_that("evaluate_parameters()", {
-  true_pars <- 1:4
-  est_pars <- 2:5
-  expect_equal(evaluate_parameters(est_pars, true_pars, "RMSE"), 1)
+  pars_true <- 1:4
+  pars_est <- 2:5
+  expect_equal(evaluate_parameters(pars_est, pars_true, "RMSE"), 1)
   expect_error(
-    evaluate_parameters(1:3, true_pars, "RMSE"),
-    "the dimensions of est_pars and true_pars must be equal"
+    evaluate_parameters(1:3, pars_true, "RMSE"),
+    "the dimensions of pars_est and pars_true must be equal"
   )
 })

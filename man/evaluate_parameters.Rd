@@ -5,16 +5,16 @@
 \title{Evaluate estimated parameters}
 \usage{
 evaluate_parameters(
-  est_pars,
-  true_pars,
+  pars_est,
+  pars_true,
   criterion = "RMSE",
   tolerance = sqrt(.Machine$double.eps)
 )
 }
 \arguments{
-\item{est_pars}{a vector or matrix of estimated parameters}
+\item{pars_est}{a vector or matrix of estimated parameters}
 
-\item{true_pars}{true parameters, normally a vector or a matrix}
+\item{pars_true}{true parameters, normally a vector or a matrix}
 
 \item{criterion}{a string specifying the used criterion for comparing the
 imputed and original values}
