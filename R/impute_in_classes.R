@@ -12,22 +12,6 @@ find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
 }
 
 
-get_split_indices <- function(ds, class_cols, breaks = Inf) {
-  ds <- as.data.frame(ds) # to get indices by split and easier cutting
-  if (!is.null(row.names(ds))) { # to get always indices and not names from rows
-    row.names(ds) <- NULL
-  }
-  group_factors <- list()
-  for (i in seq_along(class_cols)) {
-    if (is.numeric(ds[, class_cols[i]]) && is.finite(breaks)) { # first cut into intervals
-      ds[, class_cols[i]] <- cut(ds[, class_cols[i], drop = TRUE], breaks)
-    }
-    group_factors[[i]] <- as.factor(ds[, class_cols[i]])
-  }
-  ds_split <- split(ds, group_factors, drop = TRUE)
-  lapply(ds_split, function(x) as.integer(rownames(x)))
-}
-
 find_classes_recursive <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
                                    donor_limit = Inf, type = "cols_seq",
                                    min_objs_in_class = 0,
