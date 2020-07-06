@@ -195,6 +195,10 @@ test_that("are_classes_okay() works with min_objs_in_class", {
 
 
 test_that("are_classes_okay() works with min_comp and cols_seq", {
+
+  are_classes_okay(data.frame(X = 1:2, Y = c(NA, 1)),
+                   list(1, 2), min_comp = 1)
+
   test_df <- data.frame(X = 1:100, Y = 101:200)
   test_df[1:10, "X"] <- NA
   expect_identical(

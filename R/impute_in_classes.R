@@ -120,7 +120,7 @@ are_classes_okay <- function(ds, new_classes, donor_limit = Inf,
 
   for(i in seq_along(new_classes)) {
     # M_class_i  <- is.na(ds[new_classes[[i]], , drop = FALSE])
-    M_class_i <- M[new_classes[[i]], ]
+    M_class_i <- M[new_classes[[i]], ,drop = FALSE]
 
     if(is.finite(donor_limit)) { # check donor_limit, if donor_limit is finite
       if (min_donor_limit(M_class_i, type) > donor_limit)
