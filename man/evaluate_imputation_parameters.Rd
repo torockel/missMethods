@@ -13,6 +13,7 @@ evaluate_imputation_parameters(
   which_cols = seq_len(ncol(ds_imp)),
   tolerance = sqrt(.Machine$double.eps),
   imp_ds,
+  true_pars,
   ...
 )
 }
@@ -34,6 +35,8 @@ imputed and original values}
 numeric differences smaller than tolerance are treated as zero/equal}
 
 \item{imp_ds}{deprecated, renamed to \code{ds_imp}}
+
+\item{true_pars}{deprecated, renamed to \code{pars_true}}
 
 \item{...}{further arguments passed to function for parameter estimation}
 }

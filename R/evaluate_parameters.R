@@ -11,13 +11,29 @@
 #'
 #' @param pars_est a vector or matrix of estimated parameters
 #' @param pars_true true parameters, normally a vector or a matrix
+#' @param est_pars deprecated, renamed to \code{pars_est}
+#' @param true_pars deprecated, renamed to \code{pars_true}
 #'
 #' @export
 #'
 #' @examples
 #' evaluate_parameters(1:4, 2:5, "RMSE")
 evaluate_parameters <- function(pars_est, pars_true, criterion = "RMSE",
-                                tolerance = sqrt(.Machine$double.eps)) {
+                                tolerance = sqrt(.Machine$double.eps),
+                                est_pars, true_pars) {
+
+  # deprecate true_pars
+  if (!missing(true_pars)) {
+    warning("true_pars is deprecated; use pars_true instead")
+    pars_true <- true_pars
+  }
+
+  # deprecate est_pars
+  if (!missing(est_pars)) {
+    warning("est_pars is deprecated; use pars_est instead")
+    pars_est <- est_pars
+  }
+
   if (!isTRUE(all.equal(dim(pars_est), dim(pars_true))) ||
     length(pars_est) != length(pars_true)) {
     stop("the dimensions of pars_est and pars_true must be equal")

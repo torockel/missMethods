@@ -8,7 +8,9 @@ evaluate_parameters(
   pars_est,
   pars_true,
   criterion = "RMSE",
-  tolerance = sqrt(.Machine$double.eps)
+  tolerance = sqrt(.Machine$double.eps),
+  est_pars,
+  true_pars
 )
 }
 \arguments{
@@ -21,6 +23,10 @@ imputed and original values}
 
 \item{tolerance}{numeric, only used for \code{criterion = "precision"}:
 numeric differences smaller than tolerance are treated as zero/equal}
+
+\item{est_pars}{deprecated, renamed to \code{pars_est}}
+
+\item{true_pars}{deprecated, renamed to \code{pars_true}}
 }
 \value{
 a numeric vector of length one
