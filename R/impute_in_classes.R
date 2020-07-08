@@ -2,7 +2,7 @@
 find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
                          donor_limit = Inf, type = "cols_seq",
                          min_objs_in_class = 0,
-                         min_comp = 0) {
+                         min_comp_obs = 0) {
 
   # check for NA in class_cols
   if (anyNA(ds[, class_cols])) {
@@ -12,7 +12,7 @@ find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
   find_classes_recursive(ds, class_cols, breaks = breaks, use_quantiles = use_quantiles,
                          donor_limit = donor_limit, type = type,
                          min_objs_in_class = min_objs_in_class,
-                         min_comp = min_comp,
+                         min_comp_obs = min_comp_obs,
                          M = is.na(ds))
 }
 
@@ -20,7 +20,7 @@ find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
 find_classes_recursive <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
                                    donor_limit = Inf, type = "cols_seq",
                                    min_objs_in_class = 0,
-                                   min_comp = 0,
+                                   min_comp_obs = 0,
                                    act_cols = seq_len(nrow(ds)),
                                    act_lvls = NULL,
                                    imp_classes = list(),
@@ -65,7 +65,7 @@ find_classes_recursive <- function(ds, class_cols, breaks = Inf, use_quantiles =
     new_lvls[empty_classes] <- NULL
     okay_classes <- are_classes_okay(ds, new_classes,
                                      donor_limit, type, min_objs_in_class,
-                                     min_comp, M)
+                                     min_comp_obs, M)
     if (all(okay_classes)) { # everything okay -> leave repeat loop
       break
     } else { # join first not okay_class and try again
@@ -114,33 +114,38 @@ cut_vector <- function(x, breaks, use_quantiles = FALSE) {
 }
 
 are_classes_okay <- function(ds, new_classes, donor_limit = Inf,
-                             type = "cols_seq", min_objs_in_class = 0,
-                             min_comp = 0, M = is.na(ds)) {
+                             type = "cols_seq", min_objs_in_class = 1,
+                             min_comp_obs = 0,
+                             M = is.na(ds)) {
+
   res <- rep(TRUE, length(new_classes))
 
   for(i in seq_along(new_classes)) {
     # M_class_i  <- is.na(ds[new_classes[[i]], , drop = FALSE])
     M_class_i <- M[new_classes[[i]], ,drop = FALSE]
 
-    if(is.finite(donor_limit)) { # check donor_limit, if donor_limit is finite
+    ## check donor_limit, if donor_limit is finite ---------
+    if(is.finite(donor_limit)) {
       if (min_donor_limit(M_class_i, type) > donor_limit)
         res[i] <- FALSE
     }
 
-    if (min_objs_in_class > 1) { # check min_objs_in_class, if > 1
+    ## check min_objs_in_class, if > 1 --------------------
+    if (min_objs_in_class > 1) {
       if (length(new_classes[[i]]) < min_objs_in_class) {
         res[i] <- FALSE
       }
     }
 
-    if (min_comp > 0) { # check min_comp, if > 0
+    ## check min_comp_obs, if > 0 -------------------------
+    if (min_comp_obs > 0) {
 
       if (type == "cols_seq") {
-        if(any(apply(M_class_i, 2, function(x) sum(!x)) < min_comp)) {
+        if(any(apply(M_class_i, 2, function(x) sum(!x)) < min_comp_obs)) {
           res[i] <- FALSE
         }
       } else if (type == "sim_comp") {
-        if (length(new_classes[[i]]) - sum(apply(M_class_i, 1, any)) < min_comp) {
+        if (length(new_classes[[i]]) - sum(apply(M_class_i, 1, any)) < min_comp_obs) {
           res[i] <- FALSE
         }
       }
