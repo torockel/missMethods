@@ -10,7 +10,9 @@ evaluate_imputed_values(
   criterion = "RMSE",
   M = NULL,
   which_cols = seq_len(ncol(ds_imp)),
-  tolerance = sqrt(.Machine$double.eps)
+  tolerance = sqrt(.Machine$double.eps),
+  imp_ds,
+  orig_ds
 )
 }
 \arguments{
@@ -29,6 +31,10 @@ data indicator matrix is normally created via \code{is.na(ds_miss)}, where
 
 \item{tolerance}{numeric, only used for \code{criterion = "precision"}:
 numeric differences smaller than tolerance are treated as zero/equal}
+
+\item{imp_ds}{deprecated, renamed to \code{ds_imp}}
+
+\item{orig_ds}{deprecated, renamed to \code{ds_orig}}
 }
 \value{
 a numeric vector of length one

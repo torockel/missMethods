@@ -12,6 +12,7 @@ evaluate_imputation_parameters(
   criterion = "RMSE",
   which_cols = seq_len(ncol(ds_imp)),
   tolerance = sqrt(.Machine$double.eps),
+  imp_ds,
   ...
 )
 }
@@ -31,6 +32,8 @@ imputed and original values}
 
 \item{tolerance}{numeric, only used for \code{criterion = "precision"}:
 numeric differences smaller than tolerance are treated as zero/equal}
+
+\item{imp_ds}{deprecated, renamed to \code{ds_imp}}
 
 \item{...}{further arguments passed to function for parameter estimation}
 }

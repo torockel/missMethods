@@ -58,6 +58,8 @@
 #' @param M NULL (the default) or a missing data indicator matrix; the missing
 #'   data indicator matrix is normally created via \code{is.na(ds_miss)}, where
 #'   \code{ds_miss} is the dataset after deleting values from \code{ds_orig}
+#' @param imp_ds deprecated, renamed to \code{ds_imp}
+#' @param orig_ds deprecated, renamed to \code{ds_orig}
 #'
 #' @export
 #'
@@ -85,7 +87,20 @@
 #' evaluate_imputed_values(ds_imp, ds_orig, "NRMSE_col_mean")
 evaluate_imputed_values <- function(ds_imp, ds_orig, criterion = "RMSE", M = NULL,
                                     which_cols = seq_len(ncol(ds_imp)),
-                                    tolerance = sqrt(.Machine$double.eps)) {
+                                    tolerance = sqrt(.Machine$double.eps), imp_ds, orig_ds) {
+
+  # deprecate imp_ds
+  if (!missing(imp_ds)) {
+    warning("imp_ds is deprecated; use ds_imp instead")
+    ds_imp <- imp_ds
+  }
+
+  # deprecate orig_ds
+  if (!missing(orig_ds)) {
+    warning("orig_ds is deprecated; use ds_orig instead")
+    ds_orig <- orig_ds
+  }
+
   if (!isTRUE(all.equal(dim(ds_imp), dim(ds_orig)))) {
     stop("the dimensions of ds_imp and ds_orig must be equal")
   }

@@ -60,7 +60,13 @@
 evaluate_imputation_parameters <- function(ds_imp, ds_orig = NULL, pars_true = NULL,
                                            parameter = "mean", criterion = "RMSE",
                                            which_cols = seq_len(ncol(ds_imp)),
-                                           tolerance = sqrt(.Machine$double.eps), ...) {
+                                           tolerance = sqrt(.Machine$double.eps), imp_ds,...) {
+  # deprecate imp_ds
+  if (!missing(imp_ds)) {
+    warning("imp_ds is deprecated; use ds_imp instead")
+    ds_imp <- imp_ds
+  }
+
   if (!xor(is.null(ds_orig), is.null(pars_true))) {
     stop("exactly one of 'ds_orig' or 'pars_true' must be supplied and the
          other one must be NULL")
