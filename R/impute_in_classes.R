@@ -1,8 +1,8 @@
 
 find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
-                         donor_limit = Inf, type = "cols_seq",
                          min_objs_in_class = 0,
-                         min_comp_obs = 0) {
+                         min_comp_obs = 0,
+                         donor_limit = Inf, type = "cols_seq") {
 
   # check for NA in class_cols
   if (anyNA(ds[, class_cols])) {
@@ -10,17 +10,17 @@ find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
   }
 
   find_classes_recursive(ds, class_cols, breaks = breaks, use_quantiles = use_quantiles,
-                         donor_limit = donor_limit, type = type,
                          min_objs_in_class = min_objs_in_class,
                          min_comp_obs = min_comp_obs,
+                         donor_limit = donor_limit, type = type,
                          M = is.na(ds))
 }
 
 
 find_classes_recursive <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
-                                   donor_limit = Inf, type = "cols_seq",
                                    min_objs_in_class = 0,
                                    min_comp_obs = 0,
+                                   donor_limit = Inf, type = "cols_seq",
                                    act_cols = seq_len(nrow(ds)),
                                    act_lvls = NULL,
                                    imp_classes = list(),
@@ -81,6 +81,8 @@ find_classes_recursive <- function(ds, class_cols, breaks = Inf, use_quantiles =
   for (i in seq_along(new_classes)) {
     imp_classes <- find_classes_recursive(ds, class_cols[-1],
       breaks = breaks,
+      min_objs_in_class = min_objs_in_class,
+      min_comp_obs = min_comp_obs,
       donor_limit = donor_limit, type = type,
       act_cols = new_classes[[i]],
       act_lvls = new_lvls[[i]],
