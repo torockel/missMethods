@@ -2,6 +2,7 @@
 find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
                          min_objs_in_class = 0,
                          min_comp_obs = 0,
+                         min_obs_per_col = 0,
                          donor_limit = Inf, type = "cols_seq") {
 
   # check for NA in class_cols
@@ -12,6 +13,7 @@ find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
   find_classes_recursive(ds, class_cols, breaks = breaks, use_quantiles = use_quantiles,
                          min_objs_in_class = min_objs_in_class,
                          min_comp_obs = min_comp_obs,
+                         min_obs_per_col = min_obs_per_col,
                          donor_limit = donor_limit, type = type,
                          act_cols = seq_len(nrow(ds)),
                          act_lvls = NULL,
@@ -27,10 +29,10 @@ find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
 find_classes_recursive <- function(ds, class_cols, breaks, use_quantiles,
                                    min_objs_in_class,
                                    min_comp_obs,
+                                   min_obs_per_col,
                                    donor_limit, type,
                                    act_cols, act_lvls = NULL, imp_classes,
                                    M) {
-
 
 
   # first check for fast return (no columns in act_cols or no more class_cols)
@@ -72,8 +74,9 @@ find_classes_recursive <- function(ds, class_cols, breaks, use_quantiles,
     new_lvls[empty_classes] <- NULL
     okay_classes <- are_classes_okay(ds, new_classes,
                                      min_objs_in_class, min_comp_obs,
-                                     donor_limit, type,
-                                     M)
+                                     min_obs_per_col = min_obs_per_col,
+                                     donor_limit = donor_limit, type = type,
+                                     M = M)
     if (all(okay_classes)) { # everything okay -> leave repeat loop
       break
     } else { # join first not okay_class and try again
@@ -91,6 +94,7 @@ find_classes_recursive <- function(ds, class_cols, breaks, use_quantiles,
       breaks = breaks,
       min_objs_in_class = min_objs_in_class,
       min_comp_obs = min_comp_obs,
+      min_obs_per_col = min_obs_per_col,
       donor_limit = donor_limit, type = type,
       act_cols = new_classes[[i]],
       act_lvls = new_lvls[[i]],
@@ -127,6 +131,7 @@ cut_vector <- function(x, breaks, use_quantiles = FALSE) {
 are_classes_okay <- function(ds, new_classes,
                              min_objs_in_class = 1,
                              min_comp_obs = 0,
+                             min_obs_per_col = 0,
                              donor_limit = Inf,
                              type = "cols_seq",
                              M = is.na(ds)) {
@@ -153,22 +158,20 @@ are_classes_okay <- function(ds, new_classes,
       }
     }
 
+    ## check min_obs_per_col, if > 0 -------------------------
+    if (min_obs_per_col > 0) {
+      obs_per_col <- apply(M_class_i, 2, function(x) sum(!x))
+      if (any(obs_per_col < min_obs_per_col)) {
+        res[i] <- FALSE
+      }
+    }
+
     ## check donor_limit, if donor_limit is finite ---------
     if(is.finite(donor_limit)) {
       if (min_donor_limit(M_class_i, type) > donor_limit)
         res[i] <- FALSE
     }
 
-    #   if (type == "cols_seq") {
-    #     if(any(apply(M_class_i, 2, function(x) sum(!x)) < min_comp_obs)) {
-    #       res[i] <- FALSE
-    #     }
-    #   } else if (type == "sim_comp") {
-    #     if (length(new_classes[[i]]) - sum(apply(M_class_i, 1, any)) < min_comp_obs) {
-    #       res[i] <- FALSE
-    #     }
-    #   }
-    # }
   }
   res
 }
