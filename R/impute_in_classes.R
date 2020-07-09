@@ -64,8 +64,9 @@ find_classes_recursive <- function(ds, class_cols, breaks = Inf, use_quantiles =
     new_classes[empty_classes] <- NULL
     new_lvls[empty_classes] <- NULL
     okay_classes <- are_classes_okay(ds, new_classes,
-                                     donor_limit, type, min_objs_in_class,
-                                     min_comp_obs, M)
+                                     min_objs_in_class, min_comp_obs,
+                                     donor_limit, type,
+                                     M)
     if (all(okay_classes)) { # everything okay -> leave repeat loop
       break
     } else { # join first not okay_class and try again
@@ -113,22 +114,17 @@ cut_vector <- function(x, breaks, use_quantiles = FALSE) {
   x
 }
 
-are_classes_okay <- function(ds, new_classes, donor_limit = Inf,
-                             type = "cols_seq", min_objs_in_class = 1,
+are_classes_okay <- function(ds, new_classes,
+                             min_objs_in_class = 1,
                              min_comp_obs = 0,
+                             donor_limit = Inf,
+                             type = "cols_seq",
                              M = is.na(ds)) {
 
   res <- rep(TRUE, length(new_classes))
 
   for(i in seq_along(new_classes)) {
-    # M_class_i  <- is.na(ds[new_classes[[i]], , drop = FALSE])
     M_class_i <- M[new_classes[[i]], ,drop = FALSE]
-
-    ## check donor_limit, if donor_limit is finite ---------
-    if(is.finite(donor_limit)) {
-      if (min_donor_limit(M_class_i, type) > donor_limit)
-        res[i] <- FALSE
-    }
 
     ## check min_objs_in_class, if > 1 --------------------
     if (min_objs_in_class > 1) {
@@ -145,6 +141,12 @@ are_classes_okay <- function(ds, new_classes, donor_limit = Inf,
       if(n_comp_obs_i < min_comp_obs) {
         res[i] <- FALSE
       }
+    }
+
+    ## check donor_limit, if donor_limit is finite ---------
+    if(is.finite(donor_limit)) {
+      if (min_donor_limit(M_class_i, type) > donor_limit)
+        res[i] <- FALSE
     }
 
     #   if (type == "cols_seq") {
