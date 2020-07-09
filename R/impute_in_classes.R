@@ -13,18 +13,25 @@ find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
                          min_objs_in_class = min_objs_in_class,
                          min_comp_obs = min_comp_obs,
                          donor_limit = donor_limit, type = type,
+                         act_cols = seq_len(nrow(ds)),
+                         act_lvls = NULL,
+                         imp_classes = list(),
                          M = is.na(ds))
 }
 
 
-find_classes_recursive <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
-                                   min_objs_in_class = 0,
-                                   min_comp_obs = 0,
-                                   donor_limit = Inf, type = "cols_seq",
-                                   act_cols = seq_len(nrow(ds)),
-                                   act_lvls = NULL,
-                                   imp_classes = list(),
-                                   M = is.na(ds)) {
+## No defaults for the recursive function
+## all arguments should be handed over by the calling function
+## This will automatically throw an error, if a new argument is added to the
+## function, but not in the calling statement(s)
+find_classes_recursive <- function(ds, class_cols, breaks, use_quantiles,
+                                   min_objs_in_class,
+                                   min_comp_obs,
+                                   donor_limit, type,
+                                   act_cols, act_lvls = NULL, imp_classes,
+                                   M) {
+
+
 
   # first check for fast return (no columns in act_cols or no more class_cols)
   if (length(act_cols) == 0L) { # no object in new class -> eliminate class
@@ -80,6 +87,7 @@ find_classes_recursive <- function(ds, class_cols, breaks = Inf, use_quantiles =
   # call find_classes_recursive() for all new formed classes
   for (i in seq_along(new_classes)) {
     imp_classes <- find_classes_recursive(ds, class_cols[-1],
+      use_quantiles = use_quantiles,
       breaks = breaks,
       min_objs_in_class = min_objs_in_class,
       min_comp_obs = min_comp_obs,
