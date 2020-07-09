@@ -139,17 +139,24 @@ are_classes_okay <- function(ds, new_classes, donor_limit = Inf,
 
     ## check min_comp_obs, if > 0 -------------------------
     if (min_comp_obs > 0) {
+      n_incomp_obs_i <-  sum(apply(M_class_i, 1, any))
+      n_comp_obs_i <- length(new_classes[[i]]) - n_incomp_obs_i
 
-      if (type == "cols_seq") {
-        if(any(apply(M_class_i, 2, function(x) sum(!x)) < min_comp_obs)) {
-          res[i] <- FALSE
-        }
-      } else if (type == "sim_comp") {
-        if (length(new_classes[[i]]) - sum(apply(M_class_i, 1, any)) < min_comp_obs) {
-          res[i] <- FALSE
-        }
+      if(n_comp_obs_i < min_comp_obs) {
+        res[i] <- FALSE
       }
     }
+
+    #   if (type == "cols_seq") {
+    #     if(any(apply(M_class_i, 2, function(x) sum(!x)) < min_comp_obs)) {
+    #       res[i] <- FALSE
+    #     }
+    #   } else if (type == "sim_comp") {
+    #     if (length(new_classes[[i]]) - sum(apply(M_class_i, 1, any)) < min_comp_obs) {
+    #       res[i] <- FALSE
+    #     }
+    #   }
+    # }
   }
   res
 }
