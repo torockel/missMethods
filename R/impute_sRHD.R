@@ -128,7 +128,7 @@ impute_sRHD <- function(ds, type = "cols_seq", donor_limit = Inf) {
 impute_sRHD_cols_seq <- function(ds, M = is.na(ds), donor_limit) {
   if (is.infinite(donor_limit)) { # Inf donor_limit -> easy/faster implementation
     for (k in seq_len(ncol(ds))) {
-      ds[M[, k], k] <- sample(ds[!M[, k], k, drop = TRUE], sum(M[, k]), replace = TRUE)
+      ds[M[, k], k] <- resample(ds[!M[, k], k, drop = TRUE], sum(M[, k]), replace = TRUE)
     }
   } else { # finite donor_limit ----------------------------
     for (k in seq_len(ncol(ds))) {

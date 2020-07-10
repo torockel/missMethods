@@ -182,6 +182,13 @@ test_that("impute_sRHD() works with tibbles", {
   )
 })
 
+test_that("impute_sRHD_cols_seq() REsamples", {
+  expect_equal(
+    impute_sRHD_cols_seq(data.frame(X = c(1e10, NA)), donor_limit = Inf),
+    data.frame(X = c(1e10, 1e10))
+  )
+})
+
 # check helpers -------------------------------------------
 test_that("min_donor_limit()", {
   M_i_donor <- list()
