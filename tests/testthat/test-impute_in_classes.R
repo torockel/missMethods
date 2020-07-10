@@ -154,22 +154,22 @@ test_that("are_classes_okay() works with donor_limit", {
   test_df <- data.frame(X = 1:100, Y = 101:200)
   test_df[1:10, "X"] <- NA
   expect_identical(
-    are_classes_okay(test_df, list(1:15, 16:100), donor_limit = Inf, type = "cols_seq"),
+    are_classes_okay(test_df, list(1:15, 16:100), donor_limit = Inf, dl_type = "cols_seq"),
     c(TRUE, TRUE)
   )
 
   expect_identical(
-    are_classes_okay(test_df, list(1:15, 16:100), donor_limit = 2, type = "cols_seq"),
+    are_classes_okay(test_df, list(1:15, 16:100), donor_limit = 2, dl_type = "cols_seq"),
     c(TRUE, TRUE)
   )
 
   expect_identical(
-    are_classes_okay(test_df, list(1:15, 16:100), donor_limit = 1, type = "cols_seq"),
+    are_classes_okay(test_df, list(1:15, 16:100), donor_limit = 1, dl_type = "cols_seq"),
     c(FALSE, TRUE)
   )
 
   expect_identical(
-    are_classes_okay(test_df, list(1:12, 16:100), donor_limit = 2, type = "cols_seq"),
+    are_classes_okay(test_df, list(1:12, 16:100), donor_limit = 2, dl_type = "cols_seq"),
     c(FALSE, TRUE)
   )
 })
