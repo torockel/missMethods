@@ -162,3 +162,15 @@ test_that("delete_MAR_one_group() (and delete_one_group(), which is called by
   expect_true(isTRUE(all.equal(count_NA(tbl_miss[1:50, 2]), c(Y = 10))) ||
     isTRUE(all.equal(count_NA(tbl_miss[1:50, 2]), c(Y = 00))))
 })
+
+# check delete_MNAR_one_group -----------------------------
+test_that("delete_MNAR_one_group() works", {
+  # check that delete_MNAR_one_group() calls check_delete_args_MNAR()
+  expect_error(
+    delete_MNAR_one_group(df_XY_X_miss, 0.1, "X"),
+    "miss_cols must be completely observed; no NAs in ds\\[, miss_cols\\] allowed"
+  )
+
+  df_miss <- delete_MNAR_one_group(df_XY_100, c(0.3, 0.1), c("X", "Y"))
+  expect_equal(count_NA(df_miss), c(X = 30, Y = 10))
+})
