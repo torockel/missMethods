@@ -1,10 +1,15 @@
 # missMethods (development version)
 
+## New functions
+
+* `impute_in_classes()` allows to apply any imputation function inside imputation classes 
+
+## Miscellaneous
+
 * improve vignette "Generating missing values" (add connections to Santos et al. (2019))
 * rename of `ds` variables: now all should be named `ds_imp`, `ds_orig` etc.
 * rename of `pars` variables: now all should be named `pars_est` or `pars_true`
 
-Bugfixes:
 * sampling of sRHD type cols_seq is no correct, if the donor is only one numeric value
 
 # missMethods 0.1.0

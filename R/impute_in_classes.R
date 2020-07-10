@@ -1,3 +1,84 @@
+#' Impute in classes
+#'
+#' Apply an imputation function inside imputation classes
+#'
+#' @details Imputation classes (sometimes also called adjustment cells) are
+#' build using cross-validation of all `class_cols`. The classes are collapsed,
+#' if they do not satisfy any of the criteria defined by `min_objs_in_class,
+#' min_comp_obs, min_obs_per_col` or `donor_limit`. Collapsing starts from the
+#' last value of `class_cols`. Internally a mixture of collapsing and early
+#' stopping is used for the construction of the classes.
+#'
+#' @template impute
+#'
+#' @param class_cols columns that are used for constructing the imputation classes
+#' @param FUN an imputation function that is applied to impute the missing values
+#' @param breaks number of intervals / levels a column is broken into (see
+#'   [cut()], which is used internally for cutting numeric columns). If `breaks
+#'   = Inf` (the default), every unique value of a column will be in a separate
+#'   class.
+#' @param use_quantiles should quantiles be used for cutting numeric vectors?
+#'   Normally, [cut()] divides the range of an vector into equal spaced intervals.
+#'   If `use_quantiles = TRUE`, the classes will be of roughly equal content.
+#' @param min_objs_in_class minimum objects (rows) in an imputation class
+#' @param min_comp_obs minimum completely observed objects (rows) in an imputation class
+#' @param min_obs_per_col minimum number of observed values in every column of an imputation class
+#' @param donor_limit minimum odds between incomplete and complete values in a column, if `dl_type = cols_seq`; or minimum odds
+#' between incomplete to complete rows, if `dl_type = sim_comp`
+#' @param dl_type see `donor_limit`
+#' @param add_imputation_classes should imputation classes be added as attributes to the imputed dataset?
+#' @param ... arguments passed to `FUN`
+#'
+#'
+#' @export
+#'
+#' @references
+#' Andridge, R.R. and Little, R.J.A. (2010), A Review of Hot Deck Imputation for
+#' Survey Non‐response. International Statistical Review, 78: 40-64.
+#' doi:10.1111/j.1751-5823.2010.00103.x
+#'
+#' @examples
+#' # Mean imputation in classes
+#' impute_in_classes(data.frame(X = 1:5, Y = c(NA, 12:15)), "X",
+#' impute_mean, min_obs_per_col = 2)
+impute_in_classes <- function(ds, class_cols, FUN, breaks = Inf, use_quantiles = FALSE,
+                              min_objs_in_class = 1,
+                              min_comp_obs = 1,
+                              min_obs_per_col = 1,
+                              donor_limit = Inf, dl_type = "cols_seq",
+                              add_imputation_classes = FALSE,
+                              ...) {
+  ## check for missing argument class_cols, because subsetting "works" with missing argument...
+  if (missing(class_cols)) {
+    stop("class_cols must be specified")
+  }
+
+  FUN <- match.fun(FUN)
+
+  imp_classes <- find_classes(ds = ds, class_cols = class_cols, breaks = breaks,
+                              use_quantiles = use_quantiles,
+                              min_objs_in_class = min_objs_in_class,
+                              min_comp_obs = min_comp_obs,
+                              min_obs_per_col = min_obs_per_col,
+                              donor_limit = donor_limit, dl_type = dl_type)
+
+  ## apply imputation function for every imputation class separate
+  for (imp_cl in imp_classes) {
+    if(anyNA(ds[imp_cl, ])) {
+      ds[imp_cl, ] <- FUN(ds[imp_cl, ], ...)
+    }
+  }
+
+  if(add_imputation_classes) {
+    ds <- structure(ds, imputation_classes = imp_classes)
+  }
+
+  ds
+}
+
+
+
+
 
 find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
                          min_objs_in_class = 0,

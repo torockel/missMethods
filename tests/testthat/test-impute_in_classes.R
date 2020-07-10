@@ -1,3 +1,47 @@
+test_that("impute_in_classes() works (basic tests)", {
+  expect_equal(
+    impute_in_classes(data.frame(X = 1:5, Y = c(NA, 12:15)), "X",
+                      impute_mean, min_obs_per_col = 2),
+    data.frame(X = 1:5, Y = c(12.5, 12:15))
+  )
+
+  expect_equal(
+    impute_in_classes(data.frame(X = c(1, 2, 2, 1, 2), Y = c(NA, 12:15)), "X",
+                      impute_sRHD, min_obs_per_col = 1),
+    data.frame(X = c(1, 2, 2, 1, 2), Y = c(14, 12:15))
+  )
+
+})
+
+test_that("impute_in_classes() throws an error if class_cols is missing", {
+
+  expect_error(impute_in_classes(df_XY_X_miss),
+               "class_cols must be specified")
+
+})
+
+test_that("impute_in_classes() pass on arguments to FUN", {
+  expect_equal(
+    impute_in_classes(data.frame(X = 1:5, Y = c(NA, 12:15)), "X",
+                      impute_mean, min_obs_per_col = 2, type = "total"),
+    data.frame(X = 1:5, Y = c(mean(c(1:3, 12, 13)), 12:15))
+  )
+})
+
+
+test_that("impute_in_classes() adds imputation classes as attribute", {
+  expect_equal(
+    impute_in_classes(data.frame(X = 1:5, Y = c(NA, 12:15)), "X",
+                      impute_mean, min_obs_per_col = 2, add_imputation_classes = TRUE),
+    structure(data.frame(X = 1:5, Y = c(12.5, 12:15)),
+              imputation_classes = list(`1_and_2_and_3` = 1:3,
+                                        `4_and_5` = 4:5))
+  )
+
+})
+
+
+
 test_that("find_classes() check for NA in ds[, class_cols]", {
   expect_error(find_classes(matrix(c(NA, 1), ncol = 2), 1),
                "No NAs in ds[, class_cols] allowed", fixed = TRUE)
