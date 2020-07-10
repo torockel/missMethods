@@ -1,3 +1,4 @@
+## impute_in_classes() --------------------------------------------------------
 test_that("impute_in_classes() works (basic tests)", {
   expect_equal(
     impute_in_classes(data.frame(X = 1:5, Y = c(NA, 12:15)), "X",
@@ -40,8 +41,45 @@ test_that("impute_in_classes() adds imputation classes as attribute", {
 
 })
 
+## impute_hot_deck_in_classes() -----------------------------------------------
+test_that("impute_hot_deck_in_classes() works", {
+  expect_equal(
+    impute_hot_deck_in_classes(data.frame(X = c(1, 2, 2, 1, 2), Y = c(NA, 12:15)),
+                               "X", min_obs_per_col = 1),
+    data.frame(X = c(1, 2, 2, 1, 2), Y = c(14, 12:15))
+  )
 
+  expect_equal(
+    impute_hot_deck_in_classes(data.frame(X = c(rep(1, 100), 2, 2),
+                                          Y = c(NA, 102:202),
+                                          Z = c(rep(NA, 99), 300:302)),
+                               "X", type = "sim_comp", min_obs_per_col = 1),
+    data.frame(X = c(rep(1, 100), 2, 2),
+               Y = c(200, 102:202),
+               Z = c(rep(300, 99), 300:302))
+  )
 
+})
+
+test_that("impute_hot_deck_in_classes() and donor_limit works", {
+  expect_equal(
+    impute_hot_deck_in_classes(data.frame(X = c(1, 2, 2, 1, 2), Y = c(NA, 12:15)),
+                               "X", donor_limit = 1),
+    data.frame(X = c(1, 2, 2, 1, 2), Y = c(14, 12:15))
+  )
+
+  ds_imp <- impute_hot_deck_in_classes(data.frame(X = c(rep(1, 3), rep(2, 3)),
+                                                  Y = c(NA, NA, 11L, rep(12L, 3))),
+                             "X", donor_limit = 1, add_imputation_classes = TRUE)
+
+  expect_identical(attr(ds_imp, "imputation_classes"),
+                   list(`1_and_2` = 1:6))
+
+  expect_true((ds_imp[1, "Y"] == 12L || ds_imp[2, "Y"] == 12L))
+
+})
+
+## Helpers --------------------------------------------------------------------
 test_that("find_classes() check for NA in ds[, class_cols]", {
   expect_error(find_classes(matrix(c(NA, 1), ncol = 2), 1),
                "No NAs in ds[, class_cols] allowed", fixed = TRUE)

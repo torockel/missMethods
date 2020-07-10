@@ -2,14 +2,14 @@
 #'
 #' Apply an imputation function inside imputation classes
 #'
+#' @template impute
+#'
 #' @details Imputation classes (sometimes also called adjustment cells) are
 #' build using cross-validation of all `class_cols`. The classes are collapsed,
 #' if they do not satisfy any of the criteria defined by `min_objs_in_class,
 #' min_comp_obs, min_obs_per_col` or `donor_limit`. Collapsing starts from the
 #' last value of `class_cols`. Internally a mixture of collapsing and early
 #' stopping is used for the construction of the classes.
-#'
-#' @template impute
 #'
 #' @param class_cols columns that are used for constructing the imputation classes
 #' @param FUN an imputation function that is applied to impute the missing values
@@ -34,7 +34,7 @@
 #'
 #' @references
 #' Andridge, R.R. and Little, R.J.A. (2010), A Review of Hot Deck Imputation for
-#' Survey Non‐response. International Statistical Review, 78: 40-64.
+#' Survey Non-response. International Statistical Review, 78: 40-64.
 #' doi:10.1111/j.1751-5823.2010.00103.x
 #'
 #' @examples
@@ -43,7 +43,7 @@
 #' impute_mean, min_obs_per_col = 2)
 impute_in_classes <- function(ds, class_cols, FUN, breaks = Inf, use_quantiles = FALSE,
                               min_objs_in_class = 1,
-                              min_comp_obs = 1,
+                              min_comp_obs = 0,
                               min_obs_per_col = 1,
                               donor_limit = Inf, dl_type = "cols_seq",
                               add_imputation_classes = FALSE,
@@ -77,8 +77,60 @@ impute_in_classes <- function(ds, class_cols, FUN, breaks = Inf, use_quantiles =
 }
 
 
+#' Hot deck imputation in imputation classes
+#'
+#' Impute missing values in a data frame or a matrix using a hot deck with
+#' imputation classes
+#'
+#' @template impute
+#'
+#' @details
+#' This function is a combination of [impute_in_classes()] and [impute_sRHD()].
+#' It applies [impute_sRHD()] inside of imputation classes (adjustment cells),
+#' which are constructed via [impute_in_classes()]. More details can be found in
+#' these two functions.
+#'
+#' @inheritParams impute_in_classes
+#' @param type the type of hot deck (for details, see [impute_sRHD()])
+#'
+#' @seealso
+#' [impute_in_classes()], which is used for the construction of the imputation classes
+#'
+#' [impute_sRHD()], which is used for the imputation
+#'
+#' @export
+#'
+#' @references
+#' Andridge, R.R. and Little, R.J.A. (2010), A Review of Hot Deck Imputation for
+#' Survey Non-response. International Statistical Review, 78: 40-64.
+#' doi:10.1111/j.1751-5823.2010.00103.x
+#'
+#' @examples
+#' impute_hot_deck_in_classes(data.frame(X = c(rep("A", 10), rep("B", 10)),
+#'                                       Y = c(rep(NA, 5), 106:120)),
+#'                            "X", donor_limit = 1)
+impute_hot_deck_in_classes <- function(ds, class_cols, type = "cols_seq",
+                                       breaks = Inf, use_quantiles = FALSE,
+                                       min_objs_in_class = 1,
+                                       min_comp_obs = 0,
+                                       min_obs_per_col = 1,
+                                       donor_limit = Inf,
+                                       add_imputation_classes = FALSE) {
 
+  impute_in_classes(ds, class_cols,
+                    FUN = impute_sRHD,
+                    breaks = breaks, use_quantiles = use_quantiles,
+                    min_objs_in_class = min_objs_in_class,
+                    min_comp_obs = min_comp_obs,
+                    min_obs_per_col = min_obs_per_col,
+                    donor_limit = donor_limit,
+                    dl_type = type,
+                    add_imputation_classes = add_imputation_classes,
+                    type = type)
 
+}
+
+## Helpers for impute_in_classes() --------------------------------------------
 
 find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
                          min_objs_in_class = 0,
