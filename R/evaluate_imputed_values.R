@@ -38,7 +38,7 @@
 #' normalization values are equal to the total normalization value (see
 #' examples).
 #'
-#' The argument \code{which_cols} allows the selection of columns
+#' The argument \code{cols_which} allows the selection of columns
 #' for comparison (see examples).
 #'
 #' If \code{M = NULL} (the default), then all values of \code{ds_imp} and
@@ -50,16 +50,17 @@
 #' must be coded as TRUE. This is the standard behavior, if you use
 #' \code{\link[base]{is.na}} on a dataset with missing values to generate
 #' \code{M} (see examples). It is possible to combine \code{M} and
-#' \code{which_cols}.
+#' \code{cols_which}.
 #'
 #' @param ds_imp a data frame or matrix with imputed values
 #' @param ds_orig a data frame or matrix with original (true) values
-#' @param which_cols indices or names of columns used for evaluation
+#' @param cols_which indices or names of columns used for evaluation
 #' @param M NULL (the default) or a missing data indicator matrix; the missing
 #'   data indicator matrix is normally created via \code{is.na(ds_miss)}, where
 #'   \code{ds_miss} is the dataset after deleting values from \code{ds_orig}
 #' @param imp_ds deprecated, renamed to \code{ds_imp}
 #' @param orig_ds deprecated, renamed to \code{ds_orig}
+#' @param which_cols deprecated, renamed to \code{cols_which}
 #'
 #' @export
 #'
@@ -77,7 +78,7 @@
 #' M <- is.na(ds_miss)
 #' evaluate_imputed_values(ds_imp, ds_orig, M = M)
 #' # compare only the imputed values in column X
-#' evaluate_imputed_values(ds_imp, ds_orig, M = M, which_cols = "X")
+#' evaluate_imputed_values(ds_imp, ds_orig, M = M, cols_which = "X")
 #'
 #' # NRMSE_tot_mean and NRMSE_col_mean are equal, if columnwise means are equal
 #' ds_orig <- data.frame(X = 1:10, Y = 10:1)
@@ -86,29 +87,36 @@
 #' evaluate_imputed_values(ds_imp, ds_orig, "NRMSE_tot_mean")
 #' evaluate_imputed_values(ds_imp, ds_orig, "NRMSE_col_mean")
 evaluate_imputed_values <- function(ds_imp, ds_orig, criterion = "RMSE", M = NULL,
-                                    which_cols = seq_len(ncol(ds_imp)),
-                                    tolerance = sqrt(.Machine$double.eps), imp_ds, orig_ds) {
+                                    cols_which = seq_len(ncol(ds_imp)),
+                                    tolerance = sqrt(.Machine$double.eps),
+                                    imp_ds, orig_ds, which_cols) {
 
-  # deprecate imp_ds
+  ## deprecate imp_ds
   if (!missing(imp_ds)) {
     warning("imp_ds is deprecated; use ds_imp instead")
     ds_imp <- imp_ds
   }
 
-  # deprecate orig_ds
+  ## deprecate orig_ds
   if (!missing(orig_ds)) {
     warning("orig_ds is deprecated; use ds_orig instead")
     ds_orig <- orig_ds
+  }
+
+  ## deprecate which_cols
+  if (!missing(which_cols)) {
+    warning("which_cols is deprecated; use cols_which instead")
+    cols_which <- which_cols
   }
 
   if (!isTRUE(all.equal(dim(ds_imp), dim(ds_orig)))) {
     stop("the dimensions of ds_imp and ds_orig must be equal")
   }
 
-  ds_imp <- ds_imp[, which_cols, drop = FALSE]
-  ds_orig <- ds_orig[, which_cols, drop = FALSE]
+  ds_imp <- ds_imp[, cols_which, drop = FALSE]
+  ds_orig <- ds_orig[, cols_which, drop = FALSE]
   if (!is.null(M)) {
-    M <- M[, which_cols, drop = FALSE]
+    M <- M[, cols_which, drop = FALSE]
   }
 
   calc_evaluation_criterion(ds_imp, ds_orig, criterion, M, tolerance = tolerance)

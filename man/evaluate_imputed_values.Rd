@@ -9,10 +9,11 @@ evaluate_imputed_values(
   ds_orig,
   criterion = "RMSE",
   M = NULL,
-  which_cols = seq_len(ncol(ds_imp)),
+  cols_which = seq_len(ncol(ds_imp)),
   tolerance = sqrt(.Machine$double.eps),
   imp_ds,
-  orig_ds
+  orig_ds,
+  which_cols
 )
 }
 \arguments{
@@ -27,7 +28,7 @@ imputed and original values}
 data indicator matrix is normally created via \code{is.na(ds_miss)}, where
 \code{ds_miss} is the dataset after deleting values from \code{ds_orig}}
 
-\item{which_cols}{indices or names of columns used for evaluation}
+\item{cols_which}{indices or names of columns used for evaluation}
 
 \item{tolerance}{numeric, only used for \code{criterion = "precision"}:
 numeric differences smaller than tolerance are treated as zero/equal}
@@ -35,6 +36,8 @@ numeric differences smaller than tolerance are treated as zero/equal}
 \item{imp_ds}{deprecated, renamed to \code{ds_imp}}
 
 \item{orig_ds}{deprecated, renamed to \code{ds_orig}}
+
+\item{which_cols}{deprecated, renamed to \code{cols_which}}
 }
 \value{
 a numeric vector of length one
@@ -77,7 +80,7 @@ true values. These relative versions can be selected via "bias_rel" and
 normalization values are equal to the total normalization value (see
 examples).
 
-The argument \code{which_cols} allows the selection of columns
+The argument \code{cols_which} allows the selection of columns
 for comparison (see examples).
 
 If \code{M = NULL} (the default), then all values of \code{ds_imp} and
@@ -89,7 +92,7 @@ logical matrix of the same dimensions as \code{ds_orig} and missing values
 must be coded as TRUE. This is the standard behavior, if you use
 \code{\link[base]{is.na}} on a dataset with missing values to generate
 \code{M} (see examples). It is possible to combine \code{M} and
-\code{which_cols}.
+\code{cols_which}.
 }
 \examples{
 ds_orig <- data.frame(X = 1:10, Y = 101:110)
@@ -101,7 +104,7 @@ evaluate_imputed_values(ds_imp, ds_orig)
 M <- is.na(ds_miss)
 evaluate_imputed_values(ds_imp, ds_orig, M = M)
 # compare only the imputed values in column X
-evaluate_imputed_values(ds_imp, ds_orig, M = M, which_cols = "X")
+evaluate_imputed_values(ds_imp, ds_orig, M = M, cols_which = "X")
 
 # NRMSE_tot_mean and NRMSE_col_mean are equal, if columnwise means are equal
 ds_orig <- data.frame(X = 1:10, Y = 10:1)

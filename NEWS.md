@@ -8,6 +8,7 @@
 ## Miscellaneous
 
 * improve vignette "Generating missing values" (add connections to Santos et al. (2019))
+* rename of `cols` variables: now all should be named `cols_miss`, `cols_ctrl` etc.
 * rename of `ds` variables: now all should be named `ds_imp`, `ds_orig` etc.
 * rename of `pars` variables: now all should be named `pars_est` or `pars_true`
 
@@ -31,11 +32,11 @@ Functions for evaluation:
 
 * `delete_MAR_1_to_x()` and `delete_MNAR_1_to_x()` can now handle (unordered) factors
 * new criteria for `evaluate_imputed_values()` and `evaluate_parameters()`: six forms of NRMSE, nr_equal, nr_NA and precision
-* `evaluate_imputed_values()`: add argument `which_cols` to select columns for evaluation. 
+* `evaluate_imputed_values()`: add argument `cols_which` to select columns for evaluation. 
 
 ## Miscellaneous
 
-* all `delete_` functions now take the same first three arguments: `ds`, `p`, `miss_cols`
+* all `delete_` functions now take the same first three arguments: `ds`, `p`, `cols_miss`
 * package now on GitHub and CRAN
 
 # missMethods 0.0.1

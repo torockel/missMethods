@@ -121,15 +121,15 @@ test_that("evaluate_imputation_parameters() works with data frames", {
     )
   )
 
-  # which_cols --------------------------------------------
+  # cols_which --------------------------------------------
   expect_equal(evaluate_imputation_parameters(ds_imp,
     ds_orig = ds_orig,
-    which_cols = "Y"
+    cols_which = "Y"
   ), 0)
   expect_equal(
     evaluate_imputation_parameters(ds_imp,
       ds_orig = ds_orig,
-      which_cols = "X"
+      cols_which = "X"
     ),
     evaluate_parameters(mean(ds_imp$X), mean(ds_orig$X))
   )
@@ -265,15 +265,15 @@ test_that("evaluate_imputation_parameters() works with matrices", {
     )
   )
 
-  # which_cols --------------------------------------------
+  # cols_which --------------------------------------------
   expect_equal(evaluate_imputation_parameters(ds_imp,
     ds_orig = ds_orig,
-    which_cols = 2
+    cols_which = 2
   ), 0)
   expect_equal(
     evaluate_imputation_parameters(ds_imp,
       ds_orig = ds_orig,
-      which_cols = 1
+      cols_which = 1
     ),
     evaluate_parameters(mean(ds_imp[, 1]), mean(ds_orig[, 1]))
   )
@@ -409,15 +409,15 @@ test_that("evaluate_imputation_parameters() works with tibbles", {
     )
   )
 
-  # which_cols --------------------------------------------
+  # cols_which --------------------------------------------
   expect_equal(evaluate_imputation_parameters(ds_imp,
     ds_orig = ds_orig,
-    which_cols = "Y"
+    cols_which = "Y"
   ), 0)
   expect_equal(
     evaluate_imputation_parameters(ds_imp,
       ds_orig = ds_orig,
-      which_cols = "X"
+      cols_which = "X"
     ),
     evaluate_parameters(mean(ds_imp$X), mean(ds_orig$X))
   )

@@ -10,11 +10,12 @@ evaluate_imputation_parameters(
   pars_true = NULL,
   parameter = "mean",
   criterion = "RMSE",
-  which_cols = seq_len(ncol(ds_imp)),
+  cols_which = seq_len(ncol(ds_imp)),
   tolerance = sqrt(.Machine$double.eps),
+  ...,
   imp_ds,
   true_pars,
-  ...
+  which_cols
 )
 }
 \arguments{
@@ -29,16 +30,18 @@ evaluate_imputation_parameters(
 \item{criterion}{a string specifying the used criterion for comparing the
 imputed and original values}
 
-\item{which_cols}{indices or names of columns used for evaluation}
+\item{cols_which}{indices or names of columns used for evaluation}
 
 \item{tolerance}{numeric, only used for \code{criterion = "precision"}:
 numeric differences smaller than tolerance are treated as zero/equal}
+
+\item{...}{further arguments passed to function for parameter estimation}
 
 \item{imp_ds}{deprecated, renamed to \code{ds_imp}}
 
 \item{true_pars}{deprecated, renamed to \code{pars_true}}
 
-\item{...}{further arguments passed to function for parameter estimation}
+\item{which_cols}{deprecated, renamed to \code{cols_which}}
 }
 \value{
 a numeric vector of length one
@@ -62,7 +65,7 @@ argument \code{probs} (see examples). Otherwise, the default quantiles from
 \code{\link[stats]{quantile}} will be used.}
 }
 
-The argument \code{which_cols} allows the selection of columns for comparison
+The argument \code{cols_which} allows the selection of columns for comparison
 (see examples). If \code{pars_true} is used, it is assumed that only relevant
 parameters are supplied (see examples).
 
@@ -90,7 +93,7 @@ evaluate_imputation_parameters(ds_imp,
 # compare only column Y
 evaluate_imputation_parameters(ds_imp,
   pars_true = c(Y = 10), parameter = "mean",
-  which_cols = "Y"
+  cols_which = "Y"
 )
 }
 \references{
