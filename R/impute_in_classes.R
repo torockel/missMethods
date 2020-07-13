@@ -148,7 +148,7 @@ find_classes <- function(ds, cols_class, breaks = Inf, use_quantiles = FALSE,
                          min_comp_obs = min_comp_obs,
                          min_obs_per_col = min_obs_per_col,
                          donor_limit = donor_limit, dl_type = dl_type,
-                         act_cols = seq_len(nrow(ds)),
+                         cols_act = seq_len(nrow(ds)),
                          act_lvls = NULL,
                          imp_classes = list(),
                          M = is.na(ds))
@@ -164,25 +164,25 @@ find_classes_recursive <- function(ds, cols_class, breaks, use_quantiles,
                                    min_comp_obs,
                                    min_obs_per_col,
                                    donor_limit, dl_type,
-                                   act_cols, act_lvls = NULL, imp_classes,
+                                   cols_act, act_lvls = NULL, imp_classes,
                                    M) {
 
 
-  # first check for fast return (no columns in act_cols or no more cols_class)
-  if (length(act_cols) == 0L) { # no object in new class -> eliminate class
+  # first check for fast return (no columns in cols_act or no more cols_class)
+  if (length(cols_act) == 0L) { # no object in new class -> eliminate class
     return(imp_classes)
   } else if (length(cols_class) == 0L) { # no more columns to form classes
     if (is.null(act_lvls)) { # just one class for all
       act_lvls <- "everything"
     }
-    imp_classes[[act_lvls]] <- act_cols
+    imp_classes[[act_lvls]] <- cols_act
     return(imp_classes)
   }
 
   # no fast return:
   # we have objects and at least one column to form classes
-  # we select only the objects from the act_cols
-  grouping_factor <- cut_vector(ds[act_cols, cols_class[1], drop = TRUE],
+  # we select only the objects from the cols_act
+  grouping_factor <- cut_vector(ds[cols_act, cols_class[1], drop = TRUE],
     breaks = breaks,
     use_quantiles = use_quantiles
   )
@@ -195,7 +195,7 @@ find_classes_recursive <- function(ds, cols_class, breaks, use_quantiles,
     new_classes <- list()
     new_lvls <- list()
     for (i in seq_along(lvls)) {
-      new_classes[[i]] <- act_cols[grouping_factor == lvls[i]]
+      new_classes[[i]] <- cols_act[grouping_factor == lvls[i]]
       new_lvls[[i]] <- ifelse(is.null(act_lvls), as.character(lvls[i]),
         paste(act_lvls, lvls[i], sep = ".")
       )
@@ -229,7 +229,7 @@ find_classes_recursive <- function(ds, cols_class, breaks, use_quantiles,
       min_comp_obs = min_comp_obs,
       min_obs_per_col = min_obs_per_col,
       donor_limit = donor_limit, dl_type = dl_type,
-      act_cols = new_classes[[i]],
+      cols_act = new_classes[[i]],
       act_lvls = new_lvls[[i]],
       imp_classes = imp_classes,
       M = M
