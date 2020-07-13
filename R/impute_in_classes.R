@@ -149,7 +149,7 @@ find_classes <- function(ds, cols_class, breaks = Inf, use_quantiles = FALSE,
                          min_obs_per_col = min_obs_per_col,
                          donor_limit = donor_limit, dl_type = dl_type,
                          cols_act = seq_len(nrow(ds)),
-                         act_lvls = NULL,
+                         lvls_act = NULL,
                          imp_classes = list(),
                          M = is.na(ds))
 }
@@ -164,7 +164,7 @@ find_classes_recursive <- function(ds, cols_class, breaks, use_quantiles,
                                    min_comp_obs,
                                    min_obs_per_col,
                                    donor_limit, dl_type,
-                                   cols_act, act_lvls = NULL, imp_classes,
+                                   cols_act, lvls_act = NULL, imp_classes,
                                    M) {
 
 
@@ -172,10 +172,10 @@ find_classes_recursive <- function(ds, cols_class, breaks, use_quantiles,
   if (length(cols_act) == 0L) { # no object in new class -> eliminate class
     return(imp_classes)
   } else if (length(cols_class) == 0L) { # no more columns to form classes
-    if (is.null(act_lvls)) { # just one class for all
-      act_lvls <- "everything"
+    if (is.null(lvls_act)) { # just one class for all
+      lvls_act <- "everything"
     }
-    imp_classes[[act_lvls]] <- cols_act
+    imp_classes[[lvls_act]] <- cols_act
     return(imp_classes)
   }
 
@@ -196,8 +196,8 @@ find_classes_recursive <- function(ds, cols_class, breaks, use_quantiles,
     new_lvls <- list()
     for (i in seq_along(lvls)) {
       new_classes[[i]] <- cols_act[grouping_factor == lvls[i]]
-      new_lvls[[i]] <- ifelse(is.null(act_lvls), as.character(lvls[i]),
-        paste(act_lvls, lvls[i], sep = ".")
+      new_lvls[[i]] <- ifelse(is.null(lvls_act), as.character(lvls[i]),
+        paste(lvls_act, lvls[i], sep = ".")
       )
     }
 
@@ -230,7 +230,7 @@ find_classes_recursive <- function(ds, cols_class, breaks, use_quantiles,
       min_obs_per_col = min_obs_per_col,
       donor_limit = donor_limit, dl_type = dl_type,
       cols_act = new_classes[[i]],
-      act_lvls = new_lvls[[i]],
+      lvls_act = new_lvls[[i]],
       imp_classes = imp_classes,
       M = M
     )
