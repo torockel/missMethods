@@ -113,17 +113,17 @@ check_delete_args_MNAR <- function(ds, p, cols_miss, stochastic) {
 
 check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
   # check if cols_ctrl are numeric or ordered factor
-  prob_cols <- integer(0)
+  cols_prob <- integer(0)
   for (k in seq_along(cols_ctrl)) {
     if (!(is.ordered(ds[, cols_ctrl[k], drop = TRUE]) | is.numeric(ds[, cols_ctrl[k], drop = TRUE]))) {
-      prob_cols <- c(prob_cols, cols_ctrl[k])
+      cols_prob <- c(cols_prob, cols_ctrl[k])
     }
   }
-  if (length(prob_cols) > 0L) {
+  if (length(cols_prob) > 0L) {
     stop(
       "all cols_ctrl must be numeric or ordered factors;\n",
       "problematic column(s): ",
-      paste(prob_cols, collapse = ", ")
+      paste(cols_prob, collapse = ", ")
     )
   }
   TRUE
