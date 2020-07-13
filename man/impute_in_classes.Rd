@@ -6,7 +6,7 @@
 \usage{
 impute_in_classes(
   ds,
-  class_cols,
+  cols_class,
   FUN,
   breaks = Inf,
   use_quantiles = FALSE,
@@ -22,7 +22,7 @@ impute_in_classes(
 \arguments{
 \item{ds}{a data frame or matrix with missing values}
 
-\item{class_cols}{columns that are used for constructing the imputation classes}
+\item{cols_class}{columns that are used for constructing the imputation classes}
 
 \item{FUN}{an imputation function that is applied to impute the missing values}
 
@@ -57,9 +57,9 @@ Apply an imputation function inside imputation classes
 }
 \details{
 Imputation classes (sometimes also called adjustment cells) are
-build using cross-validation of all \code{class_cols}. The classes are collapsed,
+build using cross-validation of all \code{cols_class}. The classes are collapsed,
 if they do not satisfy any of the criteria defined by \verb{min_objs_in_class, min_comp_obs, min_obs_per_col} or \code{donor_limit}. Collapsing starts from the
-last value of \code{class_cols}. Internally a mixture of collapsing and early
+last value of \code{cols_class}. Internally a mixture of collapsing and early
 stopping is used for the construction of the classes.
 }
 \examples{

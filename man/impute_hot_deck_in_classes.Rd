@@ -6,7 +6,7 @@
 \usage{
 impute_hot_deck_in_classes(
   ds,
-  class_cols,
+  cols_class,
   type = "cols_seq",
   breaks = Inf,
   use_quantiles = FALSE,
@@ -20,7 +20,7 @@ impute_hot_deck_in_classes(
 \arguments{
 \item{ds}{a data frame or matrix with missing values}
 
-\item{class_cols}{columns that are used for constructing the imputation classes}
+\item{cols_class}{columns that are used for constructing the imputation classes}
 
 \item{type}{the type of hot deck (for details, see \code{\link[=impute_sRHD]{impute_sRHD()}})}
 

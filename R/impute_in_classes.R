@@ -5,13 +5,13 @@
 #' @template impute
 #'
 #' @details Imputation classes (sometimes also called adjustment cells) are
-#' build using cross-validation of all `class_cols`. The classes are collapsed,
+#' build using cross-validation of all `cols_class`. The classes are collapsed,
 #' if they do not satisfy any of the criteria defined by `min_objs_in_class,
 #' min_comp_obs, min_obs_per_col` or `donor_limit`. Collapsing starts from the
-#' last value of `class_cols`. Internally a mixture of collapsing and early
+#' last value of `cols_class`. Internally a mixture of collapsing and early
 #' stopping is used for the construction of the classes.
 #'
-#' @param class_cols columns that are used for constructing the imputation classes
+#' @param cols_class columns that are used for constructing the imputation classes
 #' @param FUN an imputation function that is applied to impute the missing values
 #' @param breaks number of intervals / levels a column is broken into (see
 #'   [cut()], which is used internally for cutting numeric columns). If `breaks
@@ -41,21 +41,21 @@
 #' # Mean imputation in classes
 #' impute_in_classes(data.frame(X = 1:5, Y = c(NA, 12:15)), "X",
 #' impute_mean, min_obs_per_col = 2)
-impute_in_classes <- function(ds, class_cols, FUN, breaks = Inf, use_quantiles = FALSE,
+impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf, use_quantiles = FALSE,
                               min_objs_in_class = 1,
                               min_comp_obs = 0,
                               min_obs_per_col = 1,
                               donor_limit = Inf, dl_type = "cols_seq",
                               add_imputation_classes = FALSE,
                               ...) {
-  ## check for missing argument class_cols, because subsetting "works" with missing argument...
-  if (missing(class_cols)) {
-    stop("class_cols must be specified")
+  ## check for missing argument cols_class, because subsetting "works" with missing argument...
+  if (missing(cols_class)) {
+    stop("cols_class must be specified")
   }
 
   FUN <- match.fun(FUN)
 
-  imp_classes <- find_classes(ds = ds, class_cols = class_cols, breaks = breaks,
+  imp_classes <- find_classes(ds = ds, cols_class = cols_class, breaks = breaks,
                               use_quantiles = use_quantiles,
                               min_objs_in_class = min_objs_in_class,
                               min_comp_obs = min_comp_obs,
@@ -109,7 +109,7 @@ impute_in_classes <- function(ds, class_cols, FUN, breaks = Inf, use_quantiles =
 #' impute_hot_deck_in_classes(data.frame(X = c(rep("A", 10), rep("B", 10)),
 #'                                       Y = c(rep(NA, 5), 106:120)),
 #'                            "X", donor_limit = 1)
-impute_hot_deck_in_classes <- function(ds, class_cols, type = "cols_seq",
+impute_hot_deck_in_classes <- function(ds, cols_class, type = "cols_seq",
                                        breaks = Inf, use_quantiles = FALSE,
                                        min_objs_in_class = 1,
                                        min_comp_obs = 0,
@@ -117,7 +117,7 @@ impute_hot_deck_in_classes <- function(ds, class_cols, type = "cols_seq",
                                        donor_limit = Inf,
                                        add_imputation_classes = FALSE) {
 
-  impute_in_classes(ds, class_cols,
+  impute_in_classes(ds, cols_class,
                     FUN = impute_sRHD,
                     breaks = breaks, use_quantiles = use_quantiles,
                     min_objs_in_class = min_objs_in_class,
@@ -132,18 +132,18 @@ impute_hot_deck_in_classes <- function(ds, class_cols, type = "cols_seq",
 
 ## Helpers for impute_in_classes() --------------------------------------------
 
-find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
+find_classes <- function(ds, cols_class, breaks = Inf, use_quantiles = FALSE,
                          min_objs_in_class = 0,
                          min_comp_obs = 0,
                          min_obs_per_col = 0,
                          donor_limit = Inf, dl_type = "cols_seq") {
 
-  # check for NA in class_cols
-  if (anyNA(ds[, class_cols])) {
-    stop("No NAs in ds[, class_cols] allowed")
+  # check for NA in cols_class
+  if (anyNA(ds[, cols_class])) {
+    stop("No NAs in ds[, cols_class] allowed")
   }
 
-  find_classes_recursive(ds, class_cols, breaks = breaks, use_quantiles = use_quantiles,
+  find_classes_recursive(ds, cols_class, breaks = breaks, use_quantiles = use_quantiles,
                          min_objs_in_class = min_objs_in_class,
                          min_comp_obs = min_comp_obs,
                          min_obs_per_col = min_obs_per_col,
@@ -159,7 +159,7 @@ find_classes <- function(ds, class_cols, breaks = Inf, use_quantiles = FALSE,
 ## all arguments should be handed over by the calling function
 ## This will automatically throw an error, if a new argument is added to the
 ## function, but not in the calling statement(s)
-find_classes_recursive <- function(ds, class_cols, breaks, use_quantiles,
+find_classes_recursive <- function(ds, cols_class, breaks, use_quantiles,
                                    min_objs_in_class,
                                    min_comp_obs,
                                    min_obs_per_col,
@@ -168,10 +168,10 @@ find_classes_recursive <- function(ds, class_cols, breaks, use_quantiles,
                                    M) {
 
 
-  # first check for fast return (no columns in act_cols or no more class_cols)
+  # first check for fast return (no columns in act_cols or no more cols_class)
   if (length(act_cols) == 0L) { # no object in new class -> eliminate class
     return(imp_classes)
-  } else if (length(class_cols) == 0L) { # no more columns to form classes
+  } else if (length(cols_class) == 0L) { # no more columns to form classes
     if (is.null(act_lvls)) { # just one class for all
       act_lvls <- "everything"
     }
@@ -182,7 +182,7 @@ find_classes_recursive <- function(ds, class_cols, breaks, use_quantiles,
   # no fast return:
   # we have objects and at least one column to form classes
   # we select only the objects from the act_cols
-  grouping_factor <- cut_vector(ds[act_cols, class_cols[1], drop = TRUE],
+  grouping_factor <- cut_vector(ds[act_cols, cols_class[1], drop = TRUE],
     breaks = breaks,
     use_quantiles = use_quantiles
   )
@@ -222,7 +222,7 @@ find_classes_recursive <- function(ds, class_cols, breaks, use_quantiles,
 
   # call find_classes_recursive() for all new formed classes
   for (i in seq_along(new_classes)) {
-    imp_classes <- find_classes_recursive(ds, class_cols[-1],
+    imp_classes <- find_classes_recursive(ds, cols_class[-1],
       use_quantiles = use_quantiles,
       breaks = breaks,
       min_objs_in_class = min_objs_in_class,

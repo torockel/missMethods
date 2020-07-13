@@ -14,10 +14,10 @@ test_that("impute_in_classes() works (basic tests)", {
 
 })
 
-test_that("impute_in_classes() throws an error if class_cols is missing", {
+test_that("impute_in_classes() throws an error if cols_class is missing", {
 
   expect_error(impute_in_classes(df_XY_X_miss),
-               "class_cols must be specified")
+               "cols_class must be specified")
 
 })
 
@@ -80,9 +80,9 @@ test_that("impute_hot_deck_in_classes() and donor_limit works", {
 })
 
 ## Helpers --------------------------------------------------------------------
-test_that("find_classes() check for NA in ds[, class_cols]", {
+test_that("find_classes() check for NA in ds[, cols_class]", {
   expect_error(find_classes(matrix(c(NA, 1), ncol = 2), 1),
-               "No NAs in ds[, class_cols] allowed", fixed = TRUE)
+               "No NAs in ds[, cols_class] allowed", fixed = TRUE)
 })
 
 test_that("find_classes() works with breaks = Inf and data frames", {
