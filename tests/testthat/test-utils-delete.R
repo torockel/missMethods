@@ -6,15 +6,15 @@ test_that("check_delete_args()", {
   # p -----------------------------------------------------
   expect_error(
     delete_MCAR(df_XY_100, p = rep(0.1, 3)),
-    "length must equal miss_cols"
+    "length must equal cols_miss"
   )
   expect_error(
     delete_MCAR(df_XY_100, p = rep(0.1, 2), "X"),
-    "length must equal miss_cols"
+    "length must equal cols_miss"
   )
   expect_error(
     delete_MCAR(df_XYZ_100, p = rep(0.1, 2), 1:3),
-    "length must equal miss_cols"
+    "length must equal cols_miss"
   )
   expect_error(
     delete_MCAR(df_XY_100, p = c(1.2, 0.9)),
@@ -22,22 +22,22 @@ test_that("check_delete_args()", {
   )
   expect_error(delete_MCAR(df_XY_100, p = "a"), "p must be numeric")
 
-  # miss_cols ---------------------------------------------
+  # cols_miss ---------------------------------------------
   expect_error(
-    delete_MCAR(df_XY_100, 0.1, miss_cols = c(2, 3)),
-    "indices in miss_cols must"
+    delete_MCAR(df_XY_100, 0.1, cols_miss = c(2, 3)),
+    "indices in cols_miss must"
   )
   expect_error(
-    delete_MCAR(df_XY_100, 0.1, miss_cols = c("X", "Z")),
-    "all entries of miss_cols"
+    delete_MCAR(df_XY_100, 0.1, cols_miss = c("X", "Z")),
+    "all entries of cols_miss"
   )
   expect_error(
     delete_MCAR(df_XY_100, 0.1, c(TRUE, FALSE)),
-    "miss_cols must be a vector of column names or indices of ds"
+    "cols_miss must be a vector of column names or indices of ds"
   )
   expect_warning(
     delete_MCAR(df_XY_100, 0.1, c(1, 1)),
-    "there are duplicates in miss_cols:"
+    "there are duplicates in cols_miss:"
   )
 
   # stochastic --------------------------------------------
@@ -95,14 +95,14 @@ test_that("check_delete_args_MAR() works", {
     "ctrl_cols must be completely observed; no NAs in ds\\[, ctrl_cols\\] allowed"
   )
   expect_error(
-    delete_MAR_1_to_x(df_XYZ_100, 0.1, miss_cols = "X", ctrl_cols = c("Y", "Z"), x = 3),
-    "length\\(miss_cols) must equal length"
+    delete_MAR_1_to_x(df_XYZ_100, 0.1, cols_miss = "X", ctrl_cols = c("Y", "Z"), x = 3),
+    "length\\(cols_miss) must equal length"
   )
 
   # special errors for check_delete_args_MAR:
   expect_error(
-    delete_MAR_1_to_x(df_XYZ_100, 0.1, miss_cols = "X", ctrl_cols = "X", x = 4),
-    "to ensure MAR no ctrl_col is allowed to be in miss_cols"
+    delete_MAR_1_to_x(df_XYZ_100, 0.1, cols_miss = "X", ctrl_cols = "X", x = 4),
+    "to ensure MAR no ctrl_col is allowed to be in cols_miss"
   )
 })
 
@@ -117,7 +117,7 @@ test_that("check_delete_args_MCAR() works", {
   # special errors for check_delete_args_MNAR:
   expect_error(
     delete_MNAR_1_to_x(df_XY_X_miss, 0.1, "X", x = 3),
-    "miss_cols must be completely observed; no NAs in ds\\[, miss_cols\\] allowed"
+    "cols_miss must be completely observed; no NAs in ds\\[, cols_miss\\] allowed"
   )
 })
 

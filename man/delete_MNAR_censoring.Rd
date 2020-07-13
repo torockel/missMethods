@@ -4,21 +4,30 @@
 \alias{delete_MNAR_censoring}
 \title{Create MNAR values using a censoring mechanism}
 \usage{
-delete_MNAR_censoring(ds, p, miss_cols, where = "lower", sorting = TRUE)
+delete_MNAR_censoring(
+  ds,
+  p,
+  cols_miss,
+  where = "lower",
+  sorting = TRUE,
+  miss_cols
+)
 }
 \arguments{
 \item{ds}{a data frame or matrix in which missing values will be created}
 
-\item{p}{a numeric vector with length one or equal to length \code{miss_cols};
+\item{p}{a numeric vector with length one or equal to length \code{cols_miss};
 the probability that a value is missing}
 
-\item{miss_cols}{a vector of column names or indices of columns in which
+\item{cols_miss}{a vector of column names or indices of columns in which
 missing values will be created}
 
 \item{where}{controls where missing values are created; one of "lower",
 "upper" or "both" (see details)}
 
 \item{sorting}{logical; should sorting be used or a quantile as a threshold}
+
+\item{miss_cols}{deprecated, use cols_miss instead}
 }
 \value{
 An object of the same class as \code{ds} with missing values
@@ -28,7 +37,7 @@ Create missing not at random (MNAR) values using a censoring mechanism in a
 data frame or a matrix
 }
 \details{
-The functions \code{delete_MNAR_censoring} and \code{\link{delete_MAR_censoring}} are sisters. The only difference between these two functions is the column that controls the generation of missing values. In \code{\link{delete_MAR_censoring}} a separate column \code{ctrl_cols[i]} controls the generation of missing values in \code{miss_cols[i]}. In contrast, in \code{delete_MNAR_censoring} the generation of missing values in \code{miss_cols[i]} is controlled by \code{miss_cols[i]} itself. All other aspects are identical for both functions. Therefore, further details can be found in \code{\link{delete_MAR_censoring}}.
+The functions \code{delete_MNAR_censoring} and \code{\link{delete_MAR_censoring}} are sisters. The only difference between these two functions is the column that controls the generation of missing values. In \code{\link{delete_MAR_censoring}} a separate column \code{ctrl_cols[i]} controls the generation of missing values in \code{cols_miss[i]}. In contrast, in \code{delete_MNAR_censoring} the generation of missing values in \code{cols_miss[i]} is controlled by \code{cols_miss[i]} itself. All other aspects are identical for both functions. Therefore, further details can be found in \code{\link{delete_MAR_censoring}}.
 }
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)

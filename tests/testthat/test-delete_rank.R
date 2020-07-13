@@ -28,7 +28,7 @@ test_that("delete_MAR_rank() and delete_rank() works", {
   # ctrl_col constant
   expect_equal(
     count_NA(delete_MAR_rank(df_XY_X_constant, 0.2,
-      miss_cols = "Y",
+      cols_miss = "Y",
       ctrl_cols = "X"
     )),
     c(X = 0, Y = 4)
@@ -37,14 +37,14 @@ test_that("delete_MAR_rank() and delete_rank() works", {
   # ctr_col nearly constant
   expect_equal(
     count_NA(delete_MAR_rank(df_XY_X_one_outlier, 0.2,
-      miss_cols = "Y", ctrl_cols = "X"
+      cols_miss = "Y", ctrl_cols = "X"
     )),
     c(X = 0, Y = 4)
   )
   # ordered control column
   expect_equal(
     count_NA(delete_MAR_rank(df_with_ord_factors, 0.2,
-      miss_cols = "Y", ctrl_cols = "X"
+      cols_miss = "Y", ctrl_cols = "X"
     )),
     c(X = 0, Y = 4)
   )
@@ -76,7 +76,7 @@ test_that("delete_MNAR_rank() works", {
   # check that delete_MNAR_rank() calls check_delete_args_MNAR()
   expect_error(
     delete_MNAR_rank(df_XY_X_miss, 0.1, "X"),
-    "miss_cols must be completely observed; no NAs in ds\\[, miss_cols\\] allowed"
+    "cols_miss must be completely observed; no NAs in ds\\[, cols_miss\\] allowed"
   )
 
   df_miss <- delete_MNAR_rank(df_XY_100, c(0.3, 0.1), c("X", "Y"))

@@ -31,7 +31,7 @@ test_that("delete_MAR_censoring() and delete_cutoff(), which is called by
   # ctrl_col constant
   expect_equal(
     count_NA(delete_MAR_censoring(df_XY_X_constant, 0.2,
-      miss_cols = "Y",
+      cols_miss = "Y",
       ctrl_cols = "X"
     )),
     c(X = 0, Y = 4)
@@ -40,14 +40,14 @@ test_that("delete_MAR_censoring() and delete_cutoff(), which is called by
   # ctr_col nearly constant
   expect_equal(
     count_NA(delete_MAR_censoring(df_XY_X_one_outlier, 0.2,
-      miss_cols = "Y", ctrl_cols = "X"
+      cols_miss = "Y", ctrl_cols = "X"
     )),
     c(X = 0, Y = 4)
   )
   # ordered control column
   expect_equal(
     count_NA(delete_MAR_censoring(df_with_ord_factors, 0.2,
-      miss_cols = "Y", ctrl_cols = "X"
+      cols_miss = "Y", ctrl_cols = "X"
     )),
     c(X = 0, Y = 4)
   )
@@ -85,7 +85,7 @@ test_that("delete_MAR_censoring() and delete_cutoff(), which is called by
   # ctrl_col constant
   expect_warning(
     delete_MAR_censoring(df_XY_X_constant, 0.2,
-      miss_cols = "Y",
+      cols_miss = "Y",
       ctrl_cols = "X", sorting = FALSE
     ),
     "the column X is constant; no missing values created"
@@ -94,7 +94,7 @@ test_that("delete_MAR_censoring() and delete_cutoff(), which is called by
   # ctr_col nearly constant
   expect_equal(
     count_NA(delete_MAR_censoring(df_XY_X_one_outlier, 0.2,
-      miss_cols = "Y", ctrl_cols = "X",
+      cols_miss = "Y", ctrl_cols = "X",
       sorting = FALSE
     )),
     c(X = 0, Y = 0)
@@ -103,7 +103,7 @@ test_that("delete_MAR_censoring() and delete_cutoff(), which is called by
   # ordered control column
   expect_equal(
     count_NA(delete_MAR_censoring(df_with_ord_factors, 0.2,
-      miss_cols = "Y", ctrl_cols = "X",
+      cols_miss = "Y", ctrl_cols = "X",
       sorting = FALSE
     )),
     c(X = 0, Y = 3)
@@ -144,7 +144,7 @@ test_that("delete_MNAR_censoring() works", {
   # check that delete_MNAR_censoring() calls check_delete_args_MNAR()
   expect_error(
     delete_MNAR_censoring(df_XY_X_miss, 0.1, "X"),
-    "miss_cols must be completely observed; no NAs in ds\\[, miss_cols\\] allowed"
+    "cols_miss must be completely observed; no NAs in ds\\[, cols_miss\\] allowed"
   )
 
   df_miss <- delete_MNAR_censoring(df_XY_100, c(0.3, 0.1), c("X", "Y"))

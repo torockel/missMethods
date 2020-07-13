@@ -7,28 +7,29 @@
 delete_MAR_one_group(
   ds,
   p,
-  miss_cols,
+  cols_miss,
   ctrl_cols,
   cutoff_fun = median,
   prop = 0.5,
   use_lpSolve = TRUE,
   ordered_as_unordered = FALSE,
   stochastic = FALSE,
-  ...
+  ...,
+  miss_cols
 )
 }
 \arguments{
 \item{ds}{a data frame or matrix in which missing values will be created}
 
-\item{p}{a numeric vector with length one or equal to length \code{miss_cols};
+\item{p}{a numeric vector with length one or equal to length \code{cols_miss};
 the probability that a value is missing}
 
-\item{miss_cols}{a vector of column names or indices of columns in which
+\item{cols_miss}{a vector of column names or indices of columns in which
 missing values will be created}
 
 \item{ctrl_cols}{a vector of column names or indices of columns, which
-controls the creation of missing values in \code{miss_cols}. Must be of the
-same length as \code{miss_cols}.}
+controls the creation of missing values in \code{cols_miss}. Must be of the
+same length as \code{cols_miss}.}
 
 \item{cutoff_fun}{function that calculates the cutoff values in the
 \code{ctrl_cols}}
@@ -45,6 +46,8 @@ unordered factors}
 \item{stochastic}{logical; see details}
 
 \item{...}{further arguments passed to \code{cutoff_fun}}
+
+\item{miss_cols}{deprecated, use cols_miss instead}
 }
 \value{
 An object of the same class as \code{ds} with missing values
@@ -55,21 +58,21 @@ groups in a data frame or a matrix
 }
 \details{
 This function creates missing at random (MAR) values in the columns
-specified by the argument \code{miss_cols}.
+specified by the argument \code{cols_miss}.
 The probability for missing values is controlled by \code{p}.
 If \code{p} is a single number, then the overall probability for a value to
-be missing will be \code{p} in all columns of \code{miss_cols}.
+be missing will be \code{p} in all columns of \code{cols_miss}.
 (Internally \code{p} will be replicated to a vector of the same length as
-\code{miss_cols}.
+\code{cols_miss}.
 So, all \code{p[i]} in the following sections will be equal to the given
 single number \code{p}.)
-Otherwise, \code{p} must be of the same length as \code{miss_cols}.
+Otherwise, \code{p} must be of the same length as \code{cols_miss}.
 In this case, the overall probability for a value to be missing will be
-\code{p[i]} in the column \code{miss_cols[i]}.
-The position of the missing values in \code{miss_cols[i]} is controlled by
+\code{p[i]} in the column \code{cols_miss[i]}.
+The position of the missing values in \code{cols_miss[i]} is controlled by
 \code{ctrl_cols[i]}.
 The following procedure is applied for each pair of \code{ctrl_cols[i]} and
-\code{miss_cols[i]} to determine the positions of missing values:
+\code{cols_miss[i]} to determine the positions of missing values:
 
 At first, the rows of \code{ds} are divided into two groups.
 Therefore, the \code{cutoff_fun} calculates a cutoff value for
@@ -81,15 +84,15 @@ cutoff value will be added to this group (otherwise, these rows will
 belong to group 2).
 The group 2 consists of the remaining rows, which are not part of group 1.
 Now one of these two groups is chosen randomly.
-In the chosen group, values are deleted in \code{miss_cols[i]}.
-In the other group, no missing values will be created in \code{miss_cols[i]}.
+In the chosen group, values are deleted in \code{cols_miss[i]}.
+In the other group, no missing values will be created in \code{cols_miss[i]}.
 
 If \code{stochastic = FALSE} (the default), then \code{floor(nrow(ds) * p[i])}
 or \code{ceiling(nrow(ds) * p[i])} values will be set \code{NA} in
-column \code{miss_cols[i]} (depending on the grouping).
+column \code{cols_miss[i]} (depending on the grouping).
 If \code{stochastic = TRUE}, each value in the group with missing values
 will have a probability to be missing, to meet a proportion of
-\code{p[i]} of missing values in \code{miss_cols[i]} in expectation.
+\code{p[i]} of missing values in \code{cols_miss[i]} in expectation.
 The effect of \code{stochastic} is further discussed in
 \code{\link{delete_MCAR}}.
 }

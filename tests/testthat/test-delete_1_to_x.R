@@ -18,7 +18,7 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   # p too low to get missing values
   expect_equal(
     count_NA(delete_MAR_1_to_x(df_XY_100, 0.001,
-      miss_cols = "Y", ctrl_cols = "X", x = 3
+      cols_miss = "Y", ctrl_cols = "X", x = 3
     )),
     c(X = 0, Y = 0)
   )
@@ -155,21 +155,21 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   # check special ctrl_col cases --------------------------
   # ctrl_col constant
   expect_warning(
-    df_miss <- delete_MAR_1_to_x(df_XY_X_constant, 0.2, miss_cols = "Y", ctrl_cols = "X", x = 3),
+    df_miss <- delete_MAR_1_to_x(df_XY_X_constant, 0.2, cols_miss = "Y", ctrl_cols = "X", x = 3),
     "is constant"
   )
   expect_equal(count_NA(df_miss), c(X = 0, Y = 4))
   # ctr_col nearly constant
   expect_equal(
     count_NA(delete_MAR_1_to_x(df_XY_X_one_outlier, 0.2,
-      miss_cols = "Y", ctrl_cols = "X", x = 3
+      cols_miss = "Y", ctrl_cols = "X", x = 3
     )),
     c(X = 0, Y = 4)
   )
 
   # ctr_col nearly constant: expected odds are 1:x?
   test <- replicate(1000, is.na(delete_MAR_1_to_x(df_XY_X_unequal_dummy, 0.1,
-    miss_cols = "Y",
+    cols_miss = "Y",
     ctrl_cols = "X", x = 3,
     stochastic = TRUE
   )[11, "Y"]))
@@ -255,14 +255,14 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 })
 
 # delete_MNAR_1_to_x --------------------------------------
-# delete_MNAR_1_to_x only calls delete_1_to_x() with ctrl_cols = miss_cols
+# delete_MNAR_1_to_x only calls delete_1_to_x() with ctrl_cols = cols_miss
 # so we only test if the missing values are in the correct variables.
 # The rest of delete_1_to_x() is tested with delete_MAR_1_to_x()
 test_that("delete_MNAR_1_to_x", {
   # check that delete_MNAR_1_to_x() calls check_delete_args_MNAR()
   expect_error(
     delete_MNAR_1_to_x(df_XY_X_miss, 0.1, "X", x = 3),
-    "miss_cols must be completely observed; no NAs in ds\\[, miss_cols\\] allowed"
+    "cols_miss must be completely observed; no NAs in ds\\[, cols_miss\\] allowed"
   )
 
   expect_equal(

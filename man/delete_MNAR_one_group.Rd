@@ -7,22 +7,23 @@
 delete_MNAR_one_group(
   ds,
   p,
-  miss_cols,
+  cols_miss,
   cutoff_fun = median,
   prop = 0.5,
   use_lpSolve = TRUE,
   ordered_as_unordered = FALSE,
   stochastic = FALSE,
-  ...
+  ...,
+  miss_cols
 )
 }
 \arguments{
 \item{ds}{a data frame or matrix in which missing values will be created}
 
-\item{p}{a numeric vector with length one or equal to length \code{miss_cols};
+\item{p}{a numeric vector with length one or equal to length \code{cols_miss};
 the probability that a value is missing}
 
-\item{miss_cols}{a vector of column names or indices of columns in which
+\item{cols_miss}{a vector of column names or indices of columns in which
 missing values will be created}
 
 \item{cutoff_fun}{function that calculates the cutoff values in the
@@ -40,6 +41,8 @@ unordered factors}
 \item{stochastic}{logical; see details}
 
 \item{...}{further arguments passed to \code{cutoff_fun}}
+
+\item{miss_cols}{deprecated, use cols_miss instead}
 }
 \value{
 An object of the same class as \code{ds} with missing values
@@ -49,7 +52,7 @@ Create missing not at random (MNAR) values by deleting values in one of two
 groups in a data frame or a matrix
 }
 \details{
-The functions \code{delete_MNAR_one_group} and \code{\link{delete_MAR_one_group}} are sisters. The only difference between these two functions is the column that controls the generation of missing values. In \code{\link{delete_MAR_one_group}} a separate column \code{ctrl_cols[i]} controls the generation of missing values in \code{miss_cols[i]}. In contrast, in \code{delete_MNAR_one_group} the generation of missing values in \code{miss_cols[i]} is controlled by \code{miss_cols[i]} itself. All other aspects are identical for both functions. Therefore, further details can be found in \code{\link{delete_MAR_one_group}}.
+The functions \code{delete_MNAR_one_group} and \code{\link{delete_MAR_one_group}} are sisters. The only difference between these two functions is the column that controls the generation of missing values. In \code{\link{delete_MAR_one_group}} a separate column \code{ctrl_cols[i]} controls the generation of missing values in \code{cols_miss[i]}. In contrast, in \code{delete_MNAR_one_group} the generation of missing values in \code{cols_miss[i]} is controlled by \code{cols_miss[i]} itself. All other aspects are identical for both functions. Therefore, further details can be found in \code{\link{delete_MAR_one_group}}.
 }
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)

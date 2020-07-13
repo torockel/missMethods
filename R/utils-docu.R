@@ -9,10 +9,10 @@ MNAR_documentation <- function(ending) {
       "controls the generation of missing values. ",
       "In \\code{\\link{delete_MAR_", ending, "}} a separate column ",
       "\\code{ctrl_cols[i]} controls the generation of missing values in ",
-      "\\code{miss_cols[i]}. ",
+      "\\code{cols_miss[i]}. ",
       "In contrast, in \\code{delete_MNAR_", ending, "} the generation ",
-      "of missing values in \\code{miss_cols[i]} is controlled by ",
-      "\\code{miss_cols[i]} itself. ",
+      "of missing values in \\code{cols_miss[i]} is controlled by ",
+      "\\code{cols_miss[i]} itself. ",
       "All other aspects are identical for both functions. ",
       "Therefore, further details can be found in ",
       "\\code{\\link{delete_MAR_", ending, "}}. "

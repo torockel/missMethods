@@ -1,14 +1,14 @@
 # the workhorse for delete_MAR_censoring and delete_MNAR_censoring
-delete_censoring <- function(ds, p, miss_cols, ctrl_cols, where = "lower", sorting = TRUE) {
+delete_censoring <- function(ds, p, cols_miss, ctrl_cols, where = "lower", sorting = TRUE) {
 
   # general checking is done in calling functions delete_MAR_censoring and
   # delete_MNAR_censoring. Only special cases are checked here.
   where <- match.arg(where, c("lower", "upper", "both"))
 
-  p <- adjust_p(p, miss_cols)
+  p <- adjust_p(p, cols_miss)
 
   # create missing values ---------------------------------
-  for (i in seq_along(miss_cols)) {
+  for (i in seq_along(cols_miss)) {
     ds_ctrl_cols_i <- ds[, ctrl_cols[i], drop = TRUE]
     if (sorting) {
       n_mis <- round(nrow(ds) * p[i], 0)
@@ -69,7 +69,7 @@ delete_censoring <- function(ds, p, miss_cols, ctrl_cols, where = "lower", sorti
         }
       }
     }
-    ds[na_indices, miss_cols[i]] <- NA
+    ds[na_indices, cols_miss[i]] <- NA
   }
   ds
 }
@@ -87,9 +87,9 @@ delete_censoring <- function(ds, p, miss_cols, ctrl_cols, where = "lower", sorti
 #' \code{ctrl_cols[i]} will be sorted. Then the rows with the
 #' \code{round(nrow(ds) * p[i])} smallest values will be selected (if
 #' \code{where = "lower"} (the default)). Now missing values will be created in
-#' the column \code{miss_cols[i]} in these rows. This effectively censors the
+#' the column \code{cols_miss[i]} in these rows. This effectively censors the
 #' proportion of \code{p[i]} rows of smallest values in \code{ctrl_cols[i]} in
-#' \code{miss_cols[i]}.
+#' \code{cols_miss[i]}.
 #'
 #' If \code{where = "upper"}, instead of the rows with the smallest values, the
 #' rows with the highest values will be selected. For \code{where = "both"}, the
@@ -102,17 +102,17 @@ delete_censoring <- function(ds, p, miss_cols, ctrl_cols, where = "lower", sorti
 #' a quantile will be calculated (using \code{\link[stats]{quantile}}). If
 #' \code{where = "lower"}, the \code{quantile(ds[, ctrl_cols[i]], p[i])} will be
 #' calculated and all rows with values in \code{ds[, ctrl_cols[i]]} below this
-#' quantile will have missing values in \code{miss_cols[i]}. For \code{where =
+#' quantile will have missing values in \code{cols_miss[i]}. For \code{where =
 #' "upper"}, the \code{quantile(ds[, ctrl_cols[i]], 1 - p[i])} will be
 #' calculated and all rows with values above this quantile will have missing
 #' values. For \code{where = "both"}, the \code{quantile(ds[, ctrl_cols[i]],
 #' p[i] / 2)} and \code{quantile(ds[, ctrl_cols[i]], 1 -  p[i] / 2)} will be
 #' calculated. All rows with values in \code{ctrl_cols[i]} below the first
 #' quantile or above the second quantile will have missing values in
-#' \code{miss_cols[i]}.
+#' \code{cols_miss[i]}.
 #'
 #' The option \code{sorting = TRUE} will always create exactly
-#' \code{round(nrow(ds) * p[i])} missing values in \code{miss_cols[i]}. For
+#' \code{round(nrow(ds) * p[i])} missing values in \code{cols_miss[i]}. For
 #' \code{sorting = FALSE}, the number of missing values will normally be close
 #' to \code{nrow(ds) * p[i]}. But for \code{ctrl_cols} with many duplicates the
 #' choice \code{sorting = FALSE} can be problematic, because of the calculation
@@ -138,16 +138,24 @@ delete_censoring <- function(ds, p, miss_cols, ctrl_cols, where = "lower", sorti
 #' quantile(ds_many_dup$Y, 0.2) # 0
 #' # No value is BELOW 0 in ds_many_dup$Y, so no missing values will be created:
 #' delete_MAR_censoring(ds_many_dup, 0.2, "X", "Y", sorting = FALSE) # No NA!
-delete_MAR_censoring <- function(ds, p, miss_cols, ctrl_cols, where = "lower", sorting = TRUE) {
+delete_MAR_censoring <- function(ds, p, cols_miss, ctrl_cols, where = "lower", sorting = TRUE,
+                                 miss_cols) {
+
+  ## deprecate miss_cols
+  if (!missing(miss_cols)) {
+    warning("miss_cols is deprecated; use cols_miss instead.")
+    cols_miss <- miss_cols
+  }
+
 
   # arg stochastic not used! (and method is not stochastic)
   check_delete_args_MAR(
-    ds = ds, p = p, miss_cols = miss_cols,
+    ds = ds, p = p, cols_miss = cols_miss,
     ctrl_cols = ctrl_cols, stochastic = FALSE
   )
 
   delete_censoring(
-    ds = ds, p = p, miss_cols = miss_cols, ctrl_cols = ctrl_cols,
+    ds = ds, p = p, cols_miss = cols_miss, ctrl_cols = ctrl_cols,
     where = where, sorting = sorting
   )
 }
@@ -164,16 +172,23 @@ delete_MAR_censoring <- function(ds, p, miss_cols, ctrl_cols, where = "lower", s
 #'
 #' @examples
 #' delete_MNAR_censoring(ds, 0.2, "X")
-delete_MNAR_censoring <- function(ds, p, miss_cols, where = "lower", sorting = TRUE) {
+delete_MNAR_censoring <- function(ds, p, cols_miss, where = "lower", sorting = TRUE,
+                                  miss_cols) {
+
+  ## deprecate miss_cols
+  if (!missing(miss_cols)) {
+    warning("miss_cols is deprecated; use cols_miss instead.")
+    cols_miss <- miss_cols
+  }
 
   # arg stochastic not used! (and method is not stochastic)
   check_delete_args_MNAR(
-    ds = ds, p = p, miss_cols = miss_cols,
+    ds = ds, p = p, cols_miss = cols_miss,
     stochastic = FALSE
   )
 
   delete_censoring(
-    ds = ds, p = p, miss_cols = miss_cols, ctrl_cols = miss_cols,
+    ds = ds, p = p, cols_miss = cols_miss, ctrl_cols = cols_miss,
     where = where, sorting = sorting
   )
 }

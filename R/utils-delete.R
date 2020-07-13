@@ -3,7 +3,7 @@
 # args checking for all mechanisms
 # normally called from check_delete_args_MCAR, check_delete_args_MAR or
 # check_delete_args_MNAR
-check_delete_args <- function(ds, p, miss_cols, stochastic) {
+check_delete_args <- function(ds, p, cols_miss, stochastic) {
   # check ds ------------------------------------
   if (!is_df_or_matrix(ds)) {
     stop("ds must be a data.frame or a matrix")
@@ -11,8 +11,8 @@ check_delete_args <- function(ds, p, miss_cols, stochastic) {
 
   # check p -------------------------------------
   if (is.numeric(p)) {
-    if (length(p) != 1L && length(p) != length(miss_cols)) {
-      stop("p must be of length 1 or length must equal miss_cols")
+    if (length(p) != 1L && length(p) != length(cols_miss)) {
+      stop("p must be of length 1 or length must equal cols_miss")
     } else {
       if (any(p < 0 | p > 1)) {
         stop("probabilties in p must be between 0 and 1")
@@ -22,23 +22,23 @@ check_delete_args <- function(ds, p, miss_cols, stochastic) {
     stop("p must be numeric")
   }
 
-  # check miss_cols -----------------------------
-  if (is.numeric(miss_cols)) {
-    if (any(miss_cols < 1 | miss_cols > ncol(ds))) {
-      stop("indices in miss_cols must be in 1:ncol(ds)")
+  # check cols_miss -----------------------------
+  if (is.numeric(cols_miss)) {
+    if (any(cols_miss < 1 | cols_miss > ncol(ds))) {
+      stop("indices in cols_miss must be in 1:ncol(ds)")
     }
-  } else if (is.character(miss_cols)) {
-    if (!all(miss_cols %in% colnames(ds))) {
-      stop("all entries of miss_cols must be in colnames(ds)")
+  } else if (is.character(cols_miss)) {
+    if (!all(cols_miss %in% colnames(ds))) {
+      stop("all entries of cols_miss must be in colnames(ds)")
     }
   } else {
-    stop("miss_cols must be a vector of column names or indices of ds")
+    stop("cols_miss must be a vector of column names or indices of ds")
   }
 
-  if (anyDuplicated(miss_cols) != 0) {
-    duplicated_cols <- unique(miss_cols[duplicated(miss_cols)])
+  if (anyDuplicated(cols_miss) != 0) {
+    duplicated_cols <- unique(cols_miss[duplicated(cols_miss)])
     warning(
-      "there are duplicates in miss_cols:\n", duplicated_cols,
+      "there are duplicates in cols_miss:\n", duplicated_cols,
       "\n this may result in a too high percentage of missing values"
     )
   }
@@ -51,9 +51,9 @@ check_delete_args <- function(ds, p, miss_cols, stochastic) {
   }
 }
 
-check_delete_args_MCAR <- function(ds, p, miss_cols, stochastic, p_overall) {
+check_delete_args_MCAR <- function(ds, p, cols_miss, stochastic, p_overall) {
   # general checking
-  check_delete_args(ds = ds, p = p, miss_cols = miss_cols, stochastic = stochastic)
+  check_delete_args(ds = ds, p = p, cols_miss = cols_miss, stochastic = stochastic)
 
   # special case: p_overall
   if (!is.logical(p_overall) | length(p_overall) != 1L) {
@@ -63,9 +63,9 @@ check_delete_args_MCAR <- function(ds, p, miss_cols, stochastic, p_overall) {
   }
 }
 
-check_delete_args_MAR <- function(ds, p, miss_cols, ctrl_cols, stochastic) {
+check_delete_args_MAR <- function(ds, p, cols_miss, ctrl_cols, stochastic) {
   # general checking
-  check_delete_args(ds = ds, p = p, miss_cols = miss_cols, stochastic = stochastic)
+  check_delete_args(ds = ds, p = p, cols_miss = cols_miss, stochastic = stochastic)
 
 
   # check ctrl_cols -----------------------------
@@ -87,26 +87,26 @@ check_delete_args_MAR <- function(ds, p, miss_cols, ctrl_cols, stochastic) {
     stop("ctrl_cols must be completely observed; no NAs in ds[, ctrl_cols] allowed")
   }
 
-  if (length(miss_cols) != length(ctrl_cols)) {
-    stop("length(miss_cols) must equal length(ctrl_cols)")
+  if (length(cols_miss) != length(ctrl_cols)) {
+    stop("length(cols_miss) must equal length(ctrl_cols)")
   }
 
-  # check if any ctrl_col is in miss_cols
-  if (any(ctrl_cols %in% miss_cols)) {
+  # check if any ctrl_col is in cols_miss
+  if (any(ctrl_cols %in% cols_miss)) {
     stop(
-      "to ensure MAR no ctrl_col is allowed to be in miss_cols;\n",
+      "to ensure MAR no ctrl_col is allowed to be in cols_miss;\n",
       "problematic ctrl_cols:\n",
-      paste(ctrl_cols[ctrl_cols %in% miss_cols], collapse = ", ")
+      paste(ctrl_cols[ctrl_cols %in% cols_miss], collapse = ", ")
     )
   }
 }
 
-check_delete_args_MNAR <- function(ds, p, miss_cols, stochastic) {
+check_delete_args_MNAR <- function(ds, p, cols_miss, stochastic) {
   # general checking
-  check_delete_args(ds = ds, p = p, miss_cols = miss_cols, stochastic = stochastic)
-  #  no NA in miss_cols
-  if (any(is.na(ds[, miss_cols]))) {
-    stop("miss_cols must be completely observed; no NAs in ds[, miss_cols] allowed")
+  check_delete_args(ds = ds, p = p, cols_miss = cols_miss, stochastic = stochastic)
+  #  no NA in cols_miss
+  if (any(is.na(ds[, cols_miss]))) {
+    stop("cols_miss must be completely observed; no NAs in ds[, cols_miss] allowed")
   }
 }
 
@@ -203,9 +203,9 @@ find_groups_by_values <- function(x, values) {
 }
 
 # more helpers --------------------------------------------
-adjust_p <- function(p, miss_cols) {
+adjust_p <- function(p, cols_miss) {
   if (length(p) == 1L) {
-    p <- rep(p, length(miss_cols))
+    p <- rep(p, length(cols_miss))
   }
   p
 }
