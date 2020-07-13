@@ -33,13 +33,13 @@ the probability of a value to be missing in group 1 against the probability
 of a value to be missing  in group 2 (see details)}
 
 \item{cutoff_fun}{function that calculates the cutoff values in the
-\code{ctrl_cols}}
+\code{cols_ctrl}}
 
 \item{prop}{numeric of length one; (minimum) proportion of rows in group 1
 (only used for unordered factors)}
 
 \item{use_lpSolve}{logical; should lpSolve be used for the determination of
-groups, if \code{ctrl_cols[i]} is an unordered factor}
+groups, if \code{cols_ctrl[i]} is an unordered factor}
 
 \item{ordered_as_unordered}{logical; should ordered factors be treated as
 unordered factors}
@@ -61,7 +61,7 @@ Create missing not at random (MNAR) values using MNAR1:x in a data frame or
 a matrix
 }
 \details{
-The functions \code{delete_MNAR_1_to_x} and \code{\link{delete_MAR_1_to_x}} are sisters. The only difference between these two functions is the column that controls the generation of missing values. In \code{\link{delete_MAR_1_to_x}} a separate column \code{ctrl_cols[i]} controls the generation of missing values in \code{cols_miss[i]}. In contrast, in \code{delete_MNAR_1_to_x} the generation of missing values in \code{cols_miss[i]} is controlled by \code{cols_miss[i]} itself. All other aspects are identical for both functions. Therefore, further details can be found in \code{\link{delete_MAR_1_to_x}}.
+The functions \code{delete_MNAR_1_to_x} and \code{\link{delete_MAR_1_to_x}} are sisters. The only difference between these two functions is the column that controls the generation of missing values. In \code{\link{delete_MAR_1_to_x}} a separate column \code{cols_ctrl[i]} controls the generation of missing values in \code{cols_miss[i]}. In contrast, in \code{delete_MNAR_1_to_x} the generation of missing values in \code{cols_miss[i]} is controlled by \code{cols_miss[i]} itself. All other aspects are identical for both functions. Therefore, further details can be found in \code{\link{delete_MAR_1_to_x}}.
 }
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)

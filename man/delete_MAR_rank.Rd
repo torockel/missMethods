@@ -8,9 +8,10 @@ delete_MAR_rank(
   ds,
   p,
   cols_miss,
-  ctrl_cols,
+  cols_ctrl,
   ties.method = "average",
-  miss_cols
+  miss_cols,
+  ctrl_cols
 )
 }
 \arguments{
@@ -22,13 +23,15 @@ the probability that a value is missing}
 \item{cols_miss}{a vector of column names or indices of columns in which
 missing values will be created}
 
-\item{ctrl_cols}{a vector of column names or indices of columns, which
+\item{cols_ctrl}{a vector of column names or indices of columns, which
 controls the creation of missing values in \code{cols_miss}. Must be of the
 same length as \code{cols_miss}.}
 
 \item{ties.method}{how ties are handled, passed to \code{\link[base]{rank}}}
 
 \item{miss_cols}{deprecated, use cols_miss instead}
+
+\item{ctrl_cols}{deprecated, use cols_ctrl instead}
 }
 \value{
 An object of the same class as \code{ds} with missing values
@@ -51,12 +54,12 @@ Otherwise, \code{p} must be of the same length as \code{cols_miss}.
 In this case, the overall probability for a value to be missing will be
 \code{p[i]} in the column \code{cols_miss[i]}.
 The position of the missing values in \code{cols_miss[i]} is controlled by
-\code{ctrl_cols[i]}.
-The following procedure is applied for each pair of \code{ctrl_cols[i]} and
+\code{cols_ctrl[i]}.
+The following procedure is applied for each pair of \code{cols_ctrl[i]} and
 \code{cols_miss[i]} to determine the positions of missing values:
 
 The probability for a missing value in a row of \code{cols_miss[i]} is
-proportional to the rank of the value in \code{ctrl_cols[i]} in the same row.
+proportional to the rank of the value in \code{cols_ctrl[i]} in the same row.
 In total \code{round(nrow(ds) * p[i])} missing values are created in
 \code{cols_miss[i]}.
 The ranks are calculated via \code{\link[base]{rank}}.

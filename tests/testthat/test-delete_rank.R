@@ -1,7 +1,7 @@
 test_that("delete_MAR_rank() calls check_delete_args_MAR()", {
   expect_error(
-    delete_MAR_rank(df_XY_100, 0.1, 1, ctrl_cols = 3),
-    "indices in ctrl_cols must be in 1:ncol\\(ds)"
+    delete_MAR_rank(df_XY_100, 0.1, 1, cols_ctrl = 3),
+    "indices in cols_ctrl must be in 1:ncol\\(ds)"
   )
 })
 
@@ -29,7 +29,7 @@ test_that("delete_MAR_rank() and delete_rank() works", {
   expect_equal(
     count_NA(delete_MAR_rank(df_XY_X_constant, 0.2,
       cols_miss = "Y",
-      ctrl_cols = "X"
+      cols_ctrl = "X"
     )),
     c(X = 0, Y = 4)
   )
@@ -37,14 +37,14 @@ test_that("delete_MAR_rank() and delete_rank() works", {
   # ctr_col nearly constant
   expect_equal(
     count_NA(delete_MAR_rank(df_XY_X_one_outlier, 0.2,
-      cols_miss = "Y", ctrl_cols = "X"
+      cols_miss = "Y", cols_ctrl = "X"
     )),
     c(X = 0, Y = 4)
   )
   # ordered control column
   expect_equal(
     count_NA(delete_MAR_rank(df_with_ord_factors, 0.2,
-      cols_miss = "Y", ctrl_cols = "X"
+      cols_miss = "Y", cols_ctrl = "X"
     )),
     c(X = 0, Y = 4)
   )

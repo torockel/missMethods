@@ -1,8 +1,8 @@
 # delete_1_to_x and delete_MAR_1_to_x ---------------------
 test_that("delete_MAR_1_to_x() calls check_delete_args_MAR()", {
   expect_error(
-    delete_MAR_1_to_x(df_XY_100, 0.1, 1, ctrl_cols = 3, x = 2),
-    "indices in ctrl_cols must be in 1:ncol\\(ds)"
+    delete_MAR_1_to_x(df_XY_100, 0.1, 1, cols_ctrl = 3, x = 2),
+    "indices in cols_ctrl must be in 1:ncol\\(ds)"
   )
 })
 
@@ -18,7 +18,7 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   # p too low to get missing values
   expect_equal(
     count_NA(delete_MAR_1_to_x(df_XY_100, 0.001,
-      cols_miss = "Y", ctrl_cols = "X", x = 3
+      cols_miss = "Y", cols_ctrl = "X", x = 3
     )),
     c(X = 0, Y = 0)
   )
@@ -155,14 +155,14 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   # check special ctrl_col cases --------------------------
   # ctrl_col constant
   expect_warning(
-    df_miss <- delete_MAR_1_to_x(df_XY_X_constant, 0.2, cols_miss = "Y", ctrl_cols = "X", x = 3),
+    df_miss <- delete_MAR_1_to_x(df_XY_X_constant, 0.2, cols_miss = "Y", cols_ctrl = "X", x = 3),
     "is constant"
   )
   expect_equal(count_NA(df_miss), c(X = 0, Y = 4))
   # ctr_col nearly constant
   expect_equal(
     count_NA(delete_MAR_1_to_x(df_XY_X_one_outlier, 0.2,
-      cols_miss = "Y", ctrl_cols = "X", x = 3
+      cols_miss = "Y", cols_ctrl = "X", x = 3
     )),
     c(X = 0, Y = 4)
   )
@@ -170,7 +170,7 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   # ctr_col nearly constant: expected odds are 1:x?
   test <- replicate(1000, is.na(delete_MAR_1_to_x(df_XY_X_unequal_dummy, 0.1,
     cols_miss = "Y",
-    ctrl_cols = "X", x = 3,
+    cols_ctrl = "X", x = 3,
     stochastic = TRUE
   )[11, "Y"]))
   realized_x <- sum(test) / ((nrow(df_XY_X_unequal_dummy) * 1000 * 0.1 - sum(test)) / 10)
@@ -255,7 +255,7 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 })
 
 # delete_MNAR_1_to_x --------------------------------------
-# delete_MNAR_1_to_x only calls delete_1_to_x() with ctrl_cols = cols_miss
+# delete_MNAR_1_to_x only calls delete_1_to_x() with cols_ctrl = cols_miss
 # so we only test if the missing values are in the correct variables.
 # The rest of delete_1_to_x() is tested with delete_MAR_1_to_x()
 test_that("delete_MNAR_1_to_x", {

@@ -1,5 +1,5 @@
 # the workhorse for delete_MAR_groups and delete_MNAR_groups
-delete_one_group <- function(ds, p, cols_miss, ctrl_cols,
+delete_one_group <- function(ds, p, cols_miss, cols_ctrl,
                              cutoff_fun = median,
                              prop = 0.5, use_lpSolve = TRUE,
                              ordered_as_unordered = FALSE,
@@ -14,16 +14,16 @@ delete_one_group <- function(ds, p, cols_miss, ctrl_cols,
 
   for (i in seq_along(cols_miss)) {
     groups <- find_groups(
-      ds[, ctrl_cols[i], drop = TRUE], cutoff_fun, prop, use_lpSolve,
+      ds[, cols_ctrl[i], drop = TRUE], cutoff_fun, prop, use_lpSolve,
       ordered_as_unordered, ...
     )
     if (is.null(groups$g2)) {
-      warning("column ", ctrl_cols[i], " is constant, effectively MCAR")
+      warning("column ", cols_ctrl[i], " is constant, effectively MCAR")
       ds[, cols_miss[i]] <- delete_MCAR_vec(ds[, cols_miss[i], drop = TRUE], p[i], stochastic)
     } else {
       miss_group <- groups[[sample.int(2, 1)]]
       if (length(miss_group) < round(nrow(ds) * p[i], 0)) {
-        warning("not enough objects in miss_group in column ", ctrl_cols[i], " to reach p")
+        warning("not enough objects in miss_group in column ", cols_ctrl[i], " to reach p")
         ds[miss_group, cols_miss[i]] <- NA
       } else {
         eff_p <- p[i] * nrow(ds) / length(miss_group)
@@ -49,9 +49,9 @@ delete_one_group <- function(ds, p, cols_miss, ctrl_cols,
 #' @details
 #' At first, the rows of \code{ds} are divided into two groups.
 #' Therefore, the \code{cutoff_fun} calculates a cutoff value for
-#' \code{ctrl_cols[i]} (via \code{cutoff_fun(ds[, ctrl_cols[i]], ...)}.
+#' \code{cols_ctrl[i]} (via \code{cutoff_fun(ds[, cols_ctrl[i]], ...)}.
 #' The group 1 consists of the rows, whose values in
-#' \code{ctrl_cols[i]} are below the calculated cutoff value.
+#' \code{cols_ctrl[i]} are below the calculated cutoff value.
 #' If the so defined group 1 is empty, the rows that are equal to the
 #' cutoff value will be added to this group (otherwise, these rows will
 #' belong to group 2).
@@ -80,11 +80,11 @@ delete_one_group <- function(ds, p, cols_miss, ctrl_cols,
 #' @examples
 #' ds <- data.frame(X = 1:20, Y = 101:120)
 #' delete_MAR_one_group(ds, 0.2, "X", "Y")
-delete_MAR_one_group <- function(ds, p, cols_miss, ctrl_cols,
+delete_MAR_one_group <- function(ds, p, cols_miss, cols_ctrl,
                                  cutoff_fun = median, prop = 0.5, use_lpSolve = TRUE,
                                  ordered_as_unordered = FALSE,
                                  stochastic = FALSE, ...,
-                                 miss_cols) {
+                                 miss_cols, ctrl_cols) {
 
   ## deprecate miss_cols
   if (!missing(miss_cols)) {
@@ -92,13 +92,19 @@ delete_MAR_one_group <- function(ds, p, cols_miss, ctrl_cols,
     cols_miss <- miss_cols
   }
 
+  ## deprecate ctrl_cols
+  if (!missing(ctrl_cols)) {
+    warning("ctrl_cols is deprecated; use cols_ctrl instead.")
+    cols_ctrl <- ctrl_cols
+  }
+
   check_delete_args_MAR(
     ds = ds, p = p, cols_miss = cols_miss,
-    ctrl_cols = ctrl_cols, stochastic = stochastic
+    cols_ctrl = cols_ctrl, stochastic = stochastic
   )
 
   delete_one_group(
-    ds = ds, p = p, cols_miss = cols_miss, ctrl_cols = ctrl_cols,
+    ds = ds, p = p, cols_miss = cols_miss, cols_ctrl = cols_ctrl,
     cutoff_fun = cutoff_fun, prop = prop,
     use_lpSolve = use_lpSolve,
     ordered_as_unordered = ordered_as_unordered,
@@ -134,7 +140,7 @@ delete_MNAR_one_group <- function(ds, p, cols_miss,
   )
 
   delete_one_group(
-    ds = ds, p = p, cols_miss = cols_miss, ctrl_cols = cols_miss,
+    ds = ds, p = p, cols_miss = cols_miss, cols_ctrl = cols_miss,
     cutoff_fun = cutoff_fun, prop = prop,
     use_lpSolve = use_lpSolve,
     ordered_as_unordered = ordered_as_unordered,

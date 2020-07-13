@@ -1,7 +1,7 @@
 test_that("delete_MAR_one_group() calls check_delete_args_MAR()", {
   expect_error(
-    delete_MAR_one_group(df_XY_100, 0.1, 1, ctrl_cols = 3),
-    "indices in ctrl_cols must be in 1:ncol\\(ds)"
+    delete_MAR_one_group(df_XY_100, 0.1, 1, cols_ctrl = 3),
+    "indices in cols_ctrl must be in 1:ncol\\(ds)"
   )
 })
 
@@ -11,7 +11,7 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
   # check p too low to get missing values with stochastic = FALSE -----
   expect_equal(
     count_NA(delete_MAR_one_group(df_XY_100, 0.001,
-      cols_miss = "Y", ctrl_cols = "X",
+      cols_miss = "Y", cols_ctrl = "X",
       stochastic = FALSE
     )),
     c(X = 0, Y = 0)
@@ -120,7 +120,7 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
   # ctrl_col constant
   expect_warning(
     miss_df <- delete_MAR_one_group(df_XY_X_constant, 0.2,
-      cols_miss = "Y", ctrl_cols = "X"
+      cols_miss = "Y", cols_ctrl = "X"
     ),
     "is constant"
   )
@@ -131,7 +131,7 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
   # warning and to less missing objects or everything fine
   # not really testable?
   # expect_equal(count_NA(delete_MAR_one_group(df_XY_X_one_outlier, 0.2,
-  #                                         cols_miss = "Y", ctrl_cols = "X")),
+  #                                         cols_miss = "Y", cols_ctrl = "X")),
   #              c(X = 0, Y = 4))
 })
 

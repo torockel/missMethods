@@ -1,5 +1,5 @@
 # the workhorse for delete_MAR_1_to_x and delete_MNAR_1_to_x
-delete_1_to_x <- function(ds, p, cols_miss, ctrl_cols, x,
+delete_1_to_x <- function(ds, p, cols_miss, cols_ctrl, x,
                           cutoff_fun = median,
                           prop = 0.5, use_lpSolve = TRUE,
                           ordered_as_unordered = FALSE,
@@ -8,8 +8,8 @@ delete_1_to_x <- function(ds, p, cols_miss, ctrl_cols, x,
 
   # general checking is done in calling functions delete_MAR_1_to_x and
   # delete_MNAR_1_to_x, only special cases are checked here
-  # check if ctrl_cols are numeric or ordered factor
-  check_ctrl_cols_1_to_x(ds, ctrl_cols)
+  # check if cols_ctrl are numeric or ordered factor
+  check_cols_ctrl_1_to_x(ds, cols_ctrl)
 
   # match cutoff_fun
   cutoff_fun <- match.fun(cutoff_fun)
@@ -28,11 +28,11 @@ delete_1_to_x <- function(ds, p, cols_miss, ctrl_cols, x,
   true_odds <- numeric(length(cols_miss))
   for (i in seq_along(cols_miss)) {
     groups <- find_groups(
-      ds[, ctrl_cols[i], drop = TRUE], cutoff_fun, prop, use_lpSolve,
+      ds[, cols_ctrl[i], drop = TRUE], cutoff_fun, prop, use_lpSolve,
       ordered_as_unordered, ...
     )
     if (is.null(groups$g2)) {
-      warning("column ", ctrl_cols[i], " is constant, effectively MCAR")
+      warning("column ", cols_ctrl[i], " is constant, effectively MCAR")
       ds[, cols_miss[i]] <- delete_MCAR_vec(ds[, cols_miss[i], drop = TRUE], p[i], stochastic)
       true_odds[i] <- 0
     } else {
@@ -119,9 +119,9 @@ delete_1_to_x <- function(ds, p, cols_miss, ctrl_cols, x,
 #' @details
 #' At first, the rows of \code{ds} are divided into two groups.
 #' Therefore, the \code{cutoff_fun} calculates a cutoff value for
-#' \code{ctrl_cols[i]} (via \code{cutoff_fun(ds[, ctrl_cols[i]], ...)}).
+#' \code{cols_ctrl[i]} (via \code{cutoff_fun(ds[, cols_ctrl[i]], ...)}).
 #' The group 1 consists of the rows, whose values in
-#' \code{ctrl_cols[i]} are below the calculated cutoff value.
+#' \code{cols_ctrl[i]} are below the calculated cutoff value.
 #' If the so defined group 1 is empty, the rows that have a value equal to the
 #' cutoff value will be added to this group (otherwise, these rows will
 #' belong to group 2).
@@ -158,7 +158,7 @@ delete_1_to_x <- function(ds, p, cols_miss, ctrl_cols, x,
 #' realized together.
 #' For example, if \code{p[i]} = 0.9, then a maximum of \code{x} = 1.25 is possible
 #' (assuming that  exactly 50 % of the values are below and 50 % of the values
-#' are above the cutoff value in \code{ctrl_cols[i]}).
+#' are above the cutoff value in \code{cols_ctrl[i]}).
 #' If a combination of \code{p} and \code{x} that cannot be realized together
 #' is given to \code{delete_MAR_1_to_x}, then a warning will be generated and
 #' \code{x} will be adjusted in such a way that \code{p} can be realized as
@@ -179,13 +179,13 @@ delete_1_to_x <- function(ds, p, cols_miss, ctrl_cols, x,
 #'   the probability of a value to be missing in group 1 against the probability
 #'   of a value to be missing  in group 2 (see details)
 #' @param cutoff_fun function that calculates the cutoff values in the
-#'   \code{ctrl_cols}
+#'   \code{cols_ctrl}
 #' @param add_realized_x logical; if TRUE the realized odds for cols_miss will
 #'   be returned (as attribute)
 #' @param prop numeric of length one; (minimum) proportion of rows in group 1
 #'   (only used for unordered factors)
 #' @param use_lpSolve logical; should lpSolve be used for the determination of
-#'   groups, if \code{ctrl_cols[i]} is an unordered factor
+#'   groups, if \code{cols_ctrl[i]} is an unordered factor
 #' @param ordered_as_unordered logical; should ordered factors be treated as
 #'   unordered factors
 #' @param ... further arguments passed to \code{cutoff_fun}
@@ -207,14 +207,14 @@ delete_1_to_x <- function(ds, p, cols_miss, ctrl_cols, x,
 #' # Too high combination of p and x:
 #' delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3)
 #' delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3, stochastic = TRUE)
-delete_MAR_1_to_x <- function(ds, p, cols_miss, ctrl_cols, x,
+delete_MAR_1_to_x <- function(ds, p, cols_miss, cols_ctrl, x,
                               cutoff_fun = median,
                               prop = 0.5,
                               use_lpSolve = TRUE,
                               ordered_as_unordered = FALSE,
                               stochastic = FALSE,
                               add_realized_x = FALSE, ...,
-                              miss_cols) {
+                              miss_cols, ctrl_cols) {
 
   ## deprecate miss_cols
   if (!missing(miss_cols)) {
@@ -222,12 +222,18 @@ delete_MAR_1_to_x <- function(ds, p, cols_miss, ctrl_cols, x,
     cols_miss <- miss_cols
   }
 
+  ## deprecate ctrl_cols
+  if (!missing(ctrl_cols)) {
+    warning("ctrl_cols is deprecated; use cols_ctrl instead.")
+    cols_ctrl <- ctrl_cols
+  }
+
   check_delete_args_MAR(
     ds = ds, p = p, cols_miss = cols_miss,
-    ctrl_cols = ctrl_cols, stochastic = stochastic
+    cols_ctrl = cols_ctrl, stochastic = stochastic
   )
 
-  delete_1_to_x(ds, p, cols_miss, ctrl_cols,
+  delete_1_to_x(ds, p, cols_miss, cols_ctrl,
     x = x,
     cutoff_fun = cutoff_fun,
     prop = prop,
@@ -270,7 +276,7 @@ delete_MNAR_1_to_x <- function(ds, p, cols_miss, x,
   )
 
   delete_1_to_x(ds, p, cols_miss,
-    ctrl_cols = cols_miss, x = x,
+    cols_ctrl = cols_miss, x = x,
     cutoff_fun = cutoff_fun,
     prop = prop,
     use_lpSolve = use_lpSolve,

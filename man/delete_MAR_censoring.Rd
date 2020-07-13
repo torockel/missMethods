@@ -8,10 +8,11 @@ delete_MAR_censoring(
   ds,
   p,
   cols_miss,
-  ctrl_cols,
+  cols_ctrl,
   where = "lower",
   sorting = TRUE,
-  miss_cols
+  miss_cols,
+  ctrl_cols
 )
 }
 \arguments{
@@ -23,7 +24,7 @@ the probability that a value is missing}
 \item{cols_miss}{a vector of column names or indices of columns in which
 missing values will be created}
 
-\item{ctrl_cols}{a vector of column names or indices of columns, which
+\item{cols_ctrl}{a vector of column names or indices of columns, which
 controls the creation of missing values in \code{cols_miss}. Must be of the
 same length as \code{cols_miss}.}
 
@@ -33,6 +34,8 @@ same length as \code{cols_miss}.}
 \item{sorting}{logical; should sorting be used or a quantile as a threshold}
 
 \item{miss_cols}{deprecated, use cols_miss instead}
+
+\item{ctrl_cols}{deprecated, use cols_ctrl instead}
 }
 \value{
 An object of the same class as \code{ds} with missing values
@@ -55,16 +58,16 @@ Otherwise, \code{p} must be of the same length as \code{cols_miss}.
 In this case, the overall probability for a value to be missing will be
 \code{p[i]} in the column \code{cols_miss[i]}.
 The position of the missing values in \code{cols_miss[i]} is controlled by
-\code{ctrl_cols[i]}.
-The following procedure is applied for each pair of \code{ctrl_cols[i]} and
+\code{cols_ctrl[i]}.
+The following procedure is applied for each pair of \code{cols_ctrl[i]} and
 \code{cols_miss[i]} to determine the positions of missing values:
 
 If \code{sorting = TRUE} (the default), the column
-\code{ctrl_cols[i]} will be sorted. Then the rows with the
+\code{cols_ctrl[i]} will be sorted. Then the rows with the
 \code{round(nrow(ds) * p[i])} smallest values will be selected (if
 \code{where = "lower"} (the default)). Now missing values will be created in
 the column \code{cols_miss[i]} in these rows. This effectively censors the
-proportion of \code{p[i]} rows of smallest values in \code{ctrl_cols[i]} in
+proportion of \code{p[i]} rows of smallest values in \code{cols_ctrl[i]} in
 \code{cols_miss[i]}.
 
 If \code{where = "upper"}, instead of the rows with the smallest values, the
@@ -72,27 +75,27 @@ rows with the highest values will be selected. For \code{where = "both"}, the
 one half of the \code{round(nrow(ds) * p[i])} rows with missing values will
 be the rows with the smallest values and the other half will be the rows with
 the highest values. So the censoring rows are dived to the highest and
-smallest values of \code{ctrl_cols[i]}.
+smallest values of \code{cols_ctrl[i]}.
 
 If \code{sorting = FALSE}, the rows of \code{ds} will not be sorted. Instead,
 a quantile will be calculated (using \code{\link[stats]{quantile}}). If
-\code{where = "lower"}, the \code{quantile(ds[, ctrl_cols[i]], p[i])} will be
-calculated and all rows with values in \code{ds[, ctrl_cols[i]]} below this
+\code{where = "lower"}, the \code{quantile(ds[, cols_ctrl[i]], p[i])} will be
+calculated and all rows with values in \code{ds[, cols_ctrl[i]]} below this
 quantile will have missing values in \code{cols_miss[i]}. For \code{where =
-"upper"}, the \code{quantile(ds[, ctrl_cols[i]], 1 - p[i])} will be
+"upper"}, the \code{quantile(ds[, cols_ctrl[i]], 1 - p[i])} will be
 calculated and all rows with values above this quantile will have missing
-values. For \code{where = "both"}, the \code{quantile(ds[, ctrl_cols[i]],
-p[i] / 2)} and \code{quantile(ds[, ctrl_cols[i]], 1 -  p[i] / 2)} will be
-calculated. All rows with values in \code{ctrl_cols[i]} below the first
+values. For \code{where = "both"}, the \code{quantile(ds[, cols_ctrl[i]],
+p[i] / 2)} and \code{quantile(ds[, cols_ctrl[i]], 1 -  p[i] / 2)} will be
+calculated. All rows with values in \code{cols_ctrl[i]} below the first
 quantile or above the second quantile will have missing values in
 \code{cols_miss[i]}.
 
 The option \code{sorting = TRUE} will always create exactly
 \code{round(nrow(ds) * p[i])} missing values in \code{cols_miss[i]}. For
 \code{sorting = FALSE}, the number of missing values will normally be close
-to \code{nrow(ds) * p[i]}. But for \code{ctrl_cols} with many duplicates the
+to \code{nrow(ds) * p[i]}. But for \code{cols_ctrl} with many duplicates the
 choice \code{sorting = FALSE} can be problematic, because of the calculation
-of \code{quantile(ds[, ctrl_cols[i]], p[i])} and setting values \code{NA}
+of \code{quantile(ds[, cols_ctrl[i]], p[i])} and setting values \code{NA}
 below this threshold (see examples). So, in most cases \code{sorting = TRUE}
 is recommended.
 }

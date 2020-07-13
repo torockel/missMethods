@@ -27,7 +27,7 @@ Create missing not at random (MNAR) values using a ranking mechanism in a
 data frame or a matrix
 }
 \details{
-The functions \code{delete_MNAR_rank} and \code{\link{delete_MAR_rank}} are sisters. The only difference between these two functions is the column that controls the generation of missing values. In \code{\link{delete_MAR_rank}} a separate column \code{ctrl_cols[i]} controls the generation of missing values in \code{cols_miss[i]}. In contrast, in \code{delete_MNAR_rank} the generation of missing values in \code{cols_miss[i]} is controlled by \code{cols_miss[i]} itself. All other aspects are identical for both functions. Therefore, further details can be found in \code{\link{delete_MAR_rank}}.
+The functions \code{delete_MNAR_rank} and \code{\link{delete_MAR_rank}} are sisters. The only difference between these two functions is the column that controls the generation of missing values. In \code{\link{delete_MAR_rank}} a separate column \code{cols_ctrl[i]} controls the generation of missing values in \code{cols_miss[i]}. In contrast, in \code{delete_MNAR_rank} the generation of missing values in \code{cols_miss[i]} is controlled by \code{cols_miss[i]} itself. All other aspects are identical for both functions. Therefore, further details can be found in \code{\link{delete_MAR_rank}}.
 }
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)

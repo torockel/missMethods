@@ -8,14 +8,15 @@ delete_MAR_one_group(
   ds,
   p,
   cols_miss,
-  ctrl_cols,
+  cols_ctrl,
   cutoff_fun = median,
   prop = 0.5,
   use_lpSolve = TRUE,
   ordered_as_unordered = FALSE,
   stochastic = FALSE,
   ...,
-  miss_cols
+  miss_cols,
+  ctrl_cols
 )
 }
 \arguments{
@@ -27,18 +28,18 @@ the probability that a value is missing}
 \item{cols_miss}{a vector of column names or indices of columns in which
 missing values will be created}
 
-\item{ctrl_cols}{a vector of column names or indices of columns, which
+\item{cols_ctrl}{a vector of column names or indices of columns, which
 controls the creation of missing values in \code{cols_miss}. Must be of the
 same length as \code{cols_miss}.}
 
 \item{cutoff_fun}{function that calculates the cutoff values in the
-\code{ctrl_cols}}
+\code{cols_ctrl}}
 
 \item{prop}{numeric of length one; (minimum) proportion of rows in group 1
 (only used for unordered factors)}
 
 \item{use_lpSolve}{logical; should lpSolve be used for the determination of
-groups, if \code{ctrl_cols[i]} is an unordered factor}
+groups, if \code{cols_ctrl[i]} is an unordered factor}
 
 \item{ordered_as_unordered}{logical; should ordered factors be treated as
 unordered factors}
@@ -48,6 +49,8 @@ unordered factors}
 \item{...}{further arguments passed to \code{cutoff_fun}}
 
 \item{miss_cols}{deprecated, use cols_miss instead}
+
+\item{ctrl_cols}{deprecated, use cols_ctrl instead}
 }
 \value{
 An object of the same class as \code{ds} with missing values
@@ -70,15 +73,15 @@ Otherwise, \code{p} must be of the same length as \code{cols_miss}.
 In this case, the overall probability for a value to be missing will be
 \code{p[i]} in the column \code{cols_miss[i]}.
 The position of the missing values in \code{cols_miss[i]} is controlled by
-\code{ctrl_cols[i]}.
-The following procedure is applied for each pair of \code{ctrl_cols[i]} and
+\code{cols_ctrl[i]}.
+The following procedure is applied for each pair of \code{cols_ctrl[i]} and
 \code{cols_miss[i]} to determine the positions of missing values:
 
 At first, the rows of \code{ds} are divided into two groups.
 Therefore, the \code{cutoff_fun} calculates a cutoff value for
-\code{ctrl_cols[i]} (via \code{cutoff_fun(ds[, ctrl_cols[i]], ...)}.
+\code{cols_ctrl[i]} (via \code{cutoff_fun(ds[, cols_ctrl[i]], ...)}.
 The group 1 consists of the rows, whose values in
-\code{ctrl_cols[i]} are below the calculated cutoff value.
+\code{cols_ctrl[i]} are below the calculated cutoff value.
 If the so defined group 1 is empty, the rows that are equal to the
 cutoff value will be added to this group (otherwise, these rows will
 belong to group 2).
@@ -99,7 +102,7 @@ The effect of \code{stochastic} is further discussed in
 \section{Treatment of factors}{
 
 
-If \code{ds[, ctrl_cols[i]]} is an unordered factor, then the concept of a
+If \code{ds[, cols_ctrl[i]]} is an unordered factor, then the concept of a
 cutoff value is not meaningful and cannot be applied.
 Instead, a combinations of the levels of the unordered factor is searched that
 \itemize{

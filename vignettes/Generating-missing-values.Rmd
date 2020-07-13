@@ -38,9 +38,9 @@ To generate missing values in a dataset with missMethods you can use one of the 
 * `delete_MNAR_one_group()`
 * `delete_MNAR_rank()`
 
-All these functions share a common interface. The first argument `ds` takes the dataset in which missing values should be generated. The next argument `p` specifies the proportion of missing values to include in every column with missing value. These columns are specified with the third argument `cols_miss`. The further arguments depend on the chosen function and are documented for every function separately. In most cases, reasonable defaults are set for these further arguments. Only the `MAR` functions need one additional argument with no default: `ctrl_cols`. The argument `ctrl_cols` specifies the columns that control the generation of missing data in a MAR settings. 
+All these functions share a common interface. The first argument `ds` takes the dataset in which missing values should be generated. The next argument `p` specifies the proportion of missing values to include in every column with missing value. These columns are specified with the third argument `cols_miss`. The further arguments depend on the chosen function and are documented for every function separately. In most cases, reasonable defaults are set for these further arguments. Only the `MAR` functions need one additional argument with no default: `cols_ctrl`. The argument `cols_ctrl` specifies the columns that control the generation of missing data in a MAR settings. 
 
-One further remark: All `MAR` functions have a `MNAR` twin. These twins behave exactly the same way. The only difference is the columns that controls the generation of missing values. In the `MAR` functions separate  `ctrl_cols` columns controls the generation of missing values in the `cols_miss` columns. In contrast, in the `MNAR` functions the generation of missing values in the `cols_miss` columns is controlled by the `cols_miss` columns themselves.
+One further remark: All `MAR` functions have a `MNAR` twin. These twins behave exactly the same way. The only difference is the columns that controls the generation of missing values. In the `MAR` functions separate  `cols_ctrl` columns controls the generation of missing values in the `cols_miss` columns. In contrast, in the `MNAR` functions the generation of missing values in the `cols_miss` columns is controlled by the `cols_miss` columns themselves.
 
 In the following, different examples for the generation of missing values will be presented. Furthermore, connections between the functions from missMethods and the paper by @Santos.2019 will be shown.
 
@@ -79,7 +79,7 @@ make_simple_MDplot(ds_comp, ds_mcar)
 Generate MAR values using a censoring mechanism. This leads to a missing value in "X", if the y-value is below the 30 % quantile of "Y":
 
 ```{r MAR censoring}
-ds_mar <- delete_MAR_censoring(ds_comp, 0.3, "X", ctrl_cols = "Y")
+ds_mar <- delete_MAR_censoring(ds_comp, 0.3, "X", cols_ctrl = "Y")
 make_simple_MDplot(ds_comp, ds_mar)
 ```
 
@@ -87,13 +87,13 @@ The censoring mechanism is a rather strong form of MAR. A function that allows t
 
 ```{r MAR_1_to_2}
 # x = 2
-ds_mar <- delete_MAR_1_to_x(ds_comp, 0.3, "X", ctrl_cols = "Y", x = 2)
+ds_mar <- delete_MAR_1_to_x(ds_comp, 0.3, "X", cols_ctrl = "Y", x = 2)
 make_simple_MDplot(ds_comp, ds_mar)
 ```
 
 ```{r MAR_1_to_10}
 # x = 10
-ds_mar <- delete_MAR_1_to_x(ds_comp, 0.3, "X", ctrl_cols = "Y", x = 10)
+ds_mar <- delete_MAR_1_to_x(ds_comp, 0.3, "X", cols_ctrl = "Y", x = 10)
 make_simple_MDplot(ds_comp, ds_mar)
 ```
 

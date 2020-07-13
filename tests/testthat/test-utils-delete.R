@@ -76,32 +76,32 @@ test_that("check_delete_args_MAR() works", {
     "ds must be a data.frame or a matrix"
   )
 
-  # ctrl_cols (special errors) ----------------------------
+  # cols_ctrl (special errors) ----------------------------
   expect_error(
-    delete_MAR_1_to_x(df_XY_100, 0.1, 1, ctrl_cols = 3, x = 2),
-    "indices in ctrl_cols must be in 1:ncol\\(ds)"
+    delete_MAR_1_to_x(df_XY_100, 0.1, 1, cols_ctrl = 3, x = 2),
+    "indices in cols_ctrl must be in 1:ncol\\(ds)"
   )
   expect_error(
-    delete_MAR_1_to_x(df_XY_100, 0.1, 1, ctrl_cols = "Z", x = 2),
-    "all entries of ctrl_cols must be in colnames\\(ds)"
+    delete_MAR_1_to_x(df_XY_100, 0.1, 1, cols_ctrl = "Z", x = 2),
+    "all entries of cols_ctrl must be in colnames\\(ds)"
   )
   expect_error(
-    delete_MAR_1_to_x(df_XY_100, 0.1, 1, ctrl_cols = factor("X"), x = 2),
-    "ctrl_cols must be a vector of column names or indices of ds"
+    delete_MAR_1_to_x(df_XY_100, 0.1, 1, cols_ctrl = factor("X"), x = 2),
+    "cols_ctrl must be a vector of column names or indices of ds"
   )
 
   expect_error(
-    delete_MAR_1_to_x(df_XY_X_miss, 0.1, "Y", ctrl_cols = "X", x = 3),
-    "ctrl_cols must be completely observed; no NAs in ds\\[, ctrl_cols\\] allowed"
+    delete_MAR_1_to_x(df_XY_X_miss, 0.1, "Y", cols_ctrl = "X", x = 3),
+    "cols_ctrl must be completely observed; no NAs in ds\\[, cols_ctrl\\] allowed"
   )
   expect_error(
-    delete_MAR_1_to_x(df_XYZ_100, 0.1, cols_miss = "X", ctrl_cols = c("Y", "Z"), x = 3),
+    delete_MAR_1_to_x(df_XYZ_100, 0.1, cols_miss = "X", cols_ctrl = c("Y", "Z"), x = 3),
     "length\\(cols_miss) must equal length"
   )
 
   # special errors for check_delete_args_MAR:
   expect_error(
-    delete_MAR_1_to_x(df_XYZ_100, 0.1, cols_miss = "X", ctrl_cols = "X", x = 4),
+    delete_MAR_1_to_x(df_XYZ_100, 0.1, cols_miss = "X", cols_ctrl = "X", x = 4),
     "to ensure MAR no ctrl_col is allowed to be in cols_miss"
   )
 })
@@ -122,11 +122,11 @@ test_that("check_delete_args_MCAR() works", {
 })
 
 
-# check check_ctrl_cols_1_to_x ----------------------------
-test_that("check_ctrl_cols_1_to_x()", {
-  expect_true(check_ctrl_cols_1_to_x(df_XY_100, "X"))
+# check check_cols_ctrl_1_to_x ----------------------------
+test_that("check_cols_ctrl_1_to_x()", {
+  expect_true(check_cols_ctrl_1_to_x(df_XY_100, "X"))
   expect_error(
-    check_ctrl_cols_1_to_x(
+    check_cols_ctrl_1_to_x(
       data.frame(
         X = letters,
         Y = 1:26,

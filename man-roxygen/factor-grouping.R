@@ -1,6 +1,6 @@
 #' @section Treatment of factors:
 #'
-#' If \code{ds[, ctrl_cols[i]]} is an unordered factor, then the concept of a
+#' If \code{ds[, cols_ctrl[i]]} is an unordered factor, then the concept of a
 #' cutoff value is not meaningful and cannot be applied.
 #' Instead, a combinations of the levels of the unordered factor is searched that
 #' \itemize{

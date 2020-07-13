@@ -8,7 +8,7 @@ MNAR_documentation <- function(ending) {
       "The only difference between these two functions is the column that ",
       "controls the generation of missing values. ",
       "In \\code{\\link{delete_MAR_", ending, "}} a separate column ",
-      "\\code{ctrl_cols[i]} controls the generation of missing values in ",
+      "\\code{cols_ctrl[i]} controls the generation of missing values in ",
       "\\code{cols_miss[i]}. ",
       "In contrast, in \\code{delete_MNAR_", ending, "} the generation ",
       "of missing values in \\code{cols_miss[i]} is controlled by ",
