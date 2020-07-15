@@ -11,30 +11,10 @@
 #'
 #' @noRd
 find_md_patterns <- function(M) {
-  patterns <- list()
-  pattern_obj <- list()
-  for (i in seq_len(nrow(M))) {
-    pat_nr <- find_md_pattern_nr(M[i, ], patterns)
-    if (pat_nr > length(patterns)) { # new pattern
-      patterns[[pat_nr]] <- M[i, ]
-      pattern_obj[[pat_nr]] <- i
-    } else { # existing pattern
-      pattern_obj[[pat_nr]] <- c(pattern_obj[[pat_nr]], i)
-    }
-  }
-
-  pattern_matrix <- matrix(unlist(patterns), byrow = TRUE, ncol = ncol(M))
+  pattern_matrix <- unique(M)
+  pattern_obj <- match(as.data.frame(t(M)), as.data.frame(t(pattern_matrix)))
+  pattern_obj <- split(seq_len(nrow(M)), pattern_obj)
   list(pattern_matrix = pattern_matrix, pattern_obj = pattern_obj)
-}
-
-
-find_md_pattern_nr <- function(md_pattern, patterns) {
-  for (pat_ind in seq_along(patterns)) {
-    if (all(md_pattern == patterns[[pat_ind]])) {
-      return(pat_ind)
-    }
-  }
-  return(length(patterns) + 1L)
 }
 
 

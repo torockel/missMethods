@@ -1,10 +1,3 @@
-test_that("find_md_pattern_nr()", {
-  patterns <- list(c(TRUE, FALSE), c(FALSE, FALSE))
-  expect_equal(find_md_pattern_nr(c(TRUE, FALSE), patterns), 1)
-  expect_equal(find_md_pattern_nr(c(FALSE, FALSE), patterns), 2)
-  expect_equal(find_md_pattern_nr(c(FALSE, TRUE), patterns), 3)
-})
-
 test_that("find_md_patterns()", {
   M <- matrix(c(
     TRUE, TRUE,
@@ -16,7 +9,7 @@ test_that("find_md_patterns()", {
       TRUE, TRUE,
       FALSE, TRUE
     ), byrow = TRUE, ncol = 2),
-    pattern_obj = list(c(1, 3), c(2))
+    pattern_obj = list(`1` = c(1, 3), `2` = c(2))
   )
   expect_equal(find_md_patterns(M), correct_res)
 })
