@@ -23,6 +23,8 @@ Suggests:
     ggplot2,
     knitr,
     lpSolve,
+    MASS,
+    norm,
     rmarkdown,
     testthat (>= 2.1.0),
     tibble
