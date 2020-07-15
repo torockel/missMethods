@@ -3,6 +3,9 @@
 #' Impute missing values in a data frame or a matrix using a simple random hot
 #' deck
 #'
+#' @template impute
+#'
+#' @details
 #' There are three types of simple random hot decks implemented. They can be
 #' selected via \code{type}:
 #' \itemize{
@@ -40,7 +43,6 @@
 #' donor limit is applied for every column separately.
 #'
 #'
-#' @param ds a data frame or matrix with missing values
 #' @param type the type of hot deck; the default ("cols_seq") is a random hot
 #'   deck that imputes each column separately. Other choices are "sim_comp" and
 #'   "sim_part". Both impute all missing values in an object (row)
@@ -51,7 +53,6 @@
 #' @param donor_limit numeric of length one or "min"; how many times an object
 #'   can be a donor. default is \code{Inf} (no restriction).
 #'
-#' @return An object of the same class as \code{ds} with imputed missing values
 #' @references Andridge, R. R., & Little, R. J. (2010). A review of hot deck
 #'   imputation for survey non-response. \emph{International statistical review},
 #'   78(1), 40-64.
