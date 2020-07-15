@@ -73,10 +73,26 @@ test_that("evaluate_imputation_parameters() works with data frames", {
 
   expect_equal(
     evaluate_imputation_parameters(ds_imp,
+                                   ds_orig = ds_orig,
+                                   parameter = "cov_only"
+    ),
+    evaluate_parameters(cov(ds_imp)[1, 2], cov(ds_orig)[1, 2])
+  )
+
+  expect_equal(
+    evaluate_imputation_parameters(ds_imp,
       ds_orig = ds_orig,
       parameter = "cor"
     ),
     evaluate_parameters(cor(ds_imp), cor(ds_orig))
+  )
+
+  expect_equal(
+    evaluate_imputation_parameters(ds_imp,
+                                   ds_orig = ds_orig,
+                                   parameter = "cor_only"
+    ),
+    evaluate_parameters(cor(ds_imp)[1, 2], cor(ds_orig)[1, 2])
   )
 
   # check parameter error

@@ -54,12 +54,16 @@ estimates based on the original dataset
 Either \code{ds_orig} or \code{pars_true} must be supplied and the other one
 must be \code{NULL} (default: both are \code{NULL}, just supply one, see
 examples). The following \code{parameter}s are implemented:
-"mean", "median", "var", "sd", "quantile", "cov", "cor".
-Some details follows:
+"mean", "median", "var", "sd", "quantile", "cov", "cov_only", cor", "cor_only".
+Some details follow:
 \itemize{
-\item{"var": only the variances of the columns (the diagonal elements of the
-covariance matrix) are compared. The whole covariance matrix can be compared
-with "cov".}
+\item{"var", "cov" and "cov_only": For "var" only the variances of the
+columns (the diagonal elements of the covariance matrix) are compared. For
+"cov" the whole covariance matrix is compared. For "cov_only" only the upper
+triangle (excluding the diagonal) of the covariance matrix is compared.}
+\item{"cor", "cor_only": For "cor" the whole correlation matrix is compared.
+For "cor_only" only the upper triangle (excluding the diagonal) of the
+correlation matrix is compared.}
 \item{"quantile": the quantiles can be set via the additional
 argument \code{probs} (see examples). Otherwise, the default quantiles from
 \code{\link[stats]{quantile}} will be used.}

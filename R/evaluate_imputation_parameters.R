@@ -9,12 +9,16 @@
 #' @details Either \code{ds_orig} or \code{pars_true} must be supplied and the other one
 #' must be \code{NULL} (default: both are \code{NULL}, just supply one, see
 #' examples). The following \code{parameter}s are implemented:
-#' "mean", "median", "var", "sd", "quantile", "cov", "cor".
-#' Some details follows:
+#' "mean", "median", "var", "sd", "quantile", "cov", "cov_only", cor", "cor_only".
+#' Some details follow:
 #' \itemize{
-#' \item{"var": only the variances of the columns (the diagonal elements of the
-#' covariance matrix) are compared. The whole covariance matrix can be compared
-#' with "cov".}
+#' \item{"var", "cov" and "cov_only": For "var" only the variances of the
+#' columns (the diagonal elements of the covariance matrix) are compared. For
+#' "cov" the whole covariance matrix is compared. For "cov_only" only the upper
+#' triangle (excluding the diagonal) of the covariance matrix is compared.}
+#' \item{"cor", "cor_only": For "cor" the whole correlation matrix is compared.
+#' For "cor_only" only the upper triangle (excluding the diagonal) of the
+#' correlation matrix is compared.}
 #' \item{"quantile": the quantiles can be set via the additional
 #' argument \code{probs} (see examples). Otherwise, the default quantiles from
 #' \code{\link[stats]{quantile}} will be used.}
@@ -85,7 +89,7 @@ evaluate_imputation_parameters <- function(ds_imp, ds_orig = NULL, pars_true = N
     stop("exactly one of 'ds_orig' or 'pars_true' must be supplied and the
          other one must be NULL")
   }
-  match.arg(parameter, c("mean", "median", "var", "sd", "quantile", "cov", "cor"))
+  match.arg(parameter, c("mean", "median", "var", "sd", "quantile", "cov", "cov_only", "cor", "cor_only"))
 
   calc_pars <- switch(parameter,
     mean = colMeans,
@@ -94,7 +98,15 @@ evaluate_imputation_parameters <- function(ds_imp, ds_orig = NULL, pars_true = N
     sd = make_col_fun(stats::sd),
     quantile = make_col_fun(stats::quantile),
     cov = stats::cov,
-    cor = stats::cor
+    cov_only = function(x, ...) {
+      whole_cov <- stats::cov(x, ...)
+      whole_cov[upper.tri(whole_cov)]
+    },
+    cor = stats::cor,
+    cor_only = function(x, ...) {
+      whole_cor <- stats::cor(x, ...)
+      whole_cor[upper.tri(whole_cor)]
+    }
   )
 
   pars_est <- calc_pars(ds_imp[, cols_which, drop = FALSE], ...)

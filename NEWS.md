@@ -7,6 +7,7 @@
 
 ## Miscellaneous
 
+* implement `cov_only` and `cor_only` as `parameter` in  `evaluate_imputation_parameters()`
 * improve vignette "Generating missing values" (add connections to Santos et al. (2019))
 * rename of `cols` variables: now all should be named `cols_miss`, `cols_ctrl` etc.
 * rename of `ds` variables: now all should be named `ds_imp`, `ds_orig` etc.
