@@ -32,3 +32,15 @@ test_that("impute_EM() works (basic test)", {
     impute_EM(data.frame(X = 1:4, Y = c(1:3, NA)), stochastic =  TRUE),
     data.frame(X = 1:4, Y = 1:4), tolerance = 0.2)
 })
+
+
+test_that("impute_EM() works (check output of 100 x 7 matrix)", {
+  skip_on_cran()
+  set.seed(123)
+  ds_orig <- MASS::mvrnorm(100, rep(0, 7), Sigma = diag(1, 7))
+  ds_miss <- delete_MCAR(ds_orig, p = 0.2)
+  ds_imp <- impute_EM(ds_miss, stochastic = FALSE)
+  verify_output(test_path("test-EM-impute.txt"), {
+    ds_imp
+  })
+})

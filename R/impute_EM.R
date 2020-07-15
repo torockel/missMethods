@@ -48,7 +48,7 @@ impute_EM <- function(ds, stochastic = TRUE, maxits = 1000, criterion = 0.0001) 
     M_i <- M[i, ]
     if (any(M_i)) { # only impute, if any missing value in row i
       sigma_22_inv <- tryCatch(solve(EM_parm$sigma[!M_i, !M_i]), # try to invert matrix
-        error = function(e) { # if matrix singular -> use regression imputation
+        error = function(e) { # if matrix singular -> use mean imputation
           warning(
             "Row ", i, " was imputed with mean values, ",
             "because EM covariance matrix is not positive-definite."
