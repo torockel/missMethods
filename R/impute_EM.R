@@ -41,18 +41,16 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 
 
 impute_EM <- function(ds, stochastic = TRUE, maxits = 1000, criterion = 0.0001) {
-  EM_parm <- get_EM_parameters(ds, maxits = maxits, criterion = criterion)
 
+  EM_parm <- get_EM_parameters(ds, maxits = maxits, criterion = criterion)
   M <- is.na(ds)
+  problematic_rows <- integer(0)
+
   for (i in seq_len(nrow(ds))) {
     M_i <- M[i, ]
     if (any(M_i)) { # only impute, if any missing value in row i
       sigma_22_inv <- tryCatch(solve(EM_parm$sigma[!M_i, !M_i]), # try to invert matrix
-        error = function(e) { # if matrix singular -> use mean imputation
-          warning(
-            "Row ", i, " was imputed with mean values, ",
-            "because EM covariance matrix is not positive-definite."
-          )
+        error = function(e) { # if matrix singular -> add row to problematic_rows
           return(NULL)
         }
       )
@@ -66,11 +64,21 @@ impute_EM <- function(ds, stochastic = TRUE, maxits = 1000, criterion = 0.0001) 
           y_imp <- y_imp + MASS::mvrnorm(n = 1, mu = rep(0, sum(M_i)), Sigma = var_y_imp)
         }
         ds[i, M_i] <- y_imp
-      } else { # Simga_22 is not invertible -> mean imputation for this row
-        ds_imp <- impute_mean(ds)
-        ds[i, M_i] <- ds_imp[i, M_i]
+      } else { # Simga_22 is not invertible -> add row to problematic_rows
+        problematic_rows <- c(problematic_rows, i)
       }
     }
+  }
+
+  ## handle rows, for which sigma_22 is not invertible ------------------------
+  if (length(problematic_rows) > 0) {
+    ds_imp <- impute_mean(ds)
+    ds[problematic_rows, ][M[problematic_rows, ]] <- ds_imp[problematic_rows, ][M[problematic_rows, ]]
+    warning(
+      "Row(s) ", paste(problematic_rows, collapse = ", "),
+      " were imputed with mean values, ",
+      "because EM covariance matrix is not positive-definite."
+    )
   }
 
   ds

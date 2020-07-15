@@ -33,6 +33,13 @@ test_that("impute_EM() works (basic test)", {
     data.frame(X = 1:4, Y = 1:4), tolerance = 0.2)
 })
 
+test_that("impute_EM() works with problematic Sigma", {
+  expect_warning(ds_imp <- impute_EM(data.frame(X = 1:5, Y = 11:15, Z = c(21:23, NA, NA))),
+    "Row(s) 4, 5 were imputed with mean values, because EM covariance matrix is not positive-definite.",
+    fixed = TRUE
+  )
+})
+
 
 test_that("impute_EM() works (check output of 100 x 7 matrix)", {
   skip_on_cran()
