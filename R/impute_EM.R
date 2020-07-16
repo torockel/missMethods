@@ -1,6 +1,5 @@
 # maxit and criterion are passed to norm::em.norm!
 # if EM does not converge: warning
-
 get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 
   ## check for norm and MASS
@@ -40,6 +39,33 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 }
 
 
+#' EM imputation
+#'
+#' Impute missing values in a data frame or a matrix using a parameters estimated
+#' via EM
+#'
+#' @template impute
+#'
+#' @details
+#' At first parameters are estimated via [norm::em.norm()]. Then these
+#' parameters are used in a regression like model to impute the missing values.
+#' If `stochachstic = FALSE`, the expected values (given the observed values and
+#' the estimated parameters via EM) is imputed for the missing values of an
+#' object. If `stochastic = TRUE` residuals from a multivariate normal
+#' distribution are added to these expected values.
+#'
+#' @param stochastic logical; see details
+#' @param maxits maximum number of iterations for the EM, passed to [norm::em.norm()]
+#' @param criterion if maximum relative difference in parameter estimates is
+#'   below this threshold, the EM algorithm stops, argument is directly passed
+#'   to [norm::em.norm()]
+#'
+#' @export
+#'
+#' @examples
+#' ds_orig <- MASS::mvrnorm(100, rep(0, 7), Sigma = diag(1, 7))
+#' ds_miss <- delete_MCAR(ds_orig, p = 0.2)
+#' ds_imp <- impute_EM(ds_miss, stochastic = FALSE)
 impute_EM <- function(ds, stochastic = TRUE, maxits = 1000, criterion = 0.0001) {
 
   EM_parm <- get_EM_parameters(ds, maxits = maxits, criterion = criterion)
