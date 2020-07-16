@@ -1,5 +1,5 @@
 test_that("imputation methods works via simulation", {
-  # skip("Too long run time to check every time or on CRAN")
+  skip("Too long run time to check every time or on CRAN")
   set.seed(123)
   expect_equal(
     rowMeans(
