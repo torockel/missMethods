@@ -38,6 +38,7 @@ test_that("impute_EM() works with problematic Sigma", {
     "Row(s) 4, 5 were imputed with mean values, because EM covariance matrix is not positive-definite.",
     fixed = TRUE
   )
+  expect_equal(ds_imp, data.frame(X = 1:5, Y = 11:15, Z = c(21:23, 22, 22)))
 })
 
 
@@ -47,7 +48,9 @@ test_that("impute_EM() works (check output of 100 x 7 matrix)", {
   ds_orig <- MASS::mvrnorm(100, rep(0, 7), Sigma = diag(1, 7))
   ds_miss <- delete_MCAR(ds_orig, p = 0.2)
   ds_imp <- impute_EM(ds_miss, stochastic = FALSE)
+  ds_imp_stoch <- impute_EM(ds_miss, stochastic = TRUE)
   verify_output(test_path("test-EM-impute.txt"), {
     ds_imp
+    ds_imp_stoch
   })
 })

@@ -4,6 +4,7 @@
 
 * `impute_in_classes()` allows to apply any imputation function inside imputation classes 
 * `impute_hot_deck_in_classes()` hot deck imputation inside of imputation classes (adjustment cells)
+* `impute_EM()` imputes values using EM parameter estimates
 
 ## Miscellaneous
 
