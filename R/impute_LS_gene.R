@@ -111,8 +111,9 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
 
 
               ## calculate weights  ---------------------------------------------
-              w <- (similarity_i[as.character(suitable)]^2 /
-                      ( 1- similarity_i[as.character(suitable)]^2 + eps))^2
+              similarities_sq <- similarity_i[as.character(suitable)]^2
+              w <- (similarities_sq /
+                      ( 1- similarities_sq + eps))^2
               w <- w / sum(w)
 
 
