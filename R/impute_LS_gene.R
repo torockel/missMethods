@@ -97,12 +97,8 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
             }
 
             ## calculate imputation values (with regression) for every suitable row separate and save in y
-            y <- numeric(length(suitable))
-            for(j in 1:length(suitable)) {
-              common_observed <- !(M_i | M[suitable[j], ])  # this will be at least min_common_obs (>= 3) TRUEs, (requirement for suitable) -> regression possible
-              lm_coef <- calc_lm_coefs(ds[i, common_observed], ds[suitable[j], common_observed])
-              y[j] <- lm_coef[1] + lm_coef[2] * ds[suitable[j], j_ind]
-            }
+            y <- calc_y_LS_gene(ds, i, j_ind, suitable, M , M_i)
+
 
             ## calculate weights  ---------------------------------------------
             w <- (similarity_i[suitable]^2 / ( 1- similarity_i[suitable]^2 + eps))^2
@@ -127,6 +123,17 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
 
 ## helpers for LSimpute_gene --------------------------------------------------
 
+calc_y_LS_gene <- function(ds, i, j_ind, suitable, M = is.na(ds), M_i = M[i, ]) {
+  y <- numeric(length(suitable))
+  for(j in 1:length(suitable)) {
+    common_observed <- !(M_i | M[suitable[j], ])  # this will be at least min_common_obs (>= 3) TRUEs, (requirement for suitable) -> regression possible
+    lm_coef <- calc_lm_coefs_simple_reg(ds[i, common_observed], ds[suitable[j], common_observed])
+    y[j] <- lm_coef[1] + lm_coef[2] * ds[suitable[j], j_ind]
+  }
+  y
+}
+
+
 #' Simple linear regression
 #'
 #' @param y numeric vector
@@ -134,10 +141,18 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
 #'
 #' @return a vector: first element beta_0, second beta_1
 #' @noRd
-calc_lm_coefs <- function(y, x) {
-  lm_fit <- stats::lm(y ~ x, data.frame(y = y, x = x))
-  stats::coef(lm_fit)
+calc_lm_coefs_simple_reg <- function(y, x) {
+  sum_x <- sum(x)
+  sum_y <- sum(y)
+  sum_xy <- sum(x*y)
+  sum_x_sq <- sum(x ^2)
+  n <- length(x)
+  beta_1 <- (sum_xy - sum_x * sum_y / n) / (sum_x_sq - sum_x ^2 / n)
+  beta_0 <- sum_y / n - beta_1 * sum_x / n
+  c(beta_0, beta_1)
 }
+
+
 
 
 calc_similarity <- function(ds, i, M = is.na(ds), M_i = M[i, ]) {

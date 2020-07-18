@@ -76,9 +76,9 @@ test_that("impute_LS_gene() imputes like Bo et al. (2004) (MCAR, 100x7)", {
 
 
 ## check helpers --------------------------------------------------------------
-test_that("calc_lm_coefs() returns correct values", {
-  expect_equal(unname(calc_lm_coefs(1:10, 1:10)), c(0, 1))
-  expect_equal(unname(calc_lm_coefs(2 + 3 * (1:10) , 1:10)), c(2, 3))
+test_that("calc_lm_coefs_simple_reg() returns correct values", {
+  expect_equal(unname(calc_lm_coefs_simple_reg(1:10, 1:10)), c(0, 1))
+  expect_equal(unname(calc_lm_coefs_simple_reg(2 + 3 * (1:10) , 1:10)), c(2, 3))
 })
 
 
