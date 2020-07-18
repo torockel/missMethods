@@ -176,7 +176,7 @@ calc_similarity <- function(ds, y) {
 
 calc_common_obs <- function(M, M_i) {
   nr_vars <- ncol(M)
-  apply(M, 1, function(x) {nr_vars - sum(x | M_i)})
+  nr_vars - colSums(t(M) | M_i)
 }
 
 
