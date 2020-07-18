@@ -95,18 +95,3 @@ test_that("calc_max_common_obs() works", {
   expect_equal(calc_common_obs(M, M[4, ]), c(2, 1, 1, 2, 0, 1))
 })
 
-
-test_that("find_suitable_rows() works", {
-  ordered_similarity <- c(2, 4, 1, 3)
-  M <- matrix(c(
-    FALSE, FALSE, FALSE, FALSE,
-    TRUE, FALSE, FALSE, FALSE,
-    FALSE, FALSE, FALSE, TRUE,
-    FALSE, TRUE, TRUE, FALSE
-  ), byrow = TRUE, ncol = 4)
-  expect_equal(find_suitable_rows(1, ordered_similarity, M, M[2, ], 1, min_common_obs = 2), 1)
-  expect_equal(find_suitable_rows(2, ordered_similarity, M, M[2, ], 1, min_common_obs = 2), c(1, 3))
-  expect_equal(find_suitable_rows(3, ordered_similarity, M, M[2, ], 1, min_common_obs = 2), c(1, 3))
-  expect_equal(find_suitable_rows(4, ordered_similarity, M, M[2, ], 1, min_common_obs = 2), c(1, 3))
-  expect_equal(find_suitable_rows(10, ordered_similarity, M, M[2, ], 1, min_common_obs = 2), c(1, 3))
-})

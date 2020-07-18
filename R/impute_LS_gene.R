@@ -74,39 +74,51 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
 
         ## LSimpute_gene for one row ------------------------------------------
 
-        ## calculate correlation and order rows by correlation
-        similarity_i <- calc_similarity(ds, i, M, M_i)
-        ordered_similarity <- order(similarity_i, decreasing = TRUE)
+        ## possible candidate rows (common obs!) for imputing
+        rows_candidates <- which(calc_common_obs(M, M_i) >= min_common_obs & seq_len(nrow(ds)) != i)
 
-        ## for every missing value j_ind in row i calculate the imputation value separately
-        for(j_ind in which(M_i)) {
-          ## find the k suitable rows for imputation and save their index in suitable
-          suitable <- find_suitable_rows(k, ordered_similarity, M, M_i, j_ind, min_common_obs = min_common_obs)
+        if (length(rows_candidates) == 0) { # no rows_candidates found -> impute mean
+          ## this condition may crashes the jar-file from Bo et al. (2004)
+          warning("No suitable row for the imputation of row ", i,
+                  " found! This row is imputed with observed row mean.")
+          ds_imp[i, M_i] <- mean(ds[i, ], na.rm = TRUE)
+        } else {
+          ## calculate correlation and order rows by correlation
+          similarity_i <- calc_similarity(ds[rows_candidates, ], ds[i, ])
+          names(similarity_i) <- rows_candidates # to save the row number to the correlation
+          # this can later be accessed via as.character(index)
+          rows_candidates <- rows_candidates[order(similarity_i, decreasing = TRUE)]
 
-          if (length(suitable) == 0) { # no suitable row found -> impute mean
-            ## this condition may crashes the jar-file from Bo et al. (2004)
-            ## we impute the observed row mean
-            warning("No suitable row for the imputation of row ", i,
-                    " and column ", j_ind, " found! Value is imputed with observed row mean.")
-            ds_imp[i, M_i] <- mean(ds[i, ], na.rm = TRUE)
+          ## for every missing value j_ind in row i calculate the imputation value separately
+          for(j_ind in which(M_i)) {
+            ## find the k suitable rows for imputation and save their index in suitable
+            suitable <- find_suitable_rows(k, rows_candidates, M, M_i, j_ind)
 
-          } else { # everything fine -> proceed with "normal" LSimpute_gene
+            if (length(suitable) == 0) { # no suitable row found -> impute mean
+              ## this condition may crashes the jar-file from Bo et al. (2004)
+              warning("No suitable row for the imputation of row ", i,
+                      " and column ", j_ind, " found! Value is imputed with observed row mean.")
+              ds_imp[i, M_i] <- mean(ds[i, ], na.rm = TRUE)
 
-            if(return_r_max) { # save highest correlation
-              r_max_matrix[i, j_ind] <- similarity_i[suitable[1]]
+            } else { # everything fine -> proceed with "normal" LSimpute_gene
+
+              if(return_r_max) { # save highest correlation
+                r_max_matrix[i, j_ind] <- similarity_i[as.character(suitable[1])]
+              }
+
+              ## calculate imputation values (with regression) for every suitable row separate and save in y
+              y <- calc_y_LS_gene(ds, i, j_ind, suitable, M , M_i)
+
+
+              ## calculate weights  ---------------------------------------------
+              w <- (similarity_i[as.character(suitable)]^2 /
+                      ( 1- similarity_i[as.character(suitable)]^2 + eps))^2
+              w <- w / sum(w)
+
+
+              ## calculate final imputation value -------------------------------
+              ds_imp[i, j_ind] <- sum(w * y)
             }
-
-            ## calculate imputation values (with regression) for every suitable row separate and save in y
-            y <- calc_y_LS_gene(ds, i, j_ind, suitable, M , M_i)
-
-
-            ## calculate weights  ---------------------------------------------
-            w <- (similarity_i[suitable]^2 / ( 1- similarity_i[suitable]^2 + eps))^2
-            w <- w / sum(w)
-
-
-            ## calculate final imputation value -------------------------------
-            ds_imp[i, j_ind] <- sum(w * y)
           }
         }
       }
@@ -155,8 +167,8 @@ calc_lm_coefs_simple_reg <- function(y, x) {
 
 
 
-calc_similarity <- function(ds, i, M = is.na(ds), M_i = M[i, ]) {
-  similarity_i <- abs(stats::cor(t(ds), ds[i, ], use = "pairwise.complete.obs"))
+calc_similarity <- function(ds, y) {
+  similarity_i <- abs(stats::cor(t(ds), y, use = "pairwise.complete.obs"))
   as.vector(similarity_i)
 }
 
@@ -167,18 +179,16 @@ calc_common_obs <- function(M, M_i) {
 }
 
 
-find_suitable_rows <- function(k, ordered_similarity, M, M_i, j_ind, min_common_obs = 5) {
-  kl <- min(k + 1, nrow(M))  # loop variable (number of checked neighbors)
+find_suitable_rows <- function(k, rows_candidates, M, M_i, j_ind) {
+  kl <- min(k, length(rows_candidates))  # loop variable (number of checked neighbors)
   ## start with k + 1 neighbors, because row i will be one of the nearest neighbors
   nr_suitable <- 0
   while (nr_suitable < k) {
-    potential_genes <- ordered_similarity[1:kl]   # the row to be imputed is removed later with the NA_in_j_ind check.
-    min2_common <- calc_common_obs(M[potential_genes, ], M_i) >= min_common_obs #otherwise no lin. regression possible
-    potential_genes <- potential_genes[min2_common]
+    potential_genes <- rows_candidates[1:kl]
     NA_in_j_ind <- M[potential_genes, j_ind]  # missing value in column j_ind (which should be imputed)?
     suitable <- potential_genes[!NA_in_j_ind] # these rows are not suitable (missing values in column j_ind)
     nr_suitable <- length(suitable)
-    if (kl >= nrow(M)) {  # to prevent infinite loop, if there are not enough suitable rows
+    if (kl >= length(rows_candidates)) {  # to prevent infinite loop, if there are not enough suitable rows
       # warning(paste("Not enough suitable rows for", i, ",", j_ind))
       break() # exit loop with the found suitable rows (there are no more additional rows to check!)
     } else {
