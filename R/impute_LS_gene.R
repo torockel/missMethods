@@ -85,6 +85,9 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
           ds_imp[i, M_i] <- mean(ds[i, ], na.rm = TRUE)
         } else {# at least one candidate row -> proceed with "normal" LSimpute_gene
 
+          betas <- matrix(NA_real_, nrow = nrow(rows_candidates), ncol = 2)
+          # idea for betas: colnames(betas) <- c("beta_0", "beta_1")
+
           ## for every missing value j_ind in row i calculate the imputation value separately
           for(j_ind in which(M_i)) {
             ## find the k suitable rows for imputation and save their index from rows_candidates
@@ -105,7 +108,15 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
               }
 
               ## calculate imputation values (with regression) and save them in y
-              y <- calc_y_LS_gene(ds, i, j_ind, rows_candidates, suitable_index, M , M_i)
+              row_indices <- rows_candidates$row_index[suitable_index]
+              for(j in seq_along(row_indices)) { # check for unknown regression parameters
+                if (is.na(betas[suitable_index[j], 1])) { # calculate regression parameters, if not already known
+                  common_observed <- !(M_i | M[row_indices[j], ])  # this will be at least min_common_obs (>= 3) TRUEs, (requirement for suitable) -> regression possible
+                  betas[suitable_index[j], ] <- calc_lm_coefs_simple_reg(ds[i, common_observed],
+                                                                         ds[row_indices[j], common_observed])
+                }
+              }
+              y <- betas[suitable_index, 1] + betas[suitable_index, 2] * ds[row_indices, j_ind]
 
 
               ## calculate weights  ---------------------------------------------
@@ -134,15 +145,9 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
 
 ## helpers for LSimpute_gene --------------------------------------------------
 
-calc_y_LS_gene <- function(ds, i, j_ind, rows_candidates, suitable_index, M = is.na(ds), M_i = M[i, ]) {
-  y <- numeric(length(suitable_index))
-  row_indices <- rows_candidates$row_index[suitable_index]
-  for(j in seq_along(row_indices)) {
-    common_observed <- !(M_i | M[row_indices[j], ])  # this will be at least min_common_obs (>= 3) TRUEs, (requirement for suitable) -> regression possible
-    lm_coef <- calc_lm_coefs_simple_reg(ds[i, common_observed], ds[row_indices[j], common_observed])
-    y[j] <- lm_coef[1] + lm_coef[2] * ds[row_indices[j], j_ind]
-  }
-  y
+calc_common_obs <- function(M, M_i) {
+  nr_vars <- ncol(M)
+  nr_vars - colSums(t(M) | M_i)
 }
 
 
@@ -165,19 +170,24 @@ calc_lm_coefs_simple_reg <- function(y, x) {
 }
 
 
-
-
 calc_similarity <- function(ds, y) {
   similarity_i <- abs(stats::cor(t(ds), y, use = "pairwise.complete.obs"))
   as.vector(similarity_i)
 }
 
 
-calc_common_obs <- function(M, M_i) {
-  nr_vars <- ncol(M)
-  nr_vars - colSums(t(M) | M_i)
-}
-
+#' Find candidates genes/rows for the imputation of a row i
+#'
+#' @param ds whole dataset
+#' @param i index of a row of ds, for which candidates should be found
+#' @param M missing data indicator matrix
+#' @param M_i missing data indicator vector of row i
+#' @param min_common_obs documented in impute_LS_gene()
+#'
+  #' @return a data frame with two columns. First column: indices of candidates;
+#'  second column: similarity (= abs(correlation)) between row i and candidate rows
+#'  data frame is ordered (decreasing) by similarity
+#' @noRd
 find_rows_candidates <- function(ds, i, M = is.na(ds), M_i = M[i, ], min_common_obs) {
   rows_candidates_index <- which(calc_common_obs(M, M_i) >= min_common_obs & seq_len(nrow(ds)) != i)
 
@@ -193,5 +203,3 @@ find_rows_candidates <- function(ds, i, M = is.na(ds), M_i = M[i, ], min_common_
              similarity = similarity_i[orderd_index])
 
 }
-
-
