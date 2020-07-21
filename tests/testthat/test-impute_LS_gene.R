@@ -22,7 +22,7 @@ test_that("impute_LS_gene() works with completely missing row", {
 })
 
 test_that("impute_LS_gene() works when there is no suitable row", {
-  # this ds_miss would result in the following error in the jar-file from
+  # This ds_miss would result in the following error in the jar-file from
   # Bo et al. (2004): "Error in imputation engine"
   set.seed(123)
   ds_miss <- MASS::mvrnorm(11, rep(0, 6), diag(1, 6))
@@ -44,13 +44,13 @@ test_that("impute_LS_gene() works when there is no suitable row", {
 test_that("impute_LS_gene() imputes row mean values, if to less objects are observed in a row", {
   # The missing values in this file were created with upper.tri, which results in a monotone pattern.
   # The rows 1:15 have 1:15 observed values.
-  ds_LS_gene_row_mean_miss <- readRDS(test_path(file.path("datasets", "ds_LS_gene_row_mean_miss.rds")))
+  ds_triangle_miss <- readRDS(test_path(file.path("datasets", "ds_triangle_miss.rds")))
   # The jar-file from Bo et al. imputes rows 1:4 with mean values:
-  ds_LS_gene_row_mean_Bo <- readRDS(test_path(file.path("datasets", "ds_LS_gene_row_mean_Bo.rds")))
+  ds_triangle_LS_gene_Bo <- readRDS(test_path(file.path("datasets", "ds_triangle_LS_gene_Bo.rds")))
   # Therefore, min_common_obs = 5 (test with other datasets showed the same pattern)
   expect_equal(
-    ds_LS_gene_row_mean_Bo,
-    round(impute_LS_gene(ds_LS_gene_row_mean_miss, min_common_obs = 5), 3)
+    ds_triangle_LS_gene_Bo,
+    round(impute_LS_gene(ds_triangle_miss, min_common_obs = 5), 3)
   )
 })
 
@@ -59,17 +59,17 @@ test_that("impute_LS_gene() imputes like Bo et al. (2004) (MCAR, 100x7)", {
   ds_100x7_LS_gene_Bo <- readRDS(test_path(file.path("datasets", "ds_100x7_LS_gene_Bo.rds")))
 
   ds_100x7_miss_MCAR <- readRDS(test_path(file.path("datasets", "ds_100x7_miss_MCAR.rds")))
-  # cure some rounding problems due to saving:
+  # Cure some rounding problems due to saving:
   ds_miss <- ds_100x7_LS_gene_Bo
   ds_miss[is.na(ds_100x7_miss_MCAR)] <- NA
 
   ds_imp <- round(impute_LS_gene(ds_miss, min_common_obs = 5), 3)
-  # need some tolerance for rounding:
+  # Need some tolerance for rounding:
   expect_equal(ds_100x7_LS_gene_Bo, ds_imp, tolerance = 0.005)
-  # less than 2 % of the imputed values have a difference bigger difference than 0.005 (round 3 digits!)
+  # Less than 2 % of the imputed values have a difference bigger difference than 0.005 (round 3 digits!)
   expect_true(sum(abs(ds_100x7_LS_gene_Bo - ds_imp) > 0.005) / sum(is.na(ds_miss)) < 0.02)
-  # all differences are smaller than 0.015:
-  expect_equal(sum(abs(ds_100x7_LS_gene_Bo - ds_imp) > 0.015), 0)
+  # All differences are smaller than 0.015:
+  expect_equal(sum(abs(ds_100x7_LS_gene_Bo - ds_imp) >= 0.015), 0)
 
   # Conclusion: Both methods seem to return the same imputation values (only deviations because of rounding)
 })
