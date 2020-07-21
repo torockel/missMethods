@@ -6,8 +6,8 @@
 #'
 #' @details
 #'
-#' This function performance LSimpute_gene as described by Bo et al. (2004). The
-#' function assumes that the genes are the rows of `ds`.
+#' This function performances LSimpute_gene as described by Bo et al. (2004).
+#' The function assumes that the genes are the rows of `ds`.
 #'
 #' Bo et al. (2004) seem to have chosen `min_common_obs = 5`. However, they did
 #' not documentation this behavior. This value emerged from inspecting

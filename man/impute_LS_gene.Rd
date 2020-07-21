@@ -37,8 +37,8 @@ If \code{return_r_max = TRUE}, a list with the imputed dataset and r_max
 Performance LSimpute_gene as described by Bo et al. (2004)
 }
 \details{
-This function performance LSimpute_gene as described by Bo et al. (2004). The
-function assumes that the genes are the rows of \code{ds}.
+This function performances LSimpute_gene as described by Bo et al. (2004).
+The function assumes that the genes are the rows of \code{ds}.
 
 Bo et al. (2004) seem to have chosen \code{min_common_obs = 5}. However, they did
 not documentation this behavior. This value emerged from inspecting
