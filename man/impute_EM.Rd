@@ -4,25 +4,35 @@
 \alias{impute_EM}
 \title{EM imputation}
 \usage{
-impute_EM(ds, stochastic = TRUE, maxits = 1000, criterion = 1e-04)
+impute_EM(
+  ds,
+  stochastic = TRUE,
+  maxits = 1000,
+  criterion = 1e-04,
+  warn_problematic_rows = FALSE
+)
 }
 \arguments{
 \item{ds}{a data frame or matrix with missing values}
 
 \item{stochastic}{logical; see details}
 
-\item{maxits}{maximum number of iterations for the EM, passed to \code{\link[norm:em.norm]{norm::em.norm()}}}
+\item{maxits}{maximum number of iterations for the EM, passed to
+\code{\link[norm:em.norm]{norm::em.norm()}}}
 
 \item{criterion}{if maximum relative difference in parameter estimates is
 below this threshold, the EM algorithm stops, argument is directly passed
 to \code{\link[norm:em.norm]{norm::em.norm()}}}
+
+\item{warn_problematic_rows}{logical, should a warning be given for
+problematic rows (see details)}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values
 }
 \description{
-Impute missing values in a data frame or a matrix using a parameters estimated
-via EM
+Impute missing values in a data frame or a matrix using a parameters
+estimated via EM
 }
 \details{
 At first parameters are estimated via \code{\link[norm:em.norm]{norm::em.norm()}}. Then these
@@ -31,6 +41,12 @@ If \code{stochachstic = FALSE}, the expected values (given the observed values a
 the estimated parameters via EM) is imputed for the missing values of an
 object. If \code{stochastic = TRUE} residuals from a multivariate normal
 distribution are added to these expected values.
+
+If no values is observed for a row or the required part of the covariance
+matrix for the calculation of the expected values is not invertible, parts of
+the estimated mu (estimated mean of the variables) will be imputed. If
+\code{stochastic = TRUE} a residuals will be added to these values. If
+\code{warn_problematic_rows = TRUE} a warning will be given for these rows.
 }
 \examples{
 ds_orig <- MASS::mvrnorm(100, rep(0, 7), Sigma = diag(1, 7))

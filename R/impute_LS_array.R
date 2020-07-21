@@ -35,35 +35,10 @@ impute_LS_array <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5, ds_imput
   # The LS_gene imputed dataset is not needed anymore after the parameters are estimated
   remove(ds_impute_LS_gene)
 
-  ## Define some variables ----------------------------------------------------
-  M <- is.na(ds)
-  ds_imp <- as.matrix(ds) # need a matrix for %*%
-
-  ## Impute row by row --------------------------------------------------------
-  for(i in 1:nrow(ds_imp)) { # rowwise imputation
-    M_i <- M[i, ]
-    if(any(M_i)) { # any missing value in row i?
-      if(all(M_i)) { # no observed value in row i
-        # imputation of colMeans
-        ds_imp[i, ] <- col_means
-      } else {
-        y_1_mean <- col_means[M_i]
-        y_2_mean <- col_means[!M_i]
-        y <- ds_imp[i, ]
-        y_2 <- y[!M_i]
-        S_12 <- S[M_i, !M_i, drop = FALSE]
-        S_22 <- S[!M_i, !M_i, drop = FALSE]
-        S_22_inv <- tryCatch(solve(S_22),
-                             error = function(cond){
-                               warning("S_22_inv was singular")
-                               matrix(0, nrow = nrow(S_22), ncol = nrow(S_22))
-                             })  # if S_22 is singular -> impute col_means
-        y_imp <- y_1_mean + S_12 %*% S_22_inv %*% (y_2 - y_2_mean)
-        ds_imp[i, M_i] <- y_imp
-      }
-    }
-  }
-  # to return the type of ds, which maybe is not a matrix!
-  ds[M] <- ds_imp[M]
-  ds
+  ## Impute the missing values ------------------------------------------------
+  # Impute least squares estimates of the missing values, given S and col_means
+  impute_expected_values(ds, mu = col_means, S = S,
+                         stochastic = FALSE,
+                         warn_problematic_rows = FALSE)
 }
+

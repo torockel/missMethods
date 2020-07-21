@@ -41,12 +41,13 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 
 #' EM imputation
 #'
-#' Impute missing values in a data frame or a matrix using a parameters estimated
+#' Impute missing values in a data frame or a matrix using parameters estimated
 #' via EM
 #'
 #' @template impute
 #'
 #' @details
+#'
 #' At first parameters are estimated via [norm::em.norm()]. Then these
 #' parameters are used in a regression like model to impute the missing values.
 #' If `stochachstic = FALSE`, the expected values (given the observed values and
@@ -54,11 +55,20 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 #' object. If `stochastic = TRUE` residuals from a multivariate normal
 #' distribution are added to these expected values.
 #'
+#' If no values is observed for a row or the required part of the covariance
+#' matrix for the calculation of the expected values is not invertible, parts of
+#' the estimated mu (estimated mean of the variables) will be imputed. If
+#' `stochastic = TRUE` a residuals will be added to these values. If
+#' `warn_problematic_rows = TRUE` a warning will be given for these rows.
+#'
 #' @param stochastic logical; see details
-#' @param maxits maximum number of iterations for the EM, passed to [norm::em.norm()]
+#' @param maxits maximum number of iterations for the EM, passed to
+#'   [norm::em.norm()]
 #' @param criterion if maximum relative difference in parameter estimates is
 #'   below this threshold, the EM algorithm stops, argument is directly passed
 #'   to [norm::em.norm()]
+#' @param warn_problematic_rows logical, should a warning be given for
+#'   problematic rows (see details)
 #'
 #' @export
 #'
@@ -66,46 +76,17 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 #' ds_orig <- MASS::mvrnorm(100, rep(0, 7), Sigma = diag(1, 7))
 #' ds_miss <- delete_MCAR(ds_orig, p = 0.2)
 #' ds_imp <- impute_EM(ds_miss, stochastic = FALSE)
-impute_EM <- function(ds, stochastic = TRUE, maxits = 1000, criterion = 0.0001) {
-
+impute_EM <- function(ds,
+                      stochastic = TRUE,
+                      maxits = 1000,
+                      criterion = 0.0001,
+                      warn_problematic_rows = FALSE) {
   EM_parm <- get_EM_parameters(ds, maxits = maxits, criterion = criterion)
-  M <- is.na(ds)
-  problematic_rows <- integer(0)
 
-  for (i in seq_len(nrow(ds))) {
-    M_i <- M[i, ]
-    if (any(M_i)) { # only impute, if any missing value in row i
-      sigma_22_inv <- tryCatch(solve(EM_parm$sigma[!M_i, !M_i]), # try to invert matrix
-        error = function(e) { # if matrix singular -> add row to problematic_rows
-          return(NULL)
-        }
-      )
-      if (!is.null(sigma_22_inv)) { # Sigma_22 is invertible -> normal EM-Imputation
-        y_imp <- EM_parm$mu[M_i] + EM_parm$sigma[M_i, !M_i] %*% sigma_22_inv %*% (ds[i, !M_i] - EM_parm$mu[!M_i])
-        y_imp <- as.vector(y_imp)
-        if (stochastic) {
-          var_y_imp <- EM_parm$sigma[M_i, M_i] - EM_parm$sigma[M_i, !M_i] %*% sigma_22_inv %*% EM_parm$sigma[!M_i, M_i]
-          # to guarantee symmetry of matrix (sometimes numeric accuracy problems with above calculation):
-          var_y_imp <- (var_y_imp + t(var_y_imp)) / 2
-          y_imp <- y_imp + MASS::mvrnorm(n = 1, mu = rep(0, sum(M_i)), Sigma = var_y_imp)
-        }
-        ds[i, M_i] <- y_imp
-      } else { # Simga_22 is not invertible -> add row to problematic_rows
-        problematic_rows <- c(problematic_rows, i)
-      }
-    }
-  }
-
-  ## handle rows, for which sigma_22 is not invertible ------------------------
-  if (length(problematic_rows) > 0) {
-    ds_imp <- impute_mean(ds)
-    ds[problematic_rows, ][M[problematic_rows, ]] <- ds_imp[problematic_rows, ][M[problematic_rows, ]]
-    warning(
-      "Row(s) ", paste(problematic_rows, collapse = ", "),
-      " were imputed with mean values, ",
-      "because EM covariance matrix is not positive-definite."
-    )
-  }
-
-  ds
+  impute_expected_values(ds,
+    mu = EM_parm$mu,
+    S = EM_parm$sigma,
+    stochastic = stochastic,
+    warn_problematic_rows = warn_problematic_rows
+  )
 }
