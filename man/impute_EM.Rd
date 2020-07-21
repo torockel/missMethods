@@ -31,8 +31,8 @@ problematic rows (see details)}
 An object of the same class as \code{ds} with imputed missing values
 }
 \description{
-Impute missing values in a data frame or a matrix using a parameters
-estimated via EM
+Impute missing values in a data frame or a matrix using parameters estimated
+via EM
 }
 \details{
 At first parameters are estimated via \code{\link[norm:em.norm]{norm::em.norm()}}. Then these
@@ -45,8 +45,8 @@ distribution are added to these expected values.
 If no values is observed for a row or the required part of the covariance
 matrix for the calculation of the expected values is not invertible, parts of
 the estimated mu (estimated mean of the variables) will be imputed. If
-\code{stochastic = TRUE} a residuals will be added to these values. If
-\code{warn_problematic_rows = TRUE} a warning will be given for these rows.
+\code{stochastic = TRUE}, residuals will be added to these values. If
+\code{warn_problematic_rows = TRUE}, a warning will be given for these rows.
 }
 \examples{
 ds_orig <- MASS::mvrnorm(100, rep(0, 7), Sigma = diag(1, 7))

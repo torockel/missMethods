@@ -32,15 +32,14 @@ test_that("impute_LS_array() works with small data frames", {
 ## Comparing impute_LS_array() to original results from Bo et al. -------------
 # For some remarks see test-impute_LS_gene.R
 
-
 test_that("impute_LS_array() works with dataset triangle miss", {
   # The missing values in this file were created with upper.tri, which results in a monotone pattern.
   # The rows 1:15 have 1:15 observed values.
   ds_triangle_miss <- readRDS(test_path(file.path("datasets", "ds_triangle_miss.rds")))
-  ds_LS_array_row_mean_Bo <- readRDS(test_path(file.path("datasets", "ds_LS_array_row_mean_Bo.rds")))
+  ds_triangle_LS_array_Bo <- readRDS(test_path(file.path("datasets", "ds_triangle_LS_array_Bo.rds")))
 
   expect_equal(
-    ds_LS_array_row_mean_Bo,
+    ds_triangle_LS_array_Bo,
     round(impute_LS_array(ds_triangle_miss, min_common_obs = 5), 3)
   )
 })
@@ -58,11 +57,10 @@ test_that("impute_LS_array() imputes like Bo et al. (2004) (MCAR, 100x7)", {
   ds_imp <- round(impute_LS_array(ds_miss, min_common_obs = 5, ds_impute_LS_gene = ds_100x7_LS_gene_Bo), 3)
 
   ds_100x7_LS_array_Bo <- readRDS(test_path(file.path("datasets", "ds_100x7_LS_array_Bo.rds")))
-  # Need some tolerance becaus of rounding:
+  # Need some tolerance because of rounding:
   expect_equal(ds_100x7_LS_array_Bo, ds_imp, tolerance = 0.005)
   # All differences are smaller than 0.002: (round 3 digits!)
   expect_equal(sum(abs(ds_100x7_LS_array_Bo - ds_imp) >= 0.002), 0 )
-
 
   # Conclusion: Both methods seem to return the same imputation values (only deviations because of rounding)
 })

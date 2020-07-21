@@ -21,17 +21,18 @@ impute_LS_array(
 
 \item{min_common_obs}{directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}}
 
-\item{ds_impute_LS_gene}{result of imputing \code{ds} with \code{ds_impute_LS_gene()}, if this already exists.}
+\item{ds_impute_LS_gene}{result of imputing \code{ds} with \code{ds_impute_LS_gene()},
+if this already exists}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values
 }
 \description{
-Performance LSimpute_array as described by Bo et al. (2004)
+Perform LSimpute_array as described by Bo et al. (2004)
 }
 \details{
-This function performances LSimpute_array as described by Bo et al. (2004).
-The function assumes that the genes are the rows of \code{ds}.
+This function performs LSimpute_array as described by Bo et al.
+(2004). The function assumes that the genes are the rows of \code{ds}.
 }
 \examples{
 impute_LS_array(data.frame(X = 1:11, Y = c(1:10, NA)))
@@ -42,5 +43,6 @@ estimation of missing values in microarray data with least squares methods.
 Nucleic acids research, 32(3), e34
 }
 \seealso{
-\code{\link[=impute_LS_gene]{impute_LS_gene()}}, which is used for the first imputation of the missing values
+\code{\link[=impute_LS_gene]{impute_LS_gene()}}, which is used for the first imputation of the
+missing values (if \code{ds_impute_LS_gene} is \code{NULL})
 }

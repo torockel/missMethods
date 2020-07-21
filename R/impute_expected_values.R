@@ -23,7 +23,9 @@
 #'
 #' @return a dataset of the same type as `ds`
 #' @noRd
-impute_expected_values <- function(ds, mu, S, stochastic = FALSE, M = is.na(ds), warn_problematic_rows = FALSE) {
+impute_expected_values <- function(ds, mu, S,
+                                   stochastic = FALSE,
+                                   M = is.na(ds), warn_problematic_rows = FALSE) {
 
   ## Define some variables ----------------------------------------------------
   ds_imp <- as.matrix(ds) # need a matrix for %*%
@@ -47,10 +49,11 @@ impute_expected_values <- function(ds, mu, S, stochastic = FALSE, M = is.na(ds),
         S_22 <- S[!M_i, !M_i, drop = FALSE] # part of covariance matrix (observed, observed)
 
         ## Calculate S_22_inv -------------------------------------------------
-        S_22_inv <- tryCatch(solve(S_22), #try to invert S_22
-                             error = function(cond){ # S_22 not invertible!
-                               NULL
-                             })
+        S_22_inv <- tryCatch(solve(S_22), # try to invert S_22
+          error = function(cond) { # S_22 not invertible!
+            NULL
+          }
+        )
 
         if (is.null(S_22_inv)) { # S_22 was not invertible
           # Assigning a 0-matrix to S_22_inv will impute mu (+ residuum)
@@ -58,7 +61,7 @@ impute_expected_values <- function(ds, mu, S, stochastic = FALSE, M = is.na(ds),
           problematic_rows <- c(problematic_rows, i)
         }
 
-        # Calculate imputation values -----------------------------------------
+        ## Calculate imputation values ----------------------------------------
         y_imp <- y_1_mean + S_12 %*% S_22_inv %*% (y_2 - y_2_mean)
         if (stochastic) { # add residuum
           # Calculate needed variance
@@ -71,14 +74,15 @@ impute_expected_values <- function(ds, mu, S, stochastic = FALSE, M = is.na(ds),
           y_imp <- y_imp + MASS::mvrnorm(n = 1, mu = rep(0, sum(M_i)), Sigma = var_y_imp)
         }
         ds_imp[i, M_i] <- y_imp
-
       }
     }
   }
 
   if (warn_problematic_rows) {
-    warning("The missing values of following rows were imputed with (parts of) mu: ",
-            paste(problematic_rows, collapse = ", "))
+    warning(
+      "The missing values of following rows were imputed with (parts of) mu: ",
+      paste(problematic_rows, collapse = ", ")
+    )
   }
 
   # To return the type of ds, which maybe is not a matrix!

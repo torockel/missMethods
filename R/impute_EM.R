@@ -58,8 +58,8 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 #' If no values is observed for a row or the required part of the covariance
 #' matrix for the calculation of the expected values is not invertible, parts of
 #' the estimated mu (estimated mean of the variables) will be imputed. If
-#' `stochastic = TRUE` a residuals will be added to these values. If
-#' `warn_problematic_rows = TRUE` a warning will be given for these rows.
+#' `stochastic = TRUE`, residuals will be added to these values. If
+#' `warn_problematic_rows = TRUE`, a warning will be given for these rows.
 #'
 #' @param stochastic logical; see details
 #' @param maxits maximum number of iterations for the EM, passed to

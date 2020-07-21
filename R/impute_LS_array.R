@@ -1,20 +1,21 @@
 #' LSimpute_array
 #'
 #'
-#' Performance LSimpute_array as described by Bo et al. (2004)
+#' Perform LSimpute_array as described by Bo et al. (2004)
 #'
-#' @details
-#' This function performances LSimpute_array as described by Bo et al. (2004).
-#' The function assumes that the genes are the rows of `ds`.
+#' @details This function performs LSimpute_array as described by Bo et al.
+#' (2004). The function assumes that the genes are the rows of `ds`.
 #'
 #' @template impute
 #'
 #' @param k directly passed to [impute_LS_gene()]
 #' @param eps directly passed to [impute_LS_gene()]
 #' @param min_common_obs directly passed to [impute_LS_gene()]
-#' @param ds_impute_LS_gene result of imputing `ds` with `ds_impute_LS_gene()`, if this already exists.
+#' @param ds_impute_LS_gene result of imputing `ds` with `ds_impute_LS_gene()`,
+#'   if this already exists
 #'
-#' @seealso [impute_LS_gene()], which is used for the first imputation of the missing values
+#' @seealso [impute_LS_gene()], which is used for the first imputation of the
+#'   missing values (if `ds_impute_LS_gene` is `NULL`)
 
 #' @references Bo, T. H., Dysvik, B., & Jonassen, I. (2004). LSimpute: accurate
 #'   estimation of missing values in microarray data with least squares methods.
@@ -30,15 +31,16 @@ impute_LS_array <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5, ds_imput
     ds_impute_LS_gene <- impute_LS_gene(ds, k = k, eps = eps, min_common_obs = min_common_obs)
   }
   # Bo et al. (2004) use the empirical covariance matrix (divisor: n -1), stats::cov() uses n as divisor
-  S <- stats::cov(ds_impute_LS_gene) * nrow(ds_impute_LS_gene) / (nrow(ds_impute_LS_gene) -1 )
+  S <- stats::cov(ds_impute_LS_gene) * nrow(ds_impute_LS_gene) / (nrow(ds_impute_LS_gene) - 1)
   col_means <- colMeans(ds_impute_LS_gene)
   # The LS_gene imputed dataset is not needed anymore after the parameters are estimated
   remove(ds_impute_LS_gene)
 
   ## Impute the missing values ------------------------------------------------
   # Impute least squares estimates of the missing values, given S and col_means
-  impute_expected_values(ds, mu = col_means, S = S,
-                         stochastic = FALSE,
-                         warn_problematic_rows = FALSE)
+  impute_expected_values(ds,
+    mu = col_means, S = S,
+    stochastic = FALSE,
+    warn_problematic_rows = FALSE
+  )
 }
-
