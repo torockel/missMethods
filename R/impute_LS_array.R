@@ -3,10 +3,10 @@
 #'
 #' Perform LSimpute_array as described by Bo et al. (2004)
 #'
+#' @template impute
+#'
 #' @details This function performs LSimpute_array as described by Bo et al.
 #' (2004). The function assumes that the genes are the rows of `ds`.
-#'
-#' @template impute
 #'
 #' @param k directly passed to [impute_LS_gene()]
 #' @param eps directly passed to [impute_LS_gene()]
