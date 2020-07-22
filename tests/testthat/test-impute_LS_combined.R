@@ -41,7 +41,6 @@ test_that("impute_LS_combined() works with dataset triangle miss", {
 
 
 test_that("impute_LS_combined() imputes like Bo et al. (2004) (MCAR, 100x7)", {
-
   ds_100x7_LS_array_Bo <- readRDS(test_path(file.path("datasets", "ds_100x7_LS_array_Bo.rds")))
   ds_100x7_LS_gene_Bo <- readRDS(test_path(file.path("datasets", "ds_100x7_LS_gene_Bo.rds")))
 
