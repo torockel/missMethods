@@ -10,7 +10,7 @@
 
 * implement `cov_only` and `cor_only` as `parameter` in  `evaluate_imputation_parameters()`
 * improve vignette "Generating missing values" (add connections to Santos et al. (2019))
-* rename of `cols` variables: now all should be named `cols_miss`, `cols_ctrl` etc.
+* rename of `cols` variables: now all should be named `cols_mis`, `cols_ctrl` etc.
 * rename of `ds` variables: now all should be named `ds_imp`, `ds_orig` etc.
 * rename of `pars` variables: now all should be named `pars_est` or `pars_true`
 
@@ -38,7 +38,7 @@ Functions for evaluation:
 
 ## Miscellaneous
 
-* all `delete_` functions now take the same first three arguments: `ds`, `p`, `cols_miss`
+* all `delete_` functions now take the same first three arguments: `ds`, `p`, `cols_mis`
 * package now on GitHub and CRAN
 
 # missMethods 0.0.1

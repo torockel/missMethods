@@ -8,120 +8,120 @@ test_that("impute_sRHD() simple random Hot-Deck imputation", {
 
   # check donor_limit errors ------------------------------
   expect_error(
-    impute_sRHD(df_XY_X_miss, donor_limit = 1:4),
+    impute_sRHD(df_XY_X_mis, donor_limit = 1:4),
     "donor_limit must be of length 1"
   )
   expect_error(
-    impute_sRHD(df_XY_X_miss, donor_limit = -5),
+    impute_sRHD(df_XY_X_mis, donor_limit = -5),
     "donor_limit must be a number >= 1 or the string 'min'"
   )
   expect_error(
-    impute_sRHD(df_XY_X_miss, donor_limit = "asdf"),
+    impute_sRHD(df_XY_X_mis, donor_limit = "asdf"),
     "donor_limit must be a number >= 1 or the string 'min'"
   )
 
   # check cols_seq ----------------------------------------
-  expect_false(anyNA(impute_sRHD(df_XY_X_miss, type = "cols_seq")))
-  expect_false(anyNA(impute_sRHD(df_XY_XY_miss, type = "cols_seq")))
+  expect_false(anyNA(impute_sRHD(df_XY_X_mis, type = "cols_seq")))
+  expect_false(anyNA(impute_sRHD(df_XY_XY_mis, type = "cols_seq")))
   expect_false(anyNA(impute_sRHD(df_XY_no_comp_obs, type = "cols_seq")))
 
   # check cols_seq with donor limit -----------------------
-  df_XY_X_miss_50_obs_imp_dl_1 <- impute_sRHD(df_XY_X_miss_50_obs,
+  df_XY_X_mis_50_obs_imp_dl_1 <- impute_sRHD(df_XY_X_mis_50_obs,
     type = "cols_seq",
     donor_limit = 1
   )
-  expect_equal(as.vector(table(df_XY_X_miss_50_obs_imp_dl_1[, "X"])), rep(2, 50))
-  df_XY_X_miss_50_obs_imp_dl_3 <- impute_sRHD(df_XY_X_miss_50_obs,
+  expect_equal(as.vector(table(df_XY_X_mis_50_obs_imp_dl_1[, "X"])), rep(2, 50))
+  df_XY_X_mis_50_obs_imp_dl_3 <- impute_sRHD(df_XY_X_mis_50_obs,
     type = "cols_seq",
     donor_limit = 3
   )
-  expect_true(all(table(df_XY_X_miss_50_obs_imp_dl_3[, "X"]) <= 4))
+  expect_true(all(table(df_XY_X_mis_50_obs_imp_dl_3[, "X"]) <= 4))
   expect_message(
-    df_XY_X_miss_one_comp_obs_min <-
-      impute_sRHD(df_XY_X_miss_one_comp_obs,
+    df_XY_X_mis_one_comp_obs_min <-
+      impute_sRHD(df_XY_X_mis_one_comp_obs,
         type = "cols_seq",
         donor_limit = "min"
       ),
     "donor_limit is set to: 99"
   )
 
-  expect_false(anyNA(df_XY_X_miss_one_comp_obs_min))
+  expect_false(anyNA(df_XY_X_mis_one_comp_obs_min))
 
-  df_XY_X_miss_one_comp_obs_99 <- impute_sRHD(df_XY_X_miss_one_comp_obs,
+  df_XY_X_mis_one_comp_obs_99 <- impute_sRHD(df_XY_X_mis_one_comp_obs,
     type = "cols_seq",
     donor_limit = 99
   )
-  expect_equal(df_XY_X_miss_one_comp_obs_min, df_XY_X_miss_one_comp_obs_99)
-  expect_equal(df_XY_X_miss_one_comp_obs_min[, "X", drop = TRUE], rep(100, 100))
+  expect_equal(df_XY_X_mis_one_comp_obs_min, df_XY_X_mis_one_comp_obs_99)
+  expect_equal(df_XY_X_mis_one_comp_obs_min[, "X", drop = TRUE], rep(100, 100))
   expect_warning(
     df_to_low_donor_limit <-
-      impute_sRHD(df_XY_X_miss_one_comp_obs,
+      impute_sRHD(df_XY_X_mis_one_comp_obs,
         type = "cols_seq",
         donor_limit = 20
       ),
     "donor_limit = 20 is to low to impute all missing values; it was set to 99"
   )
-  expect_equal(df_to_low_donor_limit, df_XY_X_miss_one_comp_obs_min)
+  expect_equal(df_to_low_donor_limit, df_XY_X_mis_one_comp_obs_min)
 
   # check sim_comp ----------------------------------------
-  expect_false(anyNA(impute_sRHD(df_XY_X_miss, type = "sim_comp")))
-  expect_false(anyNA(impute_sRHD(df_XY_XY_miss, type = "sim_comp")))
+  expect_false(anyNA(impute_sRHD(df_XY_X_mis, type = "sim_comp")))
+  expect_false(anyNA(impute_sRHD(df_XY_XY_mis, type = "sim_comp")))
   expect_error(
     impute_sRHD(df_XY_no_comp_obs, type = "sim_comp"),
     "not possible: there is no completely observed object"
   )
 
   # check sim_comp with donor limit -----------------------
-  df_XY_X_miss_50_obs_imp_dl_1 <- impute_sRHD(df_XY_X_miss_50_obs,
+  df_XY_X_mis_50_obs_imp_dl_1 <- impute_sRHD(df_XY_X_mis_50_obs,
     type = "sim_comp",
     donor_limit = 1
   )
-  expect_equal(as.vector(table(df_XY_X_miss_50_obs_imp_dl_1[, "X"])), rep(2, 50))
-  df_XY_X_miss_50_obs_imp_dl_3 <- impute_sRHD(df_XY_X_miss_50_obs,
+  expect_equal(as.vector(table(df_XY_X_mis_50_obs_imp_dl_1[, "X"])), rep(2, 50))
+  df_XY_X_mis_50_obs_imp_dl_3 <- impute_sRHD(df_XY_X_mis_50_obs,
     type = "sim_comp",
     donor_limit = 3
   )
-  expect_true(all(table(df_XY_X_miss_50_obs_imp_dl_3[, "X"]) <= 4))
+  expect_true(all(table(df_XY_X_mis_50_obs_imp_dl_3[, "X"]) <= 4))
   expect_message(
-    impute_sRHD(df_XY_X_miss_one_comp_obs,
+    impute_sRHD(df_XY_X_mis_one_comp_obs,
       type = "sim_comp",
       donor_limit = "min"
     ),
     "donor_limit is set to: 99"
   )
-  df_XY_X_miss_one_comp_obs_min <- impute_sRHD(df_XY_X_miss_one_comp_obs,
+  df_XY_X_mis_one_comp_obs_min <- impute_sRHD(df_XY_X_mis_one_comp_obs,
     type = "sim_comp",
     donor_limit = "min"
   )
-  expect_false(anyNA(df_XY_X_miss_one_comp_obs_min))
-  df_XY_X_miss_one_comp_obs_99 <- impute_sRHD(df_XY_X_miss_one_comp_obs,
+  expect_false(anyNA(df_XY_X_mis_one_comp_obs_min))
+  df_XY_X_mis_one_comp_obs_99 <- impute_sRHD(df_XY_X_mis_one_comp_obs,
     type = "sim_comp",
     donor_limit = 99
   )
-  expect_equal(df_XY_X_miss_one_comp_obs_min, df_XY_X_miss_one_comp_obs_99)
-  expect_equal(df_XY_X_miss_one_comp_obs_min[, "X", drop = TRUE], rep(100, 100))
+  expect_equal(df_XY_X_mis_one_comp_obs_min, df_XY_X_mis_one_comp_obs_99)
+  expect_equal(df_XY_X_mis_one_comp_obs_min[, "X", drop = TRUE], rep(100, 100))
   expect_warning(
     df_to_low_donor_limit <-
-      impute_sRHD(df_XY_X_miss_one_comp_obs,
+      impute_sRHD(df_XY_X_mis_one_comp_obs,
         type = "sim_comp",
         donor_limit = 20
       ),
     "donor_limit = 20 is to low to impute all missing values; it was set to 99"
   )
-  expect_equal(df_to_low_donor_limit, df_XY_X_miss_one_comp_obs_min)
+  expect_equal(df_to_low_donor_limit, df_XY_X_mis_one_comp_obs_min)
 
   # check sim_part ----------------------------------------
-  expect_false(anyNA(impute_sRHD(df_XY_X_miss, type = "sim_part")))
-  expect_false(anyNA(impute_sRHD(df_XY_XY_miss, type = "sim_part")))
+  expect_false(anyNA(impute_sRHD(df_XY_X_mis, type = "sim_part")))
+  expect_false(anyNA(impute_sRHD(df_XY_XY_mis, type = "sim_part")))
   expect_error(
     impute_sRHD(df_XY_no_comp_obs, type = "sim_part"),
     "there is no appropriate donor for the object\\(s\\)"
   )
 
-  ds_sim_part_miss1 <- matrix(c(NA, 1, 2, NA), ncol = 2)
+  ds_sim_part_mis1 <- matrix(c(NA, 1, 2, NA), ncol = 2)
   ds_sim_part_correct1 <- matrix(c(1, 1, 2, 2), ncol = 2)
   expect_equal(
-    impute_sRHD(ds_sim_part_miss1, type = "sim_part"),
+    impute_sRHD(ds_sim_part_mis1, type = "sim_part"),
     ds_sim_part_correct1
   )
 
@@ -135,7 +135,7 @@ test_that("impute_sRHD() simple random Hot-Deck imputation", {
     "there is no appropriate donor for the object\\(s\\)"
   )
   expect_error(
-    impute_sRHD(df_XY_X_miss, type = "sim_part", donor_limit = 2),
+    impute_sRHD(df_XY_X_mis, type = "sim_part", donor_limit = 2),
     "donor_limit is not implemented for type = sim_part"
   )
 
@@ -154,15 +154,15 @@ test_that("impute_sRHD() simple random Hot-Deck imputation", {
 
 test_that("impute_sRHD() works with matrices", {
   # check types
-  expect_false(anyNA(impute_sRHD(matrix_100_2_miss, type = "cols_seq")))
-  expect_false(anyNA(impute_sRHD(matrix_100_2_miss, type = "sim_comp")))
-  expect_false(anyNA(impute_sRHD(matrix_100_2_miss, type = "sim_part")))
+  expect_false(anyNA(impute_sRHD(matrix_100_2_mis, type = "cols_seq")))
+  expect_false(anyNA(impute_sRHD(matrix_100_2_mis, type = "sim_comp")))
+  expect_false(anyNA(impute_sRHD(matrix_100_2_mis, type = "sim_part")))
 
   # check donor limit with types
-  expect_false(anyNA(impute_sRHD(matrix_100_2_miss, type = "cols_seq", donor_limit = 2)))
-  expect_false(anyNA(impute_sRHD(matrix_100_2_miss, type = "sim_comp", donor_limit = 2)))
+  expect_false(anyNA(impute_sRHD(matrix_100_2_mis, type = "cols_seq", donor_limit = 2)))
+  expect_false(anyNA(impute_sRHD(matrix_100_2_mis, type = "sim_comp", donor_limit = 2)))
   expect_error(
-    impute_sRHD(matrix_100_2_miss, type = "sim_part", donor_limit = 2),
+    impute_sRHD(matrix_100_2_mis, type = "sim_part", donor_limit = 2),
     "donor_limit is not implemented for type = sim_part"
   )
 })

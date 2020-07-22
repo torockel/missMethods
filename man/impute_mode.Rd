@@ -31,8 +31,8 @@ be used as imputation value.
 }
 \examples{
 ds <- data.frame(X = c(1:12, rep(8, 8)), Y = 101:120)
-ds_miss <- delete_MCAR(ds, 0.2)
-ds_imp <- impute_mode(ds_miss)
+ds_mis <- delete_MCAR(ds, 0.2)
+ds_imp <- impute_mode(ds_mis)
 }
 \references{
 Beland, S., Pichette, F., & Jolani, S. (2016). Impact on Cronbach's

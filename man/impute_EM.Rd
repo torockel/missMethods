@@ -34,6 +34,6 @@ distribution are added to these expected values.
 }
 \examples{
 ds_orig <- MASS::mvrnorm(100, rep(0, 7), Sigma = diag(1, 7))
-ds_miss <- delete_MCAR(ds_orig, p = 0.2)
-ds_imp <- impute_EM(ds_miss, stochastic = FALSE)
+ds_mis <- delete_MCAR(ds_orig, p = 0.2)
+ds_imp <- impute_EM(ds_mis, stochastic = FALSE)
 }

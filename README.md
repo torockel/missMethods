@@ -51,8 +51,8 @@ generated missing values and evaluate the imputation result:
 library(missMethods)
 set.seed(123)
 ds_comp <- data.frame(X = rnorm(100), Y = rnorm(100))
-ds_miss <- delete_MCAR(ds_comp, 0.3)
-ds_imp <- impute_mean(ds_miss)
+ds_mis <- delete_MCAR(ds_comp, 0.3)
+ds_imp <- impute_mean(ds_mis)
 evaluate_imputed_values(ds_imp, ds_comp, "RMSE")
 #> [1] 0.5328238
 ```

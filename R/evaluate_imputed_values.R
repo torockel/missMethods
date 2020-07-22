@@ -56,8 +56,8 @@
 #' @param ds_orig a data frame or matrix with original (true) values
 #' @param cols_which indices or names of columns used for evaluation
 #' @param M NULL (the default) or a missing data indicator matrix; the missing
-#'   data indicator matrix is normally created via \code{is.na(ds_miss)}, where
-#'   \code{ds_miss} is the dataset after deleting values from \code{ds_orig}
+#'   data indicator matrix is normally created via \code{is.na(ds_mis)}, where
+#'   \code{ds_mis} is the dataset after deleting values from \code{ds_orig}
 #' @param imp_ds deprecated, renamed to \code{ds_imp}
 #' @param orig_ds deprecated, renamed to \code{ds_orig}
 #' @param which_cols deprecated, renamed to \code{cols_which}
@@ -70,20 +70,20 @@
 #'
 #' @examples
 #' ds_orig <- data.frame(X = 1:10, Y = 101:110)
-#' ds_miss <- delete_MCAR(ds_orig, 0.3)
-#' ds_imp <- impute_mean(ds_miss)
+#' ds_mis <- delete_MCAR(ds_orig, 0.3)
+#' ds_imp <- impute_mean(ds_mis)
 #' # compare all values from ds_orig and ds_imp
 #' evaluate_imputed_values(ds_imp, ds_orig)
 #' # compare only the imputed values
-#' M <- is.na(ds_miss)
+#' M <- is.na(ds_mis)
 #' evaluate_imputed_values(ds_imp, ds_orig, M = M)
 #' # compare only the imputed values in column X
 #' evaluate_imputed_values(ds_imp, ds_orig, M = M, cols_which = "X")
 #'
 #' # NRMSE_tot_mean and NRMSE_col_mean are equal, if columnwise means are equal
 #' ds_orig <- data.frame(X = 1:10, Y = 10:1)
-#' ds_miss <- delete_MCAR(ds_orig, 0.3)
-#' ds_imp <- impute_mean(ds_miss)
+#' ds_mis <- delete_MCAR(ds_orig, 0.3)
+#' ds_imp <- impute_mean(ds_mis)
 #' evaluate_imputed_values(ds_imp, ds_orig, "NRMSE_tot_mean")
 #' evaluate_imputed_values(ds_imp, ds_orig, "NRMSE_col_mean")
 evaluate_imputed_values <- function(ds_imp, ds_orig, criterion = "RMSE", M = NULL,

@@ -72,11 +72,11 @@ test_that("calc_evaluation_criterion() works", {
 
   # check mixed data frame with nr_NA
   mixed_df <- data.frame(1:3, 5:3)
-  mixed_miss_df <- data.frame(factor(c(NA, 1:2)), c(5, NA, 3))
-  expect_equal(calc_evaluation_criterion(mixed_miss_df, mixed_df, criterion = "nr_NA"), 2)
-  expect_equal(calc_evaluation_criterion(mixed_miss_df, mixed_df,
+  mixed_mis_df <- data.frame(factor(c(NA, 1:2)), c(5, NA, 3))
+  expect_equal(calc_evaluation_criterion(mixed_mis_df, mixed_df, criterion = "nr_NA"), 2)
+  expect_equal(calc_evaluation_criterion(mixed_mis_df, mixed_df,
     criterion = "nr_NA",
-    M = is.na(mixed_miss_df)
+    M = is.na(mixed_mis_df)
   ), 2)
 
   expect_equal(calc_evaluation_criterion(estimate_vec, true_val_vec, "precision"), 3 / 4)

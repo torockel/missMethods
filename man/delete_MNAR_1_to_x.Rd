@@ -7,7 +7,7 @@
 delete_MNAR_1_to_x(
   ds,
   p,
-  cols_miss,
+  cols_mis,
   x,
   cutoff_fun = median,
   prop = 0.5,
@@ -22,10 +22,10 @@ delete_MNAR_1_to_x(
 \arguments{
 \item{ds}{a data frame or matrix in which missing values will be created}
 
-\item{p}{a numeric vector with length one or equal to length \code{cols_miss};
+\item{p}{a numeric vector with length one or equal to length \code{cols_mis};
 the probability that a value is missing}
 
-\item{cols_miss}{a vector of column names or indices of columns in which
+\item{cols_mis}{a vector of column names or indices of columns in which
 missing values will be created}
 
 \item{x}{numeric with length one (0 < x < \code{Inf}); odds are 1 to x for
@@ -46,12 +46,12 @@ unordered factors}
 
 \item{stochastic}{logical; see details}
 
-\item{add_realized_x}{logical; if TRUE the realized odds for cols_miss will
+\item{add_realized_x}{logical; if TRUE the realized odds for cols_mis will
 be returned (as attribute)}
 
 \item{...}{further arguments passed to \code{cutoff_fun}}
 
-\item{miss_cols}{deprecated, use cols_miss instead}
+\item{miss_cols}{deprecated, use cols_mis instead}
 }
 \value{
 An object of the same class as \code{ds} with missing values
@@ -61,7 +61,7 @@ Create missing not at random (MNAR) values using MNAR1:x in a data frame or
 a matrix
 }
 \details{
-The functions \code{delete_MNAR_1_to_x} and \code{\link{delete_MAR_1_to_x}} are sisters. The only difference between these two functions is the column that controls the generation of missing values. In \code{\link{delete_MAR_1_to_x}} a separate column \code{cols_ctrl[i]} controls the generation of missing values in \code{cols_miss[i]}. In contrast, in \code{delete_MNAR_1_to_x} the generation of missing values in \code{cols_miss[i]} is controlled by \code{cols_miss[i]} itself. All other aspects are identical for both functions. Therefore, further details can be found in \code{\link{delete_MAR_1_to_x}}.
+The functions \code{delete_MNAR_1_to_x} and \code{\link{delete_MAR_1_to_x}} are sisters. The only difference between these two functions is the column that controls the generation of missing values. In \code{\link{delete_MAR_1_to_x}} a separate column \code{cols_ctrl[i]} controls the generation of missing values in \code{cols_mis[i]}. In contrast, in \code{delete_MNAR_1_to_x} the generation of missing values in \code{cols_mis[i]} is controlled by \code{cols_mis[i]} itself. All other aspects are identical for both functions. Therefore, further details can be found in \code{\link{delete_MAR_1_to_x}}.
 }
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)

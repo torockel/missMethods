@@ -21,11 +21,11 @@ test_that("delete_MCAR() creates MCAR", {
   df_MCAR <- delete_MCAR(df_XY_100, 0)
   expect_equal(count_NA(df_MCAR), c(X = 0, Y = 0))
 
-  # check cols_miss ---------------------------------------
-  df_MCAR <- delete_MCAR(df_XY_100, 0.2, cols_miss = 2)
+  # check cols_mis ---------------------------------------
+  df_MCAR <- delete_MCAR(df_XY_100, 0.2, cols_mis = 2)
   expect_equal(count_NA(df_MCAR), c(X = 0, Y = 20))
 
-  df_MCAR <- delete_MCAR(df_XY_100, 0.2, cols_miss = "X")
+  df_MCAR <- delete_MCAR(df_XY_100, 0.2, cols_mis = "X")
   expect_equal(count_NA(df_MCAR), c(X = 20, Y = 0))
 
   # check stochastic = TRUE -------------------------------
@@ -61,10 +61,10 @@ test_that("delete_MCAR() works with matrices", {
   ds_m_MCAR <- delete_MCAR(matrix_100_2, p = 0.4)
   expect_equal(count_NA(ds_m_MCAR), c(40, 40))
 
-  ds_m_MCAR <- delete_MCAR(matrix_100_2, p = 0.4, cols_miss = 2)
+  ds_m_MCAR <- delete_MCAR(matrix_100_2, p = 0.4, cols_mis = 2)
   expect_equal(count_NA(ds_m_MCAR), c(0, 40))
 
-  ds_m_MCAR <- delete_MCAR(matrix_20_10, p = c(0.1, 0.2, 0.3), cols_miss = 2:4)
+  ds_m_MCAR <- delete_MCAR(matrix_20_10, p = c(0.1, 0.2, 0.3), cols_mis = 2:4)
   expect_equal(count_NA(ds_m_MCAR), c(0, 2, 4, 6, rep(0, 6)))
 })
 
@@ -74,9 +74,9 @@ test_that("delete_MCAR() works with tibbles", {
   tbl_MCAR <- delete_MCAR(tbl_XY_100, p = 0.4)
   expect_equal(count_NA(tbl_MCAR), c(X = 40, Y = 40))
 
-  tbl_MCAR <- delete_MCAR(tbl_XY_100, p = 0.4, cols_miss = 2)
+  tbl_MCAR <- delete_MCAR(tbl_XY_100, p = 0.4, cols_mis = 2)
   expect_equal(count_NA(tbl_MCAR), c(X = 0, Y = 40))
 
-  tbl_MCAR <- delete_MCAR(tbl_XYZ_100, p = c(0.1, 0.2, 0.3), cols_miss = 1:3)
+  tbl_MCAR <- delete_MCAR(tbl_XYZ_100, p = c(0.1, 0.2, 0.3), cols_mis = 1:3)
   expect_equal(count_NA(tbl_MCAR), c(X = 10, Y = 20, Z = 30))
 })

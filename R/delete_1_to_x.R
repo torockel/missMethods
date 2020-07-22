@@ -1,5 +1,5 @@
 # the workhorse for delete_MAR_1_to_x and delete_MNAR_1_to_x
-delete_1_to_x <- function(ds, p, cols_miss, cols_ctrl, x,
+delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
                           cutoff_fun = median,
                           prop = 0.5, use_lpSolve = TRUE,
                           ordered_as_unordered = FALSE,
@@ -21,44 +21,44 @@ delete_1_to_x <- function(ds, p, cols_miss, cols_ctrl, x,
     stop("x must be greater than 0 and finite")
   }
 
-  p <- adjust_p(p, cols_miss)
+  p <- adjust_p(p, cols_mis)
 
   # create missing values -----------------------
   n <- nrow(ds)
-  true_odds <- numeric(length(cols_miss))
-  for (i in seq_along(cols_miss)) {
+  true_odds <- numeric(length(cols_mis))
+  for (i in seq_along(cols_mis)) {
     groups <- find_groups(
       ds[, cols_ctrl[i], drop = TRUE], cutoff_fun, prop, use_lpSolve,
       ordered_as_unordered, ...
     )
     if (is.null(groups$g2)) {
       warning("column ", cols_ctrl[i], " is constant, effectively MCAR")
-      ds[, cols_miss[i]] <- delete_MCAR_vec(ds[, cols_miss[i], drop = TRUE], p[i], stochastic)
+      ds[, cols_mis[i]] <- delete_MCAR_vec(ds[, cols_mis[i], drop = TRUE], p[i], stochastic)
       true_odds[i] <- 0
     } else {
 
-      # calculate p_miss for group 1 and group 2
+      # calculate p_mis for group 1 and group 2
       nr_g1 <- length(groups$g1)
       nr_g2 <- length(groups$g2)
-      p_miss_g1 <- p[i] * n / (nr_g1 + nr_g2 * x)
-      p_miss_g2 <- p[i] * n * x / (nr_g1 + nr_g2 * x)
-      # check if p_miss_g1 or p_miss_g2 is out of range (>1)
-      if (p_miss_g2 > 1) {
+      p_mis_g1 <- p[i] * n / (nr_g1 + nr_g2 * x)
+      p_mis_g2 <- p[i] * n * x / (nr_g1 + nr_g2 * x)
+      # check if p_mis_g1 or p_mis_g2 is out of range (>1)
+      if (p_mis_g2 > 1) {
         x_max_i <- nr_g2 / (n * p[i] - nr_g1)
         warning(
           "p (or x) is too high; x is set to ", x_max_i,
           " to get expected n * p missing values"
         )
-        p_miss_g2 <- 1 # setting x = x_max_i results in p_miss_g2 = 1
-        p_miss_g1 <- (p[i] * n - nr_g2) / nr_g1
-      } else if (p_miss_g1 > 1) {
+        p_mis_g2 <- 1 # setting x = x_max_i results in p_mis_g2 = 1
+        p_mis_g1 <- (p[i] * n - nr_g2) / nr_g1
+      } else if (p_mis_g1 > 1) {
         x_min_i <- (n * p[i] - nr_g2) / nr_g1
         warning(
           "p is too high or x to low; x is set to ", x_min_i,
           " to get expected n * p missing values"
         )
-        p_miss_g1 <- 1
-        p_miss_g2 <- (p[i] * n - nr_g1) / nr_g2
+        p_mis_g1 <- 1
+        p_mis_g2 <- (p[i] * n - nr_g1) / nr_g2
       }
 
       # delete values
@@ -67,29 +67,29 @@ delete_1_to_x <- function(ds, p, cols_miss, cols_ctrl, x,
           nr_g1,
           replace = TRUE,
           prob = c(
-            p_miss_g1,
-            1 - p_miss_g1
+            p_mis_g1,
+            1 - p_mis_g1
           )
         )]
         na_indices_g2 <- groups$g2[sample(c(TRUE, FALSE),
           nr_g2,
           replace = TRUE,
           prob = c(
-            p_miss_g2,
-            1 - p_miss_g2
+            p_mis_g2,
+            1 - p_mis_g2
           )
         )]
       } else { # stochastic = FALSE ------------------
-        nr_miss <- round(p[i] * n)
-        nr_miss_g1 <- calc_nr_miss_g1(nr_g1, p_miss_g1, nr_g2, nr_miss, x)
-        nr_miss_g2 <- nr_miss - nr_miss_g1
+        nr_mis <- round(p[i] * n)
+        nr_mis_g1 <- calc_nr_mis_g1(nr_g1, p_mis_g1, nr_g2, nr_mis, x)
+        nr_mis_g2 <- nr_mis - nr_mis_g1
 
         # sample NA indices
-        na_indices_g2 <- resample(groups$g2, nr_miss_g2)
-        na_indices_g1 <- resample(groups$g1, nr_miss_g1)
+        na_indices_g2 <- resample(groups$g2, nr_mis_g2)
+        na_indices_g1 <- resample(groups$g1, nr_mis_g1)
       }
       na_indices <- c(na_indices_g1, na_indices_g2)
-      ds[na_indices, cols_miss[i]] <- NA
+      ds[na_indices, cols_mis[i]] <- NA
       true_odds[i] <- (length(na_indices_g1) / nr_g1) /
         (length(na_indices_g2) / nr_g2)
     }
@@ -97,7 +97,7 @@ delete_1_to_x <- function(ds, p, cols_miss, cols_ctrl, x,
 
   if (add_realized_x) {
     realized_x <- 1 / true_odds
-    names(realized_x) <- cols_miss
+    names(realized_x) <- cols_mis
     return(structure(ds, realized_x = realized_x))
   }
   ds
@@ -127,7 +127,7 @@ delete_1_to_x <- function(ds, p, cols_miss, cols_ctrl, x,
 #' belong to group 2).
 #' The group 2 consists of the remaining rows, which are not part of group 1.
 #' Now the probabilities for the rows in the two groups are set in the way
-#' that the odds are 1:x against a missing value in \code{cols_miss[i]} for the
+#' that the odds are 1:x against a missing value in \code{cols_mis[i]} for the
 #' rows in group 1 compared to the rows in group 2.
 #' That means, the probability for a value to be missing in group 1 divided by
 #' the probability for a value to be missing in group 2 equals 1 divided
@@ -139,13 +139,13 @@ delete_1_to_x <- function(ds, p, cols_miss, cols_ctrl, x,
 #'
 #' If \code{stochastic = FALSE} (the default),
 #' then exactly \code{round(nrow(ds) * p[i])} values will be set \code{NA} in
-#' column \code{cols_miss[i]}.
+#' column \code{cols_mis[i]}.
 #' To achieve this, it is possible that the true odds differ from 1:x.
 #' The number of observations that are deleted in group 1 and group 2 are
 #' chosen to minimize the absolute difference between the realized odds and 1:x.
 #' Furthermore, if \code{round(nrow(ds) * p[i])} == 0, then no missing value
-#' will be created in \code{cols_miss[i]}.
-#' If \code{stochastic = TRUE}, the number of missing values in \code{cols_miss[i]}
+#' will be created in \code{cols_mis[i]}.
+#' If \code{stochastic = TRUE}, the number of missing values in \code{cols_mis[i]}
 #' is a random variable.
 #' This random variable is a sum of two binomial distributed variables (one for
 #' group 1 and one for group 2).
@@ -167,7 +167,7 @@ delete_1_to_x <- function(ds, p, cols_miss, cols_ctrl, x,
 #' The argument \code{add_realized_x} controls whether the x of the realized
 #' odds are added to the return value or not.
 #' If \code{add_realized_x = TRUE}, then the realized x values for all
-#' \code{cols_miss} will be added as an attribute to the returned object.
+#' \code{cols_mis} will be added as an attribute to the returned object.
 #' For \code{stochastic = TRUE} these realized x will differ from the given
 #' \code{x} most of the time and will change if the function is rerun without
 #' setting a seed.
@@ -180,7 +180,7 @@ delete_1_to_x <- function(ds, p, cols_miss, cols_ctrl, x,
 #'   of a value to be missing  in group 2 (see details)
 #' @param cutoff_fun function that calculates the cutoff values in the
 #'   \code{cols_ctrl}
-#' @param add_realized_x logical; if TRUE the realized odds for cols_miss will
+#' @param add_realized_x logical; if TRUE the realized odds for cols_mis will
 #'   be returned (as attribute)
 #' @param prop numeric of length one; (minimum) proportion of rows in group 1
 #'   (only used for unordered factors)
@@ -207,7 +207,7 @@ delete_1_to_x <- function(ds, p, cols_miss, cols_ctrl, x,
 #' # Too high combination of p and x:
 #' delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3)
 #' delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3, stochastic = TRUE)
-delete_MAR_1_to_x <- function(ds, p, cols_miss, cols_ctrl, x,
+delete_MAR_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
                               cutoff_fun = median,
                               prop = 0.5,
                               use_lpSolve = TRUE,
@@ -218,8 +218,8 @@ delete_MAR_1_to_x <- function(ds, p, cols_miss, cols_ctrl, x,
 
   ## deprecate miss_cols
   if (!missing(miss_cols)) {
-    warning("miss_cols is deprecated; use cols_miss instead.")
-    cols_miss <- miss_cols
+    warning("miss_cols is deprecated; use cols_mis instead.")
+    cols_mis <- miss_cols
   }
 
   ## deprecate ctrl_cols
@@ -229,11 +229,11 @@ delete_MAR_1_to_x <- function(ds, p, cols_miss, cols_ctrl, x,
   }
 
   check_delete_args_MAR(
-    ds = ds, p = p, cols_miss = cols_miss,
+    ds = ds, p = p, cols_mis = cols_mis,
     cols_ctrl = cols_ctrl, stochastic = stochastic
   )
 
-  delete_1_to_x(ds, p, cols_miss, cols_ctrl,
+  delete_1_to_x(ds, p, cols_mis, cols_ctrl,
     x = x,
     cutoff_fun = cutoff_fun,
     prop = prop,
@@ -255,7 +255,7 @@ delete_MAR_1_to_x <- function(ds, p, cols_miss, cols_ctrl, x,
 #'
 #' @examples
 #' delete_MNAR_1_to_x(ds, 0.2, "X", x = 3)
-delete_MNAR_1_to_x <- function(ds, p, cols_miss, x,
+delete_MNAR_1_to_x <- function(ds, p, cols_mis, x,
                                cutoff_fun = median,
                                prop = 0.5,
                                use_lpSolve = TRUE,
@@ -266,17 +266,17 @@ delete_MNAR_1_to_x <- function(ds, p, cols_miss, x,
 
   ## deprecate miss_cols
   if (!missing(miss_cols)) {
-    warning("miss_cols is deprecated; use cols_miss instead.")
-    cols_miss <- miss_cols
+    warning("miss_cols is deprecated; use cols_mis instead.")
+    cols_mis <- miss_cols
   }
 
   check_delete_args_MNAR(
-    ds = ds, p = p, cols_miss = cols_miss,
+    ds = ds, p = p, cols_mis = cols_mis,
     stochastic = stochastic
   )
 
-  delete_1_to_x(ds, p, cols_miss,
-    cols_ctrl = cols_miss, x = x,
+  delete_1_to_x(ds, p, cols_mis,
+    cols_ctrl = cols_mis, x = x,
     cutoff_fun = cutoff_fun,
     prop = prop,
     use_lpSolve = use_lpSolve,

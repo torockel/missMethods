@@ -3,7 +3,7 @@
 # args checking for all mechanisms
 # normally called from check_delete_args_MCAR, check_delete_args_MAR or
 # check_delete_args_MNAR
-check_delete_args <- function(ds, p, cols_miss, stochastic) {
+check_delete_args <- function(ds, p, cols_mis, stochastic) {
   # check ds ------------------------------------
   if (!is_df_or_matrix(ds)) {
     stop("ds must be a data.frame or a matrix")
@@ -11,8 +11,8 @@ check_delete_args <- function(ds, p, cols_miss, stochastic) {
 
   # check p -------------------------------------
   if (is.numeric(p)) {
-    if (length(p) != 1L && length(p) != length(cols_miss)) {
-      stop("p must be of length 1 or length must equal cols_miss")
+    if (length(p) != 1L && length(p) != length(cols_mis)) {
+      stop("p must be of length 1 or length must equal cols_mis")
     } else {
       if (any(p < 0 | p > 1)) {
         stop("probabilties in p must be between 0 and 1")
@@ -22,23 +22,23 @@ check_delete_args <- function(ds, p, cols_miss, stochastic) {
     stop("p must be numeric")
   }
 
-  # check cols_miss -----------------------------
-  if (is.numeric(cols_miss)) {
-    if (any(cols_miss < 1 | cols_miss > ncol(ds))) {
-      stop("indices in cols_miss must be in 1:ncol(ds)")
+  # check cols_mis -----------------------------
+  if (is.numeric(cols_mis)) {
+    if (any(cols_mis < 1 | cols_mis > ncol(ds))) {
+      stop("indices in cols_mis must be in 1:ncol(ds)")
     }
-  } else if (is.character(cols_miss)) {
-    if (!all(cols_miss %in% colnames(ds))) {
-      stop("all entries of cols_miss must be in colnames(ds)")
+  } else if (is.character(cols_mis)) {
+    if (!all(cols_mis %in% colnames(ds))) {
+      stop("all entries of cols_mis must be in colnames(ds)")
     }
   } else {
-    stop("cols_miss must be a vector of column names or indices of ds")
+    stop("cols_mis must be a vector of column names or indices of ds")
   }
 
-  if (anyDuplicated(cols_miss) != 0) {
-    duplicated_cols <- unique(cols_miss[duplicated(cols_miss)])
+  if (anyDuplicated(cols_mis) != 0) {
+    duplicated_cols <- unique(cols_mis[duplicated(cols_mis)])
     warning(
-      "there are duplicates in cols_miss:\n", duplicated_cols,
+      "there are duplicates in cols_mis:\n", duplicated_cols,
       "\n this may result in a too high percentage of missing values"
     )
   }
@@ -51,9 +51,9 @@ check_delete_args <- function(ds, p, cols_miss, stochastic) {
   }
 }
 
-check_delete_args_MCAR <- function(ds, p, cols_miss, stochastic, p_overall) {
+check_delete_args_MCAR <- function(ds, p, cols_mis, stochastic, p_overall) {
   # general checking
-  check_delete_args(ds = ds, p = p, cols_miss = cols_miss, stochastic = stochastic)
+  check_delete_args(ds = ds, p = p, cols_mis = cols_mis, stochastic = stochastic)
 
   # special case: p_overall
   if (!is.logical(p_overall) | length(p_overall) != 1L) {
@@ -63,9 +63,9 @@ check_delete_args_MCAR <- function(ds, p, cols_miss, stochastic, p_overall) {
   }
 }
 
-check_delete_args_MAR <- function(ds, p, cols_miss, cols_ctrl, stochastic) {
+check_delete_args_MAR <- function(ds, p, cols_mis, cols_ctrl, stochastic) {
   # general checking
-  check_delete_args(ds = ds, p = p, cols_miss = cols_miss, stochastic = stochastic)
+  check_delete_args(ds = ds, p = p, cols_mis = cols_mis, stochastic = stochastic)
 
 
   # check cols_ctrl -----------------------------
@@ -87,26 +87,26 @@ check_delete_args_MAR <- function(ds, p, cols_miss, cols_ctrl, stochastic) {
     stop("cols_ctrl must be completely observed; no NAs in ds[, cols_ctrl] allowed")
   }
 
-  if (length(cols_miss) != length(cols_ctrl)) {
-    stop("length(cols_miss) must equal length(cols_ctrl)")
+  if (length(cols_mis) != length(cols_ctrl)) {
+    stop("length(cols_mis) must equal length(cols_ctrl)")
   }
 
-  # check if any ctrl_col is in cols_miss
-  if (any(cols_ctrl %in% cols_miss)) {
+  # check if any ctrl_col is in cols_mis
+  if (any(cols_ctrl %in% cols_mis)) {
     stop(
-      "to ensure MAR no ctrl_col is allowed to be in cols_miss;\n",
+      "to ensure MAR no ctrl_col is allowed to be in cols_mis;\n",
       "problematic cols_ctrl:\n",
-      paste(cols_ctrl[cols_ctrl %in% cols_miss], collapse = ", ")
+      paste(cols_ctrl[cols_ctrl %in% cols_mis], collapse = ", ")
     )
   }
 }
 
-check_delete_args_MNAR <- function(ds, p, cols_miss, stochastic) {
+check_delete_args_MNAR <- function(ds, p, cols_mis, stochastic) {
   # general checking
-  check_delete_args(ds = ds, p = p, cols_miss = cols_miss, stochastic = stochastic)
-  #  no NA in cols_miss
-  if (any(is.na(ds[, cols_miss]))) {
-    stop("cols_miss must be completely observed; no NAs in ds[, cols_miss] allowed")
+  check_delete_args(ds = ds, p = p, cols_mis = cols_mis, stochastic = stochastic)
+  #  no NA in cols_mis
+  if (any(is.na(ds[, cols_mis]))) {
+    stop("cols_mis must be completely observed; no NAs in ds[, cols_mis] allowed")
   }
 }
 
@@ -203,31 +203,31 @@ find_groups_by_values <- function(x, values) {
 }
 
 # more helpers --------------------------------------------
-adjust_p <- function(p, cols_miss) {
+adjust_p <- function(p, cols_mis) {
   if (length(p) == 1L) {
-    p <- rep(p, length(cols_miss))
+    p <- rep(p, length(cols_mis))
   }
   p
 }
 
-calc_nr_miss_g1 <- function(nr_g1, p_miss_g1,
-                            nr_g2, nr_miss, x) {
-  if (nr_miss == 0L) {
-    nr_miss_g1 <- 0L
+calc_nr_mis_g1 <- function(nr_g1, p_mis_g1,
+                            nr_g2, nr_mis, x) {
+  if (nr_mis == 0L) {
+    nr_mis_g1 <- 0L
   } else if (nr_g2 == 0L) {
-    nr_miss_g1 <- nr_miss
+    nr_mis_g1 <- nr_mis
   } else {
-    nr_miss_g1_ceil <- ceiling(nr_g1 * p_miss_g1)
-    nr_miss_g1_floor <- floor(nr_g1 * p_miss_g1)
-    odds_ceil <- nr_miss_g1_ceil / nr_g1 /
-      ((nr_miss - nr_miss_g1_ceil) / nr_g2)
-    odds_floor <- nr_miss_g1_floor / nr_g1 /
-      ((nr_miss - nr_miss_g1_floor) / nr_g2)
+    nr_mis_g1_ceil <- ceiling(nr_g1 * p_mis_g1)
+    nr_mis_g1_floor <- floor(nr_g1 * p_mis_g1)
+    odds_ceil <- nr_mis_g1_ceil / nr_g1 /
+      ((nr_mis - nr_mis_g1_ceil) / nr_g2)
+    odds_floor <- nr_mis_g1_floor / nr_g1 /
+      ((nr_mis - nr_mis_g1_floor) / nr_g2)
     if (abs(1 / x - odds_ceil) < abs(1 / x - odds_floor)) {
-      nr_miss_g1 <- nr_miss_g1_ceil
+      nr_mis_g1 <- nr_mis_g1_ceil
     } else {
-      nr_miss_g1 <- nr_miss_g1_floor
+      nr_mis_g1 <- nr_mis_g1_floor
     }
   }
-  nr_miss_g1
+  nr_mis_g1
 }

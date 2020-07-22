@@ -7,7 +7,7 @@
 delete_MAR_1_to_x(
   ds,
   p,
-  cols_miss,
+  cols_mis,
   cols_ctrl,
   x,
   cutoff_fun = median,
@@ -24,15 +24,15 @@ delete_MAR_1_to_x(
 \arguments{
 \item{ds}{a data frame or matrix in which missing values will be created}
 
-\item{p}{a numeric vector with length one or equal to length \code{cols_miss};
+\item{p}{a numeric vector with length one or equal to length \code{cols_mis};
 the probability that a value is missing}
 
-\item{cols_miss}{a vector of column names or indices of columns in which
+\item{cols_mis}{a vector of column names or indices of columns in which
 missing values will be created}
 
 \item{cols_ctrl}{a vector of column names or indices of columns, which
-controls the creation of missing values in \code{cols_miss}. Must be of the
-same length as \code{cols_miss}.}
+controls the creation of missing values in \code{cols_mis}. Must be of the
+same length as \code{cols_mis}.}
 
 \item{x}{numeric with length one (0 < x < \code{Inf}); odds are 1 to x for
 the probability of a value to be missing in group 1 against the probability
@@ -52,12 +52,12 @@ unordered factors}
 
 \item{stochastic}{logical; see details}
 
-\item{add_realized_x}{logical; if TRUE the realized odds for cols_miss will
+\item{add_realized_x}{logical; if TRUE the realized odds for cols_mis will
 be returned (as attribute)}
 
 \item{...}{further arguments passed to \code{cutoff_fun}}
 
-\item{miss_cols}{deprecated, use cols_miss instead}
+\item{miss_cols}{deprecated, use cols_mis instead}
 
 \item{ctrl_cols}{deprecated, use cols_ctrl instead}
 }
@@ -70,21 +70,21 @@ a matrix
 }
 \details{
 This function creates missing at random (MAR) values in the columns
-specified by the argument \code{cols_miss}.
+specified by the argument \code{cols_mis}.
 The probability for missing values is controlled by \code{p}.
 If \code{p} is a single number, then the overall probability for a value to
-be missing will be \code{p} in all columns of \code{cols_miss}.
+be missing will be \code{p} in all columns of \code{cols_mis}.
 (Internally \code{p} will be replicated to a vector of the same length as
-\code{cols_miss}.
+\code{cols_mis}.
 So, all \code{p[i]} in the following sections will be equal to the given
 single number \code{p}.)
-Otherwise, \code{p} must be of the same length as \code{cols_miss}.
+Otherwise, \code{p} must be of the same length as \code{cols_mis}.
 In this case, the overall probability for a value to be missing will be
-\code{p[i]} in the column \code{cols_miss[i]}.
-The position of the missing values in \code{cols_miss[i]} is controlled by
+\code{p[i]} in the column \code{cols_mis[i]}.
+The position of the missing values in \code{cols_mis[i]} is controlled by
 \code{cols_ctrl[i]}.
 The following procedure is applied for each pair of \code{cols_ctrl[i]} and
-\code{cols_miss[i]} to determine the positions of missing values:
+\code{cols_mis[i]} to determine the positions of missing values:
 
 At first, the rows of \code{ds} are divided into two groups.
 Therefore, the \code{cutoff_fun} calculates a cutoff value for
@@ -96,7 +96,7 @@ cutoff value will be added to this group (otherwise, these rows will
 belong to group 2).
 The group 2 consists of the remaining rows, which are not part of group 1.
 Now the probabilities for the rows in the two groups are set in the way
-that the odds are 1:x against a missing value in \code{cols_miss[i]} for the
+that the odds are 1:x against a missing value in \code{cols_mis[i]} for the
 rows in group 1 compared to the rows in group 2.
 That means, the probability for a value to be missing in group 1 divided by
 the probability for a value to be missing in group 2 equals 1 divided
@@ -108,13 +108,13 @@ odds 1:x (see below).
 
 If \code{stochastic = FALSE} (the default),
 then exactly \code{round(nrow(ds) * p[i])} values will be set \code{NA} in
-column \code{cols_miss[i]}.
+column \code{cols_mis[i]}.
 To achieve this, it is possible that the true odds differ from 1:x.
 The number of observations that are deleted in group 1 and group 2 are
 chosen to minimize the absolute difference between the realized odds and 1:x.
 Furthermore, if \code{round(nrow(ds) * p[i])} == 0, then no missing value
-will be created in \code{cols_miss[i]}.
-If \code{stochastic = TRUE}, the number of missing values in \code{cols_miss[i]}
+will be created in \code{cols_mis[i]}.
+If \code{stochastic = TRUE}, the number of missing values in \code{cols_mis[i]}
 is a random variable.
 This random variable is a sum of two binomial distributed variables (one for
 group 1 and one for group 2).
@@ -136,7 +136,7 @@ given to the function.
 The argument \code{add_realized_x} controls whether the x of the realized
 odds are added to the return value or not.
 If \code{add_realized_x = TRUE}, then the realized x values for all
-\code{cols_miss} will be added as an attribute to the returned object.
+\code{cols_mis} will be added as an attribute to the returned object.
 For \code{stochastic = TRUE} these realized x will differ from the given
 \code{x} most of the time and will change if the function is rerun without
 setting a seed.

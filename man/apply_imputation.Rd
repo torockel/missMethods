@@ -66,10 +66,10 @@ integer columns to double columns, if needed.
 
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)
-ds_miss <- delete_MCAR(ds, 0.2)
-ds_imp_app <- apply_imputation(ds_miss, FUN = mean, type = "total")
+ds_mis <- delete_MCAR(ds, 0.2)
+ds_imp_app <- apply_imputation(ds_mis, FUN = mean, type = "total")
 # the same result can be achieved via impute_mean():
-ds_imp_mean <- impute_mean(ds_miss, type = "total")
+ds_imp_mean <- impute_mean(ds_mis, type = "total")
 all.equal(ds_imp_app, ds_imp_mean)
 }
 \references{

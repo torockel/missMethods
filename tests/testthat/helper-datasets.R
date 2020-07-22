@@ -20,30 +20,30 @@ df_classes_test <- data.frame(X = c(1, 1, 2, 2, 2), Y = c(5, 3, 3, 4, 3))
 
 
 # define some incomplete data frames for testing ----------
-df_XY_X_miss <- df_XY_100
-df_XY_X_miss[c(1, 3, 5, 20:40), "X"] <- NA
+df_XY_X_mis <- df_XY_100
+df_XY_X_mis[c(1, 3, 5, 20:40), "X"] <- NA
 
-df_XY_X_miss_50_obs <- df_XY_100
-df_XY_X_miss_50_obs[1:50, "X"] <- NA
+df_XY_X_mis_50_obs <- df_XY_100
+df_XY_X_mis_50_obs[1:50, "X"] <- NA
 
-df_XY_X_miss_one_comp_obs <- df_XY_100
-df_XY_X_miss_one_comp_obs[1:99, "X"] <- NA
+df_XY_X_mis_one_comp_obs <- df_XY_100
+df_XY_X_mis_one_comp_obs[1:99, "X"] <- NA
 
-df_XY_XY_miss <- df_XY_X_miss
-df_XY_XY_miss[c(2, 4, 5, 30:50), "Y"] <- NA
+df_XY_XY_mis <- df_XY_X_mis
+df_XY_XY_mis[c(2, 4, 5, 30:50), "Y"] <- NA
 
-df_XY_no_comp_obs <- df_XY_XY_miss
+df_XY_no_comp_obs <- df_XY_XY_mis
 df_XY_no_comp_obs[c(1:31, 50:100), "X"] <- NA
 
-df_XY_miss_with_comp_chars <- cbind(df_XY_XY_miss, char_col = rep("a", 100))
+df_XY_mis_with_comp_chars <- cbind(df_XY_XY_mis, char_col = rep("a", 100))
 
-df_ordered_miss <- df_ordered
-df_ordered_miss[1:10, "let"] <- NA
-df_ordered_miss[5:20, "LET"] <- NA
+df_ordered_mis <- df_ordered
+df_ordered_mis[1:10, "let"] <- NA
+df_ordered_mis[5:20, "LET"] <- NA
 
-df_with_ord_factors_miss <- df_with_ord_factors
-df_with_ord_factors_miss[2:5, "X"] <- NA
-df_with_ord_factors_miss[12:15, "Y"] <- NA
+df_with_ord_factors_mis <- df_with_ord_factors
+df_with_ord_factors_mis[2:5, "X"] <- NA
+df_with_ord_factors_mis[12:15, "Y"] <- NA
 
 
 # define some special cases -------------------------------
@@ -75,8 +75,8 @@ matrix_20_10 <- matrix(c(1:100, 200:101), nrow = 20)
 matrix_classes_test <- as.matrix(df_classes_test)
 
 # define some incomplete matrices for testing ------------------------
-matrix_100_2_miss <- matrix_100_2
-matrix_100_2_miss[is.na(df_XY_XY_miss)] <- NA
+matrix_100_2_mis <- matrix_100_2
+matrix_100_2_mis[is.na(df_XY_XY_mis)] <- NA
 
 
 # define some complete tibbles for testing ------------
@@ -88,8 +88,8 @@ tbl_classes_test <- tibble::as_tibble(df_classes_test)
 
 
 # define some incomplete tibbles for testing ----------
-tbl_XY_X_miss <- tbl_XY_100
-tbl_XY_X_miss[c(1, 3, 5, 20:40), "X"] <- NA
+tbl_XY_X_mis <- tbl_XY_100
+tbl_XY_X_mis[c(1, 3, 5, 20:40), "X"] <- NA
 
-tbl_XY_XY_miss <- tbl_XY_X_miss
-tbl_XY_XY_miss[c(2, 4, 5, 30:50), "Y"] <- NA
+tbl_XY_XY_mis <- tbl_XY_X_mis
+tbl_XY_XY_mis[c(2, 4, 5, 30:50), "Y"] <- NA

@@ -16,7 +16,7 @@ test_that("impute_in_classes() works (basic tests)", {
 
 test_that("impute_in_classes() throws an error if cols_class is missing", {
 
-  expect_error(impute_in_classes(df_XY_X_miss),
+  expect_error(impute_in_classes(df_XY_X_mis),
                "cols_class must be specified")
 
 })
