@@ -5,24 +5,26 @@
 #'
 #' @details
 #'
-#' Imputing the missing values assuming a multivariate normal distributing is
-#' equivalent to imputing the least squares estimate of the missing values in
-#' some kind of way.
+#' Normally, this function is called by other imputation function and should not
+#' be called directly. The function imputes the missing values assuming a
+#' multivariate normal distribution. This is equivalent to imputing the least
+#' squares estimate of the missing values in some kind of way.
 #'
-#' If no values is observed in a row or the matrix `S_22`is not invertible, the
-#' missing values are imputed with (parts of) `mu`. If `warn_problematic_rows =
-#' TRUE`, the problematic rows will be listed in a warning. Otherwise, they will
-#' be imputed without any message.
+#' If no values is observed in a row or the matrix a relevant submatrix of the
+#' covariance matrix (`S_22`) is not invertible, the missing values are imputed
+#' with (parts of) `mu` (plus a residuum, if `stochastich = TRUE`). If
+#' `warn_problematic_rows = TRUE`, the problematic rows will be listed in a
+#' warning. Otherwise, they will be imputed without any message.
 #'
 #' @param ds a dataset with missing values
 #' @param mu vector of expected values for the variables
 #' @param S covariance matrix of the variables
-#' @param stochastic logical, should a residual be added to the expected values
+#' @param stochastic logical, should residuals be added to the expected values
 #' @param M missing data indicator matrix
 #' @param warn_problematic_rows should warnings be given for problematic rows?
 #'
 #' @return a dataset of the same type as `ds`
-#' @noRd
+#' @export
 impute_expected_values <- function(ds, mu, S,
                                    stochastic = FALSE,
                                    M = is.na(ds), warn_problematic_rows = FALSE) {
