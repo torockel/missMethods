@@ -3,36 +3,78 @@ test_that("impute_LS_gene() works (basic test, only check for anyNA)", {
   set.seed(1234)
   ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
   ds_mis <- delete_MCAR(ds_mis, 0.2, 1:4)
-  expect_false(anyNA(impute_LS_gene(ds_mis)))
+  expect_false(anyNA(impute_LS_gene(ds_mis, warn_special_cases = FALSE)))
 })
 
-test_that("impute_LS_gene() works with completely missing row", {
+test_that("impute_LS_gene() works with completely missing row and warns", {
   set.seed(1234)
   ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
   ds_mis[5, ] <- NA
-  ds_mis[1:3, 2:4] <- NA # some additional NAs
-  ds_imp <- expect_warning(
-    impute_LS_gene(ds_mis),
+  ds_imp <- expect_silent(impute_LS_gene(ds_mis, warn_special_cases = FALSE))
+  expect_false(anyNA(ds_imp))
+  expect_equal(ds_imp[5, ], colMeans(ds_mis, na.rm = TRUE))
+
+  ds_imp_warn <- expect_warning(
+    impute_LS_gene(ds_mis, warn_special_cases = TRUE),
     "No observed value in row 5. This row is imputed with column means.",
     fixed = TRUE,
     all = TRUE
   )
-  expect_false(anyNA(ds_imp))
-  expect_equal(ds_imp[5, ], colMeans(ds_mis, na.rm = TRUE))
+  expect_false(anyNA(ds_imp_warn))
+  expect_equal(ds_imp_warn[5, ], colMeans(ds_mis, na.rm = TRUE))
 })
 
-test_that("impute_LS_gene() works when there is no suitable row", {
+test_that("impute_LS_gene() works when there is no suitable row and warns", {
+  # 1. check:
+  # Every row has at least min_common_obs observations.
+  # However, no suitable row for any row!
   # This ds_mis would result in the following error in the jar-file from
   # Bo et al. (2004): "Error in imputation engine"
   set.seed(123)
   ds_mis <- MASS::mvrnorm(11, rep(0, 6), diag(1, 6))
   ds_mis[1, 1] <- NA
   ds_mis[2:11, 2] <- NA
-  ds_imp <- expect_warning(impute_LS_gene(ds_mis, min_common_obs = 5),
-                 "No suitable row for the imputation of row")
+  ds_imp <- expect_silent(impute_LS_gene(ds_mis, min_common_obs = 5, warn_special_cases = FALSE))
   expect_false(anyNA(ds_imp))
+  ds_imp_warn <- expect_warning(
+    impute_LS_gene(ds_mis, min_common_obs = 5, warn_special_cases = TRUE),
+    "No suitable row for the imputation of row"
+  )
+  expect_false(anyNA(ds_imp_warn))
+
+  # 2. check:
+  # One row with less than min_common_obs observations
+  ds_mis2 <- MASS::mvrnorm(11, rep(0, 6), diag(1, 6))
+  ds_mis2[3, 3:5] <- NA
+  ds_imp2 <- expect_silent(impute_LS_gene(ds_mis2, min_common_obs = 5, warn_special_cases = FALSE))
+  expect_false(anyNA(ds_imp2))
+  expect_equal(ds_imp2[3, 3:5], rep(mean(ds_mis2[3, ], na.rm = TRUE), 3))
+  ds_imp2_warn <- expect_warning(
+    impute_LS_gene(ds_mis2, min_common_obs = 5, warn_special_cases = TRUE),
+    "Not enough observed values in row 3. This row is imputed with osbserved row means.",
+    fixed = TRUE
+  )
+  expect_false(anyNA(ds_imp2_warn))
 })
 
+
+## Test argument checking -----------------------------------------------------
+
+test_that("k is checked", {
+  expect_error(
+    impute_LS_gene(data.frame(X = 1:2), k = 3),
+    "k must be smaller as nrow(ds)",
+    fixed = TRUE
+  )
+})
+
+test_that("min_common_obs is checked", {
+  expect_error(
+    impute_LS_gene(data.frame(X = 1:20), min_common_obs = 2),
+    "min_common_obs should be bigger as 2 to allow calculations for correlations and regression models",
+    fixed = TRUE
+  )
+})
 
 ## Comparing impute_LS_gene() to original results from Bo et al. --------------
 # Some remarks:
@@ -55,7 +97,6 @@ test_that("impute_LS_gene() imputes row mean values, if to less objects are obse
 })
 
 test_that("impute_LS_gene() imputes like Bo et al. (2004) (MCAR, 100x7)", {
-
   ds_100x7_LS_gene_Bo <- readRDS(test_path(file.path("datasets", "ds_100x7_LS_gene_Bo.rds")))
 
   ds_100x7_mis_MCAR <- readRDS(test_path(file.path("datasets", "ds_100x7_mis_MCAR.rds")))
@@ -78,20 +119,21 @@ test_that("impute_LS_gene() imputes like Bo et al. (2004) (MCAR, 100x7)", {
 ## check helpers --------------------------------------------------------------
 test_that("calc_lm_coefs_simple_reg() returns correct values", {
   expect_equal(unname(calc_lm_coefs_simple_reg(1:10, 1:10)), c(0, 1))
-  expect_equal(unname(calc_lm_coefs_simple_reg(2 + 3 * (1:10) , 1:10)), c(2, 3))
+  expect_equal(unname(calc_lm_coefs_simple_reg(2 + 3 * (1:10), 1:10)), c(2, 3))
 })
 
 
 test_that("calc_max_common_obs() works", {
-  M <- matrix(c(FALSE, FALSE, FALSE, FALSE,
-                TRUE, TRUE, FALSE, TRUE,
-                FALSE, FALSE, FALSE, TRUE,
-                TRUE, TRUE, FALSE, FALSE,
-                FALSE, FALSE, TRUE, TRUE,
-                TRUE, FALSE, TRUE, FALSE), ncol = 4, byrow = TRUE)
+  M <- matrix(c(
+    FALSE, FALSE, FALSE, FALSE,
+    TRUE, TRUE, FALSE, TRUE,
+    FALSE, FALSE, FALSE, TRUE,
+    TRUE, TRUE, FALSE, FALSE,
+    FALSE, FALSE, TRUE, TRUE,
+    TRUE, FALSE, TRUE, FALSE
+  ), ncol = 4, byrow = TRUE)
   expect_equal(calc_common_obs(M, M[1, ]), c(4, 1, 3, 2, 2, 2))
   expect_equal(calc_common_obs(M, M[2, ]), c(1, 1, 1, 1, 0, 0))
   expect_equal(calc_common_obs(M, M[3, ]), c(3, 1, 3, 1, 2, 1))
   expect_equal(calc_common_obs(M, M[4, ]), c(2, 1, 1, 2, 0, 1))
 })
-

@@ -9,7 +9,8 @@ impute_LS_gene(
   k = 10,
   eps = 1e-06,
   min_common_obs = 5,
-  return_r_max = FALSE
+  return_r_max = FALSE,
+  warn_special_cases = FALSE
 )
 }
 \arguments{
@@ -17,8 +18,7 @@ impute_LS_gene(
 
 \item{k}{number of most correlated genes used for the imputation of a gene}
 
-\item{eps}{used in the calculation of the weights (Bo et al. (2004) used
-\code{eps = 1e-6})}
+\item{eps}{used in the calculation of the weights (Bo et al. (2004) used \code{eps = 1e-6})}
 
 \item{min_common_obs}{a row can only take part in the imputation of another
 row, if both rows share at least \code{min_common_obs} columns with no missing
@@ -27,6 +27,9 @@ the mean of the observed row values.}
 
 \item{return_r_max}{logical, normally this should be \code{FALSE}. \code{TRUE} is used
 inside of \code{impute_LS_adaptive()} to speed up some computations.}
+
+\item{warn_special_cases}{should warnings be given for special cases (see
+details)}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values
@@ -42,10 +45,19 @@ This function performs LSimpute_gene as described by Bo et al. (2004).The functi
 Bo et al. (2004) seem to have chosen \code{min_common_obs = 5}. However, they did
 not documentation this behavior. This value emerged from inspecting
 imputation results from the  original jar-file, which is provided by Bo et
-al. (2004). The only known difference between this function and the original
-one is that a row with only missing values is imputed by the observed column
-means. In this case, a warning is given. The original function would not
-impute such a column and return a dataset with missing values in this row.
+al. (2004).
+
+If there are less than \code{min_common_obs} observed values in a row and at least
+one observed value, the mean of the observed row values is imputed. If no
+value is observed in a row, the observed column means are imputed for the
+missing row values. This is the only known difference between this function
+and the original one from Bo et al. (2004). The original function would not
+impute such a row and return a dataset with missing values in this row. There
+is one more case that needs a special treatment: If no suitable row can be
+found to impute a row, the mean of the observed values is imputed, too. If
+\code{warn_special_cases = TRUE}, a warning will be given for every encountered
+instance of the described special cases. If \code{warn_special_cases = FALSE} the
+function will deal with theses cases silently.
 }
 \examples{
 set.seed(123)

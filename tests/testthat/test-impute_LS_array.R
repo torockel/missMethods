@@ -6,20 +6,20 @@ test_that("impute_LS_array() works (basic test, only check for anyNA)", {
   expect_false(anyNA(impute_LS_array(ds_mis)))
 })
 
-test_that("impute_LS_array() works with completely missing row", {
-  set.seed(1234)
-  ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
-  ds_mis[5, ] <- NA
-  ds_mis[1:3, 2:4] <- NA # some additional NAs
-  ds_imp <- expect_warning(
-    impute_LS_array(ds_mis),
-    "No observed value in row 5. This row is imputed with column means.",
-    fixed = TRUE,
-    all = TRUE
-  )
-  expect_false(anyNA(ds_imp))
-  expect_equal(ds_imp[5, ], suppressWarnings(colMeans(impute_LS_gene(ds_mis))))
-})
+# test_that("impute_LS_array() works with completely missing row", {
+#   set.seed(1234)
+#   ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
+#   ds_mis[5, ] <- NA
+#   ds_mis[1:3, 2:4] <- NA # some additional NAs
+#   ds_imp <- expect_warning(
+#     impute_LS_array(ds_mis),
+#     "No observed value in row 5. This row is imputed with column means.",
+#     fixed = TRUE,
+#     all = TRUE
+#   )
+#   expect_false(anyNA(ds_imp))
+#   expect_equal(ds_imp[5, ], suppressWarnings(colMeans(impute_LS_gene(ds_mis))))
+# })
 
 test_that("impute_LS_array() works with small data frames", {
   expect_equal(

@@ -5,25 +5,37 @@
 #' Bo et al. (2004) seem to have chosen `min_common_obs = 5`. However, they did
 #' not documentation this behavior. This value emerged from inspecting
 #' imputation results from the  original jar-file, which is provided by Bo et
-#' al. (2004). The only known difference between this function and the original
-#' one is that a row with only missing values is imputed by the observed column
-#' means. In this case, a warning is given. The original function would not
-#' impute such a column and return a dataset with missing values in this row.
+#' al. (2004).
+#'
+#' If there are less than `min_common_obs` observed values in a row and at least
+#' one observed value, the mean of the observed row values is imputed. If no
+#' value is observed in a row, the observed column means are imputed for the
+#' missing row values. This is the only known difference between this function
+#' and the original one from Bo et al. (2004). The original function would not
+#' impute such a row and return a dataset with missing values in this row. There
+#' is one more case that needs a special treatment: If no suitable row can be
+#' found to impute a row, the mean of the observed values is imputed, too. If
+#' `warn_special_cases = TRUE`, a warning will be given for every encountered
+#' instance of the described special cases. If `warn_special_cases = FALSE` the
+#' function will deal with theses cases silently.
+#'
 #'
 #' @param k number of most correlated genes used for the imputation of a gene
-#' @param eps used in the calculation of the weights (Bo et al. (2004) used
-#'  `eps = 1e-6`)
+#' @param eps used in the calculation of the weights (Bo et al. (2004) used `eps
+#'   = 1e-6`)
 #' @param min_common_obs a row can only take part in the imputation of another
 #'   row, if both rows share at least `min_common_obs` columns with no missing
 #'   values. Rows with less observed values than `min_common_obs` are imputed by
 #'   the mean of the observed row values.
 #' @param return_r_max logical, normally this should be `FALSE`. `TRUE` is used
 #'   inside of `impute_LS_adaptive()` to speed up some computations.
+#' @param warn_special_cases should warnings be given for special cases (see
+#'   details)
 #'
 #' @return  If `return_r_max = TRUE`, a list with the imputed dataset and r_max
 #'
 impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
-                           return_r_max = FALSE) {
+                           return_r_max = FALSE, warn_special_cases = FALSE) {
 
   ## Check some arguments -----------------------------------------------------
   if (k >= nrow(ds)) {
@@ -51,12 +63,21 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
       ## Check for enough observations in row i -------------------------------
       if (all(M_i)) { # all values in row i are missing
         # Bo et al. do not impute in this case, they return ds with NA values!
-        warning("No observed value in row ", i, ". This row is imputed with column means.")
         ds_imp[i, ] <- colMeans(ds, na.rm = TRUE)
+        if (warn_special_cases) {
+          warning("No observed value in row ", i, ". ",
+          "This row is imputed with column means.")
+        }
+
       } else if (sum(!M_i) < min_common_obs) { # less than min_common_obs observed values in row i
         # Bo et al. impute all values in these rows with the mean of the observed row values
         # (source: try and error with original jar-file, see test-file)
         ds_imp[i, M_i] <- mean(ds[i, !M_i])
+        if (warn_special_cases) {
+          warning("Not enough observed values in row ", i, ". ",
+          "This row is imputed with osbserved row means.")
+        }
+
       } else {
         ## Enough observations in row i ------------------------------------
         # At least min_common_obs (>= 3) observed values in row i
@@ -66,12 +87,14 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
         rows_candidates <- find_rows_candidates(ds, i, M, M_i, min_common_obs)
         # Check if at least one row candidate is found
         if (nrow(rows_candidates) == 0) { # no rows_candidates found -> impute mean
-          # this condition may crashes the jar-file from Bo et al. (2004)
-          warning(
-            "No suitable row for the imputation of row ", i,
-            " found! This row is imputed with observed row mean."
-          )
+          # This condition may crashes the jar-file from Bo et al. (2004)
           ds_imp[i, M_i] <- mean(ds[i, ], na.rm = TRUE)
+          if (warn_special_cases) {
+            warning(
+              "No suitable row for the imputation of row ", i,
+              " found! This row is imputed with observed row mean."
+            )
+          }
         } else { # at least one candidate row -> proceed with "normal" LSimpute_gene
 
           # Save calculated regression coefficients (later)
@@ -87,11 +110,13 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
 
             if (length(suitable_index) == 0) { # no suitable row found -> impute mean
               # This condition may crashes the jar-file from Bo et al. (2004)
-              warning(
-                "No suitable row for the imputation of row ", i,
-                " and column ", j_ind, " found! Value is imputed with observed row mean."
-              )
               ds_imp[i, M_i] <- mean(ds[i, ], na.rm = TRUE)
+              if (warn_special_cases) {
+                warning(
+                  "No suitable row for the imputation of row ", i,
+                  " and column ", j_ind, " found! Value is imputed with observed row mean."
+                )
+              }
             } else { # everything fine -> proceed with "normal" LSimpute_gene
 
               if (return_r_max) { # save highest correlation
