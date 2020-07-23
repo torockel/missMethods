@@ -11,7 +11,8 @@ impute_LS_adaptive(
   min_common_obs = 5,
   r_max_min = 100,
   p_mis_sim = 0.05,
-  warn_r_max = TRUE
+  warn_r_max = TRUE,
+  verbosity = 0L
 )
 }
 \arguments{
@@ -31,6 +32,9 @@ the mixing coefficient \emph{p}. The default value (0.05) corresponds to the
 choice of Bo et al. (2004).}
 
 \item{warn_r_max}{should a warning be given, if \code{r_max_min} is set too high?}
+
+\item{verbosity}{controls the amount of feedback given by the function (see
+details)}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values
@@ -53,6 +57,26 @@ too big (but, a warning will be given, if \code{warn_r_max = TRUE}). Third, if
 there are not enough observed values in row (less than\code{min_common_obs}), the
 calculation of the mixing coefficient is not possible, and missing values of
 these rows are imputed with the values from \code{impute_LS_array()}.
+
+The amount of feedback given from \code{impute_LS_gene()} and \code{impute_LS_array()}
+is controlled via \code{verbosity}:
+\itemize{
+\item \code{verbosity = 0}: No feedback from \code{impute_LS_gene()} (\code{warn_special_cases = FALSE})
+and \code{impute_LS_array()}
+\item \code{verbosity = 1}: Feedback from \code{impute_LS_gene()} (\code{warn_special_cases = TRUE})
+and no feedback \code{impute_LS_array()}
+\item \code{verbosity = 2}: No feedback from \code{impute_LS_gene()} (\code{warn_special_cases = FALSE})
+but all feedback from \code{impute_LS_array()}
+\item \code{verbosity = 3}: Feedback from \code{impute_LS_gene()} (\code{warn_special_cases = TRUE})
+and \code{impute_LS_array()}
+}
+
+Internally,  the imputed dataset from \code{impute_LS_gene()} is passed on to
+\code{impute_LS_array()}. Therefore, all warnings from \code{impute_LS_gene()} are
+truly from \code{impute_LS_gene()} and not a part of \code{impute_LS_array()}, which
+never calls \code{impute_LS_gene()} in this case. Furthermore, all warnings from
+\code{\link[=impute_expected_values]{impute_expected_values()}} belong to \code{impute_LS_array()}. Independent of the
+choice of \code{verbosity}, no feedback is given from the first runs of \code{ impute_LS_gene()} and \code{impute_LS_array()} to estimate \emph{p}.
 }
 \examples{
 set.seed(123)
