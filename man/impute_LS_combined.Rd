@@ -9,7 +9,8 @@ impute_LS_combined(
   k = 10,
   eps = 1e-06,
   min_common_obs = 5,
-  p_mis_sim = 0.05
+  p_mis_sim = 0.05,
+  verbosity = 0L
 )
 }
 \arguments{
@@ -24,6 +25,9 @@ impute_LS_combined(
 \item{p_mis_sim}{percentage of observed values that are set \code{NA} to estimate
 the mixing coefficient \emph{p}. The default value (0.05) corresponds to the
 choice of Bo et al. (2004).}
+
+\item{verbosity}{controls the amount of feedback given by the function (see
+details)}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values
@@ -34,9 +38,27 @@ Perform LSimpute_combined as described by Bo et al. (2004)
 \details{
 This function performs LSimpute_combined as described by Bo et al. (2004).The function assumes that the genes are the rows of \code{ds}.
 
-LSimpute_combined combines imputation values from \code{\link[=impute_LS_gene]{impute_LS_gene()}}
-and \code{\link[=impute_LS_array]{impute_LS_array()}} using a global approach for the mixing coefficient
-\emph{p}.
+LSimpute_combined combines imputation values from \code{\link[=impute_LS_gene]{impute_LS_gene()}} and
+\code{\link[=impute_LS_array]{impute_LS_array()}} using a global approach for the mixing coefficient \emph{p}.
+The amount of feedback given from this underlying functions is controlled
+via \code{verbosity}:
+\itemize{
+\item \code{verbosity = 0}: No feedback from \code{impute_LS_gene()} (\code{warn_special_cases = FALSE})
+and \code{impute_LS_array()}
+\item \code{verbosity = 1}: Feedback from \code{impute_LS_gene()} (\code{warn_special_cases = TRUE})
+and no feedback \code{impute_LS_array()}
+\item \code{verbosity = 2}: No feedback from \code{impute_LS_gene()} (\code{warn_special_cases = FALSE})
+but all feedback from \code{impute_LS_array()}
+\item \code{verbosity = 3}: Feedback from \code{impute_LS_gene()} (\code{warn_special_cases = TRUE})
+and \code{impute_LS_array()}
+}
+
+Internally,  the imputed dataset from \code{impute_LS_gene()} is passed on to
+\code{impute_LS_array()}. Therefore, all warnings from \code{impute_LS_gene()} are
+truly from \code{impute_LS_gene()} and not a part of \code{impute_LS_array()}, which
+never calls \code{impute_LS_gene()} in this case. Furthermore, all warnings from
+\code{\link[=impute_expected_values]{impute_expected_values()}} belong to \code{impute_LS_array()}. Independent of the
+choice of \code{verbosity}, no feedback is given from the first runs of \code{ impute_LS_gene()} and \code{impute_LS_array()} to estimate \emph{p}.
 }
 \examples{
 set.seed(123)
