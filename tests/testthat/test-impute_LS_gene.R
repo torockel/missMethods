@@ -1,34 +1,34 @@
 ## Basic tests for impute_LS_gene() -------------------------------------------
 test_that("impute_LS_gene() works (basic test, only check for anyNA)", {
   set.seed(1234)
-  ds_miss <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
-  ds_miss <- missMethods::delete_MCAR(ds_miss, 0.2, 1:4)
-  expect_false(anyNA(impute_LS_gene(ds_miss)))
+  ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
+  ds_mis <- delete_MCAR(ds_mis, 0.2, 1:4)
+  expect_false(anyNA(impute_LS_gene(ds_mis)))
 })
 
 test_that("impute_LS_gene() works with completely missing row", {
   set.seed(1234)
-  ds_miss <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
-  ds_miss[5, ] <- NA
-  ds_miss[1:3, 2:4] <- NA # some additional NAs
+  ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
+  ds_mis[5, ] <- NA
+  ds_mis[1:3, 2:4] <- NA # some additional NAs
   ds_imp <- expect_warning(
-    impute_LS_gene(ds_miss),
+    impute_LS_gene(ds_mis),
     "No observed value in row 5. This row is imputed with column means.",
     fixed = TRUE,
     all = TRUE
   )
   expect_false(anyNA(ds_imp))
-  expect_equal(ds_imp[5, ], colMeans(ds_miss, na.rm = TRUE))
+  expect_equal(ds_imp[5, ], colMeans(ds_mis, na.rm = TRUE))
 })
 
 test_that("impute_LS_gene() works when there is no suitable row", {
-  # This ds_miss would result in the following error in the jar-file from
+  # This ds_mis would result in the following error in the jar-file from
   # Bo et al. (2004): "Error in imputation engine"
   set.seed(123)
-  ds_miss <- MASS::mvrnorm(11, rep(0, 6), diag(1, 6))
-  ds_miss[1, 1] <- NA
-  ds_miss[2:11, 2] <- NA
-  ds_imp <- expect_warning(impute_LS_gene(ds_miss, min_common_obs = 5),
+  ds_mis <- MASS::mvrnorm(11, rep(0, 6), diag(1, 6))
+  ds_mis[1, 1] <- NA
+  ds_mis[2:11, 2] <- NA
+  ds_imp <- expect_warning(impute_LS_gene(ds_mis, min_common_obs = 5),
                  "No suitable row for the imputation of row")
   expect_false(anyNA(ds_imp))
 })
@@ -44,13 +44,13 @@ test_that("impute_LS_gene() works when there is no suitable row", {
 test_that("impute_LS_gene() imputes row mean values, if to less objects are observed in a row", {
   # The missing values in this file were created with upper.tri, which results in a monotone pattern.
   # The rows 1:15 have 1:15 observed values.
-  ds_triangle_miss <- readRDS(test_path(file.path("datasets", "ds_triangle_miss.rds")))
+  ds_triangle_mis <- readRDS(test_path(file.path("datasets", "ds_triangle_mis.rds")))
   # The jar-file from Bo et al. imputes rows 1:4 with mean values:
   ds_triangle_LS_gene_Bo <- readRDS(test_path(file.path("datasets", "ds_triangle_LS_gene_Bo.rds")))
   # Therefore, min_common_obs = 5 (test with other datasets showed the same pattern)
   expect_equal(
     ds_triangle_LS_gene_Bo,
-    round(impute_LS_gene(ds_triangle_miss, min_common_obs = 5), 3)
+    round(impute_LS_gene(ds_triangle_mis, min_common_obs = 5), 3)
   )
 })
 
@@ -58,16 +58,16 @@ test_that("impute_LS_gene() imputes like Bo et al. (2004) (MCAR, 100x7)", {
 
   ds_100x7_LS_gene_Bo <- readRDS(test_path(file.path("datasets", "ds_100x7_LS_gene_Bo.rds")))
 
-  ds_100x7_miss_MCAR <- readRDS(test_path(file.path("datasets", "ds_100x7_miss_MCAR.rds")))
+  ds_100x7_mis_MCAR <- readRDS(test_path(file.path("datasets", "ds_100x7_mis_MCAR.rds")))
   # Cure some rounding problems due to saving:
-  ds_miss <- ds_100x7_LS_gene_Bo
-  ds_miss[is.na(ds_100x7_miss_MCAR)] <- NA
+  ds_mis <- ds_100x7_LS_gene_Bo
+  ds_mis[is.na(ds_100x7_mis_MCAR)] <- NA
 
-  ds_imp <- round(impute_LS_gene(ds_miss, min_common_obs = 5), 3)
+  ds_imp <- round(impute_LS_gene(ds_mis, min_common_obs = 5), 3)
   # Need some tolerance for rounding:
   expect_equal(ds_100x7_LS_gene_Bo, ds_imp, tolerance = 0.005)
   # Less than 2 % of the imputed values have a difference bigger difference than 0.005 (round 3 digits!)
-  expect_true(sum(abs(ds_100x7_LS_gene_Bo - ds_imp) > 0.005) / sum(is.na(ds_miss)) < 0.02)
+  expect_true(sum(abs(ds_100x7_LS_gene_Bo - ds_imp) > 0.005) / sum(is.na(ds_mis)) < 0.02)
   # All differences are smaller than 0.015:
   expect_equal(sum(abs(ds_100x7_LS_gene_Bo - ds_imp) >= 0.015), 0)
 

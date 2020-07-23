@@ -44,12 +44,12 @@ test_that("impute_LS_adaptive() works for data frames", {
 test_that("impute_LS_adaptive() works with dataset triangle miss", {
   # The missing values in this file were created with upper.tri, which results in a monotone pattern.
   # The rows 1:15 have 1:15 observed values.
-  ds_triangle_miss <- readRDS(test_path(file.path("datasets", "ds_triangle_miss.rds")))
+  ds_triangle_mis <- readRDS(test_path(file.path("datasets", "ds_triangle_mis.rds")))
   ds_triangle_LS_array_Bo <- readRDS(test_path(file.path("datasets", "ds_triangle_LS_array_Bo.rds")))
   ds_triangle_LS_gene_Bo <- readRDS(test_path(file.path("datasets", "ds_triangle_LS_gene_Bo.rds")))
 
   set.seed(1234)
-  ds_imp <- expect_warning(round(impute_LS_adaptive(ds_triangle_miss, min_common_obs = 5), 3),
+  ds_imp <- expect_warning(round(impute_LS_adaptive(ds_triangle_mis, min_common_obs = 5), 3),
                            "Not enough data for r_max_min = 100. r_max_min reduced to 24!",
                            fixed = TRUE,
                            all = TRUE)
@@ -63,10 +63,10 @@ test_that("impute_LS_adaptive() works with dataset MCAR, 100x7", {
   ds_100x7_LS_array_Bo <- readRDS(test_path(file.path("datasets", "ds_100x7_LS_array_Bo.rds")))
   ds_100x7_LS_gene_Bo <- readRDS(test_path(file.path("datasets", "ds_100x7_LS_gene_Bo.rds")))
 
-  ds_100x7_miss_MCAR <- readRDS(test_path(file.path("datasets", "ds_100x7_miss_MCAR.rds")))
+  ds_100x7_mis_MCAR <- readRDS(test_path(file.path("datasets", "ds_100x7_mis_MCAR.rds")))
   # Cure some rounding problems due to saving:
   ds_mis <- ds_100x7_LS_gene_Bo
-  ds_mis[is.na(ds_100x7_miss_MCAR)] <- NA
+  ds_mis[is.na(ds_100x7_mis_MCAR)] <- NA
 
   set.seed(1234)
   ds_imp <- round(impute_LS_adaptive(ds_mis, warn_r_max = FALSE), 3)
