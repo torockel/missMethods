@@ -1,14 +1,10 @@
-#' LSimpute_adaptive
-#'
-#'
-#' Perform LSimpute_adaptive as described by Bo et al. (2004)
-#'
-#' @template impute
+#' @eval document_LSimpute("adaptive")
 #'
 #' @details
 #'
-#' This function performs LSimpute_adaptive as described by Bo et al. (2004).
-#' The function assumes that the genes are the rows of `ds`.
+#' LSimpute_adaptive combines imputation values from [impute_LS_gene()] and
+#' [impute_LS_array()] using a local (adaptive) approach for the mixing
+#' coefficient *p*.
 #'
 #' If the dataset is too small or has too many missing values, there are some
 #' fallback systems implemented. First, if `ncol(ds) <= min_common_obs`
@@ -24,17 +20,7 @@
 #'   default value (100) corresponds to the choice of Bo et al. (2004).
 #' @param warn_r_max should a warning be given, if `r_max_min` is set too high?
 #'
-#' @seealso [impute_LS_gene()] and [impute_LS_array()], which imputation values
-#'   are combined
 #'
-#' @references Bo, T. H., Dysvik, B., & Jonassen, I. (2004). LSimpute: accurate
-#'   estimation of missing values in microarray data with least squares methods.
-#'   Nucleic acids research, 32(3), e34
-#'
-#' @export
-#'
-#' @examples
-#' impute_LS_adaptive(data.frame(X = 1:11, Y = c(1:10, NA)))
 impute_LS_adaptive <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
                                r_max_min = 100, p_mis_sim = 0.05,
                                warn_r_max = TRUE) {

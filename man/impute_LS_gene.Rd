@@ -26,7 +26,7 @@ values. Rows with less observed values than \code{min_common_obs} are imputed by
 the mean of the observed row values.}
 
 \item{return_r_max}{logical, normally this should be \code{FALSE}. \code{TRUE} is used
-inside of \code{impute_LSA} to speed up some computations.}
+inside of \code{impute_LS_adaptive()} to speed up some computations.}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values
@@ -37,8 +37,7 @@ If \code{return_r_max = TRUE}, a list with the imputed dataset and r_max
 Perform LSimpute_gene as described by Bo et al. (2004)
 }
 \details{
-This function performs LSimpute_gene as described by Bo et al. (2004).
-The function assumes that the genes are the rows of \code{ds}.
+This function performs LSimpute_gene as described by Bo et al. (2004).The function assumes that the genes are the rows of \code{ds}.
 
 Bo et al. (2004) seem to have chosen \code{min_common_obs = 5}. However, they did
 not documentation this behavior. This value emerged from inspecting
@@ -49,10 +48,17 @@ means. In this case, a warning is given. The original function would not
 impute such a column and return a dataset with missing values in this row.
 }
 \examples{
-impute_LS_gene(data.frame(X = 1:11, Y = c(1:10, NA)))
+set.seed(123)
+ds_mis <- delete_MCAR(MASS::mvrnorm(100, rep(0, 10), diag(1, 10)), 0.1)
+ds_imp <- impute_LS_gene(ds_mis)
 }
 \references{
-Bo, T. H., Dysvik, B., & Jonassen, I. (2004). LSimpute: accurate
-estimation of missing values in microarray data with least squares methods.
-Nucleic acids research, 32(3), e34
+Bo, T. H., Dysvik, B., & Jonassen, I. (2004). LSimpute: accurate estimation of missing values in microarray data with least squares methods. Nucleic acids research, 32(3), e34
 }
+\seealso{
+Other LSimpute functions: 
+\code{\link{impute_LS_adaptive}()},
+\code{\link{impute_LS_array}()},
+\code{\link{impute_LS_combined}()}
+}
+\concept{LSimpute functions}

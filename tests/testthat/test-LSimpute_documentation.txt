@@ -1,0 +1,10 @@
+> document_LSimpute("gene")
+[1] "@title LSimpute_gene"                                                                                                                                                                       
+[2] "@description Perform LSimpute_gene as described by Bo et al. (2004)"                                                                                                                        
+[3] "@template impute"                                                                                                                                                                           
+[4] "@details This function performs LSimpute_gene as described by Bo et al. (2004).The function assumes that the genes are the rows of `ds`."                                                   
+[5] "@export"                                                                                                                                                                                    
+[6] "@references Bo, T. H., Dysvik, B., & Jonassen, I. (2004). LSimpute: accurate estimation of missing values in microarray data with least squares methods. Nucleic acids research, 32(3), e34"
+[7] "@family LSimpute functions"                                                                                                                                                                 
+[8] "@examples set.seed(123)\nds_mis <- delete_MCAR(MASS::mvrnorm(100, rep(0, 10), diag(1, 10)), 0.1)\nds_imp <- impute_LS_gene(ds_mis)"                                                         
+

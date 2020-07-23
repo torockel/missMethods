@@ -1,13 +1,6 @@
-#' LSimpute_gene
-#'
-#' Perform LSimpute_gene as described by Bo et al. (2004)
-#'
-#' @template impute
+#' @eval document_LSimpute("gene")
 #'
 #' @details
-#'
-#' This function performs LSimpute_gene as described by Bo et al. (2004).
-#' The function assumes that the genes are the rows of `ds`.
 #'
 #' Bo et al. (2004) seem to have chosen `min_common_obs = 5`. However, they did
 #' not documentation this behavior. This value emerged from inspecting
@@ -25,17 +18,10 @@
 #'   values. Rows with less observed values than `min_common_obs` are imputed by
 #'   the mean of the observed row values.
 #' @param return_r_max logical, normally this should be `FALSE`. `TRUE` is used
-#'   inside of `impute_LSA` to speed up some computations.
+#'   inside of `impute_LS_adaptive()` to speed up some computations.
 #'
 #' @return  If `return_r_max = TRUE`, a list with the imputed dataset and r_max
 #'
-#' @references Bo, T. H., Dysvik, B., & Jonassen, I. (2004). LSimpute: accurate
-#'   estimation of missing values in microarray data with least squares methods.
-#'   Nucleic acids research, 32(3), e34
-#' @export
-#'
-#' @examples
-#' impute_LS_gene(data.frame(X = 1:11, Y = c(1:10, NA)))
 impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
                            return_r_max = FALSE) {
 

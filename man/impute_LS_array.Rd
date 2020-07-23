@@ -31,18 +31,25 @@ An object of the same class as \code{ds} with imputed missing values
 Perform LSimpute_array as described by Bo et al. (2004)
 }
 \details{
-This function performs LSimpute_array as described by Bo et al.
-(2004). The function assumes that the genes are the rows of \code{ds}.
+This function performs LSimpute_array as described by Bo et al. (2004).The function assumes that the genes are the rows of \code{ds}.
+
+The covariance matrix for the imputation in LSimpute_array is based
+on a imputed dataset from LSimpute_gene. This dataset can be supplied
+directly via \code{ds_impute_LS_gene} or will automatically be created with
+\code{\link[=impute_LS_gene]{impute_LS_gene()}} (if \code{ds_impute_LS_gene} is \code{NULL}).
 }
 \examples{
-impute_LS_array(data.frame(X = 1:11, Y = c(1:10, NA)))
+set.seed(123)
+ds_mis <- delete_MCAR(MASS::mvrnorm(100, rep(0, 10), diag(1, 10)), 0.1)
+ds_imp <- impute_LS_array(ds_mis)
 }
 \references{
-Bo, T. H., Dysvik, B., & Jonassen, I. (2004). LSimpute: accurate
-estimation of missing values in microarray data with least squares methods.
-Nucleic acids research, 32(3), e34
+Bo, T. H., Dysvik, B., & Jonassen, I. (2004). LSimpute: accurate estimation of missing values in microarray data with least squares methods. Nucleic acids research, 32(3), e34
 }
 \seealso{
-\code{\link[=impute_LS_gene]{impute_LS_gene()}}, which is used for the first imputation of the
-missing values (if \code{ds_impute_LS_gene} is \code{NULL})
+Other LSimpute functions: 
+\code{\link{impute_LS_adaptive}()},
+\code{\link{impute_LS_combined}()},
+\code{\link{impute_LS_gene}()}
 }
+\concept{LSimpute functions}

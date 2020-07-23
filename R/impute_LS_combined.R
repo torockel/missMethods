@@ -1,29 +1,14 @@
-#' LSimpute_combined
+#' @eval document_LSimpute("combined")
 #'
-#'
-#' Perform LSimpute_combined as described by Bo et al. (2004)
-#'
-#' @template impute
-#'
-#' @details This function performs LSimpute_combined as described by Bo et al.
-#'   (2004). The function assumes that the genes are the rows of `ds`.
+#' @details LSimpute_combined combines imputation values from [impute_LS_gene()]
+#'   and [impute_LS_array()] using a global approach for the mixing coefficient
+#'   *p*.
 #'
 #' @inheritParams impute_LS_array
-#' @param p_mis_sim percentage of known values that are set `NA` to estimate the
-#'   mixing coefficient `p`. The default value (0.05) corresponds to the choice
-#'   of Bo et al. (2004).
+#' @param p_mis_sim percentage of observed values that are set `NA` to estimate
+#'   the mixing coefficient *p*. The default value (0.05) corresponds to the
+#'   choice of Bo et al. (2004).
 #'
-#' @seealso [impute_LS_gene()] and [impute_LS_array()], which imputation values
-#'   are combined
-#'
-#' @references Bo, T. H., Dysvik, B., & Jonassen, I. (2004). LSimpute: accurate
-#'   estimation of missing values in microarray data with least squares methods.
-#'   Nucleic acids research, 32(3), e34
-#'
-#' @export
-#'
-#' @examples
-#' impute_LS_combined(data.frame(X = 1:11, Y = c(1:10, NA)))
 impute_LS_combined <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5, p_mis_sim = 0.05) {
 
   ## Define some variables ----------------------------------------------------

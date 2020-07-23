@@ -26,9 +26,9 @@ impute_LS_adaptive(
 \item{r_max_min}{minimum number of nearest genes used for imputation. The
 default value (100) corresponds to the choice of Bo et al. (2004).}
 
-\item{p_mis_sim}{percentage of known values that are set \code{NA} to estimate the
-mixing coefficient \code{p}. The default value (0.05) corresponds to the choice
-of Bo et al. (2004).}
+\item{p_mis_sim}{percentage of observed values that are set \code{NA} to estimate
+the mixing coefficient \emph{p}. The default value (0.05) corresponds to the
+choice of Bo et al. (2004).}
 
 \item{warn_r_max}{should a warning be given, if \code{r_max_min} is set too high?}
 }
@@ -39,8 +39,11 @@ An object of the same class as \code{ds} with imputed missing values
 Perform LSimpute_adaptive as described by Bo et al. (2004)
 }
 \details{
-This function performs LSimpute_adaptive as described by Bo et al. (2004).
-The function assumes that the genes are the rows of \code{ds}.
+This function performs LSimpute_adaptive as described by Bo et al. (2004).The function assumes that the genes are the rows of \code{ds}.
+
+LSimpute_adaptive combines imputation values from \code{\link[=impute_LS_gene]{impute_LS_gene()}} and
+\code{\link[=impute_LS_array]{impute_LS_array()}} using a local (adaptive) approach for the mixing
+coefficient \emph{p}.
 
 If the dataset is too small or has too many missing values, there are some
 fallback systems implemented. First, if \code{ncol(ds) <= min_common_obs}
@@ -52,14 +55,17 @@ calculation of the mixing coefficient is not possible, and missing values of
 these rows are imputed with the values from \code{impute_LS_array()}.
 }
 \examples{
-impute_LS_adaptive(data.frame(X = 1:11, Y = c(1:10, NA)))
+set.seed(123)
+ds_mis <- delete_MCAR(MASS::mvrnorm(100, rep(0, 10), diag(1, 10)), 0.1)
+ds_imp <- impute_LS_adaptive(ds_mis)
 }
 \references{
-Bo, T. H., Dysvik, B., & Jonassen, I. (2004). LSimpute: accurate
-estimation of missing values in microarray data with least squares methods.
-Nucleic acids research, 32(3), e34
+Bo, T. H., Dysvik, B., & Jonassen, I. (2004). LSimpute: accurate estimation of missing values in microarray data with least squares methods. Nucleic acids research, 32(3), e34
 }
 \seealso{
-\code{\link[=impute_LS_gene]{impute_LS_gene()}} and \code{\link[=impute_LS_array]{impute_LS_array()}}, which imputation values
-are combined
+Other LSimpute functions: 
+\code{\link{impute_LS_array}()},
+\code{\link{impute_LS_combined}()},
+\code{\link{impute_LS_gene}()}
 }
+\concept{LSimpute functions}

@@ -4,7 +4,13 @@
 \alias{impute_LS_combined}
 \title{LSimpute_combined}
 \usage{
-impute_LS_combined(ds, k = 10, eps = 1e-06, min_common_obs = 5)
+impute_LS_combined(
+  ds,
+  k = 10,
+  eps = 1e-06,
+  min_common_obs = 5,
+  p_mis_sim = 0.05
+)
 }
 \arguments{
 \item{ds}{a data frame or matrix with missing values}
@@ -14,6 +20,10 @@ impute_LS_combined(ds, k = 10, eps = 1e-06, min_common_obs = 5)
 \item{eps}{directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}}
 
 \item{min_common_obs}{directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}}
+
+\item{p_mis_sim}{percentage of observed values that are set \code{NA} to estimate
+the mixing coefficient \emph{p}. The default value (0.05) corresponds to the
+choice of Bo et al. (2004).}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values
@@ -22,17 +32,24 @@ An object of the same class as \code{ds} with imputed missing values
 Perform LSimpute_combined as described by Bo et al. (2004)
 }
 \details{
-This function performs LSimpute_combined as described by Bo et al.
-(2004). The function assumes that the genes are the rows of \code{ds}.
+This function performs LSimpute_combined as described by Bo et al. (2004).The function assumes that the genes are the rows of \code{ds}.
+
+LSimpute_combined combines imputation values from \code{\link[=impute_LS_gene]{impute_LS_gene()}}
+and \code{\link[=impute_LS_array]{impute_LS_array()}} using a global approach for the mixing coefficient
+\emph{p}.
 }
 \examples{
-impute_LS_combined(data.frame(X = 1:11, Y = c(1:10, NA)))
+set.seed(123)
+ds_mis <- delete_MCAR(MASS::mvrnorm(100, rep(0, 10), diag(1, 10)), 0.1)
+ds_imp <- impute_LS_combined(ds_mis)
 }
 \references{
-Bo, T. H., Dysvik, B., & Jonassen, I. (2004). LSimpute: accurate
-estimation of missing values in microarray data with least squares methods.
-Nucleic acids research, 32(3), e34
+Bo, T. H., Dysvik, B., & Jonassen, I. (2004). LSimpute: accurate estimation of missing values in microarray data with least squares methods. Nucleic acids research, 32(3), e34
 }
 \seealso{
-\code{\link[=impute_LS_gene]{impute_LS_gene()}} and \code{\link[=impute_LS_array]{impute_LS_array()}}, which imputation values are combined
+Other LSimpute functions: 
+\code{\link{impute_LS_adaptive}()},
+\code{\link{impute_LS_array}()},
+\code{\link{impute_LS_gene}()}
 }
+\concept{LSimpute functions}

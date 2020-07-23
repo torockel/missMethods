@@ -1,12 +1,10 @@
-#' LSimpute_array
+#' @eval document_LSimpute("array")
 #'
+#' @details The covariance matrix for the imputation in LSimpute_array is based
+#'   on a imputed dataset from LSimpute_gene. This dataset can be supplied
+#'   directly via `ds_impute_LS_gene` or will automatically be created with
+#'   [impute_LS_gene()] (if `ds_impute_LS_gene` is `NULL`).
 #'
-#' Perform LSimpute_array as described by Bo et al. (2004)
-#'
-#' @template impute
-#'
-#' @details This function performs LSimpute_array as described by Bo et al.
-#' (2004). The function assumes that the genes are the rows of `ds`.
 #'
 #' @param k directly passed to [impute_LS_gene()]
 #' @param eps directly passed to [impute_LS_gene()]
@@ -14,16 +12,6 @@
 #' @param ds_impute_LS_gene result of imputing `ds` with `ds_impute_LS_gene()`,
 #'   if this already exists
 #'
-#' @seealso [impute_LS_gene()], which is used for the first imputation of the
-#'   missing values (if `ds_impute_LS_gene` is `NULL`)
-
-#' @references Bo, T. H., Dysvik, B., & Jonassen, I. (2004). LSimpute: accurate
-#'   estimation of missing values in microarray data with least squares methods.
-#'   Nucleic acids research, 32(3), e34
-#' @export
-#'
-#' @examples
-#' impute_LS_array(data.frame(X = 1:11, Y = c(1:10, NA)))
 impute_LS_array <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5, ds_impute_LS_gene = NULL) {
 
   ## Estimate the parameters via the imputed dataset from impute_LS_gene() ----
