@@ -6,20 +6,44 @@ test_that("impute_LS_array() works (basic test, only check for anyNA)", {
   expect_false(anyNA(impute_LS_array(ds_mis)))
 })
 
-# test_that("impute_LS_array() works with completely missing row", {
-#   set.seed(1234)
-#   ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
-#   ds_mis[5, ] <- NA
-#   ds_mis[1:3, 2:4] <- NA # some additional NAs
-#   ds_imp <- expect_warning(
-#     impute_LS_array(ds_mis),
-#     "No observed value in row 5. This row is imputed with column means.",
-#     fixed = TRUE,
-#     all = TRUE
-#   )
-#   expect_false(anyNA(ds_imp))
-#   expect_equal(ds_imp[5, ], suppressWarnings(colMeans(impute_LS_gene(ds_mis))))
-# })
+test_that("impute_LS_array() works with completely missing row and verbose", {
+  set.seed(1234)
+  ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
+  ds_mis[5, ] <- NA
+
+  # verbosity = 0
+  ds_imp_silent <- expect_silent(
+    impute_LS_array(ds_mis, verbosity = 0L)
+  )
+  expect_false(anyNA(ds_imp_silent))
+  expect_equal(ds_imp_silent[5, ], suppressWarnings(colMeans(impute_LS_gene(ds_mis))))
+
+  # verbosity = 1
+  ds_imp_verb1 <- expect_warning(
+    impute_LS_array(ds_mis, verbosity = 1L),
+    "No observed value in row 5. This row is imputed with column means.",
+    fixed = TRUE,
+    all = TRUE
+  )
+  expect_equal(ds_imp_verb1, ds_imp_silent)
+
+  # verbosity = 2
+  ds_imp_verb2 <- expect_warning(
+    impute_LS_array(ds_mis, verbosity = 2L),
+    "The missing values of following rows were imputed with (parts of) mu: 5",
+    fixed = TRUE,
+    all = TRUE
+  )
+  expect_equal(ds_imp_verb2, ds_imp_silent)
+
+  # verbosity = 3
+  verify_output(test_path("test-impute_LS_array-verbosity.txt"),
+                ds_imp <- impute_LS_array(ds_mis, verbosity = 3L))
+
+  ds_imp_verb3 <- suppressWarnings(impute_LS_array(ds_mis, verbosity = 3L))
+  expect_equal(ds_imp_verb3, ds_imp_silent)
+
+})
 
 test_that("impute_LS_array() works with small data frames", {
   expect_equal(
