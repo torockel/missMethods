@@ -72,6 +72,6 @@ impute_LS_combined <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5, p_mis
     verbose_expected_values = verbose_array
   )
   # Second: combine both results using p for mixing
-  ds[M] <- p * y_g[M] + (1 - p) * y_a[M]
-  return(ds)
+  ds_mat[M] <- p * y_g[M] + (1 - p) * y_a[M]
+  assign_imputed_values(ds, ds_mat, M)
 }

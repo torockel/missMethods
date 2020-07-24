@@ -124,6 +124,5 @@ impute_LS_adaptive <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
   }
 
   ## Return imputed ds --------------------------------------------------------
-  ds[M] <- ds_mat[M]
-  ds
+  assign_imputed_values(ds, ds_mat, M)
 }

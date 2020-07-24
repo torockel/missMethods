@@ -51,7 +51,8 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
   if (return_r_max) {
     r_max_matrix <- matrix(NA, nrow = nrow(ds), ncol = ncol(ds))
   }
-  ds_imp <- ds
+  ds_mat_original <- as.matrix(ds)
+  ds_imp <- ds_mat_original
   M <- is.na(ds)
 
   ## Impute row by row --------------------------------------------------------
@@ -83,7 +84,7 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
         # ->  proceed with "normal" LSimpute_gene
 
         # Possible candidate rows (common obs!) for imputing and their correlation
-        rows_candidates <- find_rows_candidates(ds, i, M, M_i, min_common_obs)
+        rows_candidates <- find_rows_candidates(ds_mat_original, i, M, M_i, min_common_obs)
         # Check if at least one row candidate is found
         if (nrow(rows_candidates) == 0) { # no rows_candidates found -> impute mean
           # This condition may crashes the jar-file from Bo et al. (2004)
@@ -129,8 +130,8 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
                 if (is.na(betas[suitable_index[j], 1])) { # calculate regression parameters, if not already known
                   common_observed <- !(M_i | M[row_indices[j], ]) # this will be at least min_common_obs (>= 3) TRUEs, (requirement for suitable) -> regression possible
                   betas[suitable_index[j], ] <- calc_lm_coefs_simple_reg(
-                    ds[i, common_observed],
-                    ds[row_indices[j], common_observed]
+                    ds_mat_original[i, common_observed],
+                    ds_mat_original[row_indices[j], common_observed]
                   )
                 }
               }
@@ -155,10 +156,11 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
   }
 
   ## Return value -------------------------------------------------------------
+  ds <- assign_imputed_values(ds, ds_imp, M)
   if (return_r_max) {
-    return(list(imp = ds_imp, r_max = r_max_matrix))
+    return(list(imp = ds, r_max = r_max_matrix))
   } else {
-    return(ds_imp)
+    return(ds)
   }
 }
 
