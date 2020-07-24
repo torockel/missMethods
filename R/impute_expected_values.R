@@ -81,6 +81,5 @@ impute_expected_values <- function(ds, mu, S,
   }
 
   # To return the type of ds, which maybe is not a matrix!
-  ds[M] <- ds_imp[M]
-  ds
+  assign_imputed_values(ds, ds_imp, M)
 }

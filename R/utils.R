@@ -1,3 +1,37 @@
+#' Assign imputed values
+#'
+#' Assign imputed values and take special care for tibbles
+#'
+#' Normal matrix and data frames can be subsetted by a logical matrix and than
+#' values for this subset can be assigned. However, tibbles do not like this:
+#' "Tibbles support indexing by a logical matrix, but only for a scalar RHS"
+#' (source: https://tibble.tidyverse.org/articles/invariants.html). This
+#' function merely exists to cure this problem.
+#'
+#' @param ds a dataset with missing values
+#' @param ds_imp a dataset of the same dimensions as `ds` with imputed values
+#'   for `ds`
+#' @param M missing data indicator matrix
+#'
+#' @return An object of the same class as `ds` with missing values replaced by
+#'   entries from `ds_imp`
+#'
+#' @noRd
+assign_imputed_values <- function(ds, ds_imp, M = is.na(ds)) {
+  if (requireNamespace("tibble", quietly = TRUE)) {
+    if (tibble::is_tibble(ds)) {
+      for(col_with_mis in which(apply(M, 2, any))) {
+        # https://tibble.tidyverse.org/articles/invariants.html#column-update-1
+        ds[[col_with_mis]] <- ds_imp[, col_with_mis, drop = TRUE]
+      }
+      return(ds)
+    }
+  }
+  ds[M] <- ds_imp[M]
+  ds
+}
+
+
 is_df_or_matrix <- function(ds) {
   is.data.frame(ds) || is.matrix(ds)
 }

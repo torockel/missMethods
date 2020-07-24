@@ -87,7 +87,7 @@ tbl_XYZ_100 <- tibble::tibble(X = 1:100, Y = 101:200, Z = 300:201)
 tbl_classes_test <- tibble::as_tibble(df_classes_test)
 
 
-# define some incomplete tibbles for testing ----------
+## Define some incomplete tibbles for testing ---------------------------------
 tbl_XY_X_mis <- tbl_XY_100
 tbl_XY_X_mis[c(1, 3, 5, 20:40), "X"] <- NA
 

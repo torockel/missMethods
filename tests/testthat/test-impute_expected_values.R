@@ -53,3 +53,14 @@ test_that("impute_expected_values() works with problematic rows", {
     data.frame(X = c(1:7, 5.5, 9, 5.5), Y = c(11:19, 15.5), Z = c(21:29, 25.5))
   )
 })
+
+
+test_that("impute_expected_values() works with tibbles", {
+  imp_ds <- tbl_XY_XY_mis
+  imp_ds[is.na(tbl_XY_XY_mis)[, 1], 1] <- 1
+  imp_ds[is.na(tbl_XY_XY_mis)[, 2], 2] <- 3
+  expect_equal(
+    impute_expected_values(tbl_XY_XY_mis, mu = c(1, 3), diag(1, 2), stochastic = FALSE),
+    imp_ds
+  )
+})

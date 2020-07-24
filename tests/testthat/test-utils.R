@@ -1,3 +1,28 @@
+## assign_imputed_values ------------------------------------------------------
+
+test_that("assign_imputed_values() assigns the correct values", {
+  ds_imp <- matrix(c(1:30), ncol = 3)
+  colnames(ds_imp) <- c("X", "Y", "Z")
+  ds <- ds_imp
+  ds[c(1, 5, 14, 22)] <- NA
+
+  expect_equal(
+    assign_imputed_values(ds, ds_imp),
+    ds_imp
+  )
+
+  expect_equal(
+    assign_imputed_values(as.data.frame(ds), ds_imp),
+    as.data.frame(ds_imp)
+  )
+
+  expect_equal(
+    assign_imputed_values(tibble::as_tibble(ds), ds_imp),
+    tibble::as_tibble(ds_imp)
+  )
+
+})
+
 ## is_df_or_matrix ------------------------------------------------------------
 test_that("is_df_or_matrix()", {
   expect_true(is_df_or_matrix(data.frame(X = 1)))
