@@ -5,6 +5,11 @@
 * `impute_in_classes()` allows to apply any imputation function inside imputation classes 
 * `impute_hot_deck_in_classes()` hot deck imputation inside of imputation classes (adjustment cells)
 * `impute_EM()` imputes values using EM parameter estimates
+* `imputed_expected_values()` imputes expected values from a multivariate normal distribution
+* `impute_LS_adaptive()` performs LSimpute_adaptive as described by Bo et al. (2004)
+* `impute_LS_array()` performs LSimpute_array as described by Bo et al. (2004)
+* `impute_LS_combined()` performs LSimpute_combined as described by Bo et al. (2004)
+* `impute_LS_gene()` performs LSimpute_gene as described by Bo et al. (2004)
 
 ## Miscellaneous
 
