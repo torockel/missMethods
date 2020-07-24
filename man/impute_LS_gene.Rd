@@ -10,7 +10,7 @@ impute_LS_gene(
   eps = 1e-06,
   min_common_obs = 5,
   return_r_max = FALSE,
-  warn_special_cases = FALSE
+  verbose = FALSE
 )
 }
 \arguments{
@@ -28,8 +28,7 @@ the mean of the observed row values.}
 \item{return_r_max}{logical, normally this should be \code{FALSE}. \code{TRUE} is used
 inside of \code{impute_LS_adaptive()} to speed up some computations.}
 
-\item{warn_special_cases}{should warnings be given for special cases (see
-details)}
+\item{verbose}{should messages be given for special cases (see details)}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values
@@ -55,9 +54,9 @@ and the original one from Bo et al. (2004). The original function would not
 impute such a row and return a dataset with missing values in this row. There
 is one more case that needs a special treatment: If no suitable row can be
 found to impute a row, the mean of the observed values is imputed, too. If
-\code{warn_special_cases = TRUE}, a warning will be given for every encountered
-instance of the described special cases. If \code{warn_special_cases = FALSE} the
-function will deal with theses cases silently.
+\code{verbose = TRUE}, a message will be given for every encountered instance of
+the described special cases. If \code{verbose = FALSE}, the function will deal with
+theses cases silently.
 }
 \examples{
 set.seed(123)

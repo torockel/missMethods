@@ -15,9 +15,9 @@
 #' impute such a row and return a dataset with missing values in this row. There
 #' is one more case that needs a special treatment: If no suitable row can be
 #' found to impute a row, the mean of the observed values is imputed, too. If
-#' `warn_special_cases = TRUE`, a warning will be given for every encountered
-#' instance of the described special cases. If `warn_special_cases = FALSE` the
-#' function will deal with theses cases silently.
+#' `verbose = TRUE`, a message will be given for every encountered instance of
+#' the described special cases. If `verbose = FALSE`, the function will deal with
+#' theses cases silently.
 #'
 #'
 #' @param k number of most correlated genes used for the imputation of a gene
@@ -29,13 +29,12 @@
 #'   the mean of the observed row values.
 #' @param return_r_max logical, normally this should be `FALSE`. `TRUE` is used
 #'   inside of `impute_LS_adaptive()` to speed up some computations.
-#' @param warn_special_cases should warnings be given for special cases (see
-#'   details)
+#' @param verbose should messages be given for special cases (see details)
 #'
 #' @return  If `return_r_max = TRUE`, a list with the imputed dataset and r_max
 #'
 impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
-                           return_r_max = FALSE, warn_special_cases = FALSE) {
+                           return_r_max = FALSE, verbose = FALSE) {
 
   ## Check some arguments -----------------------------------------------------
   if (k >= nrow(ds)) {
@@ -64,8 +63,8 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
       if (all(M_i)) { # all values in row i are missing
         # Bo et al. do not impute in this case, they return ds with NA values!
         ds_imp[i, ] <- colMeans(ds, na.rm = TRUE)
-        if (warn_special_cases) {
-          warning("No observed value in row ", i, ". ",
+        if (verbose) {
+          message("No observed value in row ", i, ". ",
           "This row is imputed with column means.")
         }
 
@@ -73,8 +72,8 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
         # Bo et al. impute all values in these rows with the mean of the observed row values
         # (source: try and error with original jar-file, see test-file)
         ds_imp[i, M_i] <- mean(ds[i, !M_i])
-        if (warn_special_cases) {
-          warning("Not enough observed values in row ", i, ". ",
+        if (verbose) {
+          message("Not enough observed values in row ", i, ". ",
           "This row is imputed with osbserved row means.")
         }
 
@@ -89,8 +88,8 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
         if (nrow(rows_candidates) == 0) { # no rows_candidates found -> impute mean
           # This condition may crashes the jar-file from Bo et al. (2004)
           ds_imp[i, M_i] <- mean(ds[i, ], na.rm = TRUE)
-          if (warn_special_cases) {
-            warning(
+          if (verbose) {
+            message(
               "No suitable row for the imputation of row ", i,
               " found! This row is imputed with observed row mean."
             )
@@ -111,8 +110,8 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
             if (length(suitable_index) == 0) { # no suitable row found -> impute mean
               # This condition may crashes the jar-file from Bo et al. (2004)
               ds_imp[i, M_i] <- mean(ds[i, ], na.rm = TRUE)
-              if (warn_special_cases) {
-                warning(
+              if (verbose) {
+                message(
                   "No suitable row for the imputation of row ", i,
                   " and column ", j_ind, " found! Value is imputed with observed row mean."
                 )

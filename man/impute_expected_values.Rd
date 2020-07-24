@@ -10,11 +10,11 @@ impute_expected_values(
   S,
   stochastic = FALSE,
   M = is.na(ds),
-  warn_problematic_rows = FALSE
+  verbose = FALSE
 )
 }
 \arguments{
-\item{ds}{a dataset with missing values}
+\item{ds}{a data frame or matrix with missing values}
 
 \item{mu}{vector of expected values for the variables}
 
@@ -24,10 +24,10 @@ impute_expected_values(
 
 \item{M}{missing data indicator matrix}
 
-\item{warn_problematic_rows}{should warnings be given for problematic rows?}
+\item{verbose}{should messages be given for special cases (see details)}
 }
 \value{
-a dataset of the same type as \code{ds}
+An object of the same class as \code{ds} with imputed missing values
 }
 \description{
 Impute the missing values with expected values given the observed values and
@@ -42,6 +42,6 @@ squares estimate of the missing values in some kind of way.
 If no values is observed in a row or the matrix a relevant submatrix of the
 covariance matrix (\code{S_22}) is not invertible, the missing values are imputed
 with (parts of) \code{mu} (plus a residuum, if \code{stochastich = TRUE}). If
-\code{warn_problematic_rows = TRUE}, the problematic rows will be listed in a
-warning. Otherwise, they will be imputed without any message.
+\code{verbose = TRUE}, these cases will be listed in a message. Otherwise, they
+will be imputed silently.
 }

@@ -34,10 +34,10 @@ test_that("impute_EM() works (basic test)", {
 })
 
 test_that("impute_EM() works with problematic Sigma", {
-  ds_imp <- expect_warning(
+  ds_imp <- expect_message(
     impute_EM(data.frame(X = 1:5, Y = 11:15, Z = c(21:23, NA, NA)),
               stochastic = FALSE,
-              warn_problematic_rows = TRUE),
+              verbose = TRUE),
     "The missing values of following rows were imputed with (parts of) mu: 4, 5",
     fixed = TRUE,
     all = TRUE

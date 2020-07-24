@@ -10,7 +10,8 @@ impute_LS_array(
   eps = 1e-06,
   min_common_obs = 5,
   ds_impute_LS_gene = NULL,
-  verbosity = 0L
+  verbose_gene = FALSE,
+  verbose_expected_values = FALSE
 )
 }
 \arguments{
@@ -25,8 +26,9 @@ impute_LS_array(
 \item{ds_impute_LS_gene}{result of imputing \code{ds} with \code{ds_impute_LS_gene()},
 if this already exists}
 
-\item{verbosity}{controls the amount of feedback given by the function (see
-details)}
+\item{verbose_gene}{should \code{impute_LS_gene()} be \code{verbose}}
+
+\item{verbose_expected_values}{should \code{impute_expected_values()} be \code{verbose}}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values
@@ -42,22 +44,10 @@ based on a imputed dataset from LSimpute_gene. This dataset can be supplied
 directly via \code{ds_impute_LS_gene} or will automatically be created with
 \code{\link[=impute_LS_gene]{impute_LS_gene()}} (if \code{ds_impute_LS_gene} is \code{NULL}). The imputation values
 are the expected values given the estimated parameters and the observed
-values. They are calculated via \code{\link[=impute_expected_values]{impute_expected_values()}}.
-
-Depending on \code{verbosity} the function will warn for some special cases.
-\code{verbosity} controls the setting of \code{warn_special_cases} from
-\code{impute_LS_gene()} and \code{warn_problematic_rows} from
-\code{impute_expected_values()}:
-\itemize{
-\item \code{verbosity = 0}: no warnings for special cases in \code{impute_LS_gene()} or
-\code{impute_expected_values()}
-\item \code{verbosity = 1}: warnings from \code{impute_LS_gene()}, no warnings from
-\code{impute_expected_values()}
-\item \code{verbosity = 2}: no warnings from \code{impute_LS_gene()}, warnings from
-\code{impute_expected_values()}
-\item \code{verbosity >= 3}: warnings from \code{impute_LS_gene()} and from
-\code{impute_expected_values()}
-}
+values. They are calculated via \code{\link[=impute_expected_values]{impute_expected_values()}}. The amount of
+feedback from these to functions is controlled via \code{verbose_gene}  and
+\code{verbose_expected_values}. The values of these two arguments are passed on to
+\code{verbose} from \code{impute_LS_gene()} and \code{impute_expected_values()}.
 }
 \examples{
 set.seed(123)

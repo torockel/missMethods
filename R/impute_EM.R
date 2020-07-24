@@ -59,7 +59,7 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 #' matrix for the calculation of the expected values is not invertible, parts of
 #' the estimated mu (estimated mean of the variables) will be imputed. If
 #' `stochastic = TRUE`, residuals will be added to these values. If
-#' `warn_problematic_rows = TRUE`, a warning will be given for these rows.
+#' `verbose = TRUE`, a message will be given for these rows.
 #'
 #' @param stochastic logical; see details
 #' @param maxits maximum number of iterations for the EM, passed to
@@ -67,8 +67,7 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 #' @param criterion if maximum relative difference in parameter estimates is
 #'   below this threshold, the EM algorithm stops, argument is directly passed
 #'   to [norm::em.norm()]
-#' @param warn_problematic_rows logical, should a warning be given for
-#'   problematic rows (see details)
+#' @param verbose should messages be given for special cases (see details)
 #'
 #' @export
 #'
@@ -80,13 +79,13 @@ impute_EM <- function(ds,
                       stochastic = TRUE,
                       maxits = 1000,
                       criterion = 0.0001,
-                      warn_problematic_rows = FALSE) {
+                      verbose = FALSE) {
   EM_parm <- get_EM_parameters(ds, maxits = maxits, criterion = criterion)
 
   impute_expected_values(ds,
     mu = EM_parm$mu,
     S = EM_parm$sigma,
     stochastic = stochastic,
-    warn_problematic_rows = warn_problematic_rows
+    verbose = verbose
   )
 }

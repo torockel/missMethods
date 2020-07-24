@@ -36,48 +36,81 @@ test_that("impute_LS_adaptive() works for data frames", {
   expect_false(anyNA(ds_imp))
 })
 
+
 ## Test verbosity -------------------------------------------------------------
 test_that("impute_LS_adaptive() works with completely missing row and verbose", {
   set.seed(1234)
   ds_mis <- MASS::mvrnorm(20, rep(0, 7), diag(1, 7))
   ds_mis[5, ] <- NA
 
-  # verbosity = 0
+  # silent
   ds_imp_silent <- expect_silent(
-    impute_LS_adaptive(ds_mis, warn_r_max = FALSE, verbosity = 0L)
+    impute_LS_adaptive(ds_mis, warn_r_max = FALSE, verbose_gene = FALSE, verbose_array = FALSE)
   )
   expect_false(anyNA(ds_imp_silent))
   # Completely missing rows are imputed with observed column means from LS_gene
   # and LS_array. So, independent of p, the imputed values will be these means.
   expect_equal(ds_imp_silent[5, ], suppressWarnings(colMeans(impute_LS_gene(ds_mis))))
 
-  # verbosity = 1
-  ds_imp_verb1 <- expect_warning(
-    impute_LS_adaptive(ds_mis, warn_r_max = FALSE, verbosity = 1L),
+  # verbose_gene
+  ds_imp_verb1 <- expect_message(
+    impute_LS_adaptive(ds_mis,
+      warn_r_max = FALSE,
+      verbose_gene = TRUE, verbose_array = FALSE
+    ),
     "No observed value in row 5. This row is imputed with column means.",
     fixed = TRUE,
     all = TRUE
   )
   expect_equal(ds_imp_verb1, ds_imp_silent)
 
-  # verbosity = 2
-  ds_imp_verb2 <- expect_warning(
-    impute_LS_adaptive(ds_mis, warn_r_max = FALSE, verbosity = 2L),
+  # verbose_array
+  ds_imp_verb2 <- expect_message(
+    impute_LS_adaptive(ds_mis,
+      warn_r_max = FALSE,
+      verbose_gene = FALSE, verbose_array = TRUE
+    ),
     "The missing values of following rows were imputed with (parts of) mu: 5",
     fixed = TRUE,
     all = TRUE
   )
   expect_equal(ds_imp_verb2, ds_imp_silent)
 
-  # verbosity = 3
+  # verbose_gene and verbose_array
   verify_output(
     test_path("test-impute_LS_adaptive-verbosity.txt"),
-    ds_imp <- impute_LS_adaptive(ds_mis, warn_r_max = FALSE, verbosity = 3L)
+    ds_imp_verb3 <- impute_LS_adaptive(ds_mis,
+      warn_r_max = FALSE,
+      verbose_gene = TRUE, verbose_array = TRUE
+    )
   )
-
-  ds_imp_verb3 <- suppressWarnings(impute_LS_adaptive(ds_mis, verbosity = 3L))
   expect_equal(ds_imp_verb3, ds_imp_silent)
+
+  # verbose_gene_p
+  ds_imp_verb4 <- expect_message(
+    impute_LS_adaptive(ds_mis,
+      warn_r_max = FALSE,
+      verbose_gene_p = TRUE, verbose_array_p = FALSE
+    ),
+    "No observed value in row 5. This row is imputed with column means.",
+    fixed = TRUE,
+    all = TRUE
+  )
+  expect_equal(ds_imp_verb4, ds_imp_silent)
+
+  # verbose_array_p
+  ds_imp_verb5 <- expect_message(
+    impute_LS_adaptive(ds_mis,
+      warn_r_max = FALSE,
+      verbose_gene_p = FALSE, verbose_array_p = TRUE
+    ),
+    "The missing values of following rows were imputed with (parts of) mu: 5",
+    fixed = TRUE,
+    all = TRUE
+  )
+  expect_equal(ds_imp_verb5, ds_imp_silent)
 })
+
 
 ## Comparing impute_LS_adaptive() to original results from Bo et al. ----------
 # For some remarks see test-impute_LS_gene.R

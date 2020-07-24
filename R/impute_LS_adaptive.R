@@ -16,23 +16,15 @@
 #' these rows are imputed with the values from `impute_LS_array()`.
 #'
 #' The amount of feedback given from `impute_LS_gene()` and `impute_LS_array()`
-#' is controlled via `verbosity`:
-#' * `verbosity = 0`: No feedback from `impute_LS_gene()` (`warn_special_cases = FALSE`)
-#'   and `impute_LS_array()`
-#'  * `verbosity = 1`: Feedback from `impute_LS_gene()` (`warn_special_cases = TRUE`)
-#'    and no feedback `impute_LS_array()`
-#' * `verbosity = 2`: No feedback from `impute_LS_gene()` (`warn_special_cases = FALSE`)
-#'   but all feedback from `impute_LS_array()`
-#' * `verbosity = 3`: Feedback from `impute_LS_gene()` (`warn_special_cases = TRUE`)
-#'   and `impute_LS_array()`
-#'
-#' Internally,  the imputed dataset from `impute_LS_gene()` is passed on to
-#' `impute_LS_array()`. Therefore, all warnings from `impute_LS_gene()` are
-#' truly from `impute_LS_gene()` and not a part of `impute_LS_array()`, which
-#' never calls `impute_LS_gene()` in this case. Furthermore, all warnings from
-#' [impute_expected_values()] belong to `impute_LS_array()`. Independent of the
-#' choice of `verbosity`, no feedback is given from the first runs of `
-#' impute_LS_gene()` and `impute_LS_array()` to estimate *p*.
+#' is controlled via `verbose_gene, verbose_array, verbose_gene_p` and
+#' `verbose_array_p`. The last two controls the amount of feedback while
+#' estimating *p* and the first two the amount of feedback during the estimation
+#' of the values that are mixed with *p*. Internally,  the imputed dataset from
+#' `impute_LS_gene()` is passed on to `impute_LS_array()`. Therefore, all
+#' messages from `impute_LS_gene()` are truly from `impute_LS_gene()` and not a
+#' part of `impute_LS_array()`, which never calls `impute_LS_gene()` in this
+#' case. Furthermore, all messages from [impute_expected_values()] belong to
+#' `impute_LS_array()`.
 #'
 #' @inheritParams impute_LS_combined
 #' @param r_max_min minimum number of nearest genes used for imputation. The
@@ -43,7 +35,8 @@
 impute_LS_adaptive <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
                                r_max_min = 100, p_mis_sim = 0.05,
                                warn_r_max = TRUE,
-                               verbosity = 0L) {
+                               verbose_gene = FALSE, verbose_array = FALSE,
+                               verbose_gene_p = FALSE, verbose_array_p = FALSE) {
 
   ## Define some variables ----------------------------------------------------
   ds_mat <- as.matrix(ds) # for subsetting by indices_new_mis a matrix is needed
@@ -53,18 +46,21 @@ impute_LS_adaptive <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
 
   ## Preparations to estimate p -----------------------------------------------
   # Delete and estimate p_mis_sim percent of the known values
-  indices_new_mis <- sample(indices_observed, size = round(length(indices_observed) * p_mis_sim, 0))
+  indices_new_mis <- sample(
+    indices_observed,
+    size = round(length(indices_observed) * p_mis_sim, 0)
+  )
   ds_for_p[indices_new_mis] <- NA
   ds_for_p_imp_gene <- impute_LS_gene(ds_for_p,
     k = k, eps = eps,
     min_common_obs = min_common_obs,
     return_r_max = TRUE,
-    warn_special_cases = FALSE
+    verbose = verbose_gene_p
   )
   ds_for_p_imp_gene$r_max[M] <- NA # don't use NA values from ds!
   ds_for_p_imp_array <- impute_LS_array(ds_for_p,
     ds_impute_LS_gene = ds_for_p_imp_gene$imp,
-    verbosity = 0L
+    verbose_expected_values = verbose_array_p
   )
   # calculate errors
   e_g_all <- ds_for_p_imp_gene$imp - ds_mat
@@ -97,11 +93,11 @@ impute_LS_adaptive <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
   y_g_list <- impute_LS_gene(ds_mat,
     k = k, eps = eps, min_common_obs = min_common_obs,
     return_r_max = TRUE,
-    warn_special_cases = ifelse(verbosity == 1L || verbosity >= 3, TRUE, FALSE)
+    verbose = verbose_gene
   )
   y_a <- impute_LS_array(ds_mat,
     ds_impute_LS_gene = y_g_list$imp,
-    verbosity = ifelse(verbosity >= 2L, 3L, 0L)
+    verbose_expected_values = verbose_array
   )
 
   ## Impute value by value ----------------------------------------------------

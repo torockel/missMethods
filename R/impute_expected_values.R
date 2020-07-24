@@ -3,6 +3,8 @@
 #' Impute the missing values with expected values given the observed values and
 #' estimated parameters assuming a multivariate normal distribution
 #'
+#' @template impute
+#'
 #' @details
 #'
 #' Normally, this function is called by other imputation function and should not
@@ -13,21 +15,19 @@
 #' If no values is observed in a row or the matrix a relevant submatrix of the
 #' covariance matrix (`S_22`) is not invertible, the missing values are imputed
 #' with (parts of) `mu` (plus a residuum, if `stochastich = TRUE`). If
-#' `warn_problematic_rows = TRUE`, the problematic rows will be listed in a
-#' warning. Otherwise, they will be imputed without any message.
+#' `verbose = TRUE`, these cases will be listed in a message. Otherwise, they
+#' will be imputed silently.
 #'
-#' @param ds a dataset with missing values
 #' @param mu vector of expected values for the variables
 #' @param S covariance matrix of the variables
 #' @param stochastic logical, should residuals be added to the expected values
 #' @param M missing data indicator matrix
-#' @param warn_problematic_rows should warnings be given for problematic rows?
+#' @param verbose should messages be given for special cases (see details)
 #'
-#' @return a dataset of the same type as `ds`
 #' @export
 impute_expected_values <- function(ds, mu, S,
                                    stochastic = FALSE,
-                                   M = is.na(ds), warn_problematic_rows = FALSE) {
+                                   M = is.na(ds), verbose = FALSE) {
 
   ## Define some variables ----------------------------------------------------
   ds_imp <- as.matrix(ds) # need a matrix for %*%
@@ -74,10 +74,10 @@ impute_expected_values <- function(ds, mu, S,
     }
   }
 
-  if (warn_problematic_rows) {
-    warn_msg <- "The missing values of following rows were imputed with (parts of) mu"
-    warn_msg <- paste0(warn_msg, ifelse(stochastic, " and a residuum: ", ": "))
-    warning(warn_msg, paste(problematic_rows, collapse = ", "))
+  if (verbose) {
+    msg <- "The missing values of following rows were imputed with (parts of) mu"
+    msg <- paste0(msg, ifelse(stochastic, " and a residuum: ", ": "))
+    message(msg, paste(problematic_rows, collapse = ", "))
   }
 
   # To return the type of ds, which maybe is not a matrix!

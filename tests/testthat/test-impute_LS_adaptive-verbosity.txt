@@ -1,5 +1,6 @@
-> ds_imp <- impute_LS_adaptive(ds_mis, warn_r_max = FALSE, verbosity = 3L)
-Warning in impute_LS_gene(ds_mat, k = k, eps = eps, min_common_obs = min_common_obs, : No observed value in row 5. This row is imputed with column means.
+> ds_imp_verb3 <- impute_LS_adaptive(ds_mis, warn_r_max = FALSE, verbose_gene = TRUE,
++   verbose_array = TRUE)
+Message: No observed value in row 5. This row is imputed with column means.
 
-Warning in impute_expected_values(ds, mu = col_means, S = S, stochastic = FALSE, : The missing values of following rows were imputed with (parts of) mu: 5
+Message: The missing values of following rows were imputed with (parts of) mu: 5
 

@@ -11,36 +11,36 @@ test_that("impute_LS_array() works with completely missing row and verbose", {
   ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
   ds_mis[5, ] <- NA
 
-  # verbosity = 0
+  # silent
   ds_imp_silent <- expect_silent(
-    impute_LS_array(ds_mis, verbosity = 0L)
+    impute_LS_array(ds_mis, verbose_gene = FALSE, verbose_expected_values = FALSE)
   )
   expect_false(anyNA(ds_imp_silent))
   expect_equal(ds_imp_silent[5, ], suppressWarnings(colMeans(impute_LS_gene(ds_mis))))
 
-  # verbosity = 1
-  ds_imp_verb1 <- expect_warning(
-    impute_LS_array(ds_mis, verbosity = 1L),
+  # verbose_gene
+  ds_imp_verb1 <- expect_message(
+    impute_LS_array(ds_mis, verbose_gene = TRUE, verbose_expected_values = FALSE),
     "No observed value in row 5. This row is imputed with column means.",
     fixed = TRUE,
     all = TRUE
   )
   expect_equal(ds_imp_verb1, ds_imp_silent)
 
-  # verbosity = 2
-  ds_imp_verb2 <- expect_warning(
-    impute_LS_array(ds_mis, verbosity = 2L),
+  # verbose_expected_values
+  ds_imp_verb2 <- expect_message(
+    impute_LS_array(ds_mis, verbose_gene = FALSE, verbose_expected_values = TRUE),
     "The missing values of following rows were imputed with (parts of) mu: 5",
     fixed = TRUE,
     all = TRUE
   )
   expect_equal(ds_imp_verb2, ds_imp_silent)
 
-  # verbosity = 3
+  # verbose_gene and verbose_expected_values
   verify_output(test_path("test-impute_LS_array-verbosity.txt"),
-                ds_imp <- impute_LS_array(ds_mis, verbosity = 3L))
+                ds_imp <- impute_LS_array(ds_mis, verbose_gene = TRUE, verbose_expected_values = TRUE))
 
-  ds_imp_verb3 <- suppressWarnings(impute_LS_array(ds_mis, verbosity = 3L))
+  ds_imp_verb3 <- suppressWarnings(impute_LS_array(ds_mis, verbose_gene = TRUE, verbose_expected_values = TRUE))
   expect_equal(ds_imp_verb3, ds_imp_silent)
 
 })

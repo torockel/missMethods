@@ -9,7 +9,7 @@ impute_EM(
   stochastic = TRUE,
   maxits = 1000,
   criterion = 1e-04,
-  warn_problematic_rows = FALSE
+  verbose = FALSE
 )
 }
 \arguments{
@@ -24,8 +24,7 @@ impute_EM(
 below this threshold, the EM algorithm stops, argument is directly passed
 to \code{\link[norm:em.norm]{norm::em.norm()}}}
 
-\item{warn_problematic_rows}{logical, should a warning be given for
-problematic rows (see details)}
+\item{verbose}{should messages be given for special cases (see details)}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values
@@ -46,7 +45,7 @@ If no values is observed for a row or the required part of the covariance
 matrix for the calculation of the expected values is not invertible, parts of
 the estimated mu (estimated mean of the variables) will be imputed. If
 \code{stochastic = TRUE}, residuals will be added to these values. If
-\code{warn_problematic_rows = TRUE}, a warning will be given for these rows.
+\code{verbose = TRUE}, a message will be given for these rows.
 }
 \examples{
 ds_orig <- MASS::mvrnorm(100, rep(0, 7), Sigma = diag(1, 7))
