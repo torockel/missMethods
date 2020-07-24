@@ -26,3 +26,29 @@ MNAR_documentation <- function(ending) {
     )
   )
 }
+
+
+document_LSimpute <- function(ending) {
+  c(
+    paste0("@title LSimpute_", ending),
+    paste0("@description Perform LSimpute_", ending, " as described by Bo et al. (2004)"),
+    "@template impute",
+    paste0(
+      "@details This function performs LSimpute_", ending, " as described by ",
+      "Bo et al. (2004).The function assumes that the genes are the rows of `ds`."
+    ),
+    "@export",
+    paste0(
+      "@references Bo, T. H., Dysvik, B., & Jonassen, I. (2004). LSimpute: ",
+      "accurate estimation of missing values in microarray data with least ",
+      "squares methods. Nucleic acids research, 32(3), e34"
+    ),
+    "@family LSimpute functions",
+    paste0(
+      "@examples ",
+      "set.seed(123)\n",
+      "ds_mis <- delete_MCAR(MASS::mvrnorm(100, rep(0, 10), diag(1, 10)), 0.1)\n",
+      "ds_imp <- impute_LS_", ending, "(ds_mis)"
+    )
+  )
+}
