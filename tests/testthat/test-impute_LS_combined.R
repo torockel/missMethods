@@ -1,7 +1,7 @@
 ## Basic tests for impute_LS_combined() -------------------------------------------
 test_that("impute_LS_combined() works (basic test, only check for anyNA)", {
   set.seed(1234)
-  ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
+  ds_mis <- mvtnorm::rmvnorm(20, rep(0, 5), diag(1, 5))
   ds_mis <- delete_MCAR(ds_mis, 0.2, 1:4)
   expect_false(anyNA(impute_LS_combined(ds_mis)))
 })
@@ -14,7 +14,7 @@ test_that("impute_LS_combined() works for small data frames", {
 ## Test verbosity -------------------------------------------------------------
 test_that("impute_LS_combined() works with completely missing row and verbose", {
   set.seed(1234)
-  ds_mis <- MASS::mvrnorm(20, rep(0, 7), diag(1, 7))
+  ds_mis <- mvtnorm::rmvnorm(20, rep(0, 7), diag(1, 7))
   ds_mis[5, ] <- NA
 
   # silent

@@ -8,7 +8,7 @@ test_numeric_datasets <- function(fun_imp, ...,
   set.seed(seed)
 
   ## Create datasets ----------------------------------------------------------
-  ds_matrix <- MASS::mvrnorm(n = n, rep(0, m), diag(1, m))
+  ds_matrix <- mvtnorm::rmvnorm(n = n, rep(0, m))
   colnames(ds_matrix) <- paste0("X", seq_len(m))
   ds_matrix <- delete_MCAR(ds_matrix, p = p_MCAR, cols_mis = cols_mis)
   ds_data_frame <- as.data.frame(ds_matrix)

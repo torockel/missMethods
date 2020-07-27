@@ -2,8 +2,8 @@
 # if EM does not converge: warning
 get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 
-  ## check for norm and MASS
-  check_for_packages(c("norm", "MASS"))
+  ## check for norm
+  check_for_packages("norm")
 
   ## get EM parameters from norm (1. part) ------------------------------------
   input_for_norm <- norm::prelim.norm(as.matrix(ds)) # prelim only accepts matrices as input!
@@ -72,7 +72,7 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 #' @export
 #'
 #' @examples
-#' ds_orig <- MASS::mvrnorm(100, rep(0, 7), Sigma = diag(1, 7))
+#' ds_orig <- mvtnorm::rmvnorm(100, rep(0, 7))
 #' ds_mis <- delete_MCAR(ds_orig, p = 0.2)
 #' ds_imp <- impute_EM(ds_mis, stochastic = FALSE)
 impute_EM <- function(ds,

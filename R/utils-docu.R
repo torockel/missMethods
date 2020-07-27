@@ -47,7 +47,7 @@ document_LSimpute <- function(ending) {
     paste0(
       "@examples ",
       "set.seed(123)\n",
-      "ds_mis <- delete_MCAR(MASS::mvrnorm(100, rep(0, 10), diag(1, 10)), 0.1)\n",
+      "ds_mis <- delete_MCAR(mvtnorm::rmvnorm(100, rep(0, 10)), 0.1)\n",
       "ds_imp <- impute_LS_", ending, "(ds_mis)"
     )
   )

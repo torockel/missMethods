@@ -1,7 +1,7 @@
 ## Basic tests for impute_LS_adaptive() -------------------------------------------
 test_that("impute_LS_adaptive() works (basic test, check for anyNA and warning)", {
   set.seed(1234)
-  ds_mis <- MASS::mvrnorm(20, rep(0, 8), diag(1, 8))
+  ds_mis <- mvtnorm::rmvnorm(20, rep(0, 8), diag(1, 8))
   ds_mis <- delete_MCAR(ds_mis, 0.2, 1:4)
   ds_imp <- expect_warning(impute_LS_adaptive(ds_mis, r_max_min = 43, warn_r_max = TRUE),
     "Not enough data for r_max_min = 43. r_max_min reduced to 7!",
@@ -13,7 +13,7 @@ test_that("impute_LS_adaptive() works (basic test, check for anyNA and warning)"
 
 test_that("impute_LS_adaptive() works for small matrices", {
   set.seed(1234)
-  ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
+  ds_mis <- mvtnorm::rmvnorm(20, rep(0, 5), diag(1, 5))
   ds_mis <- delete_MCAR(ds_mis, 0.2, 1:4)
   ds_imp <- expect_warning(impute_LS_adaptive(ds_mis, warn_r_max = TRUE),
     "Not enough data for r_max_min = 100. r_max_min reduced to 0!",
@@ -26,7 +26,7 @@ test_that("impute_LS_adaptive() works for small matrices", {
 
 test_that("impute_LS_adaptive() works for data frames", {
   set.seed(123)
-  ds_mis <- as.data.frame(MASS::mvrnorm(30, rep(0, 9), diag(2, 9)))
+  ds_mis <- as.data.frame(mvtnorm::rmvnorm(30, rep(0, 9), diag(2, 9)))
   ds_mis <- delete_MCAR(ds_mis, 0.1)
   ds_imp <- expect_warning(impute_LS_adaptive(ds_mis),
     "Not enough data for r_max_min = 100. r_max_min reduced to 10!",
@@ -40,7 +40,7 @@ test_that("impute_LS_adaptive() works for data frames", {
 ## Test verbosity -------------------------------------------------------------
 test_that("impute_LS_adaptive() works with completely missing row and verbose", {
   set.seed(1234)
-  ds_mis <- MASS::mvrnorm(20, rep(0, 7), diag(1, 7))
+  ds_mis <- mvtnorm::rmvnorm(20, rep(0, 7), diag(1, 7))
   ds_mis[5, ] <- NA
 
   # silent

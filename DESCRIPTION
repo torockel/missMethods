@@ -23,7 +23,7 @@ Suggests:
     ggplot2,
     knitr,
     lpSolve,
-    MASS,
+    mvtnorm,
     norm,
     rmarkdown,
     testthat (>= 2.1.0),

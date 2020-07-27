@@ -29,6 +29,10 @@ impute_expected_values <- function(ds, mu, S,
                                    stochastic = FALSE,
                                    M = is.na(ds), verbose = FALSE) {
 
+  if (stochastic) {
+    check_for_packages("mvtnorm")
+  }
+
   ## Define some variables ----------------------------------------------------
   ds_imp <- as.matrix(ds) # need a matrix for %*%
   problematic_rows <- integer(0)
@@ -68,7 +72,7 @@ impute_expected_values <- function(ds, mu, S,
         # To guarantee symmetry of matrix (sometimes numeric accuracy problems with above calculation)
         var_y_imp <- (var_y_imp + t(var_y_imp)) / 2
         # Add residuum
-        y_imp <- y_imp + MASS::mvrnorm(n = 1, mu = rep(0, sum(M_i)), Sigma = var_y_imp)
+        y_imp <- as.vector(y_imp) + mvtnorm::rmvnorm(n = 1, mean = rep(0, sum(M_i)), sigma = var_y_imp)
       }
       ds_imp[i, M_i] <- y_imp
     }

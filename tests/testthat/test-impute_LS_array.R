@@ -1,14 +1,14 @@
 ## Basic tests for impute_LS_array() -------------------------------------------
 test_that("impute_LS_array() works (basic test, only check for anyNA)", {
   set.seed(1234)
-  ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
+  ds_mis <- mvtnorm::rmvnorm(20, rep(0, 5), diag(1, 5))
   ds_mis <- delete_MCAR(ds_mis, 0.2, 1:4)
   expect_false(anyNA(impute_LS_array(ds_mis)))
 })
 
 test_that("impute_LS_array() works with completely missing row and verbose", {
   set.seed(1234)
-  ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
+  ds_mis <- mvtnorm::rmvnorm(20, rep(0, 5), diag(1, 5))
   ds_mis[5, ] <- NA
 
   # silent

@@ -81,7 +81,7 @@ case. Furthermore, all messages from \code{\link[=impute_expected_values]{impute
 }
 \examples{
 set.seed(123)
-ds_mis <- delete_MCAR(MASS::mvrnorm(100, rep(0, 10), diag(1, 10)), 0.1)
+ds_mis <- delete_MCAR(mvtnorm::rmvnorm(100, rep(0, 10)), 0.1)
 ds_imp <- impute_LS_adaptive(ds_mis)
 }
 \references{

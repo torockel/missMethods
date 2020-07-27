@@ -48,9 +48,8 @@ test_that("impute_EM() works with problematic Sigma", {
 
 
 test_that("impute_EM() works (check output of 100 x 7 matrix)", {
-  skip_on_cran()
   set.seed(123)
-  ds_orig <- MASS::mvrnorm(100, rep(0, 7), Sigma = diag(1, 7))
+  ds_orig <- mvtnorm::rmvnorm(100, rep(0, 7))
   ds_mis <- delete_MCAR(ds_orig, p = 0.2)
   ds_imp <- impute_EM(ds_mis, stochastic = FALSE)
   ds_imp_stoch <- impute_EM(ds_mis, stochastic = TRUE)

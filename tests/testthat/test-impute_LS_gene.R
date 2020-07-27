@@ -1,14 +1,14 @@
 ## Basic tests for impute_LS_gene() -------------------------------------------
 test_that("impute_LS_gene() works (basic test, only check for anyNA)", {
   set.seed(1234)
-  ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
+  ds_mis <- mvtnorm::rmvnorm(20, rep(0, 5), diag(1, 5))
   ds_mis <- delete_MCAR(ds_mis, 0.2, 1:4)
   expect_false(anyNA(impute_LS_gene(ds_mis, verbose = FALSE)))
 })
 
 test_that("impute_LS_gene() works with completely missing rows and gives a message", {
   set.seed(1234)
-  ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
+  ds_mis <- mvtnorm::rmvnorm(20, rep(0, 5), diag(1, 5))
   ds_mis[5:6, ] <- NA
   ds_imp <- expect_silent(impute_LS_gene(ds_mis, verbose = FALSE))
   expect_false(anyNA(ds_imp))
@@ -31,7 +31,7 @@ test_that("impute_LS_gene() works when there is no suitable row and give a messa
   # This ds_mis would result in the following error in the jar-file from
   # Bo et al. (2004): "Error in imputation engine"
   set.seed(123)
-  ds_mis <- MASS::mvrnorm(11, rep(0, 6), diag(1, 6))
+  ds_mis <- mvtnorm::rmvnorm(11, rep(0, 6), diag(1, 6))
   ds_mis[1, 1] <- NA
   ds_mis[2:11, 2] <- NA
   ds_imp <- expect_silent(impute_LS_gene(ds_mis, min_common_obs = 5, verbose = FALSE))
@@ -46,7 +46,7 @@ test_that("impute_LS_gene() works when there is no suitable row and give a messa
 
   # 2. check:
   # One row with less than min_common_obs observations
-  ds_mis2 <- MASS::mvrnorm(11, rep(0, 6), diag(1, 6))
+  ds_mis2 <- mvtnorm::rmvnorm(11, rep(0, 6), diag(1, 6))
   ds_mis2[3, 3:5] <- NA
   ds_imp2 <- expect_silent(impute_LS_gene(ds_mis2, min_common_obs = 5, verbose = FALSE))
   expect_false(anyNA(ds_imp2))

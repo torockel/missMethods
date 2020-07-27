@@ -51,7 +51,7 @@ feedback from these to functions is controlled via \code{verbose_gene}  and
 }
 \examples{
 set.seed(123)
-ds_mis <- delete_MCAR(MASS::mvrnorm(100, rep(0, 10), diag(1, 10)), 0.1)
+ds_mis <- delete_MCAR(mvtnorm::rmvnorm(100, rep(0, 10)), 0.1)
 ds_imp <- impute_LS_array(ds_mis)
 }
 \references{

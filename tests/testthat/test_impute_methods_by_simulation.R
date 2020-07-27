@@ -9,7 +9,7 @@ test_that("imputation methods works via simulation", {
           suppressWarnings(
             impute_EM(
               delete_MCAR(
-                MASS::mvrnorm(100, rep(0, 7), Sigma = diag(1, 7)),
+                mvtnorm::rmvnorm(100, rep(0, 7)),
                 p = 0.2
               ),
               stochastic = TRUE

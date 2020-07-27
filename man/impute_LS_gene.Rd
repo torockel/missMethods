@@ -54,13 +54,13 @@ and the original one from Bo et al. (2004). The original function would not
 impute such a row and return a dataset with missing values in this row. There
 is one more case that needs a special treatment: If no suitable row can be
 found to impute a row, the mean of the observed values is imputed, too. If
-\code{verbose = TRUE}, a message will be given for every encountered instance of
+\code{verbose = TRUE}, a message will be given for the encountered instances of
 the described special cases. If \code{verbose = FALSE}, the function will deal with
 theses cases silently.
 }
 \examples{
 set.seed(123)
-ds_mis <- delete_MCAR(MASS::mvrnorm(100, rep(0, 10), diag(1, 10)), 0.1)
+ds_mis <- delete_MCAR(mvtnorm::rmvnorm(100, rep(0, 10)), 0.1)
 ds_imp <- impute_LS_gene(ds_mis)
 }
 \references{
