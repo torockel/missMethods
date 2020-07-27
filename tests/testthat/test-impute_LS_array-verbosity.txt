@@ -1,5 +1,5 @@
 > ds_imp <- impute_LS_array(ds_mis, verbose_gene = TRUE, verbose_expected_values = TRUE)
-Message: No observed value in row 5. This row is imputed with column means.
+Message: No observed value in row(s) 5. These rows were imputed with column means.
 
 Message: The missing values of following rows were imputed with (parts of) mu: 5
 

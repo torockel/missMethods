@@ -32,7 +32,7 @@ test_that("impute_LS_combined() works with completely missing row and verbose", 
   # verbose_gene
   ds_imp_verb1 <- expect_message(
     impute_LS_combined(ds_mis, verbose_gene = TRUE, verbose_array = FALSE),
-    "No observed value in row 5. This row is imputed with column means.",
+    "No observed value in row(s) 5. These rows were imputed with column means.",
     fixed = TRUE,
     all = TRUE
   )
@@ -57,7 +57,7 @@ test_that("impute_LS_combined() works with completely missing row and verbose", 
   # verbose_gene_p
   ds_imp_verb4 <- expect_message(
     impute_LS_combined(ds_mis, verbose_gene_p = TRUE, verbose_array_p = FALSE),
-    "No observed value in row 5. This row is imputed with column means.",
+    "No observed value in row(s) 5. These rows were imputed with column means.",
     fixed = TRUE,
     all = TRUE
   )

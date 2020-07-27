@@ -15,7 +15,7 @@
 #' impute such a row and return a dataset with missing values in this row. There
 #' is one more case that needs a special treatment: If no suitable row can be
 #' found to impute a row, the mean of the observed values is imputed, too. If
-#' `verbose = TRUE`, a message will be given for every encountered instance of
+#' `verbose = TRUE`, a message will be given for the encountered instances of
 #' the described special cases. If `verbose = FALSE`, the function will deal with
 #' theses cases silently.
 #'
@@ -54,6 +54,9 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
   ds_mat_original <- as.matrix(ds)
   ds_imp <- ds_mat_original
   M <- is.na(ds)
+  rows_imp_with_colMeans <- integer(0)
+  rows_imp_with_rowMeans_min_obs <- integer(0)
+  rows_imp_with_rowMeans_no_suitable <- integer(0)
 
   ## Impute row by row --------------------------------------------------------
   for (i in 1:nrow(ds)) {
@@ -64,19 +67,13 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
       if (all(M_i)) { # all values in row i are missing
         # Bo et al. do not impute in this case, they return ds with NA values!
         ds_imp[i, ] <- colMeans(ds, na.rm = TRUE)
-        if (verbose) {
-          message("No observed value in row ", i, ". ",
-          "This row is imputed with column means.")
-        }
+        rows_imp_with_colMeans <- c(rows_imp_with_colMeans, i)
 
       } else if (sum(!M_i) < min_common_obs) { # less than min_common_obs observed values in row i
         # Bo et al. impute all values in these rows with the mean of the observed row values
         # (source: try and error with original jar-file, see test-file)
         ds_imp[i, M_i] <- mean(ds[i, !M_i])
-        if (verbose) {
-          message("Not enough observed values in row ", i, ". ",
-          "This row is imputed with osbserved row means.")
-        }
+        rows_imp_with_rowMeans_min_obs <- c(rows_imp_with_rowMeans_min_obs, i)
 
       } else {
         ## Enough observations in row i ------------------------------------
@@ -89,12 +86,8 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
         if (nrow(rows_candidates) == 0) { # no rows_candidates found -> impute mean
           # This condition may crashes the jar-file from Bo et al. (2004)
           ds_imp[i, M_i] <- mean(ds[i, ], na.rm = TRUE)
-          if (verbose) {
-            message(
-              "No suitable row for the imputation of row ", i,
-              " found! This row is imputed with observed row mean."
-            )
-          }
+          rows_imp_with_rowMeans_no_suitable <- c(rows_imp_with_rowMeans_no_suitable, i)
+
         } else { # at least one candidate row -> proceed with "normal" LSimpute_gene
 
           # Save calculated regression coefficients (later)
@@ -111,12 +104,8 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
             if (length(suitable_index) == 0) { # no suitable row found -> impute mean
               # This condition may crashes the jar-file from Bo et al. (2004)
               ds_imp[i, M_i] <- mean(ds[i, ], na.rm = TRUE)
-              if (verbose) {
-                message(
-                  "No suitable row for the imputation of row ", i,
-                  " and column ", j_ind, " found! Value is imputed with observed row mean."
-                )
-              }
+              rows_imp_with_rowMeans_no_suitable <- c(rows_imp_with_rowMeans_no_suitable, i)
+
             } else { # everything fine -> proceed with "normal" LSimpute_gene
 
               if (return_r_max) { # save highest correlation
@@ -153,6 +142,34 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
         }
       }
     }
+  }
+
+  ## Messages, if verbose = TRUE ----------------------------------------------
+  if (verbose) {
+    if (length(rows_imp_with_colMeans) > 0 ) {
+      message(
+        "No observed value in row(s) ",
+        paste(rows_imp_with_colMeans, collapse = ", "), ". ",
+        "These rows were imputed with column means.",
+        appendLF = FALSE
+      )
+    }
+    if (length(rows_imp_with_rowMeans_min_obs) > 0) {
+      message(
+        "Not enough observed values in row(s) ",
+        paste(rows_imp_with_rowMeans_min_obs, collapse = ", "), ". ",
+        "These rows were imputed with osbserved row means.",
+        appendLF = FALSE)
+    }
+    if (length(rows_imp_with_rowMeans_no_suitable) > 0) {
+      message(
+        "No suitable row for the imputation of (parts of) row(s) ",
+        paste(rows_imp_with_rowMeans_no_suitable, collapse = ", "), " found. ",
+        "These rows (or parts of them) were imputed with osbserved row means.",
+        appendLF = FALSE
+        )
+    }
+
   }
 
   ## Return value -------------------------------------------------------------

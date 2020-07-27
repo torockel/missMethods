@@ -1,6 +1,6 @@
 > ds_imp_verb3 <- impute_LS_adaptive(ds_mis, warn_r_max = FALSE, verbose_gene = TRUE,
 +   verbose_array = TRUE)
-Message: No observed value in row 5. This row is imputed with column means.
+Message: No observed value in row(s) 5. These rows were imputed with column means.
 
 Message: The missing values of following rows were imputed with (parts of) mu: 5
 

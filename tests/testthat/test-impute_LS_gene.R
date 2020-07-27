@@ -6,17 +6,17 @@ test_that("impute_LS_gene() works (basic test, only check for anyNA)", {
   expect_false(anyNA(impute_LS_gene(ds_mis, verbose = FALSE)))
 })
 
-test_that("impute_LS_gene() works with completely missing row and warns", {
+test_that("impute_LS_gene() works with completely missing rows and gives a message", {
   set.seed(1234)
   ds_mis <- MASS::mvrnorm(20, rep(0, 5), diag(1, 5))
-  ds_mis[5, ] <- NA
+  ds_mis[5:6, ] <- NA
   ds_imp <- expect_silent(impute_LS_gene(ds_mis, verbose = FALSE))
   expect_false(anyNA(ds_imp))
   expect_equal(ds_imp[5, ], colMeans(ds_mis, na.rm = TRUE))
 
   ds_imp_verbose <- expect_message(
     impute_LS_gene(ds_mis, verbose = TRUE),
-    "No observed value in row 5. This row is imputed with column means.",
+    "No observed value in row(s) 5, 6. These rows were imputed with column means.",
     fixed = TRUE,
     all = TRUE
   )
@@ -38,7 +38,9 @@ test_that("impute_LS_gene() works when there is no suitable row and give a messa
   expect_false(anyNA(ds_imp))
   ds_imp_verbose <- expect_message(
     impute_LS_gene(ds_mis, min_common_obs = 5, verbose = TRUE),
-    "No suitable row for the imputation of row"
+    "No suitable row for the imputation of (parts of) row(s) 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 found",
+    fixed = TRUE,
+    all = TRUE
   )
   expect_false(anyNA(ds_imp_verbose))
 
@@ -51,7 +53,7 @@ test_that("impute_LS_gene() works when there is no suitable row and give a messa
   expect_equal(ds_imp2[3, 3:5], rep(mean(ds_mis2[3, ], na.rm = TRUE), 3))
   ds_imp2_warn <- expect_message(
     impute_LS_gene(ds_mis2, min_common_obs = 5, verbose = TRUE),
-    "Not enough observed values in row 3. This row is imputed with osbserved row means.",
+    "Not enough observed values in row(s) 3. These rows were imputed with osbserved row means.",
     fixed = TRUE
   )
   expect_false(anyNA(ds_imp2_warn))

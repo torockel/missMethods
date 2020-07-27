@@ -58,7 +58,7 @@ test_that("impute_LS_adaptive() works with completely missing row and verbose", 
       warn_r_max = FALSE,
       verbose_gene = TRUE, verbose_array = FALSE
     ),
-    "No observed value in row 5. This row is imputed with column means.",
+    "No observed value in row(s) 5. These rows were imputed with column means.",
     fixed = TRUE,
     all = TRUE
   )
@@ -92,7 +92,7 @@ test_that("impute_LS_adaptive() works with completely missing row and verbose", 
       warn_r_max = FALSE,
       verbose_gene_p = TRUE, verbose_array_p = FALSE
     ),
-    "No observed value in row 5. This row is imputed with column means.",
+    "No observed value in row(s) 5. These rows were imputed with column means.",
     fixed = TRUE,
     all = TRUE
   )

@@ -21,7 +21,7 @@ test_that("impute_LS_array() works with completely missing row and verbose", {
   # verbose_gene
   ds_imp_verb1 <- expect_message(
     impute_LS_array(ds_mis, verbose_gene = TRUE, verbose_expected_values = FALSE),
-    "No observed value in row 5. This row is imputed with column means.",
+    "No observed value in row(s) 5. These rows were imputed with column means.",
     fixed = TRUE,
     all = TRUE
   )
