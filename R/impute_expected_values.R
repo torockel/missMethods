@@ -74,7 +74,7 @@ impute_expected_values <- function(ds, mu, S,
     }
   }
 
-  if (verbose) {
+  if (verbose && length(problematic_rows) > 0) {
     msg <- "The missing values of following rows were imputed with (parts of) mu"
     msg <- paste0(msg, ifelse(stochastic, " and a residuum: ", ": "))
     message(msg, paste(problematic_rows, collapse = ", "))
