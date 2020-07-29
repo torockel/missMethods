@@ -10,7 +10,10 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
           delete_MAR_1_to_x()) works for data.frames", {
   set.seed(12345)
   # check p -----------------------------------------------
-  df_mis <- delete_MAR_1_to_x(df_XYZ_100, c(0.2, 0.4), c("X", "Z"), c("Y", "Y"), x = 4)
+  df_mis <- delete_MAR_1_to_x(df_XYZ_100, c(0.2, 0.4),
+    c("X", "Z"), c("Y", "Y"),
+    x = 4
+  )
   expect_equal(count_NA(df_mis), c(X = 20, Y = 0, Z = 40))
   expect_equal(count_NA(df_mis[1:50, ]), c(X = 4, Y = 0, Z = 8))
   expect_equal(count_NA(df_mis[51:100, ]), c(X = 16, Y = 0, Z = 32))
@@ -154,8 +157,8 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 
   # check special ctrl_col cases --------------------------
   # ctrl_col constant
-  expect_warning(
-    df_mis <- delete_MAR_1_to_x(df_XY_X_constant, 0.2, cols_mis = "Y", cols_ctrl = "X", x = 3),
+  df_mis <- expect_warning(
+    delete_MAR_1_to_x(df_XY_X_constant, 0.2, cols_mis = "Y", cols_ctrl = "X", x = 3),
     "is constant"
   )
   expect_equal(count_NA(df_mis), c(X = 0, Y = 4))
@@ -173,7 +176,8 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
     cols_ctrl = "X", x = 3,
     stochastic = TRUE
   )[11, "Y"]))
-  realized_x <- sum(test) / ((nrow(df_XY_X_unequal_dummy) * 1000 * 0.1 - sum(test)) / 10)
+  realized_x <- sum(test) /
+    ((nrow(df_XY_X_unequal_dummy) * 1000 * 0.1 - sum(test)) / 10)
   expect_true(2 < realized_x && realized_x < 4)
 
 
@@ -228,7 +232,10 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   expect_equal(count_NA(mat_mis[1:10, ]), c(2, 3, 5, rep(0, 7)))
 
   # stochastic = TRUE
-  mat_mis <- delete_MAR_1_to_x(matrix_100_2, 0.6, 1, 2, x = 5, stochastic = TRUE)
+  mat_mis <- delete_MAR_1_to_x(matrix_100_2, 0.6, 1, 2,
+    x = 5,
+    stochastic = TRUE
+  )
   expect_equal(count_NA(mat_mis[51:100, ]), c(50, 0))
   expect_true(count_NA(mat_mis[1:50, 1, drop = FALSE]) <= 25)
   # prob for false:

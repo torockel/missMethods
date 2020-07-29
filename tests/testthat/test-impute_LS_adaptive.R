@@ -1,9 +1,10 @@
-## Basic tests for impute_LS_adaptive() -------------------------------------------
+## Basic tests for impute_LS_adaptive() ---------------------------------------
 test_that("impute_LS_adaptive() works (basic test, check for anyNA and warning)", {
   set.seed(1234)
   ds_mis <- mvtnorm::rmvnorm(20, rep(0, 8), diag(1, 8))
   ds_mis <- delete_MCAR(ds_mis, 0.2, 1:4)
-  ds_imp <- expect_warning(impute_LS_adaptive(ds_mis, r_max_min = 43, warn_r_max = TRUE),
+  ds_imp <- expect_warning(
+    impute_LS_adaptive(ds_mis, r_max_min = 43, warn_r_max = TRUE),
     "Not enough data for r_max_min = 43. r_max_min reduced to 7!",
     fixed = TRUE,
     all = TRUE
@@ -45,7 +46,9 @@ test_that("impute_LS_adaptive() works with completely missing row and verbose", 
 
   # silent
   ds_imp_silent <- expect_silent(
-    impute_LS_adaptive(ds_mis, warn_r_max = FALSE, verbose_gene = FALSE, verbose_array = FALSE)
+    impute_LS_adaptive(ds_mis,
+      warn_r_max = FALSE, verbose_gene = FALSE, verbose_array = FALSE
+    )
   )
   expect_false(anyNA(ds_imp_silent))
   # Completely missing rows are imputed with observed column means from LS_gene

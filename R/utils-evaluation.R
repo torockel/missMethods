@@ -1,5 +1,6 @@
 # the workhorse for evaluate_imputed_values and evaluate_estimated_parameters
-calc_evaluation_criterion <- function(estimate, true_val, criterion = "RMSE", M = NULL,
+calc_evaluation_criterion <- function(estimate, true_val, criterion = "RMSE",
+                                      M = NULL,
                                       tolerance = sqrt(.Machine$double.eps)) {
   criterion <- match.arg(criterion, c(
     "RMSE", "bias", "bias_rel", "cor", "MAE", "MAE_rel", "MSE",
@@ -17,7 +18,10 @@ calc_evaluation_criterion <- function(estimate, true_val, criterion = "RMSE", M 
     }
   }
 
-  colwise_crit <- c("NRMSE_col_mean", "NRMSE_col_mean_sq", "NRMSE_col_sd", "nr_equal", "nr_NA", "precision")
+  colwise_crit <- c(
+    "NRMSE_col_mean", "NRMSE_col_mean_sq", "NRMSE_col_sd",
+    "nr_equal", "nr_NA", "precision"
+  )
   if ((criterion %in% colwise_crit &&
     is_df_or_matrix(estimate))) { # handle col by col
     crit_by_col <- numeric(ncol(estimate))
@@ -61,7 +65,8 @@ calc_evaluation_criterion <- function(estimate, true_val, criterion = "RMSE", M 
 }
 
 
-calc_evaluation_criterion_vec <- function(estimate, true_val = NULL, criterion = "RMSE",
+calc_evaluation_criterion_vec <- function(estimate, true_val = NULL,
+                                          criterion = "RMSE",
                                           m_k = rep(TRUE, length(estimate)),
                                           tolerance = sqrt(.Machine$double.eps)) {
   if (criterion != "nr_NA" && length(estimate) != length(true_val)) {

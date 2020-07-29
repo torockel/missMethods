@@ -16,7 +16,8 @@ test_that("delete_MAR_censoring() and delete_cutoff(), which is called by
   df_mis <- delete_MAR_censoring(df_XY_100, 0.3, "X", "Y")
   expect_equal(count_NA(df_mis), c(X = 30, Y = 0))
   expect_true(all(is.na(df_mis[1:30, "X"])))
-  expect_false(anyNA(delete_MAR_censoring(df_XY_100, 0.001, "X", "Y"))) # to low p
+  # To low p:
+  expect_false(anyNA(delete_MAR_censoring(df_XY_100, 0.001, "X", "Y")))
 
   # check p and upper
   df_mis <- delete_MAR_censoring(df_XY_100, 0.3, "X", "Y", where = "upper")

@@ -20,16 +20,23 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
   # check default arguments -------------------------------
   df_mis <- delete_MAR_one_group(df_XYZ_100, 0.2, "X", "Y")
   expect_equal(count_NA(df_mis), c(X = 20, Y = 0, Z = 0))
-  expect_true(isTRUE(all.equal(count_NA(df_mis[1:50, ]), c(X = 20, Y = 0, Z = 0))) ||
-    isTRUE(all.equal(count_NA(df_mis[51:100, ]), c(X = 20, Y = 0, Z = 0))))
+  expect_true(
+    isTRUE(all.equal(count_NA(df_mis[1:50, ]), c(X = 20, Y = 0, Z = 0))) ||
+      isTRUE(all.equal(count_NA(df_mis[51:100, ]), c(X = 20, Y = 0, Z = 0)))
+  )
 
   # check p -----------------------------------------------
-  df_mis <- delete_MAR_one_group(df_XYZ_100, c(0.1, 0.4), c("X", "Y"), c("Z", "Z"))
+  df_mis <- delete_MAR_one_group(
+    df_XYZ_100, c(0.1, 0.4),
+    c("X", "Y"), c("Z", "Z")
+  )
   expect_equal(count_NA(df_mis), c(X = 10, Y = 40, Z = 0))
-  expect_true(isTRUE(all.equal(count_NA(df_mis[1:50, ]), c(X = 10, Y = 40, Z = 0))) ||
-    isTRUE(all.equal(count_NA(df_mis[1:50, ]), c(X = 10, Y = 0, Z = 0))) ||
-    isTRUE(all.equal(count_NA(df_mis[1:50, ]), c(X = 0, Y = 40, Z = 0))) ||
-    isTRUE(all.equal(count_NA(df_mis[1:50, ]), c(X = 0, Y = 0, Z = 0))))
+  expect_true(
+    isTRUE(all.equal(count_NA(df_mis[1:50, ]), c(X = 10, Y = 40, Z = 0))) ||
+      isTRUE(all.equal(count_NA(df_mis[1:50, ]), c(X = 10, Y = 0, Z = 0))) ||
+      isTRUE(all.equal(count_NA(df_mis[1:50, ]), c(X = 0, Y = 40, Z = 0))) ||
+      isTRUE(all.equal(count_NA(df_mis[1:50, ]), c(X = 0, Y = 0, Z = 0)))
+  )
 
   # to high p
   expect_warning(
@@ -46,8 +53,10 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
     probs = 0.5
   )
   expect_equal(count_NA(df_mis), c(X = 20, Y = 0, Z = 0))
-  expect_true(isTRUE(all.equal(count_NA(df_mis[1:50, ]), c(X = 20, Y = 0, Z = 0))) ||
-    isTRUE(all.equal(count_NA(df_mis[51:100, ]), c(X = 20, Y = 0, Z = 0))))
+  expect_true(
+    isTRUE(all.equal(count_NA(df_mis[1:50, ]), c(X = 20, Y = 0, Z = 0))) ||
+      isTRUE(all.equal(count_NA(df_mis[51:100, ]), c(X = 20, Y = 0, Z = 0)))
+  )
 
   # unequal groups via stats::quantile()
   df_mis <- delete_MAR_one_group(df_XYZ_100, 0.2, "X", "Y",
@@ -55,16 +64,22 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
     probs = 0.2
   )
   expect_equal(count_NA(df_mis), c(X = 20, Y = 0, Z = 0))
-  expect_true(isTRUE(all.equal(count_NA(df_mis[1:20, ]), c(X = 20, Y = 0, Z = 0))) ||
-    isTRUE(all.equal(count_NA(df_mis[21:100, ]), c(X = 20, Y = 0, Z = 0))))
+  expect_true(
+    isTRUE(all.equal(count_NA(df_mis[1:20, ]), c(X = 20, Y = 0, Z = 0))) ||
+      isTRUE(all.equal(count_NA(df_mis[21:100, ]), c(X = 20, Y = 0, Z = 0)))
+  )
 
   # check unorderd factor as ctrl_col and prob ------------
   df_mis <- delete_MAR_one_group(df_with_unord_factor, 0.4, "Y", "X")
   expect_equal(count_NA(df_mis), c(X = 0, Y = 8))
-  expect_true(isTRUE(all.equal(count_NA(df_mis[1:10, ]), c(X = 0, Y = 8))) ||
-    isTRUE(all.equal(count_NA(df_mis[11:20, ]), c(X = 0, Y = 8))))
+  expect_true(
+    isTRUE(all.equal(count_NA(df_mis[1:10, ]), c(X = 0, Y = 8))) ||
+      isTRUE(all.equal(count_NA(df_mis[11:20, ]), c(X = 0, Y = 8)))
+  )
 
-  df_mis <- delete_MAR_one_group(df_with_unord_factor, 0.4, "Y", "X", prob = 0.4)
+  df_mis <- delete_MAR_one_group(df_with_unord_factor, 0.4, "Y", "X",
+    prob = 0.4
+  )
   expect_equal(count_NA(df_mis), c(X = 0, Y = 8))
   expect_true(isTRUE(all.equal(count_NA(df_mis[1:8, ]), c(X = 0, Y = 8))) ||
     isTRUE(all.equal(count_NA(df_mis[9:20, ]), c(X = 0, Y = 8))))
@@ -91,7 +106,8 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
 
   expect_true(9350 < sum_X1 & sum_X1 < 10650)
   expect_true(9350 < sum_X2 & sum_X2 < 10650)
-  # pbinom(9350, 1e5, 0.1) + pbinom(10649, 1e5, 0.1, lower.tail = FALSE) # 8.237197e-12
+  # pbinom(9350, 1e5, 0.1) + pbinom(10649, 1e5, 0.1, lower.tail = FALSE)
+  # 8.237197e-12
   expect_equal(sum(res[, "Y"]), 0)
 
   # check nr_unique == 2 ----------------------------------

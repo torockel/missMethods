@@ -17,7 +17,9 @@ test_that("delete_MAR_rank() and delete_rank() works", {
   # check rank probabilities
 
   N <- 1000
-  rank_correct <- sum(replicate(N, is.na(delete_MAR_rank(df_XY_2, 0.5, "X", "Y")[2, 1])))
+  rank_correct <- sum(
+    replicate(N, is.na(delete_MAR_rank(df_XY_2, 0.5, "X", "Y")[2, 1]))
+  )
   expect_true(rank_correct > 566 && rank_correct < 766)
   # probability for FALSE:
   # pbinom(566, 1000, 2/3) + pbinom(765, 1000, 2/3, lower.tail = FALSE)

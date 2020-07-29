@@ -53,7 +53,10 @@ check_delete_args <- function(ds, p, cols_mis, stochastic) {
 
 check_delete_args_MCAR <- function(ds, p, cols_mis, stochastic, p_overall) {
   # general checking
-  check_delete_args(ds = ds, p = p, cols_mis = cols_mis, stochastic = stochastic)
+  check_delete_args(
+    ds = ds, p = p, cols_mis = cols_mis,
+    stochastic = stochastic
+  )
 
   # special case: p_overall
   if (!is.logical(p_overall) | length(p_overall) != 1L) {
@@ -65,7 +68,10 @@ check_delete_args_MCAR <- function(ds, p, cols_mis, stochastic, p_overall) {
 
 check_delete_args_MAR <- function(ds, p, cols_mis, cols_ctrl, stochastic) {
   # general checking
-  check_delete_args(ds = ds, p = p, cols_mis = cols_mis, stochastic = stochastic)
+  check_delete_args(
+    ds = ds, p = p, cols_mis = cols_mis,
+    stochastic = stochastic
+  )
 
 
   # check cols_ctrl -----------------------------
@@ -115,7 +121,8 @@ check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
   # check if cols_ctrl are numeric or ordered factor
   cols_prob <- integer(0)
   for (k in seq_along(cols_ctrl)) {
-    if (!(is.ordered(ds[, cols_ctrl[k], drop = TRUE]) | is.numeric(ds[, cols_ctrl[k], drop = TRUE]))) {
+    if (!(is.ordered(ds[, cols_ctrl[k], drop = TRUE]) |
+      is.numeric(ds[, cols_ctrl[k], drop = TRUE]))) {
       cols_prob <- c(cols_prob, cols_ctrl[k])
     }
   }

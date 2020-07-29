@@ -74,7 +74,9 @@ classes.
 \examples{
 # Mean imputation in classes
 impute_in_classes(data.frame(X = 1:5, Y = c(NA, 12:15)), "X",
-impute_mean, min_obs_per_col = 2)
+  impute_mean,
+  min_obs_per_col = 2
+)
 }
 \references{
 Andridge, R.R. and Little, R.J.A. (2010), A Review of Hot Deck

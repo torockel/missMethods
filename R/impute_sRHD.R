@@ -99,9 +99,9 @@ impute_sRHD <- function(ds, type = "cols_seq", donor_limit = Inf) {
         theo_min_donor_lim <- min_donor_limit(M, type)
         if (donor_limit < theo_min_donor_lim) {
           warning(
-            "donor_limit = ", donor_limit, " is to low to impute all missing values; ",
-            "it was set to ",
-            theo_min_donor_lim
+            "donor_limit = ", donor_limit,
+            " is to low to impute all missing values; ",
+            "it was set to ", theo_min_donor_lim
           )
           donor_limit <- theo_min_donor_lim
         }
@@ -129,7 +129,10 @@ impute_sRHD <- function(ds, type = "cols_seq", donor_limit = Inf) {
 impute_sRHD_cols_seq <- function(ds, M = is.na(ds), donor_limit) {
   if (is.infinite(donor_limit)) { # Inf donor_limit -> easy/faster implementation
     for (k in seq_len(ncol(ds))) {
-      ds[M[, k], k] <- resample(ds[!M[, k], k, drop = TRUE], sum(M[, k]), replace = TRUE)
+      ds[M[, k], k] <- resample(ds[!M[, k], k, drop = TRUE],
+        sum(M[, k]),
+        replace = TRUE
+      )
     }
   } else { # finite donor_limit ----------------------------
     for (k in seq_len(ncol(ds))) {

@@ -1,7 +1,9 @@
 
 test_that("get_EM_parameters() handles norm crashes", {
   expect_error(
-    suppressWarnings(get_EM_parameters(data.frame(X = 1:2), maxit = factor("a"))),
+    suppressWarnings(get_EM_parameters(data.frame(X = 1:2),
+      maxit = factor("a")
+    )),
     "The EM algorithm of norm produced an error; no imputation was done"
   )
 })
@@ -20,7 +22,10 @@ test_that("get_EM_parameters() returns correct values", {
   expect_equal(return_val$mu[1], mean(1:4))
   expect_equal(return_val$sigma[1, 1], var(1:4) * 3 / 4)
   expect_equal(return_val$mu[2], mean(1:4), tolerance = 0.1)
-  expect_equal(return_val$sigma, matrix(1.25, 2, 2), tolerance = 0.1, check.attributes = FALSE)
+  expect_equal(
+    return_val$sigma, matrix(1.25, 2, 2),
+    tolerance = 0.1, check.attributes = FALSE
+  )
 })
 
 
@@ -48,7 +53,8 @@ test_that("impute_EM() works with problematic Sigma", {
     fixed = TRUE,
     all = TRUE
   )
-  expect_equal(ds_imp, data.frame(X = 1:5, Y = 11:15, Z = c(21:23, 22.99986, 22.99986)),
+  expect_equal(ds_imp,
+    data.frame(X = 1:5, Y = 11:15, Z = c(21:23, 22.99986, 22.99986)),
     tolerance = 1e-5
   )
 })

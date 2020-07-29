@@ -60,7 +60,10 @@ test_that("impute_expected_values() works with tibbles", {
   imp_ds[is.na(tbl_XY_XY_mis)[, 1], 1] <- 1
   imp_ds[is.na(tbl_XY_XY_mis)[, 2], 2] <- 3
   expect_equal(
-    impute_expected_values(tbl_XY_XY_mis, mu = c(1, 3), diag(1, 2), stochastic = FALSE),
+    impute_expected_values(tbl_XY_XY_mis,
+      mu = c(1, 3), diag(1, 2),
+      stochastic = FALSE
+    ),
     imp_ds
   )
 })

@@ -35,8 +35,8 @@ A numeric vector of length one.
 Compare estimated parameters to true parameters
 }
 \details{
-The same \code{criterion}s are implemented for \code{evaluate_parameters}
-and \code{\link{evaluate_imputed_values}}.
+The same \code{criterion}s are implemented for
+\code{evaluate_parameters} and \code{\link{evaluate_imputed_values}}.
 The possible choices are documented in \code{\link{evaluate_imputed_values}}.
 }
 \examples{

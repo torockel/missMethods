@@ -466,5 +466,8 @@ test_that("make_col_fun() works", {
   expect_equal(colTable(df_XY_2), c(X.1 = 1, X.2 = 1, Y.101 = 1, Y.102 = 1))
 
   colPropt <- make_col_fun(function(x) prop.table(table(x)))
-  expect_equal(colPropt(df_XY_2), c(X.1 = 0.5, X.2 = 0.5, Y.101 = 0.5, Y.102 = 0.5))
+  expect_equal(
+    colPropt(df_XY_2),
+    c(X.1 = 0.5, X.2 = 0.5, Y.101 = 0.5, Y.102 = 0.5)
+  )
 })

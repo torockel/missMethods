@@ -31,7 +31,10 @@ MNAR_documentation <- function(ending) {
 document_LSimpute <- function(ending) {
   c(
     paste0("@title LSimpute_", ending),
-    paste0("@description Perform LSimpute_", ending, " as described by Bo et al. (2004)"),
+    paste0(
+      "@description Perform LSimpute_", ending,
+      " as described by Bo et al. (2004)"
+    ),
     "@template impute",
     paste0(
       "@details This function performs LSimpute_", ending, " as described by ",

@@ -51,9 +51,9 @@ Compares estimated parameters after imputation to true parameters or
 estimates based on the original dataset
 }
 \details{
-Either \code{ds_orig} or \code{pars_true} must be supplied and the other one
-must be \code{NULL} (default: both are \code{NULL}, just supply one, see
-examples). The following \code{parameter}s are implemented:
+Either \code{ds_orig} or \code{pars_true} must be supplied and the
+other one must be \code{NULL} (default: both are \code{NULL}, just supply
+one, see examples). The following \code{parameter}s are implemented:
 "mean", "median", "var", "sd", "quantile", "cov", "cov_only", cor", "cor_only".
 Some details follow:
 \itemize{

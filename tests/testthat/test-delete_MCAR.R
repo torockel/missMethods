@@ -43,7 +43,10 @@ test_that("delete_MCAR() creates MCAR", {
   for (i in seq_len(N)) {
     res <- res + sum(count_NA(delete_MCAR(df_XY_100, p = 0.2, stochastic = TRUE)))
   }
-  expect_true(res / prod(dim(df_XY_100), N) < 0.3 & res / prod(dim(df_XY_100), N) > 0.1)
+  expect_true(
+    res / prod(dim(df_XY_100), N) < 0.3 &
+    res / prod(dim(df_XY_100), N) > 0.1
+  )
 
   # check p_overall = TRUE --------------------------------
   df_MCAR <- delete_MCAR(df_XY_100, p = 0.2, p_overall = TRUE)

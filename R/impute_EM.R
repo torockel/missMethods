@@ -1,12 +1,11 @@
 # maxit and criterion are passed to norm::em.norm!
 # if EM does not converge: warning
 get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
-
-  ## check for norm
   check_for_packages("norm")
 
-  ## get EM parameters from norm (1. part) ------------------------------------
-  input_for_norm <- norm::prelim.norm(as.matrix(ds)) # prelim only accepts matrices as input!
+  ## Get EM parameters from norm (1. part) ------------------------------------
+  # prelim only accepts matrices as input!
+  input_for_norm <- norm::prelim.norm(as.matrix(ds))
 
   iterations <- tryCatch(utils::capture.output(EM_parm <- norm::em.norm(input_for_norm,
     showits = TRUE,
@@ -18,8 +17,8 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
   )
 
 
-  ## check for EM problems ----------------------------------------------------
-  # check for crash inside of norm
+  ## Check for EM problems ----------------------------------------------------
+  # Check for crash inside of norm
   if (any(class(iterations) == "error")) {
     stop("The EM algorithm of norm produced an error; no imputation was done.",
       "\nError message from norm:", iterations,
@@ -27,7 +26,7 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
     )
   }
 
-  # check if number of iterations > maxits
+  # Check if number of iterations > maxits
   iterations <- iterations[2]
   iterations <- substr(
     iterations, regexpr("[[:digit:]]*\\.\\.\\.$", iterations),
@@ -35,10 +34,13 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
   )
   iterations <- as.integer(iterations)
   if (iterations > maxits) {
-    warning("EM did not converge with maxits = ", maxits, ". Some imputation values are maybe unreliable.")
+    warning(
+      "EM did not converge with maxits = ", maxits,
+      ". Some imputation values are maybe unreliable."
+    )
   }
 
-  ## get EM parameters from norm (2. part) ------------------------------------
+  ## Get EM parameters from norm (2. part) ------------------------------------
   EM_parm <- norm::getparam.norm(input_for_norm, EM_parm)
 
   structure(EM_parm, iterations = iterations)

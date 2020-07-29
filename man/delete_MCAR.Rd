@@ -35,8 +35,8 @@ An object of the same class as \code{ds} with missing values.
 Create missing completely at random (MCAR) values in a data frame or a matrix
 }
 \details{
-This function creates missing completely at random (MCAR) values in the
-dataset \code{ds}.
+This function creates missing completely at random (MCAR) values in
+the dataset \code{ds}.
 The proportion of missing values is specified with \code{p}.
 The columns in which missing values are created can be set via \code{cols_mis}.
 If \code{cols_mis} is not specified, then missing values are created in
@@ -63,10 +63,10 @@ all columns together will be close to \code{p}.
 If \code{stochastic = TRUE}, then each value in column \code{cols_mis[i]}
 has the probability \code{p[i]} to be missing. In this case, the number of
 missing values in \code{cols_mis[i]} is a random variable with a binomial
-distribution \emph{B}(\code{nrow(ds)}, \code{p[i]}). This can (and will most of the time)
-lead to more or less missing values than \code{round(nrow(ds) * p[i])} in
-each column. If \code{stochastic = TRUE}, then the argument \code{p_overall}
-is ignored because it is superfluous.
+distribution \emph{B}(\code{nrow(ds)}, \code{p[i]}). This can (and will most
+of the time) lead to more or less missing values than
+\code{round(nrow(ds) * p[i])} in each column. If \code{stochastic = TRUE},
+then the argument \code{p_overall} is ignored because it is superfluous.
 }
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)

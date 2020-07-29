@@ -37,8 +37,8 @@ same length as \code{cols_mis}.}
 An object of the same class as \code{ds} with missing values.
 }
 \description{
-Create missing at random (MAR) values using a ranking mechanism in a data frame or
-a matrix
+Create missing at random (MAR) values using a ranking mechanism in a data
+frame or a matrix
 }
 \details{
 This function creates missing at random (MAR) values in the columns

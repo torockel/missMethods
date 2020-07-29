@@ -50,14 +50,16 @@
 #'   impute_mean,
 #'   min_obs_per_col = 2
 #' )
-impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf, use_quantiles = FALSE,
+impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf,
+                              use_quantiles = FALSE,
                               min_objs_in_class = 1,
                               min_obs_comp = 0,
                               min_obs_per_col = 1,
                               donor_limit = Inf, dl_type = "cols_seq",
                               add_imputation_classes = FALSE,
                               ...) {
-  ## check for missing argument cols_class, because subsetting "works" with missing argument...
+  # Check for missing argument cols_class
+  # because subsetting "works" with missing argument...
   if (missing(cols_class)) {
     stop("cols_class must be specified")
   }
@@ -73,7 +75,7 @@ impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf, use_quantiles =
     donor_limit = donor_limit, dl_type = dl_type
   )
 
-  ## apply imputation function for every imputation class separate
+  # Apply imputation function for every imputation class separate
   for (imp_cl in imp_classes) {
     if (anyNA(ds[imp_cl, ])) {
       ds[imp_cl, ] <- FUN(ds[imp_cl, ], ...)
@@ -268,7 +270,10 @@ cut_vector <- function(x, breaks, use_quantiles = FALSE) {
   if (is.numeric(x)) { # cuts are ordered for possible later merging
     if (use_quantiles) {
       x <- cut(x,
-        breaks = stats::quantile(x, seq(from = 0, to = 1, length.out = breaks + 1)),
+        breaks = stats::quantile(
+          x,
+          seq(from = 0, to = 1, length.out = breaks + 1)
+        ),
         include.lowest = TRUE, ordered_result = TRUE
       )
     } else { # equal-sized classes

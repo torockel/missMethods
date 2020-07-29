@@ -47,7 +47,8 @@ returned (this value is called \sQuote{low-median} in
 ord_factor_odd <- ordered(letters[1:5])
 median(ord_factor_odd) # calls median.factor, if package is loaded
 
-# if only base R is loaded, median.default will be called and will throw an error:
+# If only base R is loaded, median.default will be called
+# and will throw an error:
 tryCatch(median.default(ord_factor_odd), error = function(e) e)
 
 ord_factor_even <- ordered(letters[1:4])

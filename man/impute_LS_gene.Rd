@@ -18,14 +18,15 @@ impute_LS_gene(
 
 \item{k}{Number of most correlated genes used for the imputation of a gene.}
 
-\item{eps}{Used in the calculation of the weights (Bo et al. (2004) used \code{eps = 1e-6}).}
+\item{eps}{Used in the calculation of the weights (Bo et al. (2004) used
+\code{eps = 1e-6}).}
 
 \item{min_common_obs}{A row can only take part in the imputation of another
 row, if both rows share at least \code{min_common_obs} columns with no missing
 values.}
 
-\item{return_r_max}{Logical; normally, this should be \code{FALSE}. \code{TRUE} is used
-inside of \code{impute_LS_adaptive()} to speed up some computations.}
+\item{return_r_max}{Logical; normally, this should be \code{FALSE}. \code{TRUE} is
+used inside of \code{impute_LS_adaptive()} to speed up some computations.}
 
 \item{verbose}{Should messages be given for special cases (see details)?}
 }
@@ -54,8 +55,8 @@ impute such a row and return a dataset with missing values in this row. There
 is one more case that needs a special treatment: If no suitable row can be
 found to impute a row, the mean of the observed values is imputed, too. If
 \code{verbose = TRUE}, a message will be given for the encountered instances of
-the described special cases. If \code{verbose = FALSE}, the function will deal with
-theses cases silently.
+the described special cases. If \code{verbose = FALSE}, the function will deal
+with theses cases silently.
 }
 \examples{
 set.seed(123)

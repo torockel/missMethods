@@ -22,8 +22,10 @@
 #' @param verbose_gene Should `impute_LS_gene()` be `verbose`?
 #' @param verbose_expected_values Should `impute_expected_values()` be `verbose`?
 #'
-impute_LS_array <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5, ds_impute_LS_gene = NULL,
-                            verbose_gene = FALSE, verbose_expected_values = FALSE) {
+impute_LS_array <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
+                            ds_impute_LS_gene = NULL,
+                            verbose_gene = FALSE,
+                            verbose_expected_values = FALSE) {
 
   ## Estimate the parameters via the imputed dataset from impute_LS_gene() ----
   if (is.null(ds_impute_LS_gene)) { # dataset not given -> impute via impute_LS_gene()
@@ -33,10 +35,12 @@ impute_LS_array <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5, ds_imput
       verbose = verbose_gene
     )
   }
-  # Bo et al. (2004) use the empirical covariance matrix (divisor: n -1), stats::cov() uses n as divisor
-  S <- stats::cov(ds_impute_LS_gene) * nrow(ds_impute_LS_gene) / (nrow(ds_impute_LS_gene) - 1)
+  # Bo et al. (2004) use the empirical covariance matrix (divisor: n -1),
+  # stats::cov() uses n as divisor
+  S <- stats::cov(ds_impute_LS_gene) * nrow(ds_impute_LS_gene) /
+    (nrow(ds_impute_LS_gene) - 1)
   col_means <- colMeans(ds_impute_LS_gene)
-  # The LS_gene imputed dataset is not needed anymore after the parameters are estimated
+  # After parameter estimation the LS_gene imputed dataset is not needed anymore
   remove(ds_impute_LS_gene)
 
   ## Impute the missing values ------------------------------------------------

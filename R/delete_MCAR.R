@@ -5,8 +5,8 @@
 #' @template delete
 #' @template delete-stochastic
 #'
-#' @details This function creates missing completely at random (MCAR) values in the
-#' dataset \code{ds}.
+#' @details This function creates missing completely at random (MCAR) values in
+#' the dataset \code{ds}.
 #' The proportion of missing values is specified with \code{p}.
 #' The columns in which missing values are created can be set via \code{cols_mis}.
 #' If \code{cols_mis} is not specified, then missing values are created in
@@ -35,10 +35,10 @@
 #' If \code{stochastic = TRUE}, then each value in column \code{cols_mis[i]}
 #' has the probability \code{p[i]} to be missing. In this case, the number of
 #' missing values in \code{cols_mis[i]} is a random variable with a binomial
-#' distribution \emph{B}(\code{nrow(ds)}, \code{p[i]}). This can (and will most of the time)
-#' lead to more or less missing values than \code{round(nrow(ds) * p[i])} in
-#' each column. If \code{stochastic = TRUE}, then the argument \code{p_overall}
-#' is ignored because it is superfluous.
+#' distribution \emph{B}(\code{nrow(ds)}, \code{p[i]}). This can (and will most
+#' of the time) lead to more or less missing values than
+#' \code{round(nrow(ds) * p[i])} in each column. If \code{stochastic = TRUE},
+#' then the argument \code{p_overall} is ignored because it is superfluous.
 #'
 #' @param p_overall Logical; see details.
 #'
@@ -70,7 +70,10 @@ delete_MCAR <- function(ds, p, cols_mis = seq_len(ncol(ds)),
   n <- nrow(ds)
   if (!p_overall || stochastic) {
     for (i in seq_along((cols_mis))) {
-      ds[, cols_mis[i]] <- delete_MCAR_vec(ds[, cols_mis[i], drop = TRUE], p[i], stochastic)
+      ds[, cols_mis[i]] <- delete_MCAR_vec(
+        ds[, cols_mis[i], drop = TRUE],
+        p[i], stochastic
+      )
     }
   } else { # p_overall = FALSE && stochastich = FALSE
     na_indices_overall <- sample.int(

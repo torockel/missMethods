@@ -1,5 +1,6 @@
 # the workhorse for delete_MAR_censoring and delete_MNAR_censoring
-delete_censoring <- function(ds, p, cols_mis, cols_ctrl, where = "lower", sorting = TRUE) {
+delete_censoring <- function(ds, p, cols_mis, cols_ctrl,
+                             where = "lower", sorting = TRUE) {
 
   # general checking is done in calling functions delete_MAR_censoring and
   # delete_MNAR_censoring. Only special cases are checked here.
@@ -138,7 +139,8 @@ delete_censoring <- function(ds, p, cols_mis, cols_ctrl, where = "lower", sortin
 #' quantile(ds_many_dup$Y, 0.2) # 0
 #' # No value is BELOW 0 in ds_many_dup$Y, so no missing values will be created:
 #' delete_MAR_censoring(ds_many_dup, 0.2, "X", "Y", sorting = FALSE) # No NA!
-delete_MAR_censoring <- function(ds, p, cols_mis, cols_ctrl, where = "lower", sorting = TRUE,
+delete_MAR_censoring <- function(ds, p, cols_mis, cols_ctrl,
+                                 where = "lower", sorting = TRUE,
                                  miss_cols, ctrl_cols) {
 
 
@@ -179,7 +181,8 @@ delete_MAR_censoring <- function(ds, p, cols_mis, cols_ctrl, where = "lower", so
 #'
 #' @examples
 #' delete_MNAR_censoring(ds, 0.2, "X")
-delete_MNAR_censoring <- function(ds, p, cols_mis, where = "lower", sorting = TRUE,
+delete_MNAR_censoring <- function(ds, p, cols_mis,
+                                  where = "lower", sorting = TRUE,
                                   miss_cols) {
 
   ## deprecate miss_cols

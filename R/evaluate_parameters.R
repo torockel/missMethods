@@ -5,8 +5,8 @@
 #' @template evaluation
 #' @template evaluate-parameter
 #'
-#' @details The same \code{criterion}s are implemented for \code{evaluate_parameters}
-#' and \code{\link{evaluate_imputed_values}}.
+#' @details The same \code{criterion}s are implemented for
+#' \code{evaluate_parameters} and \code{\link{evaluate_imputed_values}}.
 #' The possible choices are documented in \code{\link{evaluate_imputed_values}}.
 #'
 #' @param pars_est A vector or matrix of estimated parameters.

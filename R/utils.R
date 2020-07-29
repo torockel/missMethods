@@ -50,8 +50,15 @@ resample <- function(x, size, replace = FALSE, prob = NULL) {
 }
 
 
+#' Check if a package is installed
+#'
+#' @param pkg_names character vector with names from packages
+#'
+#' @return `TRUE`(invisible), if all packages are installed. Otherwise, an error
+#'   is thrown.
+#' @noRd
 check_for_packages <- function(pkg_names) {
-  okay_pkgs <- sapply(pkg_names, requireNamespace, quietly = TRUE)
+  okay_pkgs <- vapply(pkg_names, requireNamespace, logical(1), quietly = TRUE)
   if (any(!okay_pkgs)) {
     stop(
       "The following package(s) are needed, but not installed: ",

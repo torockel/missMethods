@@ -6,9 +6,9 @@
 #' @template evaluation
 #' @template evaluate-parameter
 #'
-#' @details Either \code{ds_orig} or \code{pars_true} must be supplied and the other one
-#' must be \code{NULL} (default: both are \code{NULL}, just supply one, see
-#' examples). The following \code{parameter}s are implemented:
+#' @details Either \code{ds_orig} or \code{pars_true} must be supplied and the
+#' other one must be \code{NULL} (default: both are \code{NULL}, just supply
+#' one, see examples). The following \code{parameter}s are implemented:
 #' "mean", "median", "var", "sd", "quantile", "cov", "cov_only", cor", "cor_only".
 #' Some details follow:
 #' \itemize{
@@ -61,7 +61,8 @@
 #'   pars_true = c(Y = 10), parameter = "mean",
 #'   cols_which = "Y"
 #' )
-evaluate_imputation_parameters <- function(ds_imp, ds_orig = NULL, pars_true = NULL,
+evaluate_imputation_parameters <- function(ds_imp,
+                                           ds_orig = NULL, pars_true = NULL,
                                            parameter = "mean", criterion = "RMSE",
                                            cols_which = seq_len(ncol(ds_imp)),
                                            tolerance = sqrt(.Machine$double.eps),
@@ -89,7 +90,10 @@ evaluate_imputation_parameters <- function(ds_imp, ds_orig = NULL, pars_true = N
     stop("exactly one of 'ds_orig' or 'pars_true' must be supplied and the
          other one must be NULL")
   }
-  match.arg(parameter, c("mean", "median", "var", "sd", "quantile", "cov", "cov_only", "cor", "cor_only"))
+  match.arg(
+    parameter,
+    c("mean", "median", "var", "sd", "quantile", "cov", "cov_only", "cor", "cor_only")
+  )
 
   calc_pars <- switch(parameter,
     mean = colMeans,

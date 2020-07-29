@@ -22,7 +22,10 @@ test_that("apply_imputation() works with data.frames", {
   # mean is default for FUN:
   df_XY_XY_mean_imp <- apply_imputation(df_XY_XY_mis)
   expect_false(anyNA(df_XY_XY_mean_imp))
-  expect_equal(colMeans(df_XY_XY_mean_imp), colMeans(df_XY_XY_mis, na.rm = TRUE))
+  expect_equal(
+    colMeans(df_XY_XY_mean_imp),
+    colMeans(df_XY_XY_mis, na.rm = TRUE)
+  )
 
   expect_false(anyNA(apply_imputation(df_XY_mis_with_comp_chars,
     FUN = mean
@@ -58,7 +61,9 @@ test_that("apply_imputation() works with data.frames", {
     impute_mean(df_first_row_comp_missing, type = "rowwise"),
     "in row 1 all values are NA; the row cannot be imputed"
   )
-  expect_false(anyNA(impute_mean(df_no_comp_obs[-c(11), ], type = "rowwise")))
+  expect_false(anyNA(impute_mean(df_no_comp_obs[-c(11), ],
+    type = "rowwise"
+  )))
   expect_warning(
     impute_mean(df_no_comp_obs, type = "rowwise"),
     "in row 11 all values are NA; the row cannot be imputed"
@@ -78,8 +83,12 @@ test_that("apply_imputation() works with data.frames", {
   )
 
   # check special cases for total -------------------------
-  expect_false(anyNA(impute_mean(df_one_comp_missing_col, type = "total")))
-  expect_false(anyNA(impute_mean(df_first_row_comp_missing, type = "total")))
+  expect_false(anyNA(impute_mean(df_one_comp_missing_col,
+    type = "total"
+  )))
+  expect_false(anyNA(impute_mean(df_first_row_comp_missing,
+    type = "total"
+  )))
   expect_false(anyNA(impute_mean(df_no_comp_obs, type = "total")))
   expect_warning(
     impute_mean(df_all_NA, type = "total"),
@@ -161,10 +170,16 @@ test_that("apply_imputation() works with data.frames", {
 test_that("apply_imputation() works with matrices", {
   # check types
   expect_false(anyNA(impute_mean(matrix_100_2_mis, type = "columnwise")))
-  expect_false(anyNA(impute_mean(matrix_100_2_mis[-c(5, 30:40), ], type = "rowwise")))
+  expect_false(anyNA(impute_mean(matrix_100_2_mis[-c(5, 30:40), ],
+    type = "rowwise"
+  )))
   expect_false(anyNA(impute_mean(matrix_100_2_mis, type = "total")))
-  expect_false(anyNA(impute_mean(matrix_100_2_mis[-c(5, 30:40), ], type = "Two-Way")))
-  expect_false(anyNA(impute_mean(matrix_100_2_mis[-c(5, 30:40), ], type = "Winer")))
+  expect_false(anyNA(impute_mean(matrix_100_2_mis[-c(5, 30:40), ],
+    type = "Two-Way"
+  )))
+  expect_false(anyNA(impute_mean(matrix_100_2_mis[-c(5, 30:40), ],
+    type = "Winer"
+  )))
 })
 
 test_that("apply_imputation() works with tibbles", {
@@ -183,14 +198,20 @@ test_that("apply_imputation() works with tibbles", {
   tbl_XY_XY_mis_dbl$Y <- as.double(tbl_XY_XY_mis_dbl$Y)
 
   expect_false(anyNA(impute_mean(tbl_XY_XY_mis_dbl, type = "columnwise")))
-  expect_false(anyNA(impute_mean(tbl_XY_XY_mis_dbl[-c(5, 30:40), ], type = "rowwise")))
-  expect_false(anyNA(impute_mean(tbl_XY_XY_mis_dbl[-c(5, 30:40), ], type = "Winer")))
+  expect_false(anyNA(impute_mean(tbl_XY_XY_mis_dbl[-c(5, 30:40), ],
+    type = "rowwise"
+  )))
+  expect_false(anyNA(impute_mean(tbl_XY_XY_mis_dbl[-c(5, 30:40), ],
+    type = "Winer"
+  )))
 
   # Furthermore, if tibble version >= these solution should also work for the
   # tpyes "total" and "Two-Way":
   if (utils::packageVersion("tibble") >= package_version("3.0.0")) {
     expect_false(anyNA(impute_mean(tbl_XY_XY_mis_dbl, type = "total")))
-    expect_false(anyNA(impute_mean(tbl_XY_XY_mis_dbl[-c(5, 30:40), ], type = "Two-Way")))
+    expect_false(anyNA(impute_mean(tbl_XY_XY_mis_dbl[-c(5, 30:40), ],
+      type = "Two-Way"
+    )))
   }
 
   # Check that a meaningfull error is thrown for the types "total" and "Two-Way",
@@ -208,8 +229,8 @@ test_that("apply_imputation() works with tibbles", {
     )
   }
 
-  # All other tests and there possible errors would highly depend on the version of tibble
-  # and are omitted.
+  # All other tests and there possible errors would highly depend on the
+  # version of tibble and are omitted.
 })
 
 # mean imputation -----------------------------------------
@@ -218,7 +239,10 @@ test_that("apply_imputation() works with tibbles", {
 test_that("impute_mean()", {
   df_XY_XY_mean_imp <- impute_mean(df_XY_XY_mis)
   expect_false(anyNA(df_XY_XY_mean_imp))
-  expect_equal(colMeans(df_XY_XY_mean_imp), colMeans(df_XY_XY_mis, na.rm = TRUE))
+  expect_equal(
+    colMeans(df_XY_XY_mean_imp),
+    colMeans(df_XY_XY_mis, na.rm = TRUE)
+  )
 
   expect_false(anyNA(impute_mean(df_XY_mis_with_comp_chars)))
   # check type

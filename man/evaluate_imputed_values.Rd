@@ -46,8 +46,8 @@ A numeric vector of length one.
 Compare imputed to true values
 }
 \details{
-The following \code{criterion}s are implemented to compare the imputed values
-to the true values:
+The following \code{criterion}s are implemented to compare the
+imputed values to the true values:
 \itemize{
 \item{"RMSE" (the default): The Root Mean Squared Error between the imputed
 and true values}

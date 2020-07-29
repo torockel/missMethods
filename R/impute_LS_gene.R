@@ -16,18 +16,18 @@
 #' is one more case that needs a special treatment: If no suitable row can be
 #' found to impute a row, the mean of the observed values is imputed, too. If
 #' `verbose = TRUE`, a message will be given for the encountered instances of
-#' the described special cases. If `verbose = FALSE`, the function will deal with
-#' theses cases silently.
+#' the described special cases. If `verbose = FALSE`, the function will deal
+#' with theses cases silently.
 #'
 #'
 #' @param k Number of most correlated genes used for the imputation of a gene.
-#' @param eps Used in the calculation of the weights (Bo et al. (2004) used `eps
-#'   = 1e-6`).
+#' @param eps Used in the calculation of the weights (Bo et al. (2004) used
+#'   `eps = 1e-6`).
 #' @param min_common_obs A row can only take part in the imputation of another
 #'   row, if both rows share at least `min_common_obs` columns with no missing
 #'   values.
-#' @param return_r_max Logical; normally, this should be `FALSE`. `TRUE` is used
-#'   inside of `impute_LS_adaptive()` to speed up some computations.
+#' @param return_r_max Logical; normally, this should be `FALSE`. `TRUE` is
+#'   used inside of `impute_LS_adaptive()` to speed up some computations.
 #' @param verbose Should messages be given for special cases (see details)?
 #'
 #' @return If `return_r_max = TRUE`, a list with the imputed dataset and r_max.
@@ -58,7 +58,7 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
   rows_imp_with_rowMeans_no_suitable <- integer(0)
 
   ## Impute row by row --------------------------------------------------------
-  for (i in 1:nrow(ds)) {
+  for (i in seq_len(nrow(ds))) {
     M_i <- M[i, ]
     if (any(M_i)) { # only impute, if any missing value in row i
 

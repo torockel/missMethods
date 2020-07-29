@@ -114,8 +114,8 @@ The number of observations that are deleted in group 1 and group 2 are
 chosen to minimize the absolute difference between the realized odds and 1:x.
 Furthermore, if \code{round(nrow(ds) * p[i])} == 0, then no missing value
 will be created in \code{cols_mis[i]}.
-If \code{stochastic = TRUE}, the number of missing values in \code{cols_mis[i]}
-is a random variable.
+If \code{stochastic = TRUE}, the number of missing values in
+\code{cols_mis[i]} is a random variable.
 This random variable is a sum of two binomial distributed variables (one for
 group 1 and one for group 2).
 If \code{p} is not too high and \code{x} is not too high or to low (see
@@ -125,9 +125,9 @@ But in a single dataset the odds will be unequal to 1:x most of the time.
 If \code{p} is high and \code{x} is too high or too low, it is possible that
 the odds 1:x and the proportion of missing values \code{p} cannot be
 realized together.
-For example, if \code{p[i]} = 0.9, then a maximum of \code{x} = 1.25 is possible
-(assuming that  exactly 50 \% of the values are below and 50 \% of the values
-are above the cutoff value in \code{cols_ctrl[i]}).
+For example, if \code{p[i]} = 0.9, then a maximum of \code{x} = 1.25 is
+possible (assuming that  exactly 50 \% of the values are below and 50 \% of the
+values are above the cutoff value in \code{cols_ctrl[i]}).
 If a combination of \code{p} and \code{x} that cannot be realized together
 is given to \code{delete_MAR_1_to_x}, then a warning will be generated and
 \code{x} will be adjusted in such a way that \code{p} can be realized as

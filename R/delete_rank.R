@@ -22,8 +22,8 @@ delete_rank <- function(ds, p, cols_mis, cols_ctrl,
 
 #' Create MAR values using a ranking mechanism
 #'
-#' Create missing at random (MAR) values using a ranking mechanism in a data frame or
-#' a matrix
+#' Create missing at random (MAR) values using a ranking mechanism in a data
+#' frame or a matrix
 #'
 #' @template delete
 #' @template MAR

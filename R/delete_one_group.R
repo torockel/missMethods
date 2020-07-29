@@ -19,15 +19,24 @@ delete_one_group <- function(ds, p, cols_mis, cols_ctrl,
     )
     if (is.null(groups$g2)) {
       warning("column ", cols_ctrl[i], " is constant, effectively MCAR")
-      ds[, cols_mis[i]] <- delete_MCAR_vec(ds[, cols_mis[i], drop = TRUE], p[i], stochastic)
+      ds[, cols_mis[i]] <- delete_MCAR_vec(
+        ds[, cols_mis[i], drop = TRUE],
+        p[i], stochastic
+      )
     } else {
       miss_group <- groups[[sample.int(2, 1)]]
       if (length(miss_group) < round(nrow(ds) * p[i], 0)) {
-        warning("not enough objects in miss_group in column ", cols_ctrl[i], " to reach p")
+        warning(
+          "not enough objects in miss_group in column ", cols_ctrl[i],
+          " to reach p"
+        )
         ds[miss_group, cols_mis[i]] <- NA
       } else {
         eff_p <- p[i] * nrow(ds) / length(miss_group)
-        ds[miss_group, cols_mis[i]] <- delete_MCAR_vec(ds[miss_group, cols_mis[i], drop = TRUE], eff_p, stochastic)
+        ds[miss_group, cols_mis[i]] <- delete_MCAR_vec(
+          ds[miss_group, cols_mis[i], drop = TRUE],
+          eff_p, stochastic
+        )
       }
     }
   }
@@ -81,7 +90,8 @@ delete_one_group <- function(ds, p, cols_mis, cols_ctrl,
 #' ds <- data.frame(X = 1:20, Y = 101:120)
 #' delete_MAR_one_group(ds, 0.2, "X", "Y")
 delete_MAR_one_group <- function(ds, p, cols_mis, cols_ctrl,
-                                 cutoff_fun = median, prop = 0.5, use_lpSolve = TRUE,
+                                 cutoff_fun = median, prop = 0.5,
+                                 use_lpSolve = TRUE,
                                  ordered_as_unordered = FALSE,
                                  stochastic = FALSE, ...,
                                  miss_cols, ctrl_cols) {
@@ -123,7 +133,8 @@ delete_MAR_one_group <- function(ds, p, cols_mis, cols_ctrl,
 #' @examples
 #' delete_MNAR_one_group(ds, 0.2, "X")
 delete_MNAR_one_group <- function(ds, p, cols_mis,
-                                  cutoff_fun = median, prop = 0.5, use_lpSolve = TRUE,
+                                  cutoff_fun = median, prop = 0.5,
+                                  use_lpSolve = TRUE,
                                   ordered_as_unordered = FALSE,
                                   stochastic = FALSE, ...,
                                   miss_cols) {

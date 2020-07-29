@@ -64,9 +64,13 @@ which are constructed via \code{\link[=impute_in_classes]{impute_in_classes()}}.
 these two functions.
 }
 \examples{
-impute_hot_deck_in_classes(data.frame(X = c(rep("A", 10), rep("B", 10)),
-                                      Y = c(rep(NA, 5), 106:120)),
-                           "X", donor_limit = 1)
+impute_hot_deck_in_classes(data.frame(
+  X = c(rep("A", 10), rep("B", 10)),
+  Y = c(rep(NA, 5), 106:120)
+),
+"X",
+donor_limit = 1
+)
 }
 \references{
 Andridge, R.R. and Little, R.J.A. (2010), A Review of Hot Deck Imputation for

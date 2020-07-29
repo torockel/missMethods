@@ -4,8 +4,8 @@
 #'
 #' @template evaluation
 #'
-#' @details The following \code{criterion}s are implemented to compare the imputed values
-#' to the true values:
+#' @details The following \code{criterion}s are implemented to compare the
+#' imputed values to the true values:
 #' \itemize{
 #' \item{"RMSE" (the default): The Root Mean Squared Error between the imputed
 #' and true values}
@@ -86,7 +86,8 @@
 #' ds_imp <- impute_mean(ds_mis)
 #' evaluate_imputed_values(ds_imp, ds_orig, "NRMSE_tot_mean")
 #' evaluate_imputed_values(ds_imp, ds_orig, "NRMSE_col_mean")
-evaluate_imputed_values <- function(ds_imp, ds_orig, criterion = "RMSE", M = NULL,
+evaluate_imputed_values <- function(ds_imp, ds_orig, criterion = "RMSE",
+                                    M = NULL,
                                     cols_which = seq_len(ncol(ds_imp)),
                                     tolerance = sqrt(.Machine$double.eps),
                                     imp_ds, orig_ds, which_cols) {
