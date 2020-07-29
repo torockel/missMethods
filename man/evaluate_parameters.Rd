@@ -14,22 +14,22 @@ evaluate_parameters(
 )
 }
 \arguments{
-\item{pars_est}{a vector or matrix of estimated parameters}
+\item{pars_est}{A vector or matrix of estimated parameters.}
 
-\item{pars_true}{true parameters, normally a vector or a matrix}
+\item{pars_true}{True parameters, normally a vector or a matrix.}
 
-\item{criterion}{a string specifying the used criterion for comparing the
-imputed and original values}
+\item{criterion}{A string specifying the used criterion for comparing the
+imputed and original values.}
 
-\item{tolerance}{numeric, only used for \code{criterion = "precision"}:
-numeric differences smaller than tolerance are treated as zero/equal}
+\item{tolerance}{Numeric, only used for \code{criterion = "precision"}:
+numeric differences smaller than tolerance are treated as zero/equal.}
 
-\item{est_pars}{deprecated, renamed to \code{pars_est}}
+\item{est_pars}{Deprecated, renamed to \code{pars_est}.}
 
-\item{true_pars}{deprecated, renamed to \code{pars_true}}
+\item{true_pars}{Deprecated, renamed to \code{pars_true}.}
 }
 \value{
-a numeric vector of length one
+A numeric vector of length one.
 }
 \description{
 Compare estimated parameters to true parameters

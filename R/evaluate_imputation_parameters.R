@@ -33,8 +33,8 @@
 #'
 #' @inheritParams evaluate_parameters
 #' @inheritParams evaluate_imputed_values
-#' @param parameter a string specifying the estimated parameters for comparison
-#' @param ... further arguments passed to function for parameter estimation
+#' @param parameter A string specifying the estimated parameters for comparison.
+#' @param ... Further arguments passed to the function for parameter estimation.
 #'
 #' @export
 #'

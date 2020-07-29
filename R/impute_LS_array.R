@@ -14,13 +14,13 @@
 #' `impute_expected_values()`.
 #'
 #'
-#' @param k directly passed to [impute_LS_gene()]
-#' @param eps directly passed to [impute_LS_gene()]
-#' @param min_common_obs directly passed to [impute_LS_gene()]
-#' @param ds_impute_LS_gene result of imputing `ds` with `ds_impute_LS_gene()`,
-#'   if this already exists (see details)
-#' @param verbose_gene should `impute_LS_gene()` be `verbose`
-#' @param verbose_expected_values should `impute_expected_values()` be `verbose`
+#' @param k Directly passed to [impute_LS_gene()].
+#' @param eps Directly passed to [impute_LS_gene()].
+#' @param min_common_obs Directly passed to [impute_LS_gene()].
+#' @param ds_impute_LS_gene Result of imputing `ds` with `ds_impute_LS_gene()`,
+#'   if this already exists (see details).
+#' @param verbose_gene Should `impute_LS_gene()` be `verbose`?
+#' @param verbose_expected_values Should `impute_expected_values()` be `verbose`?
 #'
 impute_LS_array <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5, ds_impute_LS_gene = NULL,
                             verbose_gene = FALSE, verbose_expected_values = FALSE) {

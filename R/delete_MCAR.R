@@ -40,7 +40,7 @@
 #' each column. If \code{stochastic = TRUE}, then the argument \code{p_overall}
 #' is ignored because it is superfluous.
 #'
-#' @param p_overall logical; see details
+#' @param p_overall Logical; see details.
 #'
 #' @export
 #'

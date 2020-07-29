@@ -52,15 +52,15 @@
 #' \code{M} (see examples). It is possible to combine \code{M} and
 #' \code{cols_which}.
 #'
-#' @param ds_imp a data frame or matrix with imputed values
-#' @param ds_orig a data frame or matrix with original (true) values
-#' @param cols_which indices or names of columns used for evaluation
-#' @param M NULL (the default) or a missing data indicator matrix; the missing
+#' @param ds_imp A data frame or matrix with imputed values.
+#' @param ds_orig A data frame or matrix with original (true) values.
+#' @param cols_which Indices or names of columns used for evaluation.
+#' @param M NULL (the default) or a missing data indicator matrix. The missing
 #'   data indicator matrix is normally created via \code{is.na(ds_mis)}, where
-#'   \code{ds_mis} is the dataset after deleting values from \code{ds_orig}
-#' @param imp_ds deprecated, renamed to \code{ds_imp}
-#' @param orig_ds deprecated, renamed to \code{ds_orig}
-#' @param which_cols deprecated, renamed to \code{cols_which}
+#'   \code{ds_mis} is the dataset after deleting values from \code{ds_orig}.
+#' @param imp_ds Deprecated, renamed to \code{ds_imp}.
+#' @param orig_ds Deprecated, renamed to \code{ds_orig}.
+#' @param which_cols Deprecated, renamed to \code{cols_which}.
 #'
 #' @export
 #'

@@ -65,8 +65,8 @@ impute_mean <- function(ds, type = "columnwise") {
 #' The function \code{\link[stats]{median}} is used for the calculation of
 #' the median values for imputation.
 #'
-#' @param ordered_low logical; used for the calculation of ordered factors (for
-#'   details see: \link{median.factor})
+#' @param ordered_low Logical; used for the calculation of the median from
+#'   ordered factors (for details see: \link{median.factor}).
 #'
 #' @export
 #' @seealso

@@ -121,9 +121,9 @@ delete_censoring <- function(ds, p, cols_mis, cols_ctrl, where = "lower", sortin
 #' is recommended.
 #'
 #'
-#' @param where controls where missing values are created; one of "lower",
-#'   "upper" or "both" (see details)
-#' @param sorting logical; should sorting be used or a quantile as a threshold
+#' @param where Controls where missing values are created; one of "lower",
+#'   "upper" or "both" (see details).
+#' @param sorting Logical; should sorting be used or a quantile as a threshold.
 #'
 #' @export
 #'

@@ -14,20 +14,20 @@ impute_expected_values(
 )
 }
 \arguments{
-\item{ds}{a data frame or matrix with missing values}
+\item{ds}{A data frame or matrix with missing values.}
 
-\item{mu}{vector of means for the variables}
+\item{mu}{Vector of means for the variables.}
 
-\item{S}{covariance matrix of the variables}
+\item{S}{Covariance matrix of the variables.}
 
-\item{stochastic}{logical, should residuals be added to the expected values}
+\item{stochastic}{Logical, should residuals be added to the expected values.}
 
-\item{M}{missing data indicator matrix}
+\item{M}{Missing data indicator matrix.}
 
-\item{verbose}{should messages be given for special cases (see details)}
+\item{verbose}{Should messages be given for special cases (see details)?}
 }
 \value{
-An object of the same class as \code{ds} with imputed missing values
+An object of the same class as \code{ds} with imputed missing values.
 }
 \description{
 Impute the missing values with expected values given the observed values and

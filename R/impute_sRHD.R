@@ -43,14 +43,14 @@
 #' donor limit is applied for every column separately.
 #'
 #'
-#' @param type the type of hot deck; the default ("cols_seq") is a random hot
+#' @param type The type of hot deck; the default ("cols_seq") is a random hot
 #'   deck that imputes each column separately. Other choices are "sim_comp" and
 #'   "sim_part". Both impute all missing values in an object (row)
 #'   simultaneously using a single donor object. The difference between the two
 #'   types is the choice of objects that can act as donors. "sim_comp:" only
 #'   completely observed objects can be donors. "sim_part": all objects that
 #'   have no missing values in the missing parts of a recipient can be donors.
-#' @param donor_limit numeric of length one or "min"; how many times an object
+#' @param donor_limit Numeric of length one or "min"; how many times an object
 #'   can be a donor. default is \code{Inf} (no restriction).
 #'
 #' @references Andridge, R. R., & Little, R. J. (2010). A review of hot deck

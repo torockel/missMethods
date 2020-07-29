@@ -1,8 +1,8 @@
 #' @family functions to create MAR
-#' @param cols_ctrl a vector of column names or indices of columns, which
+#' @param cols_ctrl A vector of column names or indices of columns, which
 #' controls the creation of missing values in \code{cols_mis}. Must be of the
 #' same length as \code{cols_mis}.
-#' @param ctrl_cols deprecated, use cols_ctrl instead
+#' @param ctrl_cols Deprecated, use cols_ctrl instead.
 #'
 #' @details This function creates missing at random (MAR) values in the columns
 #' specified by the argument \code{cols_mis}.

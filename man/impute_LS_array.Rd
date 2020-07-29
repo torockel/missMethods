@@ -15,23 +15,23 @@ impute_LS_array(
 )
 }
 \arguments{
-\item{ds}{a data frame or matrix with missing values}
+\item{ds}{A data frame or matrix with missing values.}
 
-\item{k}{directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}}
+\item{k}{Directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}.}
 
-\item{eps}{directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}}
+\item{eps}{Directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}.}
 
-\item{min_common_obs}{directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}}
+\item{min_common_obs}{Directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}.}
 
-\item{ds_impute_LS_gene}{result of imputing \code{ds} with \code{ds_impute_LS_gene()},
-if this already exists (see details)}
+\item{ds_impute_LS_gene}{Result of imputing \code{ds} with \code{ds_impute_LS_gene()},
+if this already exists (see details).}
 
-\item{verbose_gene}{should \code{impute_LS_gene()} be \code{verbose}}
+\item{verbose_gene}{Should \code{impute_LS_gene()} be \code{verbose}?}
 
-\item{verbose_expected_values}{should \code{impute_expected_values()} be \code{verbose}}
+\item{verbose_expected_values}{Should \code{impute_expected_values()} be \code{verbose}?}
 }
 \value{
-An object of the same class as \code{ds} with imputed missing values
+An object of the same class as \code{ds} with imputed missing values.
 }
 \description{
 Perform LSimpute_array as described by Bo et al. (2004)

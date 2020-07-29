@@ -14,25 +14,25 @@ impute_LS_gene(
 )
 }
 \arguments{
-\item{ds}{a data frame or matrix with missing values}
+\item{ds}{A data frame or matrix with missing values.}
 
-\item{k}{number of most correlated genes used for the imputation of a gene}
+\item{k}{Number of most correlated genes used for the imputation of a gene.}
 
-\item{eps}{used in the calculation of the weights (Bo et al. (2004) used \code{eps = 1e-6})}
+\item{eps}{Used in the calculation of the weights (Bo et al. (2004) used \code{eps = 1e-6}).}
 
-\item{min_common_obs}{a row can only take part in the imputation of another
+\item{min_common_obs}{A row can only take part in the imputation of another
 row, if both rows share at least \code{min_common_obs} columns with no missing
 values.}
 
-\item{return_r_max}{logical, normally this should be \code{FALSE}. \code{TRUE} is used
+\item{return_r_max}{Logical; normally, this should be \code{FALSE}. \code{TRUE} is used
 inside of \code{impute_LS_adaptive()} to speed up some computations.}
 
-\item{verbose}{should messages be given for special cases (see details)}
+\item{verbose}{Should messages be given for special cases (see details)?}
 }
 \value{
-An object of the same class as \code{ds} with imputed missing values
+An object of the same class as \code{ds} with imputed missing values.
 
-If \code{return_r_max = TRUE}, a list with the imputed dataset and r_max
+If \code{return_r_max = TRUE}, a list with the imputed dataset and r_max.
 }
 \description{
 Perform LSimpute_gene as described by Bo et al. (2004)

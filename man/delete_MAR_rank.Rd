@@ -15,26 +15,26 @@ delete_MAR_rank(
 )
 }
 \arguments{
-\item{ds}{a data frame or matrix in which missing values will be created}
+\item{ds}{A data frame or matrix in which missing values will be created.}
 
-\item{p}{a numeric vector with length one or equal to length \code{cols_mis};
-the probability that a value is missing}
+\item{p}{A numeric vector with length one or equal to length \code{cols_mis};
+the probability that a value is missing.}
 
-\item{cols_mis}{a vector of column names or indices of columns in which
-missing values will be created}
+\item{cols_mis}{A vector of column names or indices of columns in which
+missing values will be created.}
 
-\item{cols_ctrl}{a vector of column names or indices of columns, which
+\item{cols_ctrl}{A vector of column names or indices of columns, which
 controls the creation of missing values in \code{cols_mis}. Must be of the
 same length as \code{cols_mis}.}
 
-\item{ties.method}{how ties are handled, passed to \code{\link[base]{rank}}}
+\item{ties.method}{How ties are handled. Passed to \code{\link[base]{rank}}.}
 
-\item{miss_cols}{deprecated, use cols_mis instead}
+\item{miss_cols}{Deprecated, use cols_mis instead.}
 
-\item{ctrl_cols}{deprecated, use cols_ctrl instead}
+\item{ctrl_cols}{Deprecated, use cols_ctrl instead.}
 }
 \value{
-An object of the same class as \code{ds} with missing values
+An object of the same class as \code{ds} with missing values.
 }
 \description{
 Create missing at random (MAR) values using a ranking mechanism in a data frame or

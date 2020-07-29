@@ -9,10 +9,10 @@
 #' and \code{\link{evaluate_imputed_values}}.
 #' The possible choices are documented in \code{\link{evaluate_imputed_values}}.
 #'
-#' @param pars_est a vector or matrix of estimated parameters
-#' @param pars_true true parameters, normally a vector or a matrix
-#' @param est_pars deprecated, renamed to \code{pars_est}
-#' @param true_pars deprecated, renamed to \code{pars_true}
+#' @param pars_est A vector or matrix of estimated parameters.
+#' @param pars_true True parameters, normally a vector or a matrix.
+#' @param est_pars Deprecated, renamed to \code{pars_est}.
+#' @param true_pars Deprecated, renamed to \code{pars_true}.
 #'
 #' @export
 #'

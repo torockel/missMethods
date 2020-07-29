@@ -22,11 +22,11 @@
 #' returned (this value is called \sQuote{low-median} in
 #' \code{\link[stats]{mad}}).
 #'
-#' @param x an ordered factor (for unordered factors an error will be thrown)
-#' @param na.rm logical; should \code{NA} be removed before computation
-#' @param ordered_low logical; only used if the length of x is even and the two
-#'   middle values are unequal (see details)
-#' @param ... not used in this function
+#' @param x An ordered factor (for unordered factors an error will be thrown).
+#' @param na.rm Logical; should \code{NA} be removed before computation?
+#' @param ordered_low Logical; only used if the length of x is even and the two
+#'   middle values are unequal (see details).
+#' @param ... Not used in this function.
 #'
 #' @return a length-one factor
 #' @export

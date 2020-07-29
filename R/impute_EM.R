@@ -61,13 +61,13 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 #' be added to these values. If `verbose = TRUE`, a message will be given for
 #' these rows.
 #'
-#' @param stochastic logical; see details
-#' @param maxits maximum number of iterations for the EM, passed to
-#'   [norm::em.norm()]
-#' @param criterion if maximum relative difference in parameter estimates is
-#'   below this threshold, the EM algorithm stops, argument is directly passed
-#'   to [norm::em.norm()]
-#' @param verbose should messages be given for special cases (see details)
+#' @param stochastic Logical; see details.
+#' @param maxits Maximum number of iterations for the EM, passed to
+#'   [norm::em.norm()].
+#' @param criterion If maximum relative difference in parameter estimates is
+#'   below this threshold, the EM algorithm stops. Argument is directly passed
+#'   to [norm::em.norm()].
+#' @param verbose Should messages be given for special cases (see details)?
 #'
 #' @export
 #'

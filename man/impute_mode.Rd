@@ -7,13 +7,13 @@
 impute_mode(ds, type = "columnwise")
 }
 \arguments{
-\item{ds}{a data frame or matrix with missing values}
+\item{ds}{A data frame or matrix with missing values.}
 
-\item{type}{one of: "columnwise", "rowwise", "total", "Two-Way" or "Winer"
-(see details)}
+\item{type}{One of: "columnwise", "rowwise", "total", "Two-Way" or "Winer"
+(see details).}
 }
 \value{
-An object of the same class as \code{ds} with imputed missing values
+An object of the same class as \code{ds} with imputed missing values.
 }
 \description{
 Impute an observed mode value for every missing value
@@ -40,7 +40,7 @@ Beland, S., Pichette, F., & Jolani, S. (2016). Impact on Cronbach's
 \emph{The Quantitative Methods for Psychology}, 12(1), 57-73.
 }
 \seealso{
-\code{\link{apply_imputation}} the workhorse for this function
+\code{\link{apply_imputation}} the workhorse for this function.
 
 Other location parameter imputation functions: 
 \code{\link{impute_mean}()},

@@ -7,14 +7,14 @@
 \method{median}{factor}(x, na.rm = FALSE, ordered_low = FALSE, ...)
 }
 \arguments{
-\item{x}{an ordered factor (for unordered factors an error will be thrown)}
+\item{x}{An ordered factor (for unordered factors an error will be thrown).}
 
-\item{na.rm}{logical; should \code{NA} be removed before computation}
+\item{na.rm}{Logical; should \code{NA} be removed before computation?}
 
-\item{ordered_low}{logical; only used if the length of x is even and the two
-middle values are unequal (see details)}
+\item{ordered_low}{Logical; only used if the length of x is even and the two
+middle values are unequal (see details).}
 
-\item{...}{not used in this function}
+\item{...}{Not used in this function.}
 }
 \value{
 a length-one factor

@@ -17,30 +17,30 @@ evaluate_imputed_values(
 )
 }
 \arguments{
-\item{ds_imp}{a data frame or matrix with imputed values}
+\item{ds_imp}{A data frame or matrix with imputed values.}
 
-\item{ds_orig}{a data frame or matrix with original (true) values}
+\item{ds_orig}{A data frame or matrix with original (true) values.}
 
-\item{criterion}{a string specifying the used criterion for comparing the
-imputed and original values}
+\item{criterion}{A string specifying the used criterion for comparing the
+imputed and original values.}
 
-\item{M}{NULL (the default) or a missing data indicator matrix; the missing
+\item{M}{NULL (the default) or a missing data indicator matrix. The missing
 data indicator matrix is normally created via \code{is.na(ds_mis)}, where
-\code{ds_mis} is the dataset after deleting values from \code{ds_orig}}
+\code{ds_mis} is the dataset after deleting values from \code{ds_orig}.}
 
-\item{cols_which}{indices or names of columns used for evaluation}
+\item{cols_which}{Indices or names of columns used for evaluation.}
 
-\item{tolerance}{numeric, only used for \code{criterion = "precision"}:
-numeric differences smaller than tolerance are treated as zero/equal}
+\item{tolerance}{Numeric, only used for \code{criterion = "precision"}:
+numeric differences smaller than tolerance are treated as zero/equal.}
 
-\item{imp_ds}{deprecated, renamed to \code{ds_imp}}
+\item{imp_ds}{Deprecated, renamed to \code{ds_imp}.}
 
-\item{orig_ds}{deprecated, renamed to \code{ds_orig}}
+\item{orig_ds}{Deprecated, renamed to \code{ds_orig}.}
 
-\item{which_cols}{deprecated, renamed to \code{cols_which}}
+\item{which_cols}{Deprecated, renamed to \code{cols_which}.}
 }
 \value{
-a numeric vector of length one
+A numeric vector of length one.
 }
 \description{
 Compare imputed to true values

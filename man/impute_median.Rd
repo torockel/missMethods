@@ -7,16 +7,16 @@
 impute_median(ds, type = "columnwise", ordered_low = FALSE)
 }
 \arguments{
-\item{ds}{a data frame or matrix with missing values}
+\item{ds}{A data frame or matrix with missing values.}
 
-\item{type}{one of: "columnwise", "rowwise", "total", "Two-Way" or "Winer"
-(see details)}
+\item{type}{One of: "columnwise", "rowwise", "total", "Two-Way" or "Winer"
+(see details).}
 
-\item{ordered_low}{logical; used for the calculation of ordered factors (for
-details see: \link{median.factor})}
+\item{ordered_low}{Logical; used for the calculation of the median from
+ordered factors (for details see: \link{median.factor}).}
 }
 \value{
-An object of the same class as \code{ds} with imputed missing values
+An object of the same class as \code{ds} with imputed missing values.
 }
 \description{
 Impute an observed median value for every missing value
@@ -54,7 +54,7 @@ Beland, S., Pichette, F., & Jolani, S. (2016). Impact on Cronbach's
 \emph{The Quantitative Methods for Psychology}, 12(1), 57-73.
 }
 \seealso{
-\code{\link{apply_imputation}} the workhorse for this function
+\code{\link{apply_imputation}} the workhorse for this function.
 
 \code{\link[stats]{median}}, \code{\link{median.factor}}
 

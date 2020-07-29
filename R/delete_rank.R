@@ -38,7 +38,7 @@ delete_rank <- function(ds, p, cols_mis, cols_ctrl,
 #' Possible choices for \code{ties.method} are documented in
 #' \code{\link[base]{rank}}.
 #'
-#' @param ties.method how ties are handled, passed to \code{\link[base]{rank}}
+#' @param ties.method How ties are handled. Passed to \code{\link[base]{rank}}.
 #'
 #' @export
 #' @seealso \code{\link[base]{rank}}, \code{\link{delete_MNAR_rank}}

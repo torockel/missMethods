@@ -15,14 +15,14 @@
 #' from [impute_expected_values()] belong to `impute_LS_array()`.
 #'
 #' @inheritParams impute_LS_array
-#' @param p_mis_sim percentage of observed values that are set `NA` to estimate
+#' @param p_mis_sim Percentage of observed values that are set `NA` to estimate
 #'   the mixing coefficient *p*. The default value (0.05) corresponds to the
 #'   choice of Bo et al. (2004).
-#' @param verbose_array should `impute_LS_array()` be `verbose`
-#' @param verbose_gene_p should `impute_LS_gene()` be `verbose` while estimating
-#'   *p*
-#' @param verbose_array_p should `impute_LS_array()` be `verbose` while
-#'   estimating *p*
+#' @param verbose_array Should `impute_LS_array()` be `verbose`?
+#' @param verbose_gene_p Should `impute_LS_gene()` be `verbose` while estimating
+#'   *p*?
+#' @param verbose_array_p Should `impute_LS_array()` be `verbose` while
+#'   estimating *p*?
 impute_LS_combined <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5, p_mis_sim = 0.05,
                                verbose_gene = FALSE, verbose_array = FALSE,
                                verbose_gene_p = FALSE, verbose_array_p = FALSE) {

@@ -7,9 +7,9 @@
 impute_sRHD(ds, type = "cols_seq", donor_limit = Inf)
 }
 \arguments{
-\item{ds}{a data frame or matrix with missing values}
+\item{ds}{A data frame or matrix with missing values.}
 
-\item{type}{the type of hot deck; the default ("cols_seq") is a random hot
+\item{type}{The type of hot deck; the default ("cols_seq") is a random hot
 deck that imputes each column separately. Other choices are "sim_comp" and
 "sim_part". Both impute all missing values in an object (row)
 simultaneously using a single donor object. The difference between the two
@@ -17,11 +17,11 @@ types is the choice of objects that can act as donors. "sim_comp:" only
 completely observed objects can be donors. "sim_part": all objects that
 have no missing values in the missing parts of a recipient can be donors.}
 
-\item{donor_limit}{numeric of length one or "min"; how many times an object
+\item{donor_limit}{Numeric of length one or "min"; how many times an object
 can be a donor. default is \code{Inf} (no restriction).}
 }
 \value{
-An object of the same class as \code{ds} with imputed missing values
+An object of the same class as \code{ds} with imputed missing values.
 }
 \description{
 Impute missing values in a data frame or a matrix using a simple random hot

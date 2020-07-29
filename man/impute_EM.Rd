@@ -13,21 +13,21 @@ impute_EM(
 )
 }
 \arguments{
-\item{ds}{a data frame or matrix with missing values}
+\item{ds}{A data frame or matrix with missing values.}
 
-\item{stochastic}{logical; see details}
+\item{stochastic}{Logical; see details.}
 
-\item{maxits}{maximum number of iterations for the EM, passed to
-\code{\link[norm:em.norm]{norm::em.norm()}}}
+\item{maxits}{Maximum number of iterations for the EM, passed to
+\code{\link[norm:em.norm]{norm::em.norm()}}.}
 
-\item{criterion}{if maximum relative difference in parameter estimates is
-below this threshold, the EM algorithm stops, argument is directly passed
-to \code{\link[norm:em.norm]{norm::em.norm()}}}
+\item{criterion}{If maximum relative difference in parameter estimates is
+below this threshold, the EM algorithm stops. Argument is directly passed
+to \code{\link[norm:em.norm]{norm::em.norm()}}.}
 
-\item{verbose}{should messages be given for special cases (see details)}
+\item{verbose}{Should messages be given for special cases (see details)?}
 }
 \value{
-An object of the same class as \code{ds} with imputed missing values
+An object of the same class as \code{ds} with imputed missing values.
 }
 \description{
 Impute missing values in a data frame or a matrix using parameters estimated

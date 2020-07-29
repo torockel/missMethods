@@ -18,40 +18,40 @@ impute_hot_deck_in_classes(
 )
 }
 \arguments{
-\item{ds}{a data frame or matrix with missing values}
+\item{ds}{A data frame or matrix with missing values.}
 
-\item{cols_class}{columns that are used for constructing the imputation.
-classes}
+\item{cols_class}{Columns that are used for constructing the imputation
+classes.}
 
-\item{type}{the type of hot deck (for details, see \code{\link[=impute_sRHD]{impute_sRHD()}})}
+\item{type}{The type of hot deck (for details, see \code{\link[=impute_sRHD]{impute_sRHD()}}).}
 
-\item{breaks}{number of intervals / levels a column is broken into (see
+\item{breaks}{Number of intervals / levels a column is broken into (see
 \code{\link[=cut]{cut()}}, which is used internally for cutting numeric columns). If \code{breaks = Inf} (the default), every unique value of a column can be in a separate
 class (if no other restrictions apply).}
 
-\item{use_quantiles}{should quantiles be used for cutting numeric vectors?
+\item{use_quantiles}{Should quantiles be used for cutting numeric vectors?
 Normally, \code{\link[=cut]{cut()}} divides the range of an vector into equal spaced
 intervals. If \code{use_quantiles = TRUE}, the classes will be of roughly equal
 content.}
 
-\item{min_objs_in_class}{minimum objects (rows) in an imputation class}
+\item{min_objs_in_class}{Minimum number of objects (rows) in an imputation class.}
 
-\item{min_obs_comp}{minimum completely observed objects (rows) in an
-imputation class}
+\item{min_obs_comp}{Minimum number of completely observed objects (rows) in an
+imputation class.}
 
-\item{min_obs_per_col}{minimum number of observed values in every column of
-an imputation class}
+\item{min_obs_per_col}{Minimum number of observed values in every column of
+an imputation class.}
 
-\item{donor_limit}{minimum odds between incomplete and complete values in a
+\item{donor_limit}{Minimum odds between incomplete and complete values in a
 column, if \code{type = cols_seq}. If \code{type = sim_comp}, minimum odds between
 incomplete and complete rows. For \code{type = sim_part} the donor limit option
 is not implemented and \code{donor_limit} should be \code{Inf}.}
 
-\item{add_imputation_classes}{should imputation classes be added as
+\item{add_imputation_classes}{Should imputation classes be added as
 attributes to the imputed dataset?}
 }
 \value{
-An object of the same class as \code{ds} with imputed missing values
+An object of the same class as \code{ds} with imputed missing values.
 }
 \description{
 Impute missing values in a data frame or a matrix using a hot deck within

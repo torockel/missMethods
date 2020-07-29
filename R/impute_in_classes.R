@@ -12,30 +12,30 @@
 #'   of collapsing and early stopping is used for the construction of the
 #'   classes.
 #'
-#' @param cols_class columns that are used for constructing the imputation.
-#'   classes
-#' @param FUN an imputation function that is applied to impute the missing
-#'   values
-#' @param breaks number of intervals / levels a column is broken into (see
+#' @param cols_class Columns that are used for constructing the imputation
+#'   classes.
+#' @param FUN An imputation function that is applied to impute the missing
+#'   values.
+#' @param breaks Number of intervals / levels a column is broken into (see
 #'   [cut()], which is used internally for cutting numeric columns). If `breaks
 #'   = Inf` (the default), every unique value of a column can be in a separate
 #'   class (if no other restrictions apply).
-#' @param use_quantiles should quantiles be used for cutting numeric vectors?
+#' @param use_quantiles Should quantiles be used for cutting numeric vectors?
 #'   Normally, [cut()] divides the range of an vector into equal spaced
 #'   intervals. If `use_quantiles = TRUE`, the classes will be of roughly equal
 #'   content.
-#' @param min_objs_in_class minimum objects (rows) in an imputation class
-#' @param min_obs_comp minimum completely observed objects (rows) in an
-#'   imputation class
-#' @param min_obs_per_col minimum number of observed values in every column of
-#'   an imputation class
-#' @param donor_limit minimum odds between incomplete and complete values in a
+#' @param min_objs_in_class Minimum number of objects (rows) in an imputation class.
+#' @param min_obs_comp Minimum number of completely observed objects (rows) in an
+#'   imputation class.
+#' @param min_obs_per_col Minimum number of observed values in every column of
+#'   an imputation class.
+#' @param donor_limit Minimum odds between incomplete and complete values in a
 #'   column, if `dl_type = cols_seq`. If `dl_type = sim_comp`, minimum odds
 #'   between incomplete and complete rows.
-#' @param dl_type see `donor_limit`
-#' @param add_imputation_classes should imputation classes be added as
+#' @param dl_type See `donor_limit`.
+#' @param add_imputation_classes Should imputation classes be added as
 #'   attributes to the imputed dataset?
-#' @param ... arguments passed to `FUN`
+#' @param ... Arguments passed to `FUN`.
 #'
 #'
 #' @export
@@ -98,11 +98,11 @@ impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf, use_quantiles =
 #' these two functions.
 #'
 #' @inheritParams impute_in_classes
-#' @param donor_limit minimum odds between incomplete and complete values in a
+#' @param donor_limit Minimum odds between incomplete and complete values in a
 #'   column, if `type = cols_seq`. If `type = sim_comp`, minimum odds between
 #'   incomplete and complete rows. For `type = sim_part` the donor limit option
 #'   is not implemented and `donor_limit` should be `Inf`.
-#' @param type the type of hot deck (for details, see [impute_sRHD()])
+#' @param type The type of hot deck (for details, see [impute_sRHD()]).
 #'
 #' @seealso
 #' [impute_in_classes()], which is used for the construction of the imputation

@@ -175,20 +175,20 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
 #' differ (see above). However, the realized odds will be constant over multiple
 #' runs.
 #'
-#' @param x numeric with length one (0 < x < \code{Inf}); odds are 1 to x for
+#' @param x Numeric with length one (0 < x < \code{Inf}); odds are 1 to x for
 #'   the probability of a value to be missing in group 1 against the probability
-#'   of a value to be missing  in group 2 (see details)
-#' @param cutoff_fun function that calculates the cutoff values in the
-#'   \code{cols_ctrl}
-#' @param add_realized_x logical; if TRUE the realized odds for cols_mis will
-#'   be returned (as attribute)
-#' @param prop numeric of length one; (minimum) proportion of rows in group 1
-#'   (only used for unordered factors)
-#' @param use_lpSolve logical; should lpSolve be used for the determination of
-#'   groups, if \code{cols_ctrl[i]} is an unordered factor
-#' @param ordered_as_unordered logical; should ordered factors be treated as
-#'   unordered factors
-#' @param ... further arguments passed to \code{cutoff_fun}
+#'   of a value to be missing  in group 2 (see details).
+#' @param cutoff_fun Function that calculates the cutoff values in the
+#'   \code{cols_ctrl}.
+#' @param add_realized_x Logical; if TRUE the realized odds for cols_mis will
+#'   be returned (as attribute).
+#' @param prop Numeric of length one; (minimum) proportion of rows in group 1
+#'   (only used for unordered factors).
+#' @param use_lpSolve Logical; should lpSolve be used for the determination of
+#'   groups, if \code{cols_ctrl[i]} is an unordered factor.
+#' @param ordered_as_unordered Logical; should ordered factors be treated as
+#'   unordered factors.
+#' @param ... Further arguments passed to \code{cutoff_fun}.
 #'
 #' @export
 #' @seealso \code{\link{delete_MNAR_1_to_x}}

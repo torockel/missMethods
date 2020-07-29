@@ -19,35 +19,35 @@ impute_LS_adaptive(
 )
 }
 \arguments{
-\item{ds}{a data frame or matrix with missing values}
+\item{ds}{A data frame or matrix with missing values.}
 
-\item{k}{directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}}
+\item{k}{Directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}.}
 
-\item{eps}{directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}}
+\item{eps}{Directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}.}
 
-\item{min_common_obs}{directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}}
+\item{min_common_obs}{Directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}.}
 
-\item{r_max_min}{minimum number of nearest genes used for imputation. The
+\item{r_max_min}{Minimum number of nearest genes used for imputation. The
 default value (100) corresponds to the choice of Bo et al. (2004).}
 
-\item{p_mis_sim}{percentage of observed values that are set \code{NA} to estimate
+\item{p_mis_sim}{Percentage of observed values that are set \code{NA} to estimate
 the mixing coefficient \emph{p}. The default value (0.05) corresponds to the
 choice of Bo et al. (2004).}
 
-\item{warn_r_max}{should a warning be given, if \code{r_max_min} is set too high?}
+\item{warn_r_max}{Should a warning be given, if \code{r_max_min} is set too high?}
 
-\item{verbose_gene}{should \code{impute_LS_gene()} be \code{verbose}}
+\item{verbose_gene}{Should \code{impute_LS_gene()} be \code{verbose}?}
 
-\item{verbose_array}{should \code{impute_LS_array()} be \code{verbose}}
+\item{verbose_array}{Should \code{impute_LS_array()} be \code{verbose}?}
 
-\item{verbose_gene_p}{should \code{impute_LS_gene()} be \code{verbose} while estimating
-\emph{p}}
+\item{verbose_gene_p}{Should \code{impute_LS_gene()} be \code{verbose} while estimating
+\emph{p}?}
 
-\item{verbose_array_p}{should \code{impute_LS_array()} be \code{verbose} while
-estimating \emph{p}}
+\item{verbose_array_p}{Should \code{impute_LS_array()} be \code{verbose} while
+estimating \emph{p}?}
 }
 \value{
-An object of the same class as \code{ds} with imputed missing values
+An object of the same class as \code{ds} with imputed missing values.
 }
 \description{
 Perform LSimpute_adaptive as described by Bo et al. (2004)

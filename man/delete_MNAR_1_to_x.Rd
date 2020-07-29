@@ -20,41 +20,41 @@ delete_MNAR_1_to_x(
 )
 }
 \arguments{
-\item{ds}{a data frame or matrix in which missing values will be created}
+\item{ds}{A data frame or matrix in which missing values will be created.}
 
-\item{p}{a numeric vector with length one or equal to length \code{cols_mis};
-the probability that a value is missing}
+\item{p}{A numeric vector with length one or equal to length \code{cols_mis};
+the probability that a value is missing.}
 
-\item{cols_mis}{a vector of column names or indices of columns in which
-missing values will be created}
+\item{cols_mis}{A vector of column names or indices of columns in which
+missing values will be created.}
 
-\item{x}{numeric with length one (0 < x < \code{Inf}); odds are 1 to x for
+\item{x}{Numeric with length one (0 < x < \code{Inf}); odds are 1 to x for
 the probability of a value to be missing in group 1 against the probability
-of a value to be missing  in group 2 (see details)}
+of a value to be missing  in group 2 (see details).}
 
-\item{cutoff_fun}{function that calculates the cutoff values in the
-\code{cols_ctrl}}
+\item{cutoff_fun}{Function that calculates the cutoff values in the
+\code{cols_ctrl}.}
 
-\item{prop}{numeric of length one; (minimum) proportion of rows in group 1
-(only used for unordered factors)}
+\item{prop}{Numeric of length one; (minimum) proportion of rows in group 1
+(only used for unordered factors).}
 
-\item{use_lpSolve}{logical; should lpSolve be used for the determination of
-groups, if \code{cols_ctrl[i]} is an unordered factor}
+\item{use_lpSolve}{Logical; should lpSolve be used for the determination of
+groups, if \code{cols_ctrl[i]} is an unordered factor.}
 
-\item{ordered_as_unordered}{logical; should ordered factors be treated as
-unordered factors}
+\item{ordered_as_unordered}{Logical; should ordered factors be treated as
+unordered factors.}
 
-\item{stochastic}{logical; see details}
+\item{stochastic}{Logical; see details.}
 
-\item{add_realized_x}{logical; if TRUE the realized odds for cols_mis will
-be returned (as attribute)}
+\item{add_realized_x}{Logical; if TRUE the realized odds for cols_mis will
+be returned (as attribute).}
 
-\item{...}{further arguments passed to \code{cutoff_fun}}
+\item{...}{Further arguments passed to \code{cutoff_fun}.}
 
-\item{miss_cols}{deprecated, use cols_mis instead}
+\item{miss_cols}{Deprecated, use cols_mis instead.}
 }
 \value{
-An object of the same class as \code{ds} with missing values
+An object of the same class as \code{ds} with missing values.
 }
 \description{
 Create missing not at random (MNAR) values using MNAR1:x in a data frame or

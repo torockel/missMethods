@@ -7,13 +7,13 @@
 impute_mean(ds, type = "columnwise")
 }
 \arguments{
-\item{ds}{a data frame or matrix with missing values}
+\item{ds}{A data frame or matrix with missing values.}
 
-\item{type}{one of: "columnwise", "rowwise", "total", "Two-Way" or "Winer"
-(see details)}
+\item{type}{One of: "columnwise", "rowwise", "total", "Two-Way" or "Winer"
+(see details).}
 }
 \value{
-An object of the same class as \code{ds} with imputed missing values
+An object of the same class as \code{ds} with imputed missing values.
 }
 \description{
 Impute an observed mean for the missing values
@@ -68,7 +68,7 @@ Winer, B. J. (1971). \emph{Statistical principles in experimental design (2ed ed
 New York: McGraw-Hill
 }
 \seealso{
-\code{\link{apply_imputation}} the workhorse for this function
+\code{\link{apply_imputation}} the workhorse for this function.
 
 Other location parameter imputation functions: 
 \code{\link{impute_median}()},

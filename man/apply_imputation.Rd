@@ -7,16 +7,16 @@
 apply_imputation(ds, FUN = mean, type = "columnwise", ...)
 }
 \arguments{
-\item{ds}{a data frame or matrix with missing values}
+\item{ds}{A data frame or matrix with missing values.}
 
-\item{FUN}{the function to be applied for imputation}
+\item{FUN}{The function to be applied for imputation.}
 
-\item{type}{a string specifying the values used for imputation, see details}
+\item{type}{A string specifying the values used for imputation (see details).}
 
-\item{...}{further arguments passed to \code{FUN}}
+\item{...}{Further arguments passed to \code{FUN}.}
 }
 \value{
-An object of the same class as \code{ds} with imputed missing values
+An object of the same class as \code{ds} with imputed missing values.
 }
 \description{
 Apply a function for imputation over rows, columns or combinations of both
@@ -79,7 +79,6 @@ data. \emph{The Quantitative Methods for Psychology}, 12(1), 57-73.
 }
 \seealso{
 A convenient interface exists for common cases like mean imputation:
-\code{\link{impute_mean}}, \code{\link{impute_median}},
-\code{\link{impute_mode}}. All these functions call
-\code{apply_imputation}.
+\code{\link[=impute_mean]{impute_mean()}}, \code{\link[=impute_median]{impute_median()}}, \code{\link[=impute_mode]{impute_mode()}}. All these functions
+call \code{apply_imputation()}.
 }

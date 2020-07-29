@@ -19,32 +19,32 @@ evaluate_imputation_parameters(
 )
 }
 \arguments{
-\item{ds_imp}{a data frame or matrix with imputed values}
+\item{ds_imp}{A data frame or matrix with imputed values.}
 
-\item{ds_orig}{a data frame or matrix with original (true) values}
+\item{ds_orig}{A data frame or matrix with original (true) values.}
 
-\item{pars_true}{true parameters, normally a vector or a matrix}
+\item{pars_true}{True parameters, normally a vector or a matrix.}
 
-\item{parameter}{a string specifying the estimated parameters for comparison}
+\item{parameter}{A string specifying the estimated parameters for comparison.}
 
-\item{criterion}{a string specifying the used criterion for comparing the
-imputed and original values}
+\item{criterion}{A string specifying the used criterion for comparing the
+imputed and original values.}
 
-\item{cols_which}{indices or names of columns used for evaluation}
+\item{cols_which}{Indices or names of columns used for evaluation.}
 
-\item{tolerance}{numeric, only used for \code{criterion = "precision"}:
-numeric differences smaller than tolerance are treated as zero/equal}
+\item{tolerance}{Numeric, only used for \code{criterion = "precision"}:
+numeric differences smaller than tolerance are treated as zero/equal.}
 
-\item{...}{further arguments passed to function for parameter estimation}
+\item{...}{Further arguments passed to the function for parameter estimation.}
 
-\item{imp_ds}{deprecated, renamed to \code{ds_imp}}
+\item{imp_ds}{Deprecated, renamed to \code{ds_imp}.}
 
-\item{true_pars}{deprecated, renamed to \code{pars_true}}
+\item{true_pars}{Deprecated, renamed to \code{pars_true}.}
 
-\item{which_cols}{deprecated, renamed to \code{cols_which}}
+\item{which_cols}{Deprecated, renamed to \code{cols_which}.}
 }
 \value{
-a numeric vector of length one
+A numeric vector of length one.
 }
 \description{
 Compares estimated parameters after imputation to true parameters or

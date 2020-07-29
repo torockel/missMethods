@@ -18,11 +18,11 @@
 #' `verbose = TRUE`, these cases will be listed in a message. Otherwise, they
 #' will be imputed silently.
 #'
-#' @param mu vector of means for the variables
-#' @param S covariance matrix of the variables
-#' @param stochastic logical, should residuals be added to the expected values
-#' @param M missing data indicator matrix
-#' @param verbose should messages be given for special cases (see details)
+#' @param mu Vector of means for the variables.
+#' @param S Covariance matrix of the variables.
+#' @param stochastic Logical, should residuals be added to the expected values.
+#' @param M Missing data indicator matrix.
+#' @param verbose Should messages be given for special cases (see details)?
 #'
 #' @export
 impute_expected_values <- function(ds, mu, S,

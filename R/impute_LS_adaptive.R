@@ -28,9 +28,9 @@
 #' `impute_LS_array()`.
 #'
 #' @inheritParams impute_LS_combined
-#' @param r_max_min minimum number of nearest genes used for imputation. The
+#' @param r_max_min Minimum number of nearest genes used for imputation. The
 #'   default value (100) corresponds to the choice of Bo et al. (2004).
-#' @param warn_r_max should a warning be given, if `r_max_min` is set too high?
+#' @param warn_r_max Should a warning be given, if `r_max_min` is set too high?
 #'
 #'
 impute_LS_adaptive <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,

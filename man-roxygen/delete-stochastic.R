@@ -1,1 +1,1 @@
-#' @param stochastic logical; see details
+#' @param stochastic Logical; see details.
