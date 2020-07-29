@@ -98,10 +98,15 @@ impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf, use_quantiles =
 #' these two functions.
 #'
 #' @inheritParams impute_in_classes
+#' @param donor_limit minimum odds between incomplete and complete values in a
+#'   column, if `type = cols_seq`. If `type = sim_comp`, minimum odds between
+#'   incomplete and complete rows. For `type = sim_part` the donor limit option
+#'   is not implemented and `donor_limit` should be `Inf`.
 #' @param type the type of hot deck (for details, see [impute_sRHD()])
 #'
 #' @seealso
-#' [impute_in_classes()], which is used for the construction of the imputation classes.
+#' [impute_in_classes()], which is used for the construction of the imputation
+#' classes.
 #'
 #' [impute_sRHD()], which is used for the imputation.
 #'

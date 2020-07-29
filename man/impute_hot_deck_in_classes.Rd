@@ -43,8 +43,9 @@ imputation class}
 an imputation class}
 
 \item{donor_limit}{minimum odds between incomplete and complete values in a
-column, if \code{dl_type = cols_seq}. If \code{dl_type = sim_comp}, minimum odds
-between incomplete and complete rows.}
+column, if \code{type = cols_seq}. If \code{type = sim_comp}, minimum odds between
+incomplete and complete rows. For \code{type = sim_part} the donor limit option
+is not implemented and \code{donor_limit} should be \code{Inf}.}
 
 \item{add_imputation_classes}{should imputation classes be added as
 attributes to the imputed dataset?}
@@ -73,7 +74,8 @@ Survey Non-response. International Statistical Review, 78: 40-64.
 doi:10.1111/j.1751-5823.2010.00103.x
 }
 \seealso{
-\code{\link[=impute_in_classes]{impute_in_classes()}}, which is used for the construction of the imputation classes.
+\code{\link[=impute_in_classes]{impute_in_classes()}}, which is used for the construction of the imputation
+classes.
 
 \code{\link[=impute_sRHD]{impute_sRHD()}}, which is used for the imputation.
 }
