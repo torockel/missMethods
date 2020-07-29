@@ -9,26 +9,32 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
   input_for_norm <- norm::prelim.norm(as.matrix(ds)) # prelim only accepts matrices as input!
 
   iterations <- tryCatch(utils::capture.output(EM_parm <- norm::em.norm(input_for_norm,
-                                                              showits = TRUE,
-                                                              maxits = maxits + 1)),
-                         error = function(cnd){ # if EM crashes, return error
-                           return(cnd)
-                         })
+    showits = TRUE,
+    maxits = maxits + 1
+  )),
+  error = function(cnd) { # if EM crashes, return error
+    return(cnd)
+  }
+  )
 
 
   ## check for EM problems ----------------------------------------------------
   # check for crash inside of norm
   if (any(class(iterations) == "error")) {
     stop("The EM algorithm of norm produced an error; no imputation was done.",
-    "\nError message from norm:", iterations, call. = FALSE)
+      "\nError message from norm:", iterations,
+      call. = FALSE
+    )
   }
 
   # check if number of iterations > maxits
   iterations <- iterations[2]
-  iterations <- substr(iterations, regexpr("[[:digit:]]*\\.\\.\\.$", iterations),
-                       nchar(iterations) - 3)
+  iterations <- substr(
+    iterations, regexpr("[[:digit:]]*\\.\\.\\.$", iterations),
+    nchar(iterations) - 3
+  )
   iterations <- as.integer(iterations)
-  if(iterations > maxits) {
+  if (iterations > maxits) {
     warning("EM did not converge with maxits = ", maxits, ". Some imputation values are maybe unreliable.")
   }
 
@@ -85,7 +91,6 @@ impute_EM <- function(ds,
                       maxits = 1000,
                       criterion = 0.0001,
                       verbose = FALSE) {
-
   EM_parm <- get_EM_parameters(ds, maxits = maxits, criterion = criterion)
 
   impute_expected_values(ds,

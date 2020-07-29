@@ -47,7 +47,9 @@
 #' @examples
 #' # Mean imputation in classes
 #' impute_in_classes(data.frame(X = 1:5, Y = c(NA, 12:15)), "X",
-#' impute_mean, min_obs_per_col = 2)
+#'   impute_mean,
+#'   min_obs_per_col = 2
+#' )
 impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf, use_quantiles = FALSE,
                               min_objs_in_class = 1,
                               min_obs_comp = 0,
@@ -62,21 +64,23 @@ impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf, use_quantiles =
 
   FUN <- match.fun(FUN)
 
-  imp_classes <- find_classes(ds = ds, cols_class = cols_class, breaks = breaks,
-                              use_quantiles = use_quantiles,
-                              min_objs_in_class = min_objs_in_class,
-                              min_obs_comp = min_obs_comp,
-                              min_obs_per_col = min_obs_per_col,
-                              donor_limit = donor_limit, dl_type = dl_type)
+  imp_classes <- find_classes(
+    ds = ds, cols_class = cols_class, breaks = breaks,
+    use_quantiles = use_quantiles,
+    min_objs_in_class = min_objs_in_class,
+    min_obs_comp = min_obs_comp,
+    min_obs_per_col = min_obs_per_col,
+    donor_limit = donor_limit, dl_type = dl_type
+  )
 
   ## apply imputation function for every imputation class separate
   for (imp_cl in imp_classes) {
-    if(anyNA(ds[imp_cl, ])) {
+    if (anyNA(ds[imp_cl, ])) {
       ds[imp_cl, ] <- FUN(ds[imp_cl, ], ...)
     }
   }
 
-  if(add_imputation_classes) {
+  if (add_imputation_classes) {
     ds <- structure(ds, imputation_classes = imp_classes)
   }
 
@@ -118,9 +122,13 @@ impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf, use_quantiles =
 #' doi:10.1111/j.1751-5823.2010.00103.x
 #'
 #' @examples
-#' impute_hot_deck_in_classes(data.frame(X = c(rep("A", 10), rep("B", 10)),
-#'                                       Y = c(rep(NA, 5), 106:120)),
-#'                            "X", donor_limit = 1)
+#' impute_hot_deck_in_classes(data.frame(
+#'   X = c(rep("A", 10), rep("B", 10)),
+#'   Y = c(rep(NA, 5), 106:120)
+#' ),
+#' "X",
+#' donor_limit = 1
+#' )
 impute_hot_deck_in_classes <- function(ds, cols_class, type = "cols_seq",
                                        breaks = Inf, use_quantiles = FALSE,
                                        min_objs_in_class = 1,
@@ -128,18 +136,17 @@ impute_hot_deck_in_classes <- function(ds, cols_class, type = "cols_seq",
                                        min_obs_per_col = 1,
                                        donor_limit = Inf,
                                        add_imputation_classes = FALSE) {
-
   impute_in_classes(ds, cols_class,
-                    FUN = impute_sRHD,
-                    breaks = breaks, use_quantiles = use_quantiles,
-                    min_objs_in_class = min_objs_in_class,
-                    min_obs_comp = min_obs_comp,
-                    min_obs_per_col = min_obs_per_col,
-                    donor_limit = donor_limit,
-                    dl_type = type,
-                    add_imputation_classes = add_imputation_classes,
-                    type = type)
-
+    FUN = impute_sRHD,
+    breaks = breaks, use_quantiles = use_quantiles,
+    min_objs_in_class = min_objs_in_class,
+    min_obs_comp = min_obs_comp,
+    min_obs_per_col = min_obs_per_col,
+    donor_limit = donor_limit,
+    dl_type = type,
+    add_imputation_classes = add_imputation_classes,
+    type = type
+  )
 }
 
 ## Helpers for impute_in_classes() --------------------------------------------
@@ -155,15 +162,17 @@ find_classes <- function(ds, cols_class, breaks = Inf, use_quantiles = FALSE,
     stop("No NAs in ds[, cols_class] allowed")
   }
 
-  find_classes_recursive(ds, cols_class, breaks = breaks, use_quantiles = use_quantiles,
-                         min_objs_in_class = min_objs_in_class,
-                         min_obs_comp = min_obs_comp,
-                         min_obs_per_col = min_obs_per_col,
-                         donor_limit = donor_limit, dl_type = dl_type,
-                         cols_act = seq_len(nrow(ds)),
-                         lvls_act = NULL,
-                         imp_classes = list(),
-                         M = is.na(ds))
+  find_classes_recursive(ds, cols_class,
+    breaks = breaks, use_quantiles = use_quantiles,
+    min_objs_in_class = min_objs_in_class,
+    min_obs_comp = min_obs_comp,
+    min_obs_per_col = min_obs_per_col,
+    donor_limit = donor_limit, dl_type = dl_type,
+    cols_act = seq_len(nrow(ds)),
+    lvls_act = NULL,
+    imp_classes = list(),
+    M = is.na(ds)
+  )
 }
 
 
@@ -218,10 +227,11 @@ find_classes_recursive <- function(ds, cols_class, breaks, use_quantiles,
     new_classes[empty_classes] <- NULL
     new_lvls[empty_classes] <- NULL
     okay_classes <- are_classes_okay(ds, new_classes,
-                                     min_objs_in_class, min_obs_comp,
-                                     min_obs_per_col = min_obs_per_col,
-                                     donor_limit = donor_limit, dl_type = dl_type,
-                                     M = M)
+      min_objs_in_class, min_obs_comp,
+      min_obs_per_col = min_obs_per_col,
+      donor_limit = donor_limit, dl_type = dl_type,
+      M = M
+    )
     if (all(okay_classes)) { # everything okay -> leave repeat loop
       break
     } else { # join first not okay_class and try again
@@ -280,11 +290,10 @@ are_classes_okay <- function(ds, new_classes,
                              donor_limit = Inf,
                              dl_type = "cols_seq",
                              M = is.na(ds)) {
-
   res <- rep(TRUE, length(new_classes))
 
-  for(i in seq_along(new_classes)) {
-    M_class_i <- M[new_classes[[i]], ,drop = FALSE]
+  for (i in seq_along(new_classes)) {
+    M_class_i <- M[new_classes[[i]], , drop = FALSE]
 
     ## check min_objs_in_class, if > 1 --------------------
     if (min_objs_in_class > 1) {
@@ -295,10 +304,10 @@ are_classes_okay <- function(ds, new_classes,
 
     ## check min_obs_comp, if > 0 -------------------------
     if (min_obs_comp > 0) {
-      n_incomp_obs_i <-  sum(apply(M_class_i, 1, any))
+      n_incomp_obs_i <- sum(apply(M_class_i, 1, any))
       n_comp_obs_i <- length(new_classes[[i]]) - n_incomp_obs_i
 
-      if(n_comp_obs_i < min_obs_comp) {
+      if (n_comp_obs_i < min_obs_comp) {
         res[i] <- FALSE
       }
     }
@@ -312,11 +321,11 @@ are_classes_okay <- function(ds, new_classes,
     }
 
     ## check donor_limit, if donor_limit is finite ---------
-    if(is.finite(donor_limit)) {
-      if (min_donor_limit(M_class_i, dl_type) > donor_limit)
+    if (is.finite(donor_limit)) {
+      if (min_donor_limit(M_class_i, dl_type) > donor_limit) {
         res[i] <- FALSE
+      }
     }
-
   }
   res
 }

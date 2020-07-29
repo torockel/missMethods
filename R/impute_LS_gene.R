@@ -145,7 +145,7 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
 
   ## Messages, if verbose = TRUE ----------------------------------------------
   if (verbose) {
-    if (length(rows_imp_with_colMeans) > 0 ) {
+    if (length(rows_imp_with_colMeans) > 0) {
       message(
         "No observed value in row(s) ",
         paste(rows_imp_with_colMeans, collapse = ", "), ". ",
@@ -158,7 +158,8 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
         "Not enough observed values in row(s) ",
         paste(rows_imp_with_rowMeans_min_obs, collapse = ", "), ". ",
         "These rows were imputed with osbserved row means.",
-        appendLF = FALSE)
+        appendLF = FALSE
+      )
     }
     if (length(rows_imp_with_rowMeans_no_suitable) > 0) {
       message(
@@ -166,9 +167,8 @@ impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
         paste(rows_imp_with_rowMeans_no_suitable, collapse = ", "), " found. ",
         "These rows (or parts of them) were imputed with osbserved row means.",
         appendLF = FALSE
-        )
+      )
     }
-
   }
 
   ## Return value -------------------------------------------------------------

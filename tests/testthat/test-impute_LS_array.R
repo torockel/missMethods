@@ -37,12 +37,13 @@ test_that("impute_LS_array() works with completely missing row and verbose", {
   expect_equal(ds_imp_verb2, ds_imp_silent)
 
   # verbose_gene and verbose_expected_values
-  verify_output(test_path("test-impute_LS_array-verbosity.txt"),
-                ds_imp <- impute_LS_array(ds_mis, verbose_gene = TRUE, verbose_expected_values = TRUE))
+  verify_output(
+    test_path("test-impute_LS_array-verbosity.txt"),
+    ds_imp <- impute_LS_array(ds_mis, verbose_gene = TRUE, verbose_expected_values = TRUE)
+  )
 
   ds_imp_verb3 <- suppressWarnings(impute_LS_array(ds_mis, verbose_gene = TRUE, verbose_expected_values = TRUE))
   expect_equal(ds_imp_verb3, ds_imp_silent)
-
 })
 
 test_that("impute_LS_array() works with small data frames", {
@@ -84,7 +85,7 @@ test_that("impute_LS_array() imputes like Bo et al. (2004) (MCAR, 100x7)", {
   # Need some tolerance because of rounding:
   expect_equal(ds_100x7_LS_array_Bo, ds_imp, tolerance = 0.005)
   # All differences are smaller than 0.002: (round 3 digits!)
-  expect_equal(sum(abs(ds_100x7_LS_array_Bo - ds_imp) >= 0.002), 0 )
+  expect_equal(sum(abs(ds_100x7_LS_array_Bo - ds_imp) >= 0.002), 0)
 
   # Conclusion: Both methods seem to return the same imputation values (only deviations because of rounding)
 })

@@ -211,7 +211,7 @@ adjust_p <- function(p, cols_mis) {
 }
 
 calc_nr_mis_g1 <- function(nr_g1, p_mis_g1,
-                            nr_g2, nr_mis, x) {
+                           nr_g2, nr_mis, x) {
   if (nr_mis == 0L) {
     nr_mis_g1 <- 0L
   } else if (nr_g2 == 0L) {

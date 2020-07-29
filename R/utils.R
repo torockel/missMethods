@@ -20,7 +20,7 @@
 assign_imputed_values <- function(ds, ds_imp, M = is.na(ds)) {
   if (requireNamespace("tibble", quietly = TRUE)) {
     if (tibble::is_tibble(ds)) {
-      for(col_with_mis in which(apply(M, 2, any))) {
+      for (col_with_mis in which(apply(M, 2, any))) {
         # https://tibble.tidyverse.org/articles/invariants.html#column-update-1
         ds[[col_with_mis]] <- ds_imp[, col_with_mis, drop = TRUE]
       }
@@ -53,9 +53,11 @@ resample <- function(x, size, replace = FALSE, prob = NULL) {
 check_for_packages <- function(pkg_names) {
   okay_pkgs <- sapply(pkg_names, requireNamespace, quietly = TRUE)
   if (any(!okay_pkgs)) {
-    stop("The following package(s) are needed, but not installed: ",
-         paste(pkg_names[!okay_pkgs], collapse = ", "),
-         ". Please install it/them to use this function.")
+    stop(
+      "The following package(s) are needed, but not installed: ",
+      paste(pkg_names[!okay_pkgs], collapse = ", "),
+      ". Please install it/them to use this function."
+    )
   }
   invisible(TRUE)
 }

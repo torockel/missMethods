@@ -20,7 +20,6 @@ test_that("assign_imputed_values() assigns the correct values", {
     assign_imputed_values(tibble::as_tibble(ds), ds_imp),
     tibble::as_tibble(ds_imp)
   )
-
 })
 
 ## is_df_or_matrix ------------------------------------------------------------

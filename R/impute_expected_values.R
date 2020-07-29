@@ -28,7 +28,6 @@
 impute_expected_values <- function(ds, mu, S,
                                    stochastic = FALSE,
                                    M = is.na(ds), verbose = FALSE) {
-
   if (stochastic) {
     check_for_packages("mvtnorm")
   }

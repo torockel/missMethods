@@ -20,7 +20,6 @@ test_numeric_datasets <- function(fun_imp, ...,
   if (check_tibble) {
     expect_false(anyNA(fun_imp(ds_tibble, ...)))
   }
-
 }
 
 # Test all imputation functions, which are suitable for numeric datasets

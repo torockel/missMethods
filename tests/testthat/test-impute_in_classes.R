@@ -2,29 +2,34 @@
 test_that("impute_in_classes() works (basic tests)", {
   expect_equal(
     impute_in_classes(data.frame(X = 1:5, Y = c(NA, 12:15)), "X",
-                      impute_mean, min_obs_per_col = 2),
+      impute_mean,
+      min_obs_per_col = 2
+    ),
     data.frame(X = 1:5, Y = c(12.5, 12:15))
   )
 
   expect_equal(
     impute_in_classes(data.frame(X = c(1, 2, 2, 1, 2), Y = c(NA, 12:15)), "X",
-                      impute_sRHD, min_obs_per_col = 1),
+      impute_sRHD,
+      min_obs_per_col = 1
+    ),
     data.frame(X = c(1, 2, 2, 1, 2), Y = c(14, 12:15))
   )
-
 })
 
 test_that("impute_in_classes() throws an error if cols_class is missing", {
-
-  expect_error(impute_in_classes(df_XY_X_mis),
-               "cols_class must be specified")
-
+  expect_error(
+    impute_in_classes(df_XY_X_mis),
+    "cols_class must be specified"
+  )
 })
 
 test_that("impute_in_classes() pass on arguments to FUN", {
   expect_equal(
     impute_in_classes(data.frame(X = 1:5, Y = c(NA, 12:15)), "X",
-                      impute_mean, min_obs_per_col = 2, type = "total"),
+      impute_mean,
+      min_obs_per_col = 2, type = "total"
+    ),
     data.frame(X = 1:5, Y = c(mean(c(1:3, 12, 13)), 12:15))
   )
 })
@@ -33,56 +38,81 @@ test_that("impute_in_classes() pass on arguments to FUN", {
 test_that("impute_in_classes() adds imputation classes as attribute", {
   expect_equal(
     impute_in_classes(data.frame(X = 1:5, Y = c(NA, 12:15)), "X",
-                      impute_mean, min_obs_per_col = 2, add_imputation_classes = TRUE),
+      impute_mean,
+      min_obs_per_col = 2, add_imputation_classes = TRUE
+    ),
     structure(data.frame(X = 1:5, Y = c(12.5, 12:15)),
-              imputation_classes = list(`1_and_2_and_3` = 1:3,
-                                        `4_and_5` = 4:5))
+      imputation_classes = list(
+        `1_and_2_and_3` = 1:3,
+        `4_and_5` = 4:5
+      )
+    )
   )
-
 })
 
 ## impute_hot_deck_in_classes() -----------------------------------------------
 test_that("impute_hot_deck_in_classes() works", {
   expect_equal(
     impute_hot_deck_in_classes(data.frame(X = c(1, 2, 2, 1, 2), Y = c(NA, 12:15)),
-                               "X", min_obs_per_col = 1),
+      "X",
+      min_obs_per_col = 1
+    ),
     data.frame(X = c(1, 2, 2, 1, 2), Y = c(14, 12:15))
   )
 
   expect_equal(
-    impute_hot_deck_in_classes(data.frame(X = c(rep(1, 100), 2, 2),
-                                          Y = c(NA, 102:202),
-                                          Z = c(rep(NA, 99), 300:302)),
-                               "X", type = "sim_comp", min_obs_per_col = 1),
-    data.frame(X = c(rep(1, 100), 2, 2),
-               Y = c(200, 102:202),
-               Z = c(rep(300, 99), 300:302))
+    impute_hot_deck_in_classes(data.frame(
+      X = c(rep(1, 100), 2, 2),
+      Y = c(NA, 102:202),
+      Z = c(rep(NA, 99), 300:302)
+    ),
+    "X",
+    type = "sim_comp", min_obs_per_col = 1
+    ),
+    data.frame(
+      X = c(rep(1, 100), 2, 2),
+      Y = c(200, 102:202),
+      Z = c(rep(300, 99), 300:302)
+    )
   )
-
 })
 
 test_that("impute_hot_deck_in_classes() collapses classes for low donor_limit", {
-  ds_imp <- impute_hot_deck_in_classes(data.frame(X = c(rep(1, 3), rep(2, 3)),
-                                                  Y = c(NA, NA, 11L, rep(12L, 3))),
-                                       "X", donor_limit = 1, add_imputation_classes = TRUE)
-  expect_identical(attr(ds_imp, "imputation_classes"),
-                   list(`1_and_2` = 1:6))
+  ds_imp <- impute_hot_deck_in_classes(data.frame(
+    X = c(rep(1, 3), rep(2, 3)),
+    Y = c(NA, NA, 11L, rep(12L, 3))
+  ),
+  "X",
+  donor_limit = 1, add_imputation_classes = TRUE
+  )
+  expect_identical(
+    attr(ds_imp, "imputation_classes"),
+    list(`1_and_2` = 1:6)
+  )
   expect_true((ds_imp[1, "Y"] == 11L || ds_imp[1, "Y"] == 12L))
 })
 
 test_that("impute_hot_deck_in_classes() does not collapse classes for high donor_limt", {
-  ds_imp <- impute_hot_deck_in_classes(data.frame(X = c(rep(1, 3), rep(2, 3)),
-                                                  Y = c(NA, NA, 11L, rep(12L, 3))),
-                                       "X", donor_limit = 2, add_imputation_classes = TRUE)
-  expect_identical(attr(ds_imp, "imputation_classes"),
-                   list(`1` = 1:3, `2` = 4:6))
+  ds_imp <- impute_hot_deck_in_classes(data.frame(
+    X = c(rep(1, 3), rep(2, 3)),
+    Y = c(NA, NA, 11L, rep(12L, 3))
+  ),
+  "X",
+  donor_limit = 2, add_imputation_classes = TRUE
+  )
+  expect_identical(
+    attr(ds_imp, "imputation_classes"),
+    list(`1` = 1:3, `2` = 4:6)
+  )
   expect_true((ds_imp[1, "Y"] == 11L && ds_imp[2, "Y"] == 11L))
 })
 
 ## Helpers --------------------------------------------------------------------
 test_that("find_classes() check for NA in ds[, cols_class]", {
   expect_error(find_classes(matrix(c(NA, 1), ncol = 2), 1),
-               "No NAs in ds[, cols_class] allowed", fixed = TRUE)
+    "No NAs in ds[, cols_class] allowed",
+    fixed = TRUE
+  )
 })
 
 test_that("find_classes() works with breaks = Inf and data frames", {
@@ -105,7 +135,6 @@ test_that("find_classes() works with breaks = Inf and data frames", {
     find_classes(df_classes_test, c("X", "Y"), breaks = Inf),
     list(`1.3` = 2L, `1.5` = 1L, `2.3` = c(3L, 5L), `2.4` = 4L)
   )
-
 })
 
 test_that("find_classes() works with matrices", {
@@ -190,8 +219,10 @@ test_that("cut_vector() works with numeric vectors", {
 
   expect_identical(
     cut_vector(1:10, 3, use_quantiles = TRUE),
-    cut(1:10, breaks = quantile(1:10, seq(from = 0, to = 1, length.out = 4)),
-        include.lowest = TRUE, ordered_result = TRUE)
+    cut(1:10,
+      breaks = quantile(1:10, seq(from = 0, to = 1, length.out = 4)),
+      include.lowest = TRUE, ordered_result = TRUE
+    )
   )
 
   expect_identical(
@@ -210,10 +241,11 @@ test_that("cut_vector() works with unordered factor vectors", {
 
   expect_identical(
     cut_vector(test_f, 3),
-    factor(c("a_and_c", "b_and_e", "a_and_c", "d", "b_and_e", "b_and_e",
-           "a_and_c", "d", "b_and_e", "a_and_c", "a_and_c", "a_and_c", "d"))
+    factor(c(
+      "a_and_c", "b_and_e", "a_and_c", "d", "b_and_e", "b_and_e",
+      "a_and_c", "d", "b_and_e", "a_and_c", "a_and_c", "a_and_c", "d"
+    ))
   )
-
 })
 
 test_that("cut_vector() works with ordered factor vectors", {
@@ -226,10 +258,11 @@ test_that("cut_vector() works with ordered factor vectors", {
 
   expect_identical(
     cut_vector(test_f, 3),
-    ordered(c("a", "b_and_c", "b_and_c", "e_and_d", "e_and_d", "b_and_c", "b_and_c",
-             "e_and_d", "e_and_d", "a", "a", "b_and_c", "e_and_d"))
+    ordered(c(
+      "a", "b_and_c", "b_and_c", "e_and_d", "e_and_d", "b_and_c", "b_and_c",
+      "e_and_d", "e_and_d", "a", "a", "b_and_c", "e_and_d"
+    ))
   )
-
 })
 
 test_that("are_classes_okay() works with donor_limit", {
@@ -277,44 +310,63 @@ test_that("are_classes_okay() works with min_objs_in_class", {
 
 
 test_that("are_classes_okay() works with min_obs_comp", {
-
   expect_identical(
     are_classes_okay(data.frame(X = 1:2, Y = c(NA, 1)),
-                     list(1, 2), min_obs_comp = 1),
-    c(FALSE, TRUE))
+      list(1, 2),
+      min_obs_comp = 1
+    ),
+    c(FALSE, TRUE)
+  )
 
   expect_identical(
     are_classes_okay(data.frame(X = 1:2, Y = c(NA, 2)),
-                     list(1, 2), min_obs_comp = 0),
-    c(TRUE, TRUE))
+      list(1, 2),
+      min_obs_comp = 0
+    ),
+    c(TRUE, TRUE)
+  )
 
   expect_identical(
     are_classes_okay(data.frame(X = 1:5, Y = c(NA, 12:15)),
-                     list(1:3, 4:5), min_obs_comp = 2),
-    c(TRUE, TRUE))
+      list(1:3, 4:5),
+      min_obs_comp = 2
+    ),
+    c(TRUE, TRUE)
+  )
 })
 
 test_that("are_classes_okay() works with min_obs_per_col", {
-
   expect_identical(
     are_classes_okay(data.frame(X = 1:2, Y = c(NA, 1)),
-                     list(1, 2), min_obs_per_col = 1),
-    c(FALSE, TRUE))
+      list(1, 2),
+      min_obs_per_col = 1
+    ),
+    c(FALSE, TRUE)
+  )
 
   expect_identical(
     are_classes_okay(data.frame(X = 1:2, Y = c(NA, 2)),
-                     list(1, 2), min_obs_per_col = 0),
-    c(TRUE, TRUE))
+      list(1, 2),
+      min_obs_per_col = 0
+    ),
+    c(TRUE, TRUE)
+  )
 
   expect_identical(
     are_classes_okay(data.frame(X = 1:5, Y = c(NA, 12:15)),
-                     list(1:3, 4:5), min_obs_per_col = 2),
-    c(TRUE, TRUE))
+      list(1:3, 4:5),
+      min_obs_per_col = 2
+    ),
+    c(TRUE, TRUE)
+  )
 
   expect_identical(
     are_classes_okay(data.frame(X = 1:5, Y = c(NA, NA, 13:15)),
-                     list(1:3, 4:5), min_obs_per_col = 2),
-    c(FALSE, TRUE))
+      list(1:3, 4:5),
+      min_obs_per_col = 2
+    ),
+    c(FALSE, TRUE)
+  )
 })
 
 
