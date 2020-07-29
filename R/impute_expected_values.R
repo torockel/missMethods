@@ -12,13 +12,13 @@
 #' multivariate normal distribution. This is equivalent to imputing the least
 #' squares estimate of the missing values in some kind of way.
 #'
-#' If no values is observed in a row or the matrix a relevant submatrix of the
+#' If no values is observed in a row or a relevant submatrix of the
 #' covariance matrix (`S_22`) is not invertible, the missing values are imputed
 #' with (parts of) `mu` (plus a residuum, if `stochastich = TRUE`). If
 #' `verbose = TRUE`, these cases will be listed in a message. Otherwise, they
 #' will be imputed silently.
 #'
-#' @param mu vector of expected values for the variables
+#' @param mu vector of means for the variables
 #' @param S covariance matrix of the variables
 #' @param stochastic logical, should residuals be added to the expected values
 #' @param M missing data indicator matrix

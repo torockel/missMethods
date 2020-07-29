@@ -22,30 +22,37 @@ impute_in_classes(
 \arguments{
 \item{ds}{a data frame or matrix with missing values}
 
-\item{cols_class}{columns that are used for constructing the imputation classes}
+\item{cols_class}{columns that are used for constructing the imputation.
+classes}
 
-\item{FUN}{an imputation function that is applied to impute the missing values}
+\item{FUN}{an imputation function that is applied to impute the missing
+values}
 
 \item{breaks}{number of intervals / levels a column is broken into (see
-\code{\link[=cut]{cut()}}, which is used internally for cutting numeric columns). If \code{breaks = Inf} (the default), every unique value of a column will be in a separate
-class.}
+\code{\link[=cut]{cut()}}, which is used internally for cutting numeric columns). If \code{breaks = Inf} (the default), every unique value of a column can be in a separate
+class (if no other restrictions apply).}
 
 \item{use_quantiles}{should quantiles be used for cutting numeric vectors?
-Normally, \code{\link[=cut]{cut()}} divides the range of an vector into equal spaced intervals.
-If \code{use_quantiles = TRUE}, the classes will be of roughly equal content.}
+Normally, \code{\link[=cut]{cut()}} divides the range of an vector into equal spaced
+intervals. If \code{use_quantiles = TRUE}, the classes will be of roughly equal
+content.}
 
 \item{min_objs_in_class}{minimum objects (rows) in an imputation class}
 
-\item{min_comp_obs}{minimum completely observed objects (rows) in an imputation class}
+\item{min_comp_obs}{minimum completely observed objects (rows) in an
+imputation class}
 
-\item{min_obs_per_col}{minimum number of observed values in every column of an imputation class}
+\item{min_obs_per_col}{minimum number of observed values in every column of
+an imputation class}
 
-\item{donor_limit}{minimum odds between incomplete and complete values in a column, if \code{dl_type = cols_seq}; or minimum odds
-between incomplete to complete rows, if \code{dl_type = sim_comp}}
+\item{donor_limit}{minimum odds between incomplete and complete values in a
+column, if \code{dl_type = cols_seq}. If \code{dl_type = sim_comp}, minimum odds
+between incomplete and complete rows.}
 
 \item{dl_type}{see \code{donor_limit}}
 
-\item{add_imputation_classes}{should imputation classes be added as attributes to the imputed dataset?}
+\item{add_imputation_classes}{should imputation classes be added as
+attributes to the imputed dataset?}
 
 \item{...}{arguments passed to \code{FUN}}
 }
@@ -57,10 +64,12 @@ Apply an imputation function inside imputation classes
 }
 \details{
 Imputation classes (sometimes also called adjustment cells) are
-build using cross-validation of all \code{cols_class}. The classes are collapsed,
-if they do not satisfy any of the criteria defined by \verb{min_objs_in_class, min_comp_obs, min_obs_per_col} or \code{donor_limit}. Collapsing starts from the
-last value of \code{cols_class}. Internally a mixture of collapsing and early
-stopping is used for the construction of the classes.
+build using cross-validation of all \code{cols_class}. The classes are
+collapsed, if they do not satisfy all of the criteria defined by
+\code{min_objs_in_class}, \code{min_comp_obs}, \code{min_obs_per_col} and \code{donor_limit}.
+Collapsing starts from the last value of \code{cols_class}. Internally, a mixture
+of collapsing and early stopping is used for the construction of the
+classes.
 }
 \examples{
 # Mean imputation in classes
@@ -68,7 +77,7 @@ impute_in_classes(data.frame(X = 1:5, Y = c(NA, 12:15)), "X",
 impute_mean, min_obs_per_col = 2)
 }
 \references{
-Andridge, R.R. and Little, R.J.A. (2010), A Review of Hot Deck Imputation for
-Survey Non-response. International Statistical Review, 78: 40-64.
-doi:10.1111/j.1751-5823.2010.00103.x
+Andridge, R.R. and Little, R.J.A. (2010), A Review of Hot Deck
+Imputation for Survey Non-response. International Statistical Review, 78:
+40-64. doi:10.1111/j.1751-5823.2010.00103.x
 }

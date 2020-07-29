@@ -8,16 +8,17 @@
 #' [impute_LS_gene()] (if `ds_impute_LS_gene` is `NULL`). The imputation values
 #' are the expected values given the estimated parameters and the observed
 #' values. They are calculated via [impute_expected_values()]. The amount of
-#' feedback from these to functions is controlled via `verbose_gene`  and
+#' feedback from these two functions is controlled via `verbose_gene`  and
 #' `verbose_expected_values`. The values of these two arguments are passed on to
-#' `verbose` from `impute_LS_gene()` and `impute_expected_values()`.
+#' the argument `verbose` from `impute_LS_gene()` and
+#' `impute_expected_values()`.
 #'
 #'
 #' @param k directly passed to [impute_LS_gene()]
 #' @param eps directly passed to [impute_LS_gene()]
 #' @param min_common_obs directly passed to [impute_LS_gene()]
 #' @param ds_impute_LS_gene result of imputing `ds` with `ds_impute_LS_gene()`,
-#'   if this already exists
+#'   if this already exists (see details)
 #' @param verbose_gene should `impute_LS_gene()` be `verbose`
 #' @param verbose_expected_values should `impute_expected_values()` be `verbose`
 #'

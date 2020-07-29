@@ -49,17 +49,17 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 #' @details
 #'
 #' At first parameters are estimated via [norm::em.norm()]. Then these
-#' parameters are used in a regression like model to impute the missing values.
+#' parameters are used in regression like models to impute the missing values.
 #' If `stochachstic = FALSE`, the expected values (given the observed values and
-#' the estimated parameters via EM) is imputed for the missing values of an
-#' object. If `stochastic = TRUE` residuals from a multivariate normal
+#' the estimated parameters via EM) are imputed for the missing values of an
+#' object. If `stochastic = TRUE`, residuals from a multivariate normal
 #' distribution are added to these expected values.
 #'
-#' If no values is observed for a row or the required part of the covariance
-#' matrix for the calculation of the expected values is not invertible, parts of
-#' the estimated mu (estimated mean of the variables) will be imputed. If
-#' `stochastic = TRUE`, residuals will be added to these values. If
-#' `verbose = TRUE`, a message will be given for these rows.
+#' If all values in a row are `NA` or the required part of the covariance matrix
+#' for the calculation of the expected values is not invertible, parts of the
+#' estimated mean vector will be imputed. If `stochastic = TRUE`, residuals will
+#' be added to these values. If `verbose = TRUE`, a message will be given for
+#' these rows.
 #'
 #' @param stochastic logical; see details
 #' @param maxits maximum number of iterations for the EM, passed to
@@ -70,6 +70,11 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 #' @param verbose should messages be given for special cases (see details)
 #'
 #' @export
+#'
+#' @seealso
+#' * [norm::em.norm()], which estimates the parameters
+#' * [impute_expected_values()], which calculates the imputation values
+#'
 #'
 #' @examples
 #' ds_orig <- mvtnorm::rmvnorm(100, rep(0, 7))

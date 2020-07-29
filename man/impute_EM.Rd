@@ -35,20 +35,26 @@ via EM
 }
 \details{
 At first parameters are estimated via \code{\link[norm:em.norm]{norm::em.norm()}}. Then these
-parameters are used in a regression like model to impute the missing values.
+parameters are used in regression like models to impute the missing values.
 If \code{stochachstic = FALSE}, the expected values (given the observed values and
-the estimated parameters via EM) is imputed for the missing values of an
-object. If \code{stochastic = TRUE} residuals from a multivariate normal
+the estimated parameters via EM) are imputed for the missing values of an
+object. If \code{stochastic = TRUE}, residuals from a multivariate normal
 distribution are added to these expected values.
 
-If no values is observed for a row or the required part of the covariance
-matrix for the calculation of the expected values is not invertible, parts of
-the estimated mu (estimated mean of the variables) will be imputed. If
-\code{stochastic = TRUE}, residuals will be added to these values. If
-\code{verbose = TRUE}, a message will be given for these rows.
+If all values in a row are \code{NA} or the required part of the covariance matrix
+for the calculation of the expected values is not invertible, parts of the
+estimated mean vector will be imputed. If \code{stochastic = TRUE}, residuals will
+be added to these values. If \code{verbose = TRUE}, a message will be given for
+these rows.
 }
 \examples{
 ds_orig <- mvtnorm::rmvnorm(100, rep(0, 7))
 ds_mis <- delete_MCAR(ds_orig, p = 0.2)
 ds_imp <- impute_EM(ds_mis, stochastic = FALSE)
+}
+\seealso{
+\itemize{
+\item \code{\link[norm:em.norm]{norm::em.norm()}}, which estimates the parameters
+\item \code{\link[=impute_expected_values]{impute_expected_values()}}, which calculates the imputation values
+}
 }

@@ -22,8 +22,7 @@ impute_LS_gene(
 
 \item{min_common_obs}{a row can only take part in the imputation of another
 row, if both rows share at least \code{min_common_obs} columns with no missing
-values. Rows with less observed values than \code{min_common_obs} are imputed by
-the mean of the observed row values.}
+values.}
 
 \item{return_r_max}{logical, normally this should be \code{FALSE}. \code{TRUE} is used
 inside of \code{impute_LS_adaptive()} to speed up some computations.}
@@ -42,7 +41,7 @@ Perform LSimpute_gene as described by Bo et al. (2004)
 This function performs LSimpute_gene as described by Bo et al. (2004).The function assumes that the genes are the rows of \code{ds}.
 
 Bo et al. (2004) seem to have chosen \code{min_common_obs = 5}. However, they did
-not documentation this behavior. This value emerged from inspecting
+not document this behavior. This value emerged from inspecting
 imputation results from the  original jar-file, which is provided by Bo et
 al. (2004).
 

@@ -9,15 +9,16 @@
 #' If the dataset is too small or has too many missing values, there are some
 #' fallback systems implemented. First, if `ncol(ds) <= min_common_obs`
 #' (normally, this should not the case!), values are imputed through
-#' [impute_LS_array()]. Second `r_max_min` is automatically adjusted, if it is
-#' too big (but, a warning will be given, if `warn_r_max = TRUE`). Third, if
-#' there are not enough observed values in row (less than`min_common_obs`), the
-#' calculation of the mixing coefficient is not possible, and missing values of
-#' these rows are imputed with the values from `impute_LS_array()`.
+#' [impute_LS_array()]. Second, `r_max_min` is automatically adjusted, if it is
+#' too high. In this case, a warning will be given, if `warn_r_max = TRUE`.
+#' Third, if there are not enough observed values in a row (less than
+#' `min_common_obs`), the calculation of the mixing coefficient is not possible
+#' and missing values of these rows are imputed with the values from
+#' `impute_LS_array()`.
 #'
 #' The amount of feedback given from `impute_LS_gene()` and `impute_LS_array()`
-#' is controlled via `verbose_gene, verbose_array, verbose_gene_p` and
-#' `verbose_array_p`. The last two controls the amount of feedback while
+#' is controlled via `verbose_gene`, `verbose_array`, `verbose_gene_p` and
+#' `verbose_array_p`. The last two control the amount of feedback while
 #' estimating *p* and the first two the amount of feedback during the estimation
 #' of the values that are mixed with *p*. Internally,  the imputed dataset from
 #' `impute_LS_gene()` is passed on to `impute_LS_array()`. Therefore, all

@@ -52,7 +52,7 @@ LSimpute_combined combines imputation values from \code{\link[=impute_LS_gene]{i
 \code{\link[=impute_LS_array]{impute_LS_array()}} using a global approach for the mixing coefficient \emph{p}.
 The amount of feedback given from these underlying functions is controlled
 via \verb{verbose_gene, verbose_array, verbose_gene_p, verbose_array_p}. The last
-two controls the amount of feedback while estimating \emph{p} and the first two
+two control the amount of feedback while estimating \emph{p} and the first two
 the amount of feedback during the estimation of the values that are mixed
 with \emph{p}. Internally,  the imputed dataset from \code{impute_LS_gene()} is passed
 on to \code{impute_LS_array()}. Therefore, all messages from \code{impute_LS_gene()}

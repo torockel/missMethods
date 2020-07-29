@@ -20,34 +20,40 @@ impute_hot_deck_in_classes(
 \arguments{
 \item{ds}{a data frame or matrix with missing values}
 
-\item{cols_class}{columns that are used for constructing the imputation classes}
+\item{cols_class}{columns that are used for constructing the imputation.
+classes}
 
 \item{type}{the type of hot deck (for details, see \code{\link[=impute_sRHD]{impute_sRHD()}})}
 
 \item{breaks}{number of intervals / levels a column is broken into (see
-\code{\link[=cut]{cut()}}, which is used internally for cutting numeric columns). If \code{breaks = Inf} (the default), every unique value of a column will be in a separate
-class.}
+\code{\link[=cut]{cut()}}, which is used internally for cutting numeric columns). If \code{breaks = Inf} (the default), every unique value of a column can be in a separate
+class (if no other restrictions apply).}
 
 \item{use_quantiles}{should quantiles be used for cutting numeric vectors?
-Normally, \code{\link[=cut]{cut()}} divides the range of an vector into equal spaced intervals.
-If \code{use_quantiles = TRUE}, the classes will be of roughly equal content.}
+Normally, \code{\link[=cut]{cut()}} divides the range of an vector into equal spaced
+intervals. If \code{use_quantiles = TRUE}, the classes will be of roughly equal
+content.}
 
 \item{min_objs_in_class}{minimum objects (rows) in an imputation class}
 
-\item{min_comp_obs}{minimum completely observed objects (rows) in an imputation class}
+\item{min_comp_obs}{minimum completely observed objects (rows) in an
+imputation class}
 
-\item{min_obs_per_col}{minimum number of observed values in every column of an imputation class}
+\item{min_obs_per_col}{minimum number of observed values in every column of
+an imputation class}
 
-\item{donor_limit}{minimum odds between incomplete and complete values in a column, if \code{dl_type = cols_seq}; or minimum odds
-between incomplete to complete rows, if \code{dl_type = sim_comp}}
+\item{donor_limit}{minimum odds between incomplete and complete values in a
+column, if \code{dl_type = cols_seq}. If \code{dl_type = sim_comp}, minimum odds
+between incomplete and complete rows.}
 
-\item{add_imputation_classes}{should imputation classes be added as attributes to the imputed dataset?}
+\item{add_imputation_classes}{should imputation classes be added as
+attributes to the imputed dataset?}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values
 }
 \description{
-Impute missing values in a data frame or a matrix using a hot deck with
+Impute missing values in a data frame or a matrix using a hot deck within
 imputation classes
 }
 \details{
@@ -67,7 +73,7 @@ Survey Non-response. International Statistical Review, 78: 40-64.
 doi:10.1111/j.1751-5823.2010.00103.x
 }
 \seealso{
-\code{\link[=impute_in_classes]{impute_in_classes()}}, which is used for the construction of the imputation classes
+\code{\link[=impute_in_classes]{impute_in_classes()}}, which is used for the construction of the imputation classes.
 
-\code{\link[=impute_sRHD]{impute_sRHD()}}, which is used for the imputation
+\code{\link[=impute_sRHD]{impute_sRHD()}}, which is used for the imputation.
 }

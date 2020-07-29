@@ -6,7 +6,7 @@
 #' [impute_LS_array()] using a global approach for the mixing coefficient *p*.
 #' The amount of feedback given from these underlying functions is controlled
 #' via `verbose_gene, verbose_array, verbose_gene_p, verbose_array_p`. The last
-#' two controls the amount of feedback while estimating *p* and the first two
+#' two control the amount of feedback while estimating *p* and the first two
 #' the amount of feedback during the estimation of the values that are mixed
 #' with *p*. Internally,  the imputed dataset from `impute_LS_gene()` is passed
 #' on to `impute_LS_array()`. Therefore, all messages from `impute_LS_gene()`

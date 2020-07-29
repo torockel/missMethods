@@ -24,7 +24,7 @@ impute_LS_array(
 \item{min_common_obs}{directly passed to \code{\link[=impute_LS_gene]{impute_LS_gene()}}}
 
 \item{ds_impute_LS_gene}{result of imputing \code{ds} with \code{ds_impute_LS_gene()},
-if this already exists}
+if this already exists (see details)}
 
 \item{verbose_gene}{should \code{impute_LS_gene()} be \code{verbose}}
 
@@ -45,9 +45,10 @@ directly via \code{ds_impute_LS_gene} or will automatically be created with
 \code{\link[=impute_LS_gene]{impute_LS_gene()}} (if \code{ds_impute_LS_gene} is \code{NULL}). The imputation values
 are the expected values given the estimated parameters and the observed
 values. They are calculated via \code{\link[=impute_expected_values]{impute_expected_values()}}. The amount of
-feedback from these to functions is controlled via \code{verbose_gene}  and
+feedback from these two functions is controlled via \code{verbose_gene}  and
 \code{verbose_expected_values}. The values of these two arguments are passed on to
-\code{verbose} from \code{impute_LS_gene()} and \code{impute_expected_values()}.
+the argument \code{verbose} from \code{impute_LS_gene()} and
+\code{impute_expected_values()}.
 }
 \examples{
 set.seed(123)

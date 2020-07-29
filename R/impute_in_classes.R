@@ -5,37 +5,44 @@
 #' @template impute
 #'
 #' @details Imputation classes (sometimes also called adjustment cells) are
-#' build using cross-validation of all `cols_class`. The classes are collapsed,
-#' if they do not satisfy any of the criteria defined by `min_objs_in_class,
-#' min_comp_obs, min_obs_per_col` or `donor_limit`. Collapsing starts from the
-#' last value of `cols_class`. Internally a mixture of collapsing and early
-#' stopping is used for the construction of the classes.
+#'   build using cross-validation of all `cols_class`. The classes are
+#'   collapsed, if they do not satisfy all of the criteria defined by
+#'   `min_objs_in_class`, `min_comp_obs`, `min_obs_per_col` and `donor_limit`.
+#'   Collapsing starts from the last value of `cols_class`. Internally, a mixture
+#'   of collapsing and early stopping is used for the construction of the
+#'   classes.
 #'
-#' @param cols_class columns that are used for constructing the imputation classes
-#' @param FUN an imputation function that is applied to impute the missing values
+#' @param cols_class columns that are used for constructing the imputation.
+#'   classes
+#' @param FUN an imputation function that is applied to impute the missing
+#'   values
 #' @param breaks number of intervals / levels a column is broken into (see
 #'   [cut()], which is used internally for cutting numeric columns). If `breaks
-#'   = Inf` (the default), every unique value of a column will be in a separate
-#'   class.
+#'   = Inf` (the default), every unique value of a column can be in a separate
+#'   class (if no other restrictions apply).
 #' @param use_quantiles should quantiles be used for cutting numeric vectors?
-#'   Normally, [cut()] divides the range of an vector into equal spaced intervals.
-#'   If `use_quantiles = TRUE`, the classes will be of roughly equal content.
+#'   Normally, [cut()] divides the range of an vector into equal spaced
+#'   intervals. If `use_quantiles = TRUE`, the classes will be of roughly equal
+#'   content.
 #' @param min_objs_in_class minimum objects (rows) in an imputation class
-#' @param min_comp_obs minimum completely observed objects (rows) in an imputation class
-#' @param min_obs_per_col minimum number of observed values in every column of an imputation class
-#' @param donor_limit minimum odds between incomplete and complete values in a column, if `dl_type = cols_seq`; or minimum odds
-#' between incomplete to complete rows, if `dl_type = sim_comp`
+#' @param min_comp_obs minimum completely observed objects (rows) in an
+#'   imputation class
+#' @param min_obs_per_col minimum number of observed values in every column of
+#'   an imputation class
+#' @param donor_limit minimum odds between incomplete and complete values in a
+#'   column, if `dl_type = cols_seq`. If `dl_type = sim_comp`, minimum odds
+#'   between incomplete and complete rows.
 #' @param dl_type see `donor_limit`
-#' @param add_imputation_classes should imputation classes be added as attributes to the imputed dataset?
+#' @param add_imputation_classes should imputation classes be added as
+#'   attributes to the imputed dataset?
 #' @param ... arguments passed to `FUN`
 #'
 #'
 #' @export
 #'
-#' @references
-#' Andridge, R.R. and Little, R.J.A. (2010), A Review of Hot Deck Imputation for
-#' Survey Non-response. International Statistical Review, 78: 40-64.
-#' doi:10.1111/j.1751-5823.2010.00103.x
+#' @references Andridge, R.R. and Little, R.J.A. (2010), A Review of Hot Deck
+#'   Imputation for Survey Non-response. International Statistical Review, 78:
+#'   40-64. doi:10.1111/j.1751-5823.2010.00103.x
 #'
 #' @examples
 #' # Mean imputation in classes
@@ -79,7 +86,7 @@ impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf, use_quantiles =
 
 #' Hot deck imputation in imputation classes
 #'
-#' Impute missing values in a data frame or a matrix using a hot deck with
+#' Impute missing values in a data frame or a matrix using a hot deck within
 #' imputation classes
 #'
 #' @template impute
@@ -94,9 +101,9 @@ impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf, use_quantiles =
 #' @param type the type of hot deck (for details, see [impute_sRHD()])
 #'
 #' @seealso
-#' [impute_in_classes()], which is used for the construction of the imputation classes
+#' [impute_in_classes()], which is used for the construction of the imputation classes.
 #'
-#' [impute_sRHD()], which is used for the imputation
+#' [impute_sRHD()], which is used for the imputation.
 #'
 #' @export
 #'

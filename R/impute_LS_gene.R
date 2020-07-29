@@ -3,7 +3,7 @@
 #' @details
 #'
 #' Bo et al. (2004) seem to have chosen `min_common_obs = 5`. However, they did
-#' not documentation this behavior. This value emerged from inspecting
+#' not document this behavior. This value emerged from inspecting
 #' imputation results from the  original jar-file, which is provided by Bo et
 #' al. (2004).
 #'
@@ -25,8 +25,7 @@
 #'   = 1e-6`)
 #' @param min_common_obs a row can only take part in the imputation of another
 #'   row, if both rows share at least `min_common_obs` columns with no missing
-#'   values. Rows with less observed values than `min_common_obs` are imputed by
-#'   the mean of the observed row values.
+#'   values.
 #' @param return_r_max logical, normally this should be `FALSE`. `TRUE` is used
 #'   inside of `impute_LS_adaptive()` to speed up some computations.
 #' @param verbose should messages be given for special cases (see details)

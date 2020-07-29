@@ -62,15 +62,16 @@ coefficient \emph{p}.
 If the dataset is too small or has too many missing values, there are some
 fallback systems implemented. First, if \code{ncol(ds) <= min_common_obs}
 (normally, this should not the case!), values are imputed through
-\code{\link[=impute_LS_array]{impute_LS_array()}}. Second \code{r_max_min} is automatically adjusted, if it is
-too big (but, a warning will be given, if \code{warn_r_max = TRUE}). Third, if
-there are not enough observed values in row (less than\code{min_common_obs}), the
-calculation of the mixing coefficient is not possible, and missing values of
-these rows are imputed with the values from \code{impute_LS_array()}.
+\code{\link[=impute_LS_array]{impute_LS_array()}}. Second, \code{r_max_min} is automatically adjusted, if it is
+too high. In this case, a warning will be given, if \code{warn_r_max = TRUE}.
+Third, if there are not enough observed values in a row (less than
+\code{min_common_obs}), the calculation of the mixing coefficient is not possible
+and missing values of these rows are imputed with the values from
+\code{impute_LS_array()}.
 
 The amount of feedback given from \code{impute_LS_gene()} and \code{impute_LS_array()}
-is controlled via \verb{verbose_gene, verbose_array, verbose_gene_p} and
-\code{verbose_array_p}. The last two controls the amount of feedback while
+is controlled via \code{verbose_gene}, \code{verbose_array}, \code{verbose_gene_p} and
+\code{verbose_array_p}. The last two control the amount of feedback while
 estimating \emph{p} and the first two the amount of feedback during the estimation
 of the values that are mixed with \emph{p}. Internally,  the imputed dataset from
 \code{impute_LS_gene()} is passed on to \code{impute_LS_array()}. Therefore, all

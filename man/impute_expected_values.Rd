@@ -16,7 +16,7 @@ impute_expected_values(
 \arguments{
 \item{ds}{a data frame or matrix with missing values}
 
-\item{mu}{vector of expected values for the variables}
+\item{mu}{vector of means for the variables}
 
 \item{S}{covariance matrix of the variables}
 
@@ -39,7 +39,7 @@ be called directly. The function imputes the missing values assuming a
 multivariate normal distribution. This is equivalent to imputing the least
 squares estimate of the missing values in some kind of way.
 
-If no values is observed in a row or the matrix a relevant submatrix of the
+If no values is observed in a row or a relevant submatrix of the
 covariance matrix (\code{S_22}) is not invertible, the missing values are imputed
 with (parts of) \code{mu} (plus a residuum, if \code{stochastich = TRUE}). If
 \code{verbose = TRUE}, these cases will be listed in a message. Otherwise, they
