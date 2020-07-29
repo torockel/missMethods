@@ -7,7 +7,7 @@
 #' @details Imputation classes (sometimes also called adjustment cells) are
 #'   build using cross-validation of all `cols_class`. The classes are
 #'   collapsed, if they do not satisfy all of the criteria defined by
-#'   `min_objs_in_class`, `min_comp_obs`, `min_obs_per_col` and `donor_limit`.
+#'   `min_objs_in_class`, `min_obs_comp`, `min_obs_per_col` and `donor_limit`.
 #'   Collapsing starts from the last value of `cols_class`. Internally, a mixture
 #'   of collapsing and early stopping is used for the construction of the
 #'   classes.
@@ -25,7 +25,7 @@
 #'   intervals. If `use_quantiles = TRUE`, the classes will be of roughly equal
 #'   content.
 #' @param min_objs_in_class minimum objects (rows) in an imputation class
-#' @param min_comp_obs minimum completely observed objects (rows) in an
+#' @param min_obs_comp minimum completely observed objects (rows) in an
 #'   imputation class
 #' @param min_obs_per_col minimum number of observed values in every column of
 #'   an imputation class
@@ -50,7 +50,7 @@
 #' impute_mean, min_obs_per_col = 2)
 impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf, use_quantiles = FALSE,
                               min_objs_in_class = 1,
-                              min_comp_obs = 0,
+                              min_obs_comp = 0,
                               min_obs_per_col = 1,
                               donor_limit = Inf, dl_type = "cols_seq",
                               add_imputation_classes = FALSE,
@@ -65,7 +65,7 @@ impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf, use_quantiles =
   imp_classes <- find_classes(ds = ds, cols_class = cols_class, breaks = breaks,
                               use_quantiles = use_quantiles,
                               min_objs_in_class = min_objs_in_class,
-                              min_comp_obs = min_comp_obs,
+                              min_obs_comp = min_obs_comp,
                               min_obs_per_col = min_obs_per_col,
                               donor_limit = donor_limit, dl_type = dl_type)
 
@@ -119,7 +119,7 @@ impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf, use_quantiles =
 impute_hot_deck_in_classes <- function(ds, cols_class, type = "cols_seq",
                                        breaks = Inf, use_quantiles = FALSE,
                                        min_objs_in_class = 1,
-                                       min_comp_obs = 0,
+                                       min_obs_comp = 0,
                                        min_obs_per_col = 1,
                                        donor_limit = Inf,
                                        add_imputation_classes = FALSE) {
@@ -128,7 +128,7 @@ impute_hot_deck_in_classes <- function(ds, cols_class, type = "cols_seq",
                     FUN = impute_sRHD,
                     breaks = breaks, use_quantiles = use_quantiles,
                     min_objs_in_class = min_objs_in_class,
-                    min_comp_obs = min_comp_obs,
+                    min_obs_comp = min_obs_comp,
                     min_obs_per_col = min_obs_per_col,
                     donor_limit = donor_limit,
                     dl_type = type,
@@ -141,7 +141,7 @@ impute_hot_deck_in_classes <- function(ds, cols_class, type = "cols_seq",
 
 find_classes <- function(ds, cols_class, breaks = Inf, use_quantiles = FALSE,
                          min_objs_in_class = 0,
-                         min_comp_obs = 0,
+                         min_obs_comp = 0,
                          min_obs_per_col = 0,
                          donor_limit = Inf, dl_type = "cols_seq") {
 
@@ -152,7 +152,7 @@ find_classes <- function(ds, cols_class, breaks = Inf, use_quantiles = FALSE,
 
   find_classes_recursive(ds, cols_class, breaks = breaks, use_quantiles = use_quantiles,
                          min_objs_in_class = min_objs_in_class,
-                         min_comp_obs = min_comp_obs,
+                         min_obs_comp = min_obs_comp,
                          min_obs_per_col = min_obs_per_col,
                          donor_limit = donor_limit, dl_type = dl_type,
                          cols_act = seq_len(nrow(ds)),
@@ -168,7 +168,7 @@ find_classes <- function(ds, cols_class, breaks = Inf, use_quantiles = FALSE,
 ## function, but not in the calling statement(s)
 find_classes_recursive <- function(ds, cols_class, breaks, use_quantiles,
                                    min_objs_in_class,
-                                   min_comp_obs,
+                                   min_obs_comp,
                                    min_obs_per_col,
                                    donor_limit, dl_type,
                                    cols_act, lvls_act = NULL, imp_classes,
@@ -213,7 +213,7 @@ find_classes_recursive <- function(ds, cols_class, breaks, use_quantiles,
     new_classes[empty_classes] <- NULL
     new_lvls[empty_classes] <- NULL
     okay_classes <- are_classes_okay(ds, new_classes,
-                                     min_objs_in_class, min_comp_obs,
+                                     min_objs_in_class, min_obs_comp,
                                      min_obs_per_col = min_obs_per_col,
                                      donor_limit = donor_limit, dl_type = dl_type,
                                      M = M)
@@ -233,7 +233,7 @@ find_classes_recursive <- function(ds, cols_class, breaks, use_quantiles,
       use_quantiles = use_quantiles,
       breaks = breaks,
       min_objs_in_class = min_objs_in_class,
-      min_comp_obs = min_comp_obs,
+      min_obs_comp = min_obs_comp,
       min_obs_per_col = min_obs_per_col,
       donor_limit = donor_limit, dl_type = dl_type,
       cols_act = new_classes[[i]],
@@ -270,7 +270,7 @@ cut_vector <- function(x, breaks, use_quantiles = FALSE) {
 
 are_classes_okay <- function(ds, new_classes,
                              min_objs_in_class = 1,
-                             min_comp_obs = 0,
+                             min_obs_comp = 0,
                              min_obs_per_col = 0,
                              donor_limit = Inf,
                              dl_type = "cols_seq",
@@ -288,12 +288,12 @@ are_classes_okay <- function(ds, new_classes,
       }
     }
 
-    ## check min_comp_obs, if > 0 -------------------------
-    if (min_comp_obs > 0) {
+    ## check min_obs_comp, if > 0 -------------------------
+    if (min_obs_comp > 0) {
       n_incomp_obs_i <-  sum(apply(M_class_i, 1, any))
       n_comp_obs_i <- length(new_classes[[i]]) - n_incomp_obs_i
 
-      if(n_comp_obs_i < min_comp_obs) {
+      if(n_comp_obs_i < min_obs_comp) {
         res[i] <- FALSE
       }
     }

@@ -11,7 +11,7 @@ impute_hot_deck_in_classes(
   breaks = Inf,
   use_quantiles = FALSE,
   min_objs_in_class = 1,
-  min_comp_obs = 0,
+  min_obs_comp = 0,
   min_obs_per_col = 1,
   donor_limit = Inf,
   add_imputation_classes = FALSE
@@ -36,7 +36,7 @@ content.}
 
 \item{min_objs_in_class}{minimum objects (rows) in an imputation class}
 
-\item{min_comp_obs}{minimum completely observed objects (rows) in an
+\item{min_obs_comp}{minimum completely observed objects (rows) in an
 imputation class}
 
 \item{min_obs_per_col}{minimum number of observed values in every column of

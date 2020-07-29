@@ -276,21 +276,21 @@ test_that("are_classes_okay() works with min_objs_in_class", {
 })
 
 
-test_that("are_classes_okay() works with min_comp_obs", {
+test_that("are_classes_okay() works with min_obs_comp", {
 
   expect_identical(
     are_classes_okay(data.frame(X = 1:2, Y = c(NA, 1)),
-                     list(1, 2), min_comp_obs = 1),
+                     list(1, 2), min_obs_comp = 1),
     c(FALSE, TRUE))
 
   expect_identical(
     are_classes_okay(data.frame(X = 1:2, Y = c(NA, 2)),
-                     list(1, 2), min_comp_obs = 0),
+                     list(1, 2), min_obs_comp = 0),
     c(TRUE, TRUE))
 
   expect_identical(
     are_classes_okay(data.frame(X = 1:5, Y = c(NA, 12:15)),
-                     list(1:3, 4:5), min_comp_obs = 2),
+                     list(1:3, 4:5), min_obs_comp = 2),
     c(TRUE, TRUE))
 })
 

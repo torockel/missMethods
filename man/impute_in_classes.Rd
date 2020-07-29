@@ -11,7 +11,7 @@ impute_in_classes(
   breaks = Inf,
   use_quantiles = FALSE,
   min_objs_in_class = 1,
-  min_comp_obs = 0,
+  min_obs_comp = 0,
   min_obs_per_col = 1,
   donor_limit = Inf,
   dl_type = "cols_seq",
@@ -39,7 +39,7 @@ content.}
 
 \item{min_objs_in_class}{minimum objects (rows) in an imputation class}
 
-\item{min_comp_obs}{minimum completely observed objects (rows) in an
+\item{min_obs_comp}{minimum completely observed objects (rows) in an
 imputation class}
 
 \item{min_obs_per_col}{minimum number of observed values in every column of
@@ -66,7 +66,7 @@ Apply an imputation function inside imputation classes
 Imputation classes (sometimes also called adjustment cells) are
 build using cross-validation of all \code{cols_class}. The classes are
 collapsed, if they do not satisfy all of the criteria defined by
-\code{min_objs_in_class}, \code{min_comp_obs}, \code{min_obs_per_col} and \code{donor_limit}.
+\code{min_objs_in_class}, \code{min_obs_comp}, \code{min_obs_per_col} and \code{donor_limit}.
 Collapsing starts from the last value of \code{cols_class}. Internally, a mixture
 of collapsing and early stopping is used for the construction of the
 classes.
