@@ -71,17 +71,13 @@ check_for_packages <- function(pkg_names) {
 
 check_renamed_arg <- function(old, new) {
 
+  # old is not used
+  if (missing(old)) {
+    return(invisible(TRUE))
+  }
+
   old_name <- deparse(substitute(old))
   new_name <- deparse(substitute(new))
-
-  if (missing(old)) { # old is not used
-    if (!missing(new)) {
-      # only new is supplied -> everything okay
-      return(new)
-    } else {
-      stop("argument ", new_name, " is missing with no default!", call. = FALSE)
-    }
-  }
 
   # old was used
   if (missing(new)) {
@@ -89,7 +85,7 @@ check_renamed_arg <- function(old, new) {
       old_name, " is deprecated; use ", new_name, " instead.",
       call. = FALSE
     )
-    return(old)
+    assign(new_name, old, pos = parent.frame(1))
   } else { # both are not missing!
     stop(
       old_name, " is deprecated and replaced by ", new_name, ". ",
@@ -98,5 +94,4 @@ check_renamed_arg <- function(old, new) {
       call. = FALSE
     )
   }
-
 }

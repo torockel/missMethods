@@ -54,7 +54,7 @@ test_that("check_for_packages() works", {
 ## check_renamed_arg -----------------------------------------------------------
 test_that("check_renamed_arg() works", {
   f_two_args <- function(new_arg, old_arg) {
-    new_arg <- check_renamed_arg(old_arg, new_arg)
+    check_renamed_arg(old_arg, new_arg)
     new_arg
   }
   # Only old arg is used
@@ -83,6 +83,6 @@ test_that("check_renamed_arg() works", {
   # No arg is used
   expect_error(
     f_two_args(),
-    "argument new_arg is missing with no default"
+    "argument \"new_arg\" is missing, with no default"
   )
 })
