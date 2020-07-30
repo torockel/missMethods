@@ -7,13 +7,16 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
   # prelim only accepts matrices as input!
   input_for_norm <- norm::prelim.norm(as.matrix(ds))
 
-  iterations <- tryCatch(utils::capture.output(EM_parm <- norm::em.norm(input_for_norm,
-    showits = TRUE,
-    maxits = maxits + 1
-  )),
-  error = function(cnd) { # if EM crashes, return error
-    return(cnd)
-  }
+  iterations <- tryCatch(
+    utils::capture.output(EM_parm <- norm::em.norm(
+      input_for_norm,
+      showits = TRUE,
+      maxits = maxits + 1,
+      criterion = criterion
+    )),
+    error = function(cnd) { # if EM crashes, return error
+      return(cnd)
+    }
   )
 
 
