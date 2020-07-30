@@ -92,9 +92,12 @@ test_that("impute_LS_gene() imputes row mean values, if to less objects are obse
   # The jar-file from Bo et al. imputes rows 1:4 with mean values:
   ds_triangle_LS_gene_Bo <- readRDS(test_path(file.path("datasets", "ds_triangle_LS_gene_Bo.rds")))
   # Therefore, min_common_obs = 5 (test with other datasets showed the same pattern)
+  # tolerance is locally not needed. However, rhub Ubuntu Linux 16.04 LTS, R-release, GCC
+  # failed with some 0.001 difference. Therefore, add some tolerance to be on the save side.
   expect_equal(
     ds_triangle_LS_gene_Bo,
-    round(impute_LS_gene(ds_triangle_mis, min_common_obs = 5), 3)
+    round(impute_LS_gene(ds_triangle_mis, min_common_obs = 5), 3),
+    tolerance = 0.005
   )
 })
 
