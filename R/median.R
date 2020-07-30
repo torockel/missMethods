@@ -5,7 +5,7 @@
 #' Currently, the median for an ordered factor is not implemented in base R.
 #' This function is a remedy for this. It allows the computation of \dQuote{a
 #' median} for ordered factors (see below) and overwrites the error message for
-#' unordered factors from \code{\link[stats]{median.default}} (hence, the
+#' unordered factors from \code{\link[=median]{median.default}} (hence, the
 #' function name is median.factor and not median.ordered).
 #'
 #' If the length of \code{x} is even, then the median will be the middle value

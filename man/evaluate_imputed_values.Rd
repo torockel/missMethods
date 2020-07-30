@@ -90,7 +90,7 @@ imputed values (values that are marked as missing via \code{M}) will be used
 for the calculation. If you want to provide \code{M}, \code{M} must be a
 logical matrix of the same dimensions as \code{ds_orig} and missing values
 must be coded as TRUE. This is the standard behavior, if you use
-\code{\link[base]{is.na}} on a dataset with missing values to generate
+\code{\link{is.na}} on a dataset with missing values to generate
 \code{M} (see examples). It is possible to combine \code{M} and
 \code{cols_which}.
 }
