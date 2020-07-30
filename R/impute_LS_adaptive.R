@@ -32,7 +32,7 @@
 #'   default value (100) corresponds to the choice of Bo et al. (2004).
 #' @param warn_r_max Should a warning be given, if `r_max_min` is set too high?
 #'
-#'
+#' @md
 impute_LS_adaptive <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
                                r_max_min = 100, p_mis_sim = 0.05,
                                warn_r_max = TRUE,

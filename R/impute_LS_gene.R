@@ -31,7 +31,7 @@
 #' @param verbose Should messages be given for special cases (see details)?
 #'
 #' @return If `return_r_max = TRUE`, a list with the imputed dataset and r_max.
-#'
+#' @md
 impute_LS_gene <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
                            return_r_max = FALSE, verbose = FALSE) {
 

@@ -91,6 +91,7 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 #' ds_orig <- mvtnorm::rmvnorm(100, rep(0, 7))
 #' ds_mis <- delete_MCAR(ds_orig, p = 0.2)
 #' ds_imp <- impute_EM(ds_mis, stochastic = FALSE)
+#' @md
 impute_EM <- function(ds,
                       stochastic = TRUE,
                       maxits = 1000,

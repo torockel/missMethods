@@ -69,8 +69,8 @@ delete_MNAR_1_to_x(ds, 0.2, "X", x = 3)
 }
 \references{
 Santos, M. S., Pereira, R. C., Costa, A. F., Soares, J. P.,
-Santos, J., & Abreu, P. H. (2019). Generating Synthetic Missing Data: A
-Review by Missing Mechanism. \emph{IEEE Access}, 7, 11651-11667
+  Santos, J., & Abreu, P. H. (2019). Generating Synthetic Missing Data: A
+  Review by Missing Mechanism. \emph{IEEE Access}, 7, 11651-11667
 }
 \seealso{
 \code{\link{delete_MAR_1_to_x}}

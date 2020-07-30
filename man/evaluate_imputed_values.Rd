@@ -115,8 +115,8 @@ evaluate_imputed_values(ds_imp, ds_orig, "NRMSE_col_mean")
 }
 \references{
 Kim, H., Golub, G. H., & Park, H. (2005). Missing value
-estimation for DNA microarray gene expression data: local least squares
-imputation. \emph{Bioinformatics}, 21(2), 187-198.
+  estimation for DNA microarray gene expression data: local least squares
+  imputation. \emph{Bioinformatics}, 21(2), 187-198.
 }
 \seealso{
 Other evaluation functions: 

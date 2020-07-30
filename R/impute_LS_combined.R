@@ -23,6 +23,8 @@
 #'   *p*?
 #' @param verbose_array_p Should `impute_LS_array()` be `verbose` while
 #'   estimating *p*?
+#'
+#' @md
 impute_LS_combined <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
                                p_mis_sim = 0.05,
                                verbose_gene = FALSE, verbose_array = FALSE,

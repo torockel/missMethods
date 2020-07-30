@@ -126,8 +126,8 @@ If \code{p} is high and \code{x} is too high or too low, it is possible that
 the odds 1:x and the proportion of missing values \code{p} cannot be
 realized together.
 For example, if \code{p[i]} = 0.9, then a maximum of \code{x} = 1.25 is
-possible (assuming that  exactly 50 \% of the values are below and 50 \% of the
-values are above the cutoff value in \code{cols_ctrl[i]}).
+possible (assuming that  exactly 50 \% of the values are below and 50 \% of
+the values are above the cutoff value in \code{cols_ctrl[i]}).
 If a combination of \code{p} and \code{x} that cannot be realized together
 is given to \code{delete_MAR_1_to_x}, then a warning will be generated and
 \code{x} will be adjusted in such a way that \code{p} can be realized as
@@ -187,8 +187,8 @@ delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3, stochastic = TRUE)
 }
 \references{
 Santos, M. S., Pereira, R. C., Costa, A. F., Soares, J. P.,
-Santos, J., & Abreu, P. H. (2019). Generating Synthetic Missing Data: A
-Review by Missing Mechanism. \emph{IEEE Access}, 7, 11651-11667
+  Santos, J., & Abreu, P. H. (2019). Generating Synthetic Missing Data: A
+  Review by Missing Mechanism. \emph{IEEE Access}, 7, 11651-11667
 }
 \seealso{
 \code{\link{delete_MNAR_1_to_x}}

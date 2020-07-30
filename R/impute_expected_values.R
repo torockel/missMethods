@@ -25,6 +25,7 @@
 #' @param verbose Should messages be given for special cases (see details)?
 #'
 #' @export
+#' @md
 impute_expected_values <- function(ds, mu, S,
                                    stochastic = FALSE,
                                    M = is.na(ds), verbose = FALSE) {

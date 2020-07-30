@@ -77,6 +77,6 @@ impute_sRHD(ds_mis_one_donor, donor_limit = 3)
 }
 \references{
 Andridge, R. R., & Little, R. J. (2010). A review of hot deck
-imputation for survey non-response. \emph{International statistical review},
-78(1), 40-64.
+  imputation for survey non-response. \emph{International statistical review},
+  78(1), 40-64.
 }

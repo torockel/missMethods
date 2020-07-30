@@ -50,6 +50,7 @@
 #'   impute_mean,
 #'   min_obs_per_col = 2
 #' )
+#' @md
 impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf,
                               use_quantiles = FALSE,
                               min_objs_in_class = 1,
@@ -131,6 +132,7 @@ impute_in_classes <- function(ds, cols_class, FUN, breaks = Inf,
 #' "X",
 #' donor_limit = 1
 #' )
+#' @md
 impute_hot_deck_in_classes <- function(ds, cols_class, type = "cols_seq",
                                        breaks = Inf, use_quantiles = FALSE,
                                        min_objs_in_class = 1,

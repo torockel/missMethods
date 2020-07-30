@@ -43,8 +43,9 @@
 #' @param ... Further arguments passed to \code{FUN}.
 #'
 #' @seealso A convenient interface exists for common cases like mean imputation:
-#'   [impute_mean()], [impute_median()], [impute_mode()]. All these functions
-#'   call `apply_imputation()`.
+#'   \code{\link{impute_mean}}, \code{\link{impute_median}},
+#'   \code{\link{impute_mode}}. All these functions
+#'   call \code{apply_imputation}.
 #'
 #' @references Beland, S., Pichette, F., & Jolani, S. (2016). Impact on
 #'   Cronbach's \eqn{\alpha}{alpha} of simple treatment methods for missing

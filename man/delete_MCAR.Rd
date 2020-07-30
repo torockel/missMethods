@@ -74,6 +74,6 @@ delete_MCAR(ds, 0.2)
 }
 \references{
 Santos, M. S., Pereira, R. C., Costa, A. F., Soares, J. P.,
-Santos, J., & Abreu, P. H. (2019). Generating Synthetic Missing Data: A
-Review by Missing Mechanism. \emph{IEEE Access}, 7, 11651-11667
+  Santos, J., & Abreu, P. H. (2019). Generating Synthetic Missing Data: A
+  Review by Missing Mechanism. \emph{IEEE Access}, 7, 11651-11667
 }

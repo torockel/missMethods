@@ -22,6 +22,7 @@
 #' @param verbose_gene Should `impute_LS_gene()` be `verbose`?
 #' @param verbose_expected_values Should `impute_expected_values()` be `verbose`?
 #'
+#' @md
 impute_LS_array <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
                             ds_impute_LS_gene = NULL,
                             verbose_gene = FALSE,
