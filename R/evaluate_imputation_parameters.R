@@ -68,23 +68,10 @@ evaluate_imputation_parameters <- function(ds_imp,
                                            tolerance = sqrt(.Machine$double.eps),
                                            ...,
                                            imp_ds, true_pars, which_cols) {
-  ## deprecate imp_ds
-  if (!missing(imp_ds)) {
-    warning("imp_ds is deprecated; use ds_imp instead")
-    ds_imp <- imp_ds
-  }
-
-  ## deprecate true_pars
-  if (!missing(true_pars)) {
-    warning("true_pars is deprecated; use pars_true instead")
-    pars_true <- true_pars
-  }
-
-  ## deprecate which_cols
-  if (!missing(which_cols)) {
-    warning("which_cols is deprecated; use cols_which instead")
-    cols_which <- which_cols
-  }
+  # Deprecate imp_ds, true_pars, which_cols
+  check_renamed_arg(imp_ds, ds_imp)
+  check_renamed_arg(true_pars, pars_true)
+  check_renamed_arg(which_cols, cols_which)
 
   if (!xor(is.null(ds_orig), is.null(pars_true))) {
     stop("exactly one of 'ds_orig' or 'pars_true' must be supplied and the

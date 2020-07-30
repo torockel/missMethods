@@ -22,17 +22,9 @@ evaluate_parameters <- function(pars_est, pars_true, criterion = "RMSE",
                                 tolerance = sqrt(.Machine$double.eps),
                                 est_pars, true_pars) {
 
-  # deprecate true_pars
-  if (!missing(true_pars)) {
-    warning("true_pars is deprecated; use pars_true instead")
-    pars_true <- true_pars
-  }
-
-  # deprecate est_pars
-  if (!missing(est_pars)) {
-    warning("est_pars is deprecated; use pars_est instead")
-    pars_est <- est_pars
-  }
+  # Deprecate true_pars, est_pars
+  check_renamed_arg(true_pars, pars_true)
+  check_renamed_arg(est_pars, pars_est)
 
   if (!isTRUE(all.equal(dim(pars_est), dim(pars_true))) ||
     length(pars_est) != length(pars_true)) {

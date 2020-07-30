@@ -96,17 +96,9 @@ delete_MAR_one_group <- function(ds, p, cols_mis, cols_ctrl,
                                  stochastic = FALSE, ...,
                                  miss_cols, ctrl_cols) {
 
-  ## deprecate miss_cols
-  if (!missing(miss_cols)) {
-    warning("miss_cols is deprecated; use cols_mis instead.")
-    cols_mis <- miss_cols
-  }
-
-  ## deprecate ctrl_cols
-  if (!missing(ctrl_cols)) {
-    warning("ctrl_cols is deprecated; use cols_ctrl instead.")
-    cols_ctrl <- ctrl_cols
-  }
+  # Deprecate miss_cols, ctrl_cols
+  check_renamed_arg(miss_cols, cols_mis)
+  check_renamed_arg(ctrl_cols, cols_ctrl)
 
   check_delete_args_MAR(
     ds = ds, p = p, cols_mis = cols_mis,
@@ -139,11 +131,8 @@ delete_MNAR_one_group <- function(ds, p, cols_mis,
                                   stochastic = FALSE, ...,
                                   miss_cols) {
 
-  ## deprecate miss_cols
-  if (!missing(miss_cols)) {
-    warning("miss_cols is deprecated; use cols_mis instead.")
-    cols_mis <- miss_cols
-  }
+  # Deprecate miss_cols
+  check_renamed_arg(miss_cols, cols_mis)
 
   check_delete_args_MNAR(
     ds = ds, p = p, cols_mis = cols_mis,

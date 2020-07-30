@@ -50,11 +50,8 @@
 delete_MCAR <- function(ds, p, cols_mis = seq_len(ncol(ds)),
                         stochastic = FALSE, p_overall = FALSE, miss_cols) {
 
-  ## deprecate miss_cols
-  if (!missing(miss_cols)) {
-    warning("miss_cols is deprecated; use cols_mis instead.")
-    cols_mis <- miss_cols
-  }
+  # Deprecate miss_cols
+  check_renamed_arg(miss_cols, cols_mis)
 
   ## checks and corrections for p -----------------------------------
   check_delete_args_MCAR(

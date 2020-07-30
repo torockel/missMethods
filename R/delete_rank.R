@@ -49,17 +49,9 @@ delete_MAR_rank <- function(ds, p, cols_mis, cols_ctrl,
                             ties.method = "average",
                             miss_cols, ctrl_cols) {
 
-  ## deprecate miss_cols
-  if (!missing(miss_cols)) {
-    warning("miss_cols is deprecated; use cols_mis instead.")
-    cols_mis <- miss_cols
-  }
-
-  ## deprecate ctrl_cols
-  if (!missing(ctrl_cols)) {
-    warning("ctrl_cols is deprecated; use cols_ctrl instead.")
-    cols_ctrl <- ctrl_cols
-  }
+  # Deprecate miss_cols, ctrl_cols
+  check_renamed_arg(miss_cols, cols_mis)
+  check_renamed_arg(ctrl_cols, cols_ctrl)
 
   # arg stochastic not used (and method is not stochastic)
   check_delete_args_MAR(
@@ -85,11 +77,8 @@ delete_MAR_rank <- function(ds, p, cols_mis, cols_ctrl,
 delete_MNAR_rank <- function(ds, p, cols_mis, ties.method = "average",
                              miss_cols) {
 
-  ## deprecate miss_cols
-  if (!missing(miss_cols)) {
-    warning("miss_cols is deprecated; use cols_mis instead.")
-    cols_mis <- miss_cols
-  }
+  # Deprecate miss_cols
+  check_renamed_arg(miss_cols, cols_mis)
 
   # arg stochastic not used! (and method is not stochastic)
   check_delete_args_MNAR(

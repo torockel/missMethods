@@ -92,23 +92,10 @@ evaluate_imputed_values <- function(ds_imp, ds_orig, criterion = "RMSE",
                                     tolerance = sqrt(.Machine$double.eps),
                                     imp_ds, orig_ds, which_cols) {
 
-  ## deprecate imp_ds
-  if (!missing(imp_ds)) {
-    warning("imp_ds is deprecated; use ds_imp instead")
-    ds_imp <- imp_ds
-  }
-
-  ## deprecate orig_ds
-  if (!missing(orig_ds)) {
-    warning("orig_ds is deprecated; use ds_orig instead")
-    ds_orig <- orig_ds
-  }
-
-  ## deprecate which_cols
-  if (!missing(which_cols)) {
-    warning("which_cols is deprecated; use cols_which instead")
-    cols_which <- which_cols
-  }
+  # Deprecate imp_ds, orig_ds, which_cols
+  check_renamed_arg(imp_ds, ds_imp)
+  check_renamed_arg(orig_ds, ds_orig)
+  check_renamed_arg(which_cols, cols_which)
 
   if (!isTRUE(all.equal(dim(ds_imp), dim(ds_orig)))) {
     stop("the dimensions of ds_imp and ds_orig must be equal")

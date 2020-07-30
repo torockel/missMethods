@@ -6,6 +6,19 @@ test_that("delete_MAR_1_to_x() calls check_delete_args_MAR()", {
   )
 })
 
+test_that("delete_MAR_1_to_x() deprecate miss_cols", {
+  ds_mis <- expect_warning(
+    delete_MAR_1_to_x(data.frame(X = 1:10, Y = 11:20),
+                      0.2, x = 2, cols_ctrl = 2, miss_cols = 1),
+    "miss_cols is deprecated; use cols_mis instead."
+  )
+  expect_equal(
+    count_NA(ds_mis),
+    c(X = 2, Y = 0)
+  )
+
+})
+
 test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
           delete_MAR_1_to_x()) works for data.frames", {
   set.seed(12345)
