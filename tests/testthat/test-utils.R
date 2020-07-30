@@ -49,3 +49,40 @@ test_that("check_for_packages() works", {
     fixed = TRUE
   )
 })
+
+
+## check_renamed_arg -----------------------------------------------------------
+test_that("check_renamed_arg() works", {
+  f_two_args <- function(new_arg, old_arg) {
+    new_arg <- check_renamed_arg(old_arg, new_arg)
+    new_arg
+  }
+  # Only old arg is used
+  expect_equal(
+    expect_warning(
+      f_two_args(old_arg = 3),
+      "old_arg is deprecated; use new_arg instead."
+    ),
+    3
+  )
+
+  # Only new arg is used
+  expect_equal(
+    expect_silent(
+      f_two_args(42)
+    ),
+    42
+  )
+
+  # Both args are used
+  expect_error(
+    f_two_args(42, 3),
+    "old_arg is deprecated and replaced by new_arg. Please supply"
+  )
+
+  # No arg is used
+  expect_error(
+    f_two_args(),
+    "argument new_arg is missing with no default"
+  )
+})
