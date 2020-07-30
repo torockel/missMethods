@@ -45,7 +45,7 @@ test_that("delete_MCAR() creates MCAR", {
   }
   expect_true(
     res / prod(dim(df_XY_100), N) < 0.3 &
-    res / prod(dim(df_XY_100), N) > 0.1
+      res / prod(dim(df_XY_100), N) > 0.1
   )
 
   # check p_overall = TRUE --------------------------------

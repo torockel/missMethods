@@ -1,4 +1,4 @@
-# missMethods (development version)
+# missMethods 0.2.0
 
 ## New functions
 
@@ -13,13 +13,13 @@
 
 ## Miscellaneous
 
-* implement `cov_only` and `cor_only` as `parameter` in  `evaluate_imputation_parameters()`
+* add `cov_only` and `cor_only` as `parameter` in  `evaluate_imputation_parameters()`
 * improve vignette "Generating missing values" (add connections to Santos et al. (2019))
 * rename of `cols` variables: now all should be named `cols_mis`, `cols_ctrl` etc.
 * rename of `ds` variables: now all should be named `ds_imp`, `ds_orig` etc.
 * rename of `pars` variables: now all should be named `pars_est` or `pars_true`
-
-* sampling of sRHD type cols_seq is no correct, if the donor is only one numeric value
+* sampling of sRHD type `cols_seq` is no correct, if the donor is only one numeric value
+* use markdown for documentation of new functions
 
 # missMethods 0.1.0
 
