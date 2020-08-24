@@ -48,12 +48,19 @@ calc_evaluation_criterion <- function(estimate, true_val, criterion = "RMSE",
         precision = mean(crit_by_col)
       ))
     }
-  } else { # handle all elements of estimate and true_val in one call
+  } else { # Handle all elements of estimate and true_val in one call
+
+    # Convert estimate to an atomic vector
     if (is.matrix(estimate)) {
       estimate <- as.vector(estimate)
-      true_val <- as.vector(true_val)
     } else if (is.data.frame(estimate)) {
       estimate <- unlist(estimate)
+    }
+
+    # Convert true_val to an atomic vector
+    if (is.matrix(true_val)) {
+      true_val <- as.vector(true_val)
+    } else if (is.data.frame(true_val)) {
       true_val <- unlist(true_val)
     }
 

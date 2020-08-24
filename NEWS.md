@@ -1,5 +1,9 @@
 # missMethods (development version)
 
+## Miscellaneous
+
+* evaluation functions can now compare a data frame with a matrix (thanks to Marie Feldhoff for the suggestion)
+
 # missMethods 0.2.0
 
 ## New functions

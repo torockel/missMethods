@@ -143,6 +143,24 @@ test_that("calc_evaluation_criterion() works", {
   ), 4) # diff is 2
 })
 
+test_that("calc_evaluation_criterion() accepts a data frame and a matrix", {
+  expect_equal(
+    calc_evaluation_criterion(
+      data.frame(X = 1:10, Y = 21:30),
+      matrix(c(1:10, 20:29), ncol = 2)
+    ),
+    sqrt(1/2)
+  )
+
+  expect_equal(
+    calc_evaluation_criterion(
+      matrix(c(1:10, 20:29), ncol = 2),
+      data.frame(X = 1:10, Y = 21:30)
+    ),
+    sqrt(1/2)
+  )
+})
+
 test_that("calc_evaluation_criterion_vec() works", {
   # calc_evaluation_criterion_vec -------------------------
   # define some vectors -----------------------------------
