@@ -1,3 +1,24 @@
+## Indices for deleting -------------------------------------------------------
+
+get_NA_indices <- function(stochastic, n, p,
+                           prob = NULL,
+                           n_mis = round(n * p),
+                           indices = seq_len(n)) {
+  if (stochastic) {
+    if (is.null(prob)) {
+      na_indices <- sample(c(TRUE, FALSE), n, replace = TRUE, prob = c(p, 1 - p))
+      na_indices <- indices[na_indices]
+      # na_indices <- stats::runif(n) < p # old
+    } else {
+      stop("ToDo")
+    }
+  } else { # not stochastic
+    na_indices <- resample(indices, n_mis, prob = prob)
+  }
+  na_indices
+}
+
+
 # checking arguments --------------------------------------
 
 # args checking for all mechanisms

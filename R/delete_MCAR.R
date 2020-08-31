@@ -88,15 +88,7 @@ delete_MCAR <- function(ds, p, cols_mis = seq_len(ncol(ds)),
 
 # delete values MCAR in a single vector
 delete_MCAR_vec <- function(x, p, stochastic) {
-  n <- length(x)
-  if (stochastic) {
-    na_indices <- which(sample(c(TRUE, FALSE), n,
-      replace = TRUE, prob = c(p, 1 - p)
-    ))
-    # na_indices <- which(stats::runif(n) < p) # old
-  } else {
-    na_indices <- sample.int(n, round(n * p, digits = 0))
-  }
+  na_indices <- get_NA_indices(stochastic, n = length(x), p = p)
   x[na_indices] <- NA
   x
 }
