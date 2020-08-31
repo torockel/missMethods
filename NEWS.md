@@ -3,6 +3,7 @@
 ## Miscellaneous
 
 * evaluation functions can now compare a data frame with a matrix (thanks to Marie Feldhoff for the suggestion)
+* `delete_rank()` now hands the agrument `ties.method` over to `rank()`
 
 # missMethods 0.2.0
 

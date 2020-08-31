@@ -10,7 +10,7 @@ delete_rank <- function(ds, p, cols_mis, cols_ctrl,
   for (i in seq_along(cols_mis)) {
     n_mis <- round(nrow(ds) * p[i])
     if (n_mis > 0L) {
-      p_ranks <- rank(ds[, cols_ctrl[i], drop = TRUE])
+      p_ranks <- rank(ds[, cols_ctrl[i], drop = TRUE], ties.method = ties.method)
       p_ranks <- p_ranks / sum(p_ranks)
       na_indices <- sample.int(nrow(ds), n_mis, prob = p_ranks)
       ds[na_indices, cols_mis[i]] <- NA
