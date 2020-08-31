@@ -1,6 +1,6 @@
 ## Indices for deleting -------------------------------------------------------
 
-get_NA_indices <- function(stochastic, n, p,
+get_NA_indices <- function(stochastic, n = length(indices), p,
                            prob = NULL,
                            n_mis = round(n * p),
                            indices = seq_len(n)) {
@@ -238,24 +238,24 @@ adjust_p <- function(p, cols_mis) {
   p
 }
 
-calc_nr_mis_g1 <- function(nr_g1, p_mis_g1,
-                           nr_g2, nr_mis, x) {
-  if (nr_mis == 0L) {
-    nr_mis_g1 <- 0L
+calc_n_mis_g1 <- function(nr_g1, p_mis_g1,
+                           nr_g2, n_mis, x) {
+  if (n_mis == 0L) {
+    n_mis_g1 <- 0L
   } else if (nr_g2 == 0L) {
-    nr_mis_g1 <- nr_mis
+    n_mis_g1 <- n_mis
   } else {
-    nr_mis_g1_ceil <- ceiling(nr_g1 * p_mis_g1)
-    nr_mis_g1_floor <- floor(nr_g1 * p_mis_g1)
-    odds_ceil <- nr_mis_g1_ceil / nr_g1 /
-      ((nr_mis - nr_mis_g1_ceil) / nr_g2)
-    odds_floor <- nr_mis_g1_floor / nr_g1 /
-      ((nr_mis - nr_mis_g1_floor) / nr_g2)
+    n_mis_g1_ceil <- ceiling(nr_g1 * p_mis_g1)
+    n_mis_g1_floor <- floor(nr_g1 * p_mis_g1)
+    odds_ceil <- n_mis_g1_ceil / nr_g1 /
+      ((n_mis - n_mis_g1_ceil) / nr_g2)
+    odds_floor <- n_mis_g1_floor / nr_g1 /
+      ((n_mis - n_mis_g1_floor) / nr_g2)
     if (abs(1 / x - odds_ceil) < abs(1 / x - odds_floor)) {
-      nr_mis_g1 <- nr_mis_g1_ceil
+      n_mis_g1 <- n_mis_g1_ceil
     } else {
-      nr_mis_g1 <- nr_mis_g1_floor
+      n_mis_g1 <- n_mis_g1_floor
     }
   }
-  nr_mis_g1
+  n_mis_g1
 }

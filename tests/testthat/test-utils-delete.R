@@ -323,12 +323,12 @@ test_that("find_groups_by_values()", {
   )
 })
 
-# check calc_nr_mis_g1 --------------------------------
-test_that("calc_nr_mis_g1()", {
-  expect_equal(calc_nr_mis_g1(50, 0.8, 50, 50, 4), 40)
-  expect_equal(calc_nr_mis_g1(50, 0.25, 50, 20, 4), 12)
-  expect_equal(calc_nr_mis_g1(50, 0.45, 50, 30, 3), 22)
-  expect_equal(calc_nr_mis_g1(20, 1 / 17, 80, 20, 4), 1)
+# check calc_n_mis_g1 --------------------------------
+test_that("calc_n_mis_g1() works", {
+  expect_equal(calc_n_mis_g1(50, 0.8, 50, 50, 4), 40)
+  expect_equal(calc_n_mis_g1(50, 0.25, 50, 20, 4), 12)
+  expect_equal(calc_n_mis_g1(50, 0.45, 50, 30, 3), 22)
+  expect_equal(calc_n_mis_g1(20, 1 / 17, 80, 20, 4), 1)
 
-  expect_equal(calc_nr_mis_g1(50, 0.8, 0, 50, 4), 50)
+  expect_equal(calc_n_mis_g1(50, 0.8, 0, 50, 4), 50)
 })

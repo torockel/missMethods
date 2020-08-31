@@ -66,30 +66,17 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
 
       # delete values
       if (stochastic) { # stochastic = TRUE ------------------
-        na_indices_g1 <- groups$g1[sample(c(TRUE, FALSE),
-          nr_g1,
-          replace = TRUE,
-          prob = c(
-            p_mis_g1,
-            1 - p_mis_g1
-          )
-        )]
-        na_indices_g2 <- groups$g2[sample(c(TRUE, FALSE),
-          nr_g2,
-          replace = TRUE,
-          prob = c(
-            p_mis_g2,
-            1 - p_mis_g2
-          )
-        )]
+        na_indices_g1 <- get_NA_indices(stochastic, p = p_mis_g1, indices = groups$g1)
+        na_indices_g2 <- get_NA_indices(stochastic, p = p_mis_g2, indices = groups$g2)
+
       } else { # stochastic = FALSE ------------------
-        nr_mis <- round(p[i] * n)
-        nr_mis_g1 <- calc_nr_mis_g1(nr_g1, p_mis_g1, nr_g2, nr_mis, x)
-        nr_mis_g2 <- nr_mis - nr_mis_g1
+        n_mis <- round(p[i] * n)
+        n_mis_g1 <- calc_n_mis_g1(nr_g1, p_mis_g1, nr_g2, n_mis, x)
+        n_mis_g2 <- n_mis - n_mis_g1
 
         # sample NA indices
-        na_indices_g2 <- resample(groups$g2, nr_mis_g2)
-        na_indices_g1 <- resample(groups$g1, nr_mis_g1)
+        na_indices_g1 <- get_NA_indices(stochastic, n_mis = n_mis_g1, indices = groups$g1)
+        na_indices_g2 <- get_NA_indices(stochastic, n_mis = n_mis_g2, indices = groups$g2)
       }
       na_indices <- c(na_indices_g1, na_indices_g2)
       ds[na_indices, cols_mis[i]] <- NA
