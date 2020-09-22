@@ -95,23 +95,10 @@ delete_MAR_one_group <- function(ds, p, cols_mis, cols_ctrl,
                                  ordered_as_unordered = FALSE,
                                  stochastic = FALSE, ...,
                                  miss_cols, ctrl_cols) {
-
-  # Deprecate miss_cols, ctrl_cols
-  check_renamed_arg(miss_cols, cols_mis)
-  check_renamed_arg(ctrl_cols, cols_ctrl)
-
-  check_delete_args_MAR(
-    ds = ds, p = p, cols_mis = cols_mis,
-    cols_ctrl = cols_ctrl, stochastic = stochastic
-  )
-
-  delete_one_group(
-    ds = ds, p = p, cols_mis = cols_mis, cols_ctrl = cols_ctrl,
-    cutoff_fun = cutoff_fun, prop = prop,
-    use_lpSolve = use_lpSolve,
-    ordered_as_unordered = ordered_as_unordered,
-    stochastic = stochastic, ...
-  )
+  do.call(delete_values, c(
+    list(mechanism = "MAR", mech_type = "one_group"),
+    as.list(environment()), list(...)
+  ))
 }
 
 
@@ -131,19 +118,8 @@ delete_MNAR_one_group <- function(ds, p, cols_mis,
                                   stochastic = FALSE, ...,
                                   miss_cols) {
 
-  # Deprecate miss_cols
-  check_renamed_arg(miss_cols, cols_mis)
-
-  check_delete_args_MNAR(
-    ds = ds, p = p, cols_mis = cols_mis,
-    stochastic = stochastic
-  )
-
-  delete_one_group(
-    ds = ds, p = p, cols_mis = cols_mis, cols_ctrl = cols_mis,
-    cutoff_fun = cutoff_fun, prop = prop,
-    use_lpSolve = use_lpSolve,
-    ordered_as_unordered = ordered_as_unordered,
-    stochastic = stochastic, ...
-  )
+  do.call(delete_values, c(
+    list(mechanism = "MNAR", mech_type = "one_group"),
+    as.list(environment()), list(...)
+  ))
 }

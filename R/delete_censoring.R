@@ -1,10 +1,15 @@
 # the workhorse for delete_MAR_censoring and delete_MNAR_censoring
+# The argument stochastic is only added to make it easier to call this function
+# from delete_values(). Right now only stochastic = FALSE is implemented.
 delete_censoring <- function(ds, p, cols_mis, cols_ctrl,
-                             where = "lower", sorting = TRUE) {
+                             where = "lower", sorting = TRUE, stochastic = FALSE) {
 
   # general checking is done in calling functions delete_MAR_censoring and
   # delete_MNAR_censoring. Only special cases are checked here.
   where <- match.arg(where, c("lower", "upper", "both"))
+  if (stochastic) {
+    stop("stochastic = TRUE ist not implemented!")
+  }
 
   p <- adjust_p(p, cols_mis)
 
@@ -142,23 +147,10 @@ delete_censoring <- function(ds, p, cols_mis, cols_ctrl,
 delete_MAR_censoring <- function(ds, p, cols_mis, cols_ctrl,
                                  where = "lower", sorting = TRUE,
                                  miss_cols, ctrl_cols) {
-
-
-  # Deprecate miss_cols, ctrl_cols
-  check_renamed_arg(miss_cols, cols_mis)
-  check_renamed_arg(ctrl_cols, cols_ctrl)
-
-
-  # arg stochastic not used! (and method is not stochastic)
-  check_delete_args_MAR(
-    ds = ds, p = p, cols_mis = cols_mis,
-    cols_ctrl = cols_ctrl, stochastic = FALSE
-  )
-
-  delete_censoring(
-    ds = ds, p = p, cols_mis = cols_mis, cols_ctrl = cols_ctrl,
-    where = where, sorting = sorting
-  )
+  do.call(delete_values, c(
+    list(mechanism = "MAR", mech_type = "censoring", stochastic = FALSE),
+    as.list(environment())
+  ))
 }
 
 
@@ -176,18 +168,8 @@ delete_MAR_censoring <- function(ds, p, cols_mis, cols_ctrl,
 delete_MNAR_censoring <- function(ds, p, cols_mis,
                                   where = "lower", sorting = TRUE,
                                   miss_cols) {
-
-  # Deprecate miss_cols
-  check_renamed_arg(miss_cols, cols_mis)
-
-  # arg stochastic not used! (and method is not stochastic)
-  check_delete_args_MNAR(
-    ds = ds, p = p, cols_mis = cols_mis,
-    stochastic = FALSE
-  )
-
-  delete_censoring(
-    ds = ds, p = p, cols_mis = cols_mis, cols_ctrl = cols_mis,
-    where = where, sorting = sorting
-  )
+  do.call(delete_values, c(
+    list(mechanism = "MNAR", mech_type = "censoring", stochastic = FALSE),
+    as.list(environment())
+  ))
 }

@@ -205,25 +205,10 @@ delete_MAR_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
                               stochastic = FALSE,
                               add_realized_x = FALSE, ...,
                               miss_cols, ctrl_cols) {
-
-  # Deprecate miss_cols, ctrl_cols
-  check_renamed_arg(miss_cols, cols_mis)
-  check_renamed_arg(ctrl_cols, cols_ctrl)
-
-  check_delete_args_MAR(
-    ds = ds, p = p, cols_mis = cols_mis,
-    cols_ctrl = cols_ctrl, stochastic = stochastic
-  )
-
-  delete_1_to_x(ds, p, cols_mis, cols_ctrl,
-    x = x,
-    cutoff_fun = cutoff_fun,
-    prop = prop,
-    use_lpSolve = use_lpSolve,
-    ordered_as_unordered = ordered_as_unordered,
-    stochastic = stochastic,
-    add_realized_x = add_realized_x, ...
-  )
+  do.call(delete_values, c(
+    list(mechanism = "MAR", mech_type = "1_to_x"),
+    as.list(environment()), list(...)
+  ))
 }
 
 
@@ -245,22 +230,8 @@ delete_MNAR_1_to_x <- function(ds, p, cols_mis, x,
                                stochastic = FALSE,
                                add_realized_x = FALSE, ...,
                                miss_cols) {
-
-  # Deprecate miss_cols
-  check_renamed_arg(miss_cols, cols_mis)
-
-  check_delete_args_MNAR(
-    ds = ds, p = p, cols_mis = cols_mis,
-    stochastic = stochastic
-  )
-
-  delete_1_to_x(ds, p, cols_mis,
-    cols_ctrl = cols_mis, x = x,
-    cutoff_fun = cutoff_fun,
-    prop = prop,
-    use_lpSolve = use_lpSolve,
-    ordered_as_unordered = ordered_as_unordered,
-    stochastic = stochastic, add_realized_x = add_realized_x,
-    ...
-  )
+  do.call(delete_values, c(
+    list(mechanism = "MNAR", mech_type = "1_to_x"),
+    as.list(environment()), list(...)
+  ))
 }
