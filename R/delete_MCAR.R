@@ -49,21 +49,16 @@
 #' delete_MCAR(ds, 0.2)
 delete_MCAR <- function(ds, p, cols_mis = seq_len(ncol(ds)),
                         stochastic = FALSE, p_overall = FALSE, miss_cols) {
+  # The real work is done inside of .delete_MCAR()
+  do.call(delete_values, c(
+    list(mechanism = "MCAR", mech_type = NULL),
+    as.list(environment())
+  ))
+}
 
-  # Deprecate miss_cols
-  check_renamed_arg(miss_cols, cols_mis)
+.delete_MCAR <- function(ds, p, cols_mis = seq_len(ncol(ds)),
+                        stochastic = FALSE, p_overall = FALSE, miss_cols) {
 
-  ## checks and corrections for p -----------------------------------
-  check_delete_args_MCAR(
-    ds = ds, p = p, cols_mis = cols_mis,
-    stochastic = stochastic, p_overall = p_overall
-  )
-
-  check_delete_args(ds = ds, p = p, cols_mis = cols_mis, stochastic = stochastic)
-
-  p <- adjust_p(p, cols_mis)
-
-  # create missing values -----------------------
   n <- nrow(ds)
   if (!p_overall || stochastic) {
     for (i in seq_along((cols_mis))) {

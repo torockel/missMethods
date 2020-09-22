@@ -52,7 +52,7 @@ get_NA_indices <- function(stochastic, n = length(indices), p,
   na_indices
 }
 
-## Interface for MAR and MNAR -------------------------------------------------
+## Interface for all MCAR, MAR, MNAR functions --------------------------------
 
 delete_values <- function(mechanism, mech_type, ...) {
 
@@ -122,14 +122,28 @@ delete_values <- function(mechanism, mech_type, ...) {
       stochastic = args$stochastic
     )
     args$cols_ctrl <- args$cols_mis
+  } else if (mechanism == "MCAR") {
+    check_delete_args_MCAR(
+      ds = args$ds, p = args$p, cols_mis = args$cols_mis,
+      stochastic = args$stochastic, p_overall = args$p_overall
+    )
+    check_delete_args(
+      ds = args$ds, p = args$p, cols_mis = args$cols_mis,
+      stochastic = args$stochastic
+    )
   } else {
-    stop("mechanism must be one of MAR or MNAR")
+    stop("mechanism must be one of MCAR, MAR or MNAR")
   }
 
   args$p <- adjust_p(args$p, args$cols_mis)
 
   ## Call delete function -----------------------------------------------------
-  do.call(paste0("delete_", mech_type), args)
+  fun_name <- if (mechanism == "MCAR") {
+    ".delete_MCAR"
+  } else {
+    paste0("delete_", mech_type)
+  }
+  do.call(fun_name, args)
 }
 
 
