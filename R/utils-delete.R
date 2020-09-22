@@ -17,14 +17,15 @@ get_NA_indices <- function(stochastic, n = length(indices), p,
         to_big <- prob > 1 / (n * p)
         prob[to_big] <- 1 / (n * p)
         # Scale up other probs (if they are not 0 and not already scaled)
-        neq_0_not_scaled <- prob > 0 & (prob < 1 / (n * p))
+        scaled <- prob >= 1 / (n * p)
+        neq_0_not_scaled <- prob > 0 & !scaled
         if (any(neq_0_not_scaled)) {
           prob[neq_0_not_scaled] <- prob[neq_0_not_scaled] *
-            (1 - sum(to_big) * 1 / (n * p)) / sum(prob[neq_0_not_scaled])
+            (1 - sum(scaled) * 1 / (n * p)) / sum(prob[neq_0_not_scaled])
         } else {
           # We have to delete values from objects with prob == 0, to get
           # (expected) n * p missing values
-          prob[prob == 0] <- (1 - sum(to_big) * 1 / (n * p)) / sum(prob == 0)
+          prob[prob == 0] <- (1 - sum(scaled) * 1 / (n * p)) / sum(prob == 0)
           break()
         }
       }
