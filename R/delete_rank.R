@@ -1,5 +1,5 @@
 # the workhorse for delete_MAR_rank and delete_MNAR_rank
-delete_rank <- function(ds, p, cols_mis, cols_ctrl,
+delete_rank <- function(ds, p, cols_mis, cols_ctrl, stochastic,
                         ties.method = "average") {
 
   # General checking is done in calling functions delete_MAR_rank and
@@ -8,15 +8,12 @@ delete_rank <- function(ds, p, cols_mis, cols_ctrl,
   p <- adjust_p(p, cols_mis)
 
   for (i in seq_along(cols_mis)) {
-    n_mis <- round(nrow(ds) * p[i])
-    if (n_mis > 0L) {
-      p_ranks <- rank(ds[, cols_ctrl[i], drop = TRUE])
-      na_indices <- get_NA_indices(
-        stochastic = FALSE,
-        n = nrow(ds), n_mis = n_mis, prob = p_ranks
-      )
-      ds[na_indices, cols_mis[i]] <- NA
-    }
+    p_ranks <- rank(ds[, cols_ctrl[i], drop = TRUE])
+    na_indices <- get_NA_indices(
+      stochastic = stochastic,
+      n = nrow(ds), p = p[i], prob = p_ranks
+    )
+    ds[na_indices, cols_mis[i]] <- NA
   }
   ds
 }
@@ -47,7 +44,7 @@ delete_rank <- function(ds, p, cols_mis, cols_ctrl,
 #' @examples
 #' ds <- data.frame(X = 1:20, Y = 101:120)
 #' delete_MAR_rank(ds, 0.2, "X", "Y")
-delete_MAR_rank <- function(ds, p, cols_mis, cols_ctrl,
+delete_MAR_rank <- function(ds, p, cols_mis, cols_ctrl, stochastic = FALSE,
                             ties.method = "average",
                             miss_cols, ctrl_cols) {
 
@@ -55,15 +52,14 @@ delete_MAR_rank <- function(ds, p, cols_mis, cols_ctrl,
   check_renamed_arg(miss_cols, cols_mis)
   check_renamed_arg(ctrl_cols, cols_ctrl)
 
-  # arg stochastic not used (and method is not stochastic)
   check_delete_args_MAR(
     ds = ds, p = p, cols_mis = cols_mis,
-    cols_ctrl = cols_ctrl, stochastic = FALSE
+    cols_ctrl = cols_ctrl, stochastic = stochastic
   )
 
   delete_rank(
     ds = ds, p = p, cols_mis = cols_mis, cols_ctrl = cols_ctrl,
-    ties.method = ties.method
+    stochastic = stochastic, ties.method = ties.method
   )
 }
 
@@ -76,7 +72,8 @@ delete_MAR_rank <- function(ds, p, cols_mis, cols_ctrl,
 #'
 #' @examples
 #' delete_MNAR_rank(ds, 0.2, "X")
-delete_MNAR_rank <- function(ds, p, cols_mis, ties.method = "average",
+delete_MNAR_rank <- function(ds, p, cols_mis, stochastic = FALSE,
+                             ties.method = "average",
                              miss_cols) {
 
   # Deprecate miss_cols
@@ -85,11 +82,11 @@ delete_MNAR_rank <- function(ds, p, cols_mis, ties.method = "average",
   # arg stochastic not used! (and method is not stochastic)
   check_delete_args_MNAR(
     ds = ds, p = p, cols_mis = cols_mis,
-    stochastic = FALSE
+    stochastic = stochastic
   )
 
   delete_rank(
     ds = ds, p = p, cols_mis = cols_mis, cols_ctrl = cols_mis,
-    ties.method = ties.method
+    stochastic = stochastic, ties.method = ties.method
   )
 }
