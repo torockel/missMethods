@@ -4,6 +4,14 @@ get_NA_indices <- function(stochastic, n = length(indices), p,
                            prob = NULL,
                            n_mis = round(n * p),
                            indices = seq_len(n)) {
+  stopifnot(
+    is.logical(stochastic), length(stochastic) == 1L,
+    missing(p) || (is.numeric(p) && length(p) == 1L),
+    is.null(prob) || n == length(prob),
+    is.numeric(n_mis), length(n_mis) == 1L,
+    n == length(indices)
+  )
+
   if (stochastic) {
     if (is.null(prob)) {
       na_indices <- sample(c(TRUE, FALSE), n, replace = TRUE, prob = c(p, 1 - p))
