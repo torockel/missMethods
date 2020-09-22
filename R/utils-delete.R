@@ -7,7 +7,6 @@ get_NA_indices <- function(stochastic, n = length(indices), p,
   if (stochastic) {
     if (is.null(prob)) {
       na_indices <- sample(c(TRUE, FALSE), n, replace = TRUE, prob = c(p, 1 - p))
-      na_indices <- indices[na_indices]
       # na_indices <- stats::runif(n) < p # old
     } else {
       # First: Normalize prob
@@ -35,8 +34,9 @@ get_NA_indices <- function(stochastic, n = length(indices), p,
         stop("We have a problem with prob; did you specify 'p' correctly?")
       }
       # get NA indices
-      na_indices <- stats::runif(n) < p
+      na_indices <- stats::runif(n) < prob
     }
+    na_indices <- indices[na_indices]
   } else { # not stochastic
     na_indices <- resample(indices, n_mis, prob = prob)
   }
