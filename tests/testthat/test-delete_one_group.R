@@ -46,10 +46,10 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
   expect_equal(count_NA(df_mis), c(X = 50, Y = 0, Z = 0))
 
 
-  # check FUN ---------------------------------------------
+  # check cutoff_fun ---------------------------------------------
   # median via stats::quantile()
   df_mis <- delete_MAR_one_group(df_XYZ_100, 0.2, "X", "Y",
-    FUN = stats::quantile,
+    cutoff_fun = stats::quantile,
     probs = 0.5
   )
   expect_equal(count_NA(df_mis), c(X = 20, Y = 0, Z = 0))
@@ -60,7 +60,7 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
 
   # unequal groups via stats::quantile()
   df_mis <- delete_MAR_one_group(df_XYZ_100, 0.2, "X", "Y",
-    FUN = stats::quantile,
+    cutoff_fun = stats::quantile,
     probs = 0.2
   )
   expect_equal(count_NA(df_mis), c(X = 20, Y = 0, Z = 0))
@@ -69,7 +69,7 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
       isTRUE(all.equal(count_NA(df_mis[21:100, ]), c(X = 20, Y = 0, Z = 0)))
   )
 
-  # check unorderd factor as ctrl_col and prob ------------
+  # check unorderd factor as ctrl_col and prop ------------
   df_mis <- delete_MAR_one_group(df_with_unord_factor, 0.4, "Y", "X")
   expect_equal(count_NA(df_mis), c(X = 0, Y = 8))
   expect_true(
@@ -78,7 +78,7 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
   )
 
   df_mis <- delete_MAR_one_group(df_with_unord_factor, 0.4, "Y", "X",
-    prob = 0.4
+    prop = 0.4
   )
   expect_equal(count_NA(df_mis), c(X = 0, Y = 8))
   expect_true(isTRUE(all.equal(count_NA(df_mis[1:8, ]), c(X = 0, Y = 8))) ||
