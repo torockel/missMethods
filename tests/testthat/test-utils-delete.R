@@ -114,6 +114,16 @@ test_that("delete_values() adjusts p", {
   )
 })
 
+test_that("delete_values() adjusts p", {
+  expect_equal(
+    count_NA(delete_values(
+      "MAR", "rank", ds = df_XYZ_100, p = 0.1,
+      cols_mis = c("X", "Z"), cols_ctrl = c("Y", "Y"), stochastic = FALSE
+    )),
+    c(X = 10, Y = 0, Z = 10)
+  )
+})
+
 
 
 # check_delete_args ---------------------------------------

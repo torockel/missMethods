@@ -60,7 +60,7 @@ delete_values <- function(mechanism, mech_type, ...) {
   args <- as.list(substitute(...()))
   # Evaluate symbols (if not missing)
   args <- lapply(args, function(x) {
-    if (is.symbol(x)) {
+    if (is.language(x)) {
       return(tryCatch(eval(x), error = function(cnd) "args_eval_missing_arg"))
     } else {
       return(x)
