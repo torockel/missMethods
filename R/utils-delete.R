@@ -10,7 +10,11 @@ get_NA_indices <- function(stochastic, n = length(indices), p,
       na_indices <- indices[na_indices]
       # na_indices <- stats::runif(n) < p # old
     } else {
-      stop("ToDo")
+      prob <- prob / sum(prob) * n * p
+      if (any(prob > 1)) {
+        stop("We have a problem with prob")
+      }
+      na_indices <- stats::runif(n) < p
     }
   } else { # not stochastic
     na_indices <- resample(indices, n_mis, prob = prob)
