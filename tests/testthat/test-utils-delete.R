@@ -91,6 +91,19 @@ test_that("get_NA_indices() scales prob correctly", {
 
 })
 
+
+## delete_values() ------------------------------------------------------------
+test_that("delete_values() works (basic test)", {
+  expect_equal(
+    count_NA(delete_values(
+      "MAR", "rank", ds = df_XY_20, p = 0.1,
+      cols_mis = "X", cols_ctrl = "Y", stochastic = FALSE
+    )),
+    c(X = 2, Y = 0)
+  )
+})
+
+
 # check_delete_args ---------------------------------------
 test_that("check_delete_args()", {
   # ds ----------------------------------------------------

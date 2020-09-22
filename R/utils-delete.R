@@ -52,6 +52,84 @@ get_NA_indices <- function(stochastic, n = length(indices), p,
   na_indices
 }
 
+## Interface for MAR and MNAR -------------------------------------------------
+
+delete_values <- function(mechanism, mech_type, ...) {
+
+  ## Get args -----------------------------------------------------------------
+  args <- as.list(substitute(...()))
+  # Evaluate symbols (if not missing)
+  args <- lapply(args, function(x) {
+    if (is.symbol(x)) {
+      return(tryCatch(eval(x), error = function(cnd) "args_eval_missing_arg"))
+    } else {
+      return(x)
+    }
+  })
+
+
+  ## Check for deprecated arguments -------------------------------------------
+  # Deprecate miss_cols
+  if ("miss_cols" %in% names(args) && args$miss_cols != "args_eval_missing_arg") {
+    if ("cols_mis" %in% names(args) && args$cols_mis != "args_eval_missing_arg") {
+      stop(
+        "miss_cols is deprecated and replaced by cols_mis. ",
+        "Please supply only a value to cols_mis.",
+        call. = FALSE
+      )
+    } else {
+      warning(
+        "miss_cols is deprecated; use cols_mis instead.",
+        call. = FALSE
+      )
+      args$cols_mis <- args$miss_cols
+      args$miss_cols <- NULL
+
+    }
+  }
+
+  # Deprecate ctrl_cols
+  if ("ctrl_cols" %in% names(args) && args$ctrl_cols != "args_eval_missing_arg") {
+    if ("cols_ctrl" %in% names(args) && args$cols_ctrl != "args_eval_missing_arg") {
+      stop(
+        "ctrl_cols is deprecated and replaced by cols_ctrl ",
+        "Please supply only a value to cols_ctrl",
+        call. = FALSE
+      )
+    } else {
+      warning(
+        "ctrl_cols is deprecated; use cols_ctrl instead.",
+        call. = FALSE
+      )
+      args$cols_mis <- args$ctrl_cols
+      args$ctrl_cols <- NULL
+    }
+  }
+
+  ## Check arguments ----------------------------------------------------------
+  # Remove missing arguments
+  args <- args[!(args == "args_eval_missing_arg")]
+
+  # Check arguments
+  if (mechanism == "MAR") {
+    check_delete_args_MAR(
+      ds = args$ds, p = args$p, cols_mis = args$cols_mis,
+      cols_ctrl = args$cols_ctrl, stochastic = args$stochastic
+    )
+  } else if (mechanism == "MNAR") {
+    check_delete_args_MNAR(
+      ds = args$ds, p = args$p, cols_mis = args$cols_mis,
+      stochastic = args$stochastic
+    )
+    args$cols_ctrl <- args$cols_mis
+  } else {
+    stop("mechanism must be one of MAR or MNAR")
+  }
+
+  ## Call delete function -----------------------------------------------------
+  do.call(paste0("delete_", mech_type), args)
+}
+
 
 # checking arguments --------------------------------------
 
