@@ -10,10 +10,31 @@ get_NA_indices <- function(stochastic, n = length(indices), p,
       na_indices <- indices[na_indices]
       # na_indices <- stats::runif(n) < p # old
     } else {
-      prob <- prob / sum(prob) * n * p
-      if (any(prob > 1)) {
-        stop("We have a problem with prob")
+      # First: Normalize prob
+      prob <- prob / sum(prob)
+      # Do we need to scale prob?
+      while (any(prob > 1 / (n * p))) {
+        # Scale down to big probs
+        to_big <- prob > 1 / (n * p)
+        prob[to_big] <- 1 / (n * p)
+        # Scale up other probs (if they are not 0)
+        neq_0_not_big <- prob > 0 & ! to_big
+        if (any(neq_0_not_big)) {
+          prob[neq_0_not_big] <- prob[neq_0_not_big] *
+            (1 - sum(to_big) * 1 / (n * p)) / sum(prob[neq_0_not_big])
+        } else {
+          # We have to delete values from objects with prob == 0, to get
+          # (expected) n * p missing values
+          prob[prob == 0] <- (1 - sum(to_big) * 1 / (n * p)) / sum(prob == 0)
+          break()
+        }
       }
+      # After this loop all probs should be <= 1/(n*p) and sum(prob) == 1
+      prob <- prob * n * p
+      if (any(prob > 1) || isFALSE(all.equal(sum(prob), n * p))) {
+        stop("We have a problem with prob; did you specify 'p' correctly?")
+      }
+      # get NA indices
       na_indices <- stats::runif(n) < p
     }
   } else { # not stochastic
