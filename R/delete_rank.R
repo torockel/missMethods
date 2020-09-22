@@ -47,20 +47,10 @@ delete_rank <- function(ds, p, cols_mis, cols_ctrl, stochastic,
 delete_MAR_rank <- function(ds, p, cols_mis, cols_ctrl, stochastic = FALSE,
                             ties.method = "average",
                             miss_cols, ctrl_cols) {
-
-  # Deprecate miss_cols, ctrl_cols
-  check_renamed_arg(miss_cols, cols_mis)
-  check_renamed_arg(ctrl_cols, cols_ctrl)
-
-  check_delete_args_MAR(
-    ds = ds, p = p, cols_mis = cols_mis,
-    cols_ctrl = cols_ctrl, stochastic = stochastic
-  )
-
-  delete_rank(
-    ds = ds, p = p, cols_mis = cols_mis, cols_ctrl = cols_ctrl,
-    stochastic = stochastic, ties.method = ties.method
-  )
+  do.call(delete_values, c(
+    list(mechanism = "MAR", mech_type = "rank"),
+    as.list(environment())
+  ))
 }
 
 #' Create MNAR values using a ranking mechanism
@@ -75,18 +65,8 @@ delete_MAR_rank <- function(ds, p, cols_mis, cols_ctrl, stochastic = FALSE,
 delete_MNAR_rank <- function(ds, p, cols_mis, stochastic = FALSE,
                              ties.method = "average",
                              miss_cols) {
-
-  # Deprecate miss_cols
-  check_renamed_arg(miss_cols, cols_mis)
-
-  # arg stochastic not used! (and method is not stochastic)
-  check_delete_args_MNAR(
-    ds = ds, p = p, cols_mis = cols_mis,
-    stochastic = stochastic
-  )
-
-  delete_rank(
-    ds = ds, p = p, cols_mis = cols_mis, cols_ctrl = cols_mis,
-    stochastic = stochastic, ties.method = ties.method
-  )
+  do.call(delete_values, c(
+    list(mechanism = "MNAR", mech_type = "rank"),
+    as.list(environment())
+  ))
 }
