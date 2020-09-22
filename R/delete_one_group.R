@@ -6,11 +6,9 @@ delete_one_group <- function(ds, p, cols_mis, cols_ctrl,
                              stochastic = FALSE,
                              ...) {
 
-  # General checking is done in calling functions.
+  # General checking of arguments is done in delete_values().
   # Only special cases are checked here.
   cutoff_fun <- match.fun(cutoff_fun)
-
-  p <- adjust_p(p, cols_mis)
 
   for (i in seq_along(cols_mis)) {
     groups <- find_groups(

@@ -6,8 +6,8 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
                           stochastic = FALSE,
                           add_realized_x = FALSE, ...) {
 
-  # general checking is done in calling functions delete_MAR_1_to_x and
-  # delete_MNAR_1_to_x, only special cases are checked here
+  # General checking of arguments is done in delete_values().
+  # Only special cases are checked here.
   # check if cols_ctrl are numeric or ordered factor
   check_cols_ctrl_1_to_x(ds, cols_ctrl)
 
@@ -21,7 +21,6 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
     stop("x must be greater than 0 and finite")
   }
 
-  p <- adjust_p(p, cols_mis)
 
   # create missing values -----------------------
   n <- nrow(ds)

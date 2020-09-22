@@ -1,12 +1,6 @@
 # the workhorse for delete_MAR_rank and delete_MNAR_rank
 delete_rank <- function(ds, p, cols_mis, cols_ctrl, stochastic,
                         ties.method = "average") {
-
-  # General checking is done in calling functions delete_MAR_rank and
-  # delete_MNAR_rank. Only special cases are checked here.
-
-  p <- adjust_p(p, cols_mis)
-
   for (i in seq_along(cols_mis)) {
     p_ranks <- rank(ds[, cols_ctrl[i], drop = TRUE])
     na_indices <- get_NA_indices(

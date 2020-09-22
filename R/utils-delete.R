@@ -126,6 +126,8 @@ delete_values <- function(mechanism, mech_type, ...) {
     stop("mechanism must be one of MAR or MNAR")
   }
 
+  args$p <- adjust_p(args$p, args$cols_mis)
+
   ## Call delete function -----------------------------------------------------
   do.call(paste0("delete_", mech_type), args)
 }

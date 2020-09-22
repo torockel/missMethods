@@ -4,14 +4,12 @@
 delete_censoring <- function(ds, p, cols_mis, cols_ctrl,
                              where = "lower", sorting = TRUE, stochastic = FALSE) {
 
-  # general checking is done in calling functions delete_MAR_censoring and
-  # delete_MNAR_censoring. Only special cases are checked here.
+  # General checking of arguments is done in delete_values().
+  # Only special cases are checked here.
   where <- match.arg(where, c("lower", "upper", "both"))
   if (stochastic) {
     stop("stochastic = TRUE ist not implemented!")
   }
-
-  p <- adjust_p(p, cols_mis)
 
   # create missing values ---------------------------------
   for (i in seq_along(cols_mis)) {
