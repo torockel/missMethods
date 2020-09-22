@@ -1,3 +1,59 @@
+## get_NA_indices() -----------------------------------------------------------
+test_that("get_NA_indices() works with comibinations of stochastic and prob", {
+  N <- 1000
+  n <- 10
+  p <- 0.1
+  set.seed(12345)
+
+  # stochastic + prob = NULL
+  n_mis <- sum(replicate(
+    N, length(get_NA_indices(stochastic = TRUE, n = n, p = p, prob = NULL))
+  ))
+  expect_true(stats::qbinom(1e-10, n * N, p) <= n_mis)
+  expect_true(n_mis <= stats::qbinom(1e-10, n * N, p, FALSE))
+
+  # stochastic + prob = 1:10
+  NA_indices <- replicate(
+    N, get_NA_indices(stochastic = TRUE, n = n, p = p, prob = 1:10)
+  )
+  n_mis <- sum(vapply(NA_indices, length, integer(1)))
+  expect_true(stats::qbinom(1e-10, n * N, p) <= n_mis)
+  expect_true(n_mis <= stats::qbinom(1e-10, n * N, p, FALSE))
+
+  n_1 <- sum(vapply(NA_indices, function(x) any(x == 1), logical(1)))
+  n_10 <- sum(vapply(NA_indices, function(x) any(x == 10), logical(1)))
+
+  expect_true(stats::qbinom(1e-10, n * N, p * 1 / sum(1:10)) <= n_1)
+  expect_true(n_1 <= stats::qbinom(1e-10, n * N, p* 1 / sum(1:10), FALSE))
+
+  expect_true(stats::qbinom(1e-10, n * N, p * 10 / sum(1:10)) <= n_10)
+  expect_true(n_10 <= stats::qbinom(1e-10, n * N, p * 10 / sum(1:10), FALSE))
+
+  # stochastic = FALSE + prob = NULL
+  n_mis <- replicate(
+    N, length(get_NA_indices(stochastic = FALSE, n = n, p = p, prob = NULL))
+  )
+  expect_true(all(n_mis == 1L))
+
+
+  # stochastic = FALSE + prob = 1:10
+  NA_indices <- replicate(
+    N, get_NA_indices(stochastic = FALSE, n = n, p = p, prob = 1:10)
+  )
+  n_mis <- vapply(NA_indices, length, integer(1))
+  expect_true(all(n_mis == 1L))
+
+  n_1 <- sum(vapply(NA_indices, function(x) any(x == 1), logical(1)))
+  n_10 <- sum(vapply(NA_indices, function(x) any(x == 10), logical(1)))
+
+  expect_true(stats::qbinom(1e-10, n * N, p * 1 / sum(1:10)) <= n_1)
+  expect_true(n_1 <= stats::qbinom(1e-10, n * N, p* 1 / sum(1:10), FALSE))
+
+  expect_true(stats::qbinom(1e-10, n * N, p * 10 / sum(1:10)) <= n_10)
+  expect_true(n_10 <= stats::qbinom(1e-10, n * N, p * 10 / sum(1:10), FALSE))
+})
+
+
 # check_delete_args ---------------------------------------
 test_that("check_delete_args()", {
   # ds ----------------------------------------------------
