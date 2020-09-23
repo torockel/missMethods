@@ -53,85 +53,56 @@ get_NA_indices <- function(stochastic, n = length(indices), p,
 }
 
 ## Interface for all MCAR, MAR, MNAR functions --------------------------------
-
-delete_values <- function(mechanism, mech_type, ...) {
-
-  ## Get args -----------------------------------------------------------------
-  args <- as.list(substitute(...()))
-  # Evaluate symbols (if not missing)
-  args <- lapply(args, function(x) {
-    if (is.language(x)) {
-      return(tryCatch(eval(x), error = function(cnd) "args_eval_missing_arg"))
-    } else {
-      return(x)
-    }
-  })
-
+# The function delete_values() is normally called via, delete_MCAR(),
+# delete_MAR_1_to_x() and friends. All of these functions call delete_values
+# (via do.call()). Inside delete_values() arguments, which should not be passed
+# on, must be removed (via (remove() or args$argName <-NULL). Finally,
+# delete_values() calls delete_mech_type() or .delete_MCAR().
+delete_values <- function(mechanism, mech_type, ds, p, cols_mis, stochastic,
+                          cols_ctrl,
+                          p_overall,
+                          miss_cols, ctrl_cols,
+                          ...) {
 
   ## Check for deprecated arguments -------------------------------------------
-  # Deprecate miss_cols
-  if ("miss_cols" %in% names(args) && args$miss_cols != "args_eval_missing_arg") {
-    if ("cols_mis" %in% names(args) && args$cols_mis != "args_eval_missing_arg") {
-      stop(
-        "miss_cols is deprecated and replaced by cols_mis. ",
-        "Please supply only a value to cols_mis.",
-        call. = FALSE
-      )
-    } else {
-      warning(
-        "miss_cols is deprecated; use cols_mis instead.",
-        call. = FALSE
-      )
-      args$cols_mis <- args$miss_cols
-      args$miss_cols <- NULL
+  check_renamed_arg(miss_cols, cols_mis)
+  check_renamed_arg(ctrl_cols, cols_ctrl)
+  remove(list = c("miss_cols", "ctrl_cols"))
 
-    }
-  }
-
-  # Deprecate ctrl_cols
-  if ("ctrl_cols" %in% names(args) && args$ctrl_cols != "args_eval_missing_arg") {
-    if ("cols_ctrl" %in% names(args) && args$cols_ctrl != "args_eval_missing_arg") {
-      stop(
-        "ctrl_cols is deprecated and replaced by cols_ctrl ",
-        "Please supply only a value to cols_ctrl",
-        call. = FALSE
-      )
-    } else {
-      warning(
-        "ctrl_cols is deprecated; use cols_ctrl instead.",
-        call. = FALSE
-      )
-      args$cols_mis <- args$ctrl_cols
-      args$ctrl_cols <- NULL
-    }
-  }
-
-  # Remove deprecated arguments
-  args <- args[!(names(args) %in% c("miss_cols", "ctrl_cols"))]
 
   ## Check and adjust arguments -----------------------------------------------
-  check_delete_args_general(args$ds, args$p, args$cols_mis, args$stochastic)
+  check_delete_args_general(ds, p, cols_mis, stochastic)
 
   if (mechanism == "MCAR") {
-    check_args_MCAR(args$p, args$p_overall)
+    check_args_MCAR(p, p_overall)
+    remove(cols_ctrl)
   } else if (mechanism == "MAR") {
-    check_args_MAR(args$ds, args$cols_mis, args$cols_ctrl)
+    check_args_MAR(ds, cols_mis, cols_ctrl)
+    remove(p_overall)
   } else if (mechanism == "MNAR") {
-    check_args_MNAR(args$ds, args$cols_mis)
-    args$cols_ctrl <- args$cols_mis
+    check_args_MNAR(ds, cols_mis)
+    cols_ctrl <- cols_mis
+    remove(p_overall)
   } else {
     stop("mechanism must be one of MCAR, MAR or MNAR")
   }
 
-  args$p <- adjust_p(args$p, args$cols_mis)
+  p <- adjust_p(p, cols_mis)
 
 
   ## Call delete function -----------------------------------------------------
+  # Get needed arguments
+  args <- c(as.list(environment()), list(...))
+  args$mechanism <- NULL
+  args$mech_type <- NULL
+
+  # Construct function name
   fun_name <- if (mechanism == "MCAR") {
     ".delete_MCAR"
   } else {
     paste0("delete_", mech_type)
   }
+
   do.call(fun_name, args)
 }
 
