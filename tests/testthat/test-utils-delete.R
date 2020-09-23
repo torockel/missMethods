@@ -129,6 +129,15 @@ test_that("delete_values() deprecate ctrl_cols", {
   )
 })
 
+
+test_that("delete_values() calls check_delete_args_general()", {
+  expect_error(
+    delete_MCAR(array(1:6, dim = c(1, 2, 3)), 0.3),
+    "ds must be a data.frame or a matrix"
+  )
+})
+
+
 test_that("delete_values() adjusts p", {
   expect_equal(
     count_NA(delete_values(
@@ -140,38 +149,41 @@ test_that("delete_values() adjusts p", {
 })
 
 
-# check_delete_args ---------------------------------------
-test_that("check_delete_args()", {
+# check_delete_args_general() -------------------------------------------------
+test_that("check_delete_args_general()", {
   # ds ----------------------------------------------------
-  # expect_error(delete_MCAR(1:5, 0.3), "ds must be a data.frame or a matrix")
+    expect_error(
+      delete_MCAR(array(1:6, dim = c(1, 2, 3)), 0.3),
+      "ds must be a data.frame or a matrix"
+    )
 
   # p -----------------------------------------------------
   expect_error(
     delete_MCAR(df_XY_100, p = rep(0.1, 3)),
-    "length must equal cols_mis"
+    "p must be of length 1 or length must equal cols_mis"
   )
   expect_error(
     delete_MCAR(df_XY_100, p = rep(0.1, 2), "X"),
-    "length must equal cols_mis"
+    "p must be of length 1 or length must equal cols_mis"
   )
   expect_error(
     delete_MCAR(df_XYZ_100, p = rep(0.1, 2), 1:3),
-    "length must equal cols_mis"
+    "p must be of length 1 or length must equal cols_mis"
   )
   expect_error(
     delete_MCAR(df_XY_100, p = c(1.2, 0.9)),
-    "must be between 0 and 1"
+    "probabilties in p must be between 0 and 1"
   )
   expect_error(delete_MCAR(df_XY_100, p = "a"), "p must be numeric")
 
   # cols_mis ---------------------------------------------
   expect_error(
     delete_MCAR(df_XY_100, 0.1, cols_mis = c(2, 3)),
-    "indices in cols_mis must"
+    "indices in cols_mis must be in 1:ncol\\(ds)"
   )
   expect_error(
     delete_MCAR(df_XY_100, 0.1, cols_mis = c("X", "Z")),
-    "all entries of cols_mis"
+    "all entries of cols_mis must be in colnames\\(ds)"
   )
   expect_error(
     delete_MCAR(df_XY_100, 0.1, c(TRUE, FALSE)),
@@ -195,10 +207,6 @@ test_that("check_delete_args()", {
 
 # check_delete_args_MCAR ----------------------------------
 test_that("check_delete_args_MCAR() works", {
-  # check_delete_args_MCAR calls check_delete_args:
-  # expect_error(check_delete_args_MCAR(1:5, 0.3), "ds must be a data.frame or a matrix")
-
-  # special errors for check_delete_args_MCAR:
   expect_error(
     delete_MCAR(df_XY_100, 0.1, p_overall = "A"),
     "p_overall must be logical of length 1"
@@ -212,12 +220,6 @@ test_that("check_delete_args_MCAR() works", {
 
 # check_delete_args_MAR -----------------------------------
 test_that("check_delete_args_MAR() works", {
-  # check_delete_args_MAR calls check_delete_args:
-  expect_error(
-    delete_MAR_1_to_x(1:5, 0.3, "X", "Y"),
-    "ds must be a data.frame or a matrix"
-  )
-
   # cols_ctrl (special errors) ----------------------------
   expect_error(
     delete_MAR_1_to_x(df_XY_100, 0.1, 1, cols_ctrl = 3, x = 2),
@@ -250,13 +252,6 @@ test_that("check_delete_args_MAR() works", {
 
 # check_delete_args_MNAR ----------------------------------
 test_that("check_delete_args_MCAR() works", {
-  # check_delete_args_MNAR calls check_delete_args:
-  expect_error(
-    delete_MNAR_1_to_x(1:5, 0.3, "X", x = 3),
-    "ds must be a data.frame or a matrix"
-  )
-
-  # special errors for check_delete_args_MNAR:
   expect_error(
     delete_MNAR_1_to_x(df_XY_X_mis, 0.1, "X", x = 3),
     "cols_mis must be completely observed; no NAs in ds\\[, cols_mis\\] allowed"
