@@ -93,6 +93,25 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
 }
 
 
+check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
+  # check if cols_ctrl are numeric or ordered factor
+  cols_prob <- integer(0)
+  for (k in seq_along(cols_ctrl)) {
+    if (!(is.ordered(ds[, cols_ctrl[k], drop = TRUE]) |
+          is.numeric(ds[, cols_ctrl[k], drop = TRUE]))) {
+      cols_prob <- c(cols_prob, cols_ctrl[k])
+    }
+  }
+  if (length(cols_prob) > 0L) {
+    stop(
+      "all cols_ctrl must be numeric or ordered factors;\n",
+      "problematic column(s): ",
+      paste(cols_prob, collapse = ", ")
+    )
+  }
+  TRUE
+}
+
 
 
 #' Create MAR values using MAR1:x

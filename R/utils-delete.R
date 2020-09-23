@@ -52,182 +52,8 @@ get_NA_indices <- function(stochastic, n = length(indices), p,
   na_indices
 }
 
-## Interface for all MCAR, MAR, MNAR functions --------------------------------
-# The function delete_values() is normally called via, delete_MCAR(),
-# delete_MAR_1_to_x() and friends. All of these functions call delete_values
-# (via do.call()). Inside delete_values() arguments, which should not be passed
-# on, must be removed (via (remove() or args$argName <-NULL). Finally,
-# delete_values() calls delete_mech_type() or .delete_MCAR().
-delete_values <- function(mechanism, mech_type, ds, p, cols_mis, stochastic,
-                          cols_ctrl,
-                          p_overall,
-                          miss_cols, ctrl_cols,
-                          ...) {
 
-  ## Check for deprecated arguments -------------------------------------------
-  check_renamed_arg(miss_cols, cols_mis)
-  check_renamed_arg(ctrl_cols, cols_ctrl)
-  remove(list = c("miss_cols", "ctrl_cols"))
-
-
-  ## Check and adjust arguments -----------------------------------------------
-  check_delete_args_general(ds, p, cols_mis, stochastic)
-
-  if (mechanism == "MCAR") {
-    check_args_MCAR(p, p_overall)
-    remove(cols_ctrl)
-  } else if (mechanism == "MAR") {
-    check_args_MAR(ds, cols_mis, cols_ctrl)
-    remove(p_overall)
-  } else if (mechanism == "MNAR") {
-    check_args_MNAR(ds, cols_mis)
-    cols_ctrl <- cols_mis
-    remove(p_overall)
-  } else {
-    stop("mechanism must be one of MCAR, MAR or MNAR")
-  }
-
-  p <- adjust_p(p, cols_mis)
-
-
-  ## Call delete function -----------------------------------------------------
-  # Get needed arguments
-  args <- c(as.list(environment()), list(...))
-  args$mechanism <- NULL
-  args$mech_type <- NULL
-
-  # Construct function name
-  fun_name <- if (mechanism == "MCAR") {
-    ".delete_MCAR"
-  } else {
-    paste0("delete_", mech_type)
-  }
-
-  do.call(fun_name, args)
-}
-
-
-# checking arguments --------------------------------------
-# args checking for all mechanisms
-check_delete_args_general <- function(ds, p, cols_mis, stochastic) {
-  # check ds ------------------------------------
-  if (!is_df_or_matrix(ds)) {
-    stop("ds must be a data.frame or a matrix")
-  }
-
-  # check p -------------------------------------
-  if (is.numeric(p)) {
-    if (length(p) != 1L && length(p) != length(cols_mis)) {
-      stop("p must be of length 1 or length must equal cols_mis")
-    } else {
-      if (any(p < 0 | p > 1)) {
-        stop("probabilties in p must be between 0 and 1")
-      }
-    }
-  } else {
-    stop("p must be numeric")
-  }
-
-  # check cols_mis -----------------------------
-  if (is.numeric(cols_mis)) {
-    if (any(cols_mis < 1 | cols_mis > ncol(ds))) {
-      stop("indices in cols_mis must be in 1:ncol(ds)")
-    }
-  } else if (is.character(cols_mis)) {
-    if (!all(cols_mis %in% colnames(ds))) {
-      stop("all entries of cols_mis must be in colnames(ds)")
-    }
-  } else {
-    stop("cols_mis must be a vector of column names or indices of ds")
-  }
-
-  if (anyDuplicated(cols_mis) != 0) {
-    duplicated_cols <- unique(cols_mis[duplicated(cols_mis)])
-    warning(
-      "there are duplicates in cols_mis:\n", duplicated_cols,
-      "\n this may result in a too high percentage of missing values"
-    )
-  }
-
-  # check stochastic ----------------------------
-  if (!is.logical(stochastic)) {
-    stop("stochastic must be logical")
-  } else if (length(stochastic) != 1L) {
-    stop("the length of stochastic must be 1")
-  }
-}
-
-check_args_MCAR <- function(p, p_overall) {
-  # special case: p_overall
-  if (!is.logical(p_overall) || length(p_overall) != 1L) {
-    stop("p_overall must be logical of length 1")
-  } else if (p_overall && length(p) != 1L) {
-    stop("if p_overall = TRUE, then length(p) must be 1")
-  }
-}
-
-check_args_MAR <- function(ds, cols_mis, cols_ctrl) {
-  # check cols_ctrl -----------------------------
-  if (!is.null(cols_ctrl)) {
-    if (is.numeric(cols_ctrl)) {
-      if (any(cols_ctrl < 1 | cols_ctrl > ncol(ds))) {
-        stop("indices in cols_ctrl must be in 1:ncol(ds)")
-      }
-    } else if (is.character(cols_ctrl)) {
-      if (!all(cols_ctrl %in% colnames(ds))) {
-        stop("all entries of cols_ctrl must be in colnames(ds)")
-      }
-    } else {
-      stop("cols_ctrl must be a vector of column names or indices of ds")
-    }
-  }
-  # no NA in cols_ctrl
-  if (any(is.na(ds[, cols_ctrl]))) {
-    stop("cols_ctrl must be completely observed; no NAs in ds[, cols_ctrl] allowed")
-  }
-
-  if (length(cols_mis) != length(cols_ctrl)) {
-    stop("length(cols_mis) must equal length(cols_ctrl)")
-  }
-
-  # check if any ctrl_col is in cols_mis
-  if (any(cols_ctrl %in% cols_mis)) {
-    stop(
-      "to ensure MAR no ctrl_col is allowed to be in cols_mis;\n",
-      "problematic cols_ctrl:\n",
-      paste(cols_ctrl[cols_ctrl %in% cols_mis], collapse = ", ")
-    )
-  }
-}
-
-check_args_MNAR <- function(ds, cols_mis) {
-  #  no NA in cols_mis
-  if (any(is.na(ds[, cols_mis]))) {
-    stop("cols_mis must be completely observed; no NAs in ds[, cols_mis] allowed")
-  }
-}
-
-
-check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
-  # check if cols_ctrl are numeric or ordered factor
-  cols_prob <- integer(0)
-  for (k in seq_along(cols_ctrl)) {
-    if (!(is.ordered(ds[, cols_ctrl[k], drop = TRUE]) |
-      is.numeric(ds[, cols_ctrl[k], drop = TRUE]))) {
-      cols_prob <- c(cols_prob, cols_ctrl[k])
-    }
-  }
-  if (length(cols_prob) > 0L) {
-    stop(
-      "all cols_ctrl must be numeric or ordered factors;\n",
-      "problematic column(s): ",
-      paste(cols_prob, collapse = ", ")
-    )
-  }
-  TRUE
-}
-
-# finding groups ------------------------------------------
+## Finding groups -------------------------------------------------------------
 
 find_groups <- function(x, cutoff_fun, prop, use_lpSolve,
                         ordered_as_unordered, ...) {
@@ -244,6 +70,7 @@ find_groups <- function(x, cutoff_fun, prop, use_lpSolve,
   }
   groups
 }
+
 
 find_groups_by_cutoff_val <- function(x, cutoff_val) {
   # get rows below the cutoff value
@@ -293,6 +120,7 @@ find_groups_by_prop <- function(x, prop, use_lpSolve = TRUE) {
   find_groups_by_values(x, g1_ux)
 }
 
+
 find_groups_by_values <- function(x, values) {
   g1 <- x %in% values
   g2 <- which(!g1)
@@ -300,13 +128,8 @@ find_groups_by_values <- function(x, values) {
   list(g1 = g1, g2 = g2)
 }
 
-# more helpers --------------------------------------------
-adjust_p <- function(p, cols_mis) {
-  if (length(p) == 1L) {
-    p <- rep(p, length(cols_mis))
-  }
-  p
-}
+
+## More helpers ---------------------------------------------------------------
 
 calc_n_mis_g1 <- function(nr_g1, p_mis_g1,
                            nr_g2, n_mis, x) {

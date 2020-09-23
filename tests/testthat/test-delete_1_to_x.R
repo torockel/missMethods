@@ -273,3 +273,19 @@ test_that("delete_MNAR_1_to_x() works", {
     c(X = 4, Z = 4)
   )
 })
+
+## Check check_cols_ctrl_1_to_x() ---------------------------------------------
+test_that("check_cols_ctrl_1_to_x()", {
+  expect_true(check_cols_ctrl_1_to_x(df_XY_100, "X"))
+  expect_error(
+    check_cols_ctrl_1_to_x(
+      data.frame(
+        X = letters,
+        Y = 1:26,
+        Z = LETTERS
+      ),
+      c("X", "Y", "Z")
+    ),
+    "ordered factors;\nproblematic column\\(s): X, Z$"
+  )
+})
