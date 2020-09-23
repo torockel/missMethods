@@ -103,6 +103,32 @@ test_that("delete_values() works (basic test)", {
   )
 })
 
+
+test_that("delete_values() deprecate miss_cols", {
+  # use delete_MAR_1_to_x() as calling function (arbitrary choice)
+  ds_mis <- expect_warning(
+    delete_MAR_1_to_x(df_XY_20, 0.1, x = 2, cols_ctrl = 2, miss_cols = 1),
+    "miss_cols is deprecated; use cols_mis instead."
+  )
+  expect_equal(
+    count_NA(ds_mis),
+    c(X = 2, Y = 0)
+  )
+})
+
+
+test_that("delete_values() deprecate ctrl_cols", {
+  # use delete_MAR_1_to_x() as calling function (arbitrary choice)
+  ds_mis <- expect_warning(
+    delete_MAR_1_to_x(df_XY_20, 0.1, "X", x = 2, ctrl_cols = 2),
+    "ctrl_cols is deprecated; use cols_ctrl instead."
+  )
+  expect_equal(
+    count_NA(ds_mis),
+    c(X = 2, Y = 0)
+  )
+})
+
 test_that("delete_values() adjusts p", {
   expect_equal(
     count_NA(delete_values(
