@@ -1,18 +1,18 @@
 ## Indices for deleting -------------------------------------------------------
 
-get_NA_indices <- function(stochastic, n = length(indices), p,
+get_NA_indices <- function(n_mis_stochastic, n = length(indices), p,
                            prob = NULL,
                            n_mis = round(n * p),
                            indices = seq_len(n)) {
   stopifnot(
-    is.logical(stochastic), length(stochastic) == 1L,
+    is.logical(n_mis_stochastic), length(n_mis_stochastic) == 1L,
     missing(p) || (is.numeric(p) && length(p) == 1L),
     is.null(prob) || n == length(prob),
     is.numeric(n_mis), length(n_mis) == 1L,
     n == length(indices)
   )
 
-  if (stochastic) {
+  if (n_mis_stochastic) {
     if (is.null(prob)) {
       na_indices <- sample(c(TRUE, FALSE), n, replace = TRUE, prob = c(p, 1 - p))
       # na_indices <- stats::runif(n) < p # old
@@ -46,7 +46,7 @@ get_NA_indices <- function(stochastic, n = length(indices), p,
       na_indices <- stats::runif(n) < prob
     }
     na_indices <- indices[na_indices]
-  } else { # not stochastic
+  } else { # not n_mis_stochastic
     na_indices <- resample(indices, n_mis, prob = prob)
   }
   na_indices

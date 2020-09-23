@@ -112,7 +112,7 @@ The following table shows the connections between the algorithm names of the mis
 
 @Santos.2019   |  Function               |  Arguments
 ---------------|-------------------------|----------------------
-MCAR1univa     |`delete_MCAR`            | stochastic = FALSE
+MCAR1univa     |`delete_MCAR`            | n_mis_stochastic = FALSE
 MCAR2univa     |`delete_MCAR`            | all default
 MCAR3univa     |`delete_MCAR`            | all default
 MAR1univa      |`delete_MAR_censoring`   | sorting = FALSE
@@ -122,7 +122,7 @@ MAR4univa      |`delete_MAR_censoring`   | where = "upper"
 MAR5univa      |`delete_MAR_censoring`   | where = "both"
 MNAR1univa     |`delete_MNAR_censoring`  | sorting = FALSE
 MNAR2univa     |`delete_MNAR_censoring`  | where = "upper"
-MCAR1unifo     |`delete_MCAR`            | stochastic = FALSE
+MCAR1unifo     |`delete_MCAR`            | n_mis_stochastic = FALSE
 MCAR2unifo     |`delete_MCAR`            | p_overall = TRUE 
 MAR1unifo      |`delete_MAR_censoring`   | all default
 MAR2unifo      |`delete_MAR_censoring`   | sorting = FALSE

@@ -104,14 +104,14 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   expect_equal(count_NA(df_mis[1:20, ]), c(X = 1, Y = 0, Z = 0))
   expect_equal(count_NA(df_mis[21:100, ]), c(X = 19, Y = 0, Z = 0))
 
-  # check stochastic = TRUE -------------------------------
+  # check n_mis_stochastic = TRUE -------------------------------
   expect_false(anyNA(delete_MAR_1_to_x(df_XYZ_100, 0, "X", "Y",
     x = 3,
-    stochastic = TRUE
+    n_mis_stochastic = TRUE
   )))
   miss_09 <- delete_MAR_1_to_x(df_XYZ_100, 0.9, "X", "Y",
     x = 1.2,
-    stochastic = TRUE
+    n_mis_stochastic = TRUE
   )
   expect_true(anyNA(miss_09))
   expect_true(count_NA(miss_09)["X"] > 0)
@@ -123,7 +123,7 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   for (i in seq_len(N)) {
     ds_mis <- delete_MAR_1_to_x(df_XY_100, 0.5, "X", "Y",
       x = 4,
-      stochastic = TRUE
+      n_mis_stochastic = TRUE
     )
     res[i, "Y"] <- sum(is.na(ds_mis[, "Y"]))
     res[i, "X1"] <- sum(is.na(ds_mis[1:50, "X"]))
@@ -142,7 +142,7 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
     1000,
     sum(is.na(delete_MAR_1_to_x(df_XY_20, 0.9, "X", "Y",
       x = 3,
-      stochastic = TRUE
+      n_mis_stochastic = TRUE
     )[1:10, "X"]))
   ))
   expect_true(mean(test_max_x) < 9 && mean(test_max_x) > 7)
@@ -166,7 +166,7 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   test <- replicate(1000, is.na(delete_MAR_1_to_x(df_XY_X_unequal_dummy, 0.1,
     cols_mis = "Y",
     cols_ctrl = "X", x = 3,
-    stochastic = TRUE
+    n_mis_stochastic = TRUE
   )[11, "Y"]))
   realized_x <- sum(test) /
     ((nrow(df_XY_X_unequal_dummy) * 1000 * 0.1 - sum(test)) / 10)
@@ -203,10 +203,10 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
     c(X = 23 / 7)
   )
 
-  # add_realized_x with stochastic = TRUE
+  # add_realized_x with n_mis_stochastic = TRUE
   df_mis <- delete_MAR_1_to_x(df_XYZ_100, 0.4, "X", "Y",
     x = 3,
-    stochastic = TRUE,
+    n_mis_stochastic = TRUE,
     add_realized_x = TRUE
   )
   expect_true(attributes(df_mis)$realized_x > 0)
@@ -223,10 +223,10 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   expect_equal(count_NA(mat_mis), c(2, 4, 6, rep(0, 7)))
   expect_equal(count_NA(mat_mis[1:10, ]), c(2, 3, 5, rep(0, 7)))
 
-  # stochastic = TRUE
+  # n_mis_stochastic = TRUE
   mat_mis <- delete_MAR_1_to_x(matrix_100_2, 0.6, 1, 2,
     x = 5,
-    stochastic = TRUE
+    n_mis_stochastic = TRUE
   )
   expect_equal(count_NA(mat_mis[51:100, ]), c(50, 0))
   expect_true(count_NA(mat_mis[1:50, 1, drop = FALSE]) <= 25)
@@ -245,8 +245,8 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   expect_equal(count_NA(tbl_mis), c(X = 10, Y = 20, Z = 0))
   expect_equal(count_NA(tbl_mis[1:50, ]), c(X = 9, Y = 18, Z = 0))
 
-  # stochastic = TRUE
-  tbl_mis <- delete_MAR_1_to_x(tbl_XY_100, 0.6, 1, 2, stochastic = TRUE, x = 5)
+  # n_mis_stochastic = TRUE
+  tbl_mis <- delete_MAR_1_to_x(tbl_XY_100, 0.6, 1, 2, n_mis_stochastic = TRUE, x = 5)
   expect_equal(count_NA(tbl_mis[51:100, ]), c(X = 50, Y = 0))
   expect_true(count_NA(tbl_mis[1:50, 1, drop = FALSE]) <= 25)
   # prob for false:

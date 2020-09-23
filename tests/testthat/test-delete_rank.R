@@ -17,11 +17,11 @@ test_that("delete_MAR_rank() and delete_rank() works", {
   # pbinom(566, 1000, 2/3) + pbinom(765, 1000, 2/3, lower.tail = FALSE)
   # 2.683384e-11 # not very likely...
 
-  # check stochastic
+  # check n_mis_stochastic
 
   set.seed(12345)
   N <- 1000
-  n_mis <- mean(replicate(N, count_NA(delete_MAR_rank(df_XY_20, 0.125, "X", "Y", stochastic = TRUE)["X"])))
+  n_mis <- mean(replicate(N, count_NA(delete_MAR_rank(df_XY_20, 0.125, "X", "Y", n_mis_stochastic = TRUE)["X"])))
   expect_true(2 < n_mis, n_mis < 3)
 
 

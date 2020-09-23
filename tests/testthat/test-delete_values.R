@@ -3,7 +3,7 @@ test_that("delete_values() works (basic test)", {
   expect_equal(
     count_NA(delete_values(
       "MAR", "rank", ds = df_XY_20, p = 0.1,
-      cols_mis = "X", cols_ctrl = "Y", stochastic = FALSE
+      cols_mis = "X", cols_ctrl = "Y", n_mis_stochastic = FALSE
     )),
     c(X = 2, Y = 0)
   )
@@ -72,7 +72,7 @@ test_that("delete_values() adjusts p", {
   expect_equal(
     count_NA(delete_values(
       "MAR", "rank", ds = df_XYZ_100, p = 0.1,
-      cols_mis = c("X", "Z"), cols_ctrl = c("Y", "Y"), stochastic = FALSE
+      cols_mis = c("X", "Z"), cols_ctrl = c("Y", "Y"), n_mis_stochastic = FALSE
     )),
     c(X = 10, Y = 0, Z = 10)
   )
@@ -124,14 +124,14 @@ test_that("check_delete_args_general() works", {
     "there are duplicates in cols_mis:"
   )
 
-  # stochastic --------------------------------------------
+  # n_mis_stochastic --------------------------------------------
   expect_error(
-    delete_MCAR(df_XY_100, 0.1, stochastic = "asdf"),
-    "stochastic must be logical"
+    delete_MCAR(df_XY_100, 0.1, n_mis_stochastic = "asdf"),
+    "n_mis_stochastic must be logical"
   )
   expect_error(
-    delete_MCAR(df_XY_100, 0.1, stochastic = c(TRUE, TRUE)),
-    "the length of stochastic must be 1"
+    delete_MCAR(df_XY_100, 0.1, n_mis_stochastic = c(TRUE, TRUE)),
+    "the length of n_mis_stochastic must be 1"
   )
 })
 

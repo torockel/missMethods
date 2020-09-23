@@ -4,7 +4,7 @@
 # (via do.call()). Inside delete_values() arguments, which should not be passed
 # on, must be removed (via (remove() or args$argName <-NULL). Finally,
 # delete_values() calls delete_mech_type() or .delete_MCAR().
-delete_values <- function(mechanism, mech_type, ds, p, cols_mis, stochastic,
+delete_values <- function(mechanism, mech_type, ds, p, cols_mis, n_mis_stochastic,
                           cols_ctrl,
                           p_overall,
                           miss_cols, ctrl_cols,
@@ -17,7 +17,7 @@ delete_values <- function(mechanism, mech_type, ds, p, cols_mis, stochastic,
 
 
   ## Check and adjust arguments -----------------------------------------------
-  check_delete_args_general(ds, p, cols_mis, stochastic)
+  check_delete_args_general(ds, p, cols_mis, n_mis_stochastic)
 
   if (mechanism == "MCAR") {
     check_args_MCAR(p, p_overall)
@@ -54,7 +54,7 @@ delete_values <- function(mechanism, mech_type, ds, p, cols_mis, stochastic,
 
 # Functions for checking arguments inside of delete_values() ------------------
 # args checking for all mechanisms
-check_delete_args_general <- function(ds, p, cols_mis, stochastic) {
+check_delete_args_general <- function(ds, p, cols_mis, n_mis_stochastic) {
   # check ds ------------------------------------
   if (!is_df_or_matrix(ds)) {
     stop("ds must be a data.frame or a matrix")
@@ -94,11 +94,11 @@ check_delete_args_general <- function(ds, p, cols_mis, stochastic) {
     )
   }
 
-  # check stochastic ----------------------------
-  if (!is.logical(stochastic)) {
-    stop("stochastic must be logical")
-  } else if (length(stochastic) != 1L) {
-    stop("the length of stochastic must be 1")
+  # check n_mis_stochastic ----------------------------
+  if (!is.logical(n_mis_stochastic)) {
+    stop("n_mis_stochastic must be logical")
+  } else if (length(n_mis_stochastic) != 1L) {
+    stop("the length of n_mis_stochastic must be 1")
   }
 }
 

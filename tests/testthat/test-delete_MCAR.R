@@ -2,7 +2,7 @@
 test_that("delete_MCAR() creates MCAR", {
   set.seed(123454)
 
-  # check stochastic = FALSE (default) --------------------
+  # check n_mis_stochastic = FALSE (default) --------------------
   df_MCAR <- delete_MCAR(df_XY_100, 0.1)
   expect_equal(count_NA(df_MCAR), c(X = 10, Y = 10))
 
@@ -19,20 +19,20 @@ test_that("delete_MCAR() creates MCAR", {
   df_MCAR <- delete_MCAR(df_XY_100, 0.2, cols_mis = "X")
   expect_equal(count_NA(df_MCAR), c(X = 20, Y = 0))
 
-  # check stochastic = TRUE -------------------------------
-  df_MCAR <- delete_MCAR(df_XY_100, p = 0.5, stochastic = TRUE)
+  # check n_mis_stochastic = TRUE -------------------------------
+  df_MCAR <- delete_MCAR(df_XY_100, p = 0.5, n_mis_stochastic = TRUE)
   expect_true(anyNA(df_MCAR)) # very, very, very bad luck if delete works
 
-  df_MCAR <- delete_MCAR(df_XY_100, p = 1, stochastic = TRUE)
+  df_MCAR <- delete_MCAR(df_XY_100, p = 1, n_mis_stochastic = TRUE)
   expect_equal(count_NA(df_MCAR), c(X = 100, Y = 100))
 
-  df_MCAR <- delete_MCAR(df_XY_100, p = 0, stochastic = TRUE)
+  df_MCAR <- delete_MCAR(df_XY_100, p = 0, n_mis_stochastic = TRUE)
   expect_equal(count_NA(df_MCAR), c(X = 0, Y = 0))
 
   N <- 1000
   res <- 0
   for (i in seq_len(N)) {
-    res <- res + sum(count_NA(delete_MCAR(df_XY_100, p = 0.2, stochastic = TRUE)))
+    res <- res + sum(count_NA(delete_MCAR(df_XY_100, p = 0.2, n_mis_stochastic = TRUE)))
   }
   expect_true(
     res / prod(dim(df_XY_100), N) < 0.3 &

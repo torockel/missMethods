@@ -1,11 +1,11 @@
 test_that("delete_one_group() and delete_MAR_one_group() works", {
   set.seed(12345)
 
-  # check p too low to get missing values with stochastic = FALSE -----
+  # check p too low to get missing values with n_mis_stochastic = FALSE -----
   expect_equal(
     count_NA(delete_MAR_one_group(df_XY_100, 0.001,
       cols_mis = "Y", cols_ctrl = "X",
-      stochastic = FALSE
+      n_mis_stochastic = FALSE
     )),
     c(X = 0, Y = 0)
   )
@@ -78,9 +78,9 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
     isTRUE(all.equal(count_NA(df_mis[9:20, ]), c(X = 0, Y = 8))))
 
 
-  # check stochastic = TRUE -------------------------------
+  # check n_mis_stochastic = TRUE -------------------------------
   expect_false(anyNA(delete_MAR_one_group(df_XYZ_100, 0, "X", "Y",
-    stochastic = TRUE
+    n_mis_stochastic = TRUE
   )))
 
   N <- 1000
@@ -88,7 +88,7 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
   colnames(res) <- c("X1", "X2", "Y")
   for (i in seq_len(N)) {
     ds_mis <- delete_MAR_one_group(df_XY_100, 0.2, "X", "Y",
-      stochastic = TRUE
+      n_mis_stochastic = TRUE
     )
     res[i, "Y"] <- sum(is.na(ds_mis[, "Y"]))
     res[i, "X1"] <- sum(is.na(ds_mis[1:50, "X"]))

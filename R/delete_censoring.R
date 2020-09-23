@@ -1,8 +1,6 @@
 # the workhorse for delete_MAR_censoring and delete_MNAR_censoring
-# The argument stochastic is only added to make it easier to call this function
-# from delete_values(). Right now only stochastic = FALSE is implemented.
 delete_censoring <- function(ds, p, cols_mis, cols_ctrl,
-                             where = "lower", sorting = TRUE, stochastic = FALSE) {
+                             where = "lower", sorting = TRUE, n_mis_stochastic = FALSE) {
 
   # General checking of arguments is done in delete_values().
   # Only special cases are checked here.
@@ -13,7 +11,7 @@ delete_censoring <- function(ds, p, cols_mis, cols_ctrl,
     ds_cols_ctrl_i <- ds[, cols_ctrl[i], drop = TRUE]
     if (sorting) {
       expected_n_mis <- nrow(ds) * p[i]
-      n_mis <- ifelse(stochastic,
+      n_mis <- ifelse(n_mis_stochastic,
                       ceiling(expected_n_mis), round(expected_n_mis))
       if (n_mis > 0) { # to avoid problems with seq and n_mis == 0
         ordered_indices <- order(ds_cols_ctrl_i)
@@ -31,7 +29,7 @@ delete_censoring <- function(ds, p, cols_mis, cols_ctrl,
             )]
           )
         )
-        if (stochastic && n_mis > expected_n_mis) {
+        if (n_mis_stochastic && n_mis > expected_n_mis) {
           prob_mis <- expected_n_mis + 1 - n_mis
           remove_one <- prob_mis <= stats::runif(1)
           if (remove_one) {
@@ -46,8 +44,8 @@ delete_censoring <- function(ds, p, cols_mis, cols_ctrl,
         na_indices <- rep(FALSE, nrow(ds))
       }
     } else { # no sorting -> using quantile()
-      if (stochastic) {
-        stop("stochastic = TRUE ist not meaningfull for sorting = FALSE!")
+      if (n_mis_stochastic) {
+        stop("n_mis_stochastic = TRUE ist not meaningfull for sorting = FALSE!")
       }
       if (length(unique(ds_cols_ctrl_i)) == 1L) {
         warning(
@@ -155,7 +153,7 @@ delete_censoring <- function(ds, p, cols_mis, cols_ctrl,
 #' quantile(ds_many_dup$Y, 0.2) # 0
 #' # No value is BELOW 0 in ds_many_dup$Y, so no missing values will be created:
 #' delete_MAR_censoring(ds_many_dup, 0.2, "X", "Y", sorting = FALSE) # No NA!
-delete_MAR_censoring <- function(ds, p, cols_mis, cols_ctrl, stochastic = FALSE,
+delete_MAR_censoring <- function(ds, p, cols_mis, cols_ctrl, n_mis_stochastic = FALSE,
                                  where = "lower", sorting = TRUE,
                                  miss_cols, ctrl_cols) {
   do.call(delete_values, c(
@@ -176,7 +174,7 @@ delete_MAR_censoring <- function(ds, p, cols_mis, cols_ctrl, stochastic = FALSE,
 #'
 #' @examples
 #' delete_MNAR_censoring(ds, 0.2, "X")
-delete_MNAR_censoring <- function(ds, p, cols_mis, stochastic = FALSE,
+delete_MNAR_censoring <- function(ds, p, cols_mis, n_mis_stochastic = FALSE,
                                   where = "lower", sorting = TRUE,
                                   miss_cols) {
   do.call(delete_values, c(

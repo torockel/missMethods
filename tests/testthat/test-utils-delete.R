@@ -9,22 +9,22 @@ check_index <- function(NA_indices, index_nr, lower_bound, upper_bound) {
   expect_true(n <= upper_bound)
 }
 
-test_that("get_NA_indices() works with comibinations of stochastic and prob", {
+test_that("get_NA_indices() works with comibinations of n_mis_stochastic and prob", {
   N <- 1000
   n <- 10
   p <- 0.1
   set.seed(12345)
 
-  # stochastic + prob = NULL
+  # n_mis_stochastic + prob = NULL
   n_mis <- sum(replicate(
-    N, length(get_NA_indices(stochastic = TRUE, n = n, p = p, prob = NULL))
+    N, length(get_NA_indices(n_mis_stochastic = TRUE, n = n, p = p, prob = NULL))
   ))
   expect_true(stats::qbinom(1e-10, n * N, p) <= n_mis)
   expect_true(n_mis <= stats::qbinom(1e-10, n * N, p, FALSE))
 
-  # stochastic + prob = seq_len(n)
+  # n_mis_stochastic + prob = seq_len(n)
   NA_indices <- replicate(
-    N, get_NA_indices(stochastic = TRUE, n = n, p = p, prob = seq_len(n))
+    N, get_NA_indices(n_mis_stochastic = TRUE, n = n, p = p, prob = seq_len(n))
   )
   n_mis <- sum(vapply(NA_indices, length, integer(1)))
   expect_true(stats::qbinom(1e-10, n * N, p) <= n_mis)
@@ -38,16 +38,16 @@ test_that("get_NA_indices() works with comibinations of stochastic and prob", {
               stats::qbinom(1e-10, n * N, p* 10 / sum(seq_len(n)), FALSE))
 
 
-  # stochastic = FALSE + prob = NULL
+  # n_mis_stochastic = FALSE + prob = NULL
   n_mis <- replicate(
-    N, length(get_NA_indices(stochastic = FALSE, n = n, p = p, prob = NULL))
+    N, length(get_NA_indices(n_mis_stochastic = FALSE, n = n, p = p, prob = NULL))
   )
   expect_true(all(n_mis == 1L))
 
 
-  # stochastic = FALSE + prob = seq_len(n)
+  # n_mis_stochastic = FALSE + prob = seq_len(n)
   NA_indices <- replicate(
-    N, get_NA_indices(stochastic = FALSE, n = n, p = p, prob = seq_len(n))
+    N, get_NA_indices(n_mis_stochastic = FALSE, n = n, p = p, prob = seq_len(n))
   )
   n_mis <- vapply(NA_indices, length, integer(1))
   expect_true(all(n_mis == 1L))
@@ -68,9 +68,9 @@ test_that("get_NA_indices() scales prob correctly", {
   p <- 3 / 4
   set.seed(12345)
 
-  # stochastic + prob = seq_len(n)
+  # n_mis_stochastic + prob = seq_len(n)
   NA_indices <- replicate(
-    N, get_NA_indices(stochastic = TRUE, n = n, p = p, prob = seq_len(n))
+    N, get_NA_indices(n_mis_stochastic = TRUE, n = n, p = p, prob = seq_len(n))
   )
   n_mis <- sum(vapply(NA_indices, length, integer(1)))
   expect_true(stats::qbinom(1e-10, n * N, p) <= n_mis)
@@ -85,7 +85,7 @@ test_that("get_NA_indices() scales prob correctly", {
   expect_equal(calc_n_index(NA_indices, 4), N)
   expect_equal(calc_n_index(NA_indices, 3), N)
 
-  # stochastic = FALSE + prob = seq_len(n)
+  # n_mis_stochastic = FALSE + prob = seq_len(n)
   # prob is directly passed to base::sample()
   # just trust in R Core!
 

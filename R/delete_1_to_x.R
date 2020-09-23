@@ -3,7 +3,7 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
                           cutoff_fun = median,
                           prop = 0.5, use_lpSolve = TRUE,
                           ordered_as_unordered = FALSE,
-                          stochastic = FALSE,
+                          n_mis_stochastic = FALSE,
                           add_realized_x = FALSE, ...) {
 
   # General checking of arguments is done in delete_values().
@@ -34,7 +34,7 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
       warning("column ", cols_ctrl[i], " is constant, effectively MCAR")
       ds[, cols_mis[i]] <- delete_MCAR_vec(
         ds[, cols_mis[i], drop = TRUE],
-        p[i], stochastic
+        p[i], n_mis_stochastic
       )
       true_odds[i] <- 0
     } else {
@@ -64,18 +64,18 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
       }
 
       # delete values
-      if (stochastic) { # stochastic = TRUE ------------------
-        na_indices_g1 <- get_NA_indices(stochastic, p = p_mis_g1, indices = groups$g1)
-        na_indices_g2 <- get_NA_indices(stochastic, p = p_mis_g2, indices = groups$g2)
+      if (n_mis_stochastic) { # n_mis_stochastic = TRUE ------------------
+        na_indices_g1 <- get_NA_indices(n_mis_stochastic, p = p_mis_g1, indices = groups$g1)
+        na_indices_g2 <- get_NA_indices(n_mis_stochastic, p = p_mis_g2, indices = groups$g2)
 
-      } else { # stochastic = FALSE ------------------
+      } else { # n_mis_stochastic = FALSE ------------------
         n_mis <- round(p[i] * n)
         n_mis_g1 <- calc_n_mis_g1(nr_g1, p_mis_g1, nr_g2, n_mis, x)
         n_mis_g2 <- n_mis - n_mis_g1
 
         # sample NA indices
-        na_indices_g1 <- get_NA_indices(stochastic, n_mis = n_mis_g1, indices = groups$g1)
-        na_indices_g2 <- get_NA_indices(stochastic, n_mis = n_mis_g2, indices = groups$g2)
+        na_indices_g1 <- get_NA_indices(n_mis_stochastic, n_mis = n_mis_g1, indices = groups$g1)
+        na_indices_g2 <- get_NA_indices(n_mis_stochastic, n_mis = n_mis_g2, indices = groups$g2)
       }
       na_indices <- c(na_indices_g1, na_indices_g2)
       ds[na_indices, cols_mis[i]] <- NA
@@ -145,7 +145,7 @@ check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
 #' But there are some restrictions, which can lead to some deviations from the
 #' odds 1:x (see below).
 #'
-#' If \code{stochastic = FALSE} (the default),
+#' If \code{n_mis_stochastic = FALSE} (the default),
 #' then exactly \code{round(nrow(ds) * p[i])} values will be set \code{NA} in
 #' column \code{cols_mis[i]}.
 #' To achieve this, it is possible that the true odds differ from 1:x.
@@ -153,7 +153,7 @@ check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
 #' chosen to minimize the absolute difference between the realized odds and 1:x.
 #' Furthermore, if \code{round(nrow(ds) * p[i])} == 0, then no missing value
 #' will be created in \code{cols_mis[i]}.
-#' If \code{stochastic = TRUE}, the number of missing values in
+#' If \code{n_mis_stochastic = TRUE}, the number of missing values in
 #' \code{cols_mis[i]} is a random variable.
 #' This random variable is a sum of two binomial distributed variables (one for
 #' group 1 and one for group 2).
@@ -176,10 +176,10 @@ check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
 #' odds are added to the return value or not.
 #' If \code{add_realized_x = TRUE}, then the realized x values for all
 #' \code{cols_mis} will be added as an attribute to the returned object.
-#' For \code{stochastic = TRUE} these realized x will differ from the given
+#' For \code{n_mis_stochastic = TRUE} these realized x will differ from the given
 #' \code{x} most of the time and will change if the function is rerun without
 #' setting a seed.
-#' For \code{stochastic = FALSE}, it is also possible that the realized odds
+#' For \code{n_mis_stochastic = FALSE}, it is also possible that the realized odds
 #' differ (see above). However, the realized odds will be constant over multiple
 #' runs.
 #'
@@ -204,7 +204,7 @@ check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
 #' @examples
 #' ds <- data.frame(X = 1:20, Y = 101:120)
 #' delete_MAR_1_to_x(ds, 0.2, "X", "Y", 3)
-#' # beware of small datasets and stochastic = FALSE
+#' # beware of small datasets and n_mis_stochastic = FALSE
 #' attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 3, add_realized_x = TRUE), "realized_x")
 #' attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 4, add_realized_x = TRUE), "realized_x")
 #' attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 5, add_realized_x = TRUE), "realized_x")
@@ -214,13 +214,13 @@ check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
 #' # 7 above and 1 below (x = 7)
 #' # Too high combination of p and x:
 #' delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3)
-#' delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3, stochastic = TRUE)
+#' delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3, n_mis_stochastic = TRUE)
 delete_MAR_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
                               cutoff_fun = median,
                               prop = 0.5,
                               use_lpSolve = TRUE,
                               ordered_as_unordered = FALSE,
-                              stochastic = FALSE,
+                              n_mis_stochastic = FALSE,
                               add_realized_x = FALSE, ...,
                               miss_cols, ctrl_cols) {
   do.call(delete_values, c(
@@ -245,7 +245,7 @@ delete_MNAR_1_to_x <- function(ds, p, cols_mis, x,
                                prop = 0.5,
                                use_lpSolve = TRUE,
                                ordered_as_unordered = FALSE,
-                               stochastic = FALSE,
+                               n_mis_stochastic = FALSE,
                                add_realized_x = FALSE, ...,
                                miss_cols) {
   do.call(delete_values, c(

@@ -3,7 +3,7 @@ delete_one_group <- function(ds, p, cols_mis, cols_ctrl,
                              cutoff_fun = median,
                              prop = 0.5, use_lpSolve = TRUE,
                              ordered_as_unordered = FALSE,
-                             stochastic = FALSE,
+                             n_mis_stochastic = FALSE,
                              ...) {
 
   # General checking of arguments is done in delete_values().
@@ -19,7 +19,7 @@ delete_one_group <- function(ds, p, cols_mis, cols_ctrl,
       warning("column ", cols_ctrl[i], " is constant, effectively MCAR")
       ds[, cols_mis[i]] <- delete_MCAR_vec(
         ds[, cols_mis[i], drop = TRUE],
-        p[i], stochastic
+        p[i], n_mis_stochastic
       )
     } else {
       miss_group <- groups[[sample.int(2, 1)]]
@@ -33,7 +33,7 @@ delete_one_group <- function(ds, p, cols_mis, cols_ctrl,
         eff_p <- p[i] * nrow(ds) / length(miss_group)
         ds[miss_group, cols_mis[i]] <- delete_MCAR_vec(
           ds[miss_group, cols_mis[i], drop = TRUE],
-          eff_p, stochastic
+          eff_p, n_mis_stochastic
         )
       }
     }
@@ -67,13 +67,13 @@ delete_one_group <- function(ds, p, cols_mis, cols_ctrl,
 #' In the chosen group, values are deleted in \code{cols_mis[i]}.
 #' In the other group, no missing values will be created in \code{cols_mis[i]}.
 #'
-#' If \code{stochastic = FALSE} (the default), then \code{floor(nrow(ds) * p[i])}
+#' If \code{n_mis_stochastic = FALSE} (the default), then \code{floor(nrow(ds) * p[i])}
 #' or \code{ceiling(nrow(ds) * p[i])} values will be set \code{NA} in
 #' column \code{cols_mis[i]} (depending on the grouping).
-#' If \code{stochastic = TRUE}, each value in the group with missing values
+#' If \code{n_mis_stochastic = TRUE}, each value in the group with missing values
 #' will have a probability to be missing, to meet a proportion of
 #' \code{p[i]} of missing values in \code{cols_mis[i]} in expectation.
-#' The effect of \code{stochastic} is further discussed in
+#' The effect of \code{n_mis_stochastic} is further discussed in
 #' \code{\link{delete_MCAR}}.
 #'
 #'
@@ -91,7 +91,7 @@ delete_MAR_one_group <- function(ds, p, cols_mis, cols_ctrl,
                                  cutoff_fun = median, prop = 0.5,
                                  use_lpSolve = TRUE,
                                  ordered_as_unordered = FALSE,
-                                 stochastic = FALSE, ...,
+                                 n_mis_stochastic = FALSE, ...,
                                  miss_cols, ctrl_cols) {
   do.call(delete_values, c(
     list(mechanism = "MAR", mech_type = "one_group"),
@@ -113,7 +113,7 @@ delete_MNAR_one_group <- function(ds, p, cols_mis,
                                   cutoff_fun = median, prop = 0.5,
                                   use_lpSolve = TRUE,
                                   ordered_as_unordered = FALSE,
-                                  stochastic = FALSE, ...,
+                                  n_mis_stochastic = FALSE, ...,
                                   miss_cols) {
 
   do.call(delete_values, c(

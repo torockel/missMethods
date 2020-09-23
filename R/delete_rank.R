@@ -1,10 +1,10 @@
 # the workhorse for delete_MAR_rank and delete_MNAR_rank
-delete_rank <- function(ds, p, cols_mis, cols_ctrl, stochastic,
+delete_rank <- function(ds, p, cols_mis, cols_ctrl, n_mis_stochastic,
                         ties.method = "average") {
   for (i in seq_along(cols_mis)) {
     p_ranks <- rank(ds[, cols_ctrl[i], drop = TRUE])
     na_indices <- get_NA_indices(
-      stochastic = stochastic,
+      n_mis_stochastic = n_mis_stochastic,
       n = nrow(ds), p = p[i], prob = p_ranks
     )
     ds[na_indices, cols_mis[i]] <- NA
@@ -38,7 +38,7 @@ delete_rank <- function(ds, p, cols_mis, cols_ctrl, stochastic,
 #' @examples
 #' ds <- data.frame(X = 1:20, Y = 101:120)
 #' delete_MAR_rank(ds, 0.2, "X", "Y")
-delete_MAR_rank <- function(ds, p, cols_mis, cols_ctrl, stochastic = FALSE,
+delete_MAR_rank <- function(ds, p, cols_mis, cols_ctrl, n_mis_stochastic = FALSE,
                             ties.method = "average",
                             miss_cols, ctrl_cols) {
   do.call(delete_values, c(
@@ -56,7 +56,7 @@ delete_MAR_rank <- function(ds, p, cols_mis, cols_ctrl, stochastic = FALSE,
 #'
 #' @examples
 #' delete_MNAR_rank(ds, 0.2, "X")
-delete_MNAR_rank <- function(ds, p, cols_mis, stochastic = FALSE,
+delete_MNAR_rank <- function(ds, p, cols_mis, n_mis_stochastic = FALSE,
                              ties.method = "average",
                              miss_cols) {
   do.call(delete_values, c(
