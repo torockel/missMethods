@@ -7,13 +7,14 @@
 delete_values <- function(mechanism, mech_type, ds, p, cols_mis, n_mis_stochastic,
                           cols_ctrl,
                           p_overall,
-                          miss_cols, ctrl_cols,
+                          miss_cols, ctrl_cols, stochastic,
                           ...) {
 
   ## Check for deprecated arguments -------------------------------------------
   check_renamed_arg(miss_cols, cols_mis)
   check_renamed_arg(ctrl_cols, cols_ctrl)
-  remove(list = c("miss_cols", "ctrl_cols"))
+  check_renamed_arg(stochastic, n_mis_stochastic)
+  remove(list = c("miss_cols", "ctrl_cols", "stochastic"))
 
 
   ## Check and adjust arguments -----------------------------------------------

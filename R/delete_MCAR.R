@@ -48,7 +48,7 @@
 #' ds <- data.frame(X = 1:20, Y = 101:120)
 #' delete_MCAR(ds, 0.2)
 delete_MCAR <- function(ds, p, cols_mis = seq_len(ncol(ds)),
-                        n_mis_stochastic = FALSE, p_overall = FALSE, miss_cols) {
+                        n_mis_stochastic = FALSE, p_overall = FALSE, miss_cols, stochastic) {
   # The real work is done inside of .delete_MCAR()
   do.call(delete_values, c(
     list(mechanism = "MCAR", mech_type = NULL),

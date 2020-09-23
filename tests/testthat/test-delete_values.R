@@ -35,6 +35,14 @@ test_that("delete_values() deprecate ctrl_cols", {
   )
 })
 
+test_that("delete_values() deprecate stochastic", {
+  # use delete_MCAR() as calling function (arbitrary choice)
+  expect_error(
+    delete_MCAR(df_XY_20, 0.1, stochastic = FALSE),
+    "stochastic is deprecated and replaced by n_mis_stochastic."
+  )
+})
+
 
 test_that("delete_values() calls check_delete_args_general()", {
   expect_error(

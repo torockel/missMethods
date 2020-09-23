@@ -92,7 +92,7 @@ delete_MAR_one_group <- function(ds, p, cols_mis, cols_ctrl,
                                  use_lpSolve = TRUE,
                                  ordered_as_unordered = FALSE,
                                  n_mis_stochastic = FALSE, ...,
-                                 miss_cols, ctrl_cols) {
+                                 miss_cols, ctrl_cols, stochastic) {
   do.call(delete_values, c(
     list(mechanism = "MAR", mech_type = "one_group"),
     as.list(environment()), list(...)
@@ -114,7 +114,7 @@ delete_MNAR_one_group <- function(ds, p, cols_mis,
                                   use_lpSolve = TRUE,
                                   ordered_as_unordered = FALSE,
                                   n_mis_stochastic = FALSE, ...,
-                                  miss_cols) {
+                                  miss_cols, stochastic) {
 
   do.call(delete_values, c(
     list(mechanism = "MNAR", mech_type = "one_group"),
