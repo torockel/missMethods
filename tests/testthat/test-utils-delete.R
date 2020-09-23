@@ -170,7 +170,7 @@ test_that("check_delete_args()", {
 # check_delete_args_MCAR ----------------------------------
 test_that("check_delete_args_MCAR() works", {
   # check_delete_args_MCAR calls check_delete_args:
-  expect_error(check_delete_args_MCAR(1:5, 0.3), "ds must be a data.frame or a matrix")
+  # expect_error(check_delete_args_MCAR(1:5, 0.3), "ds must be a data.frame or a matrix")
 
   # special errors for check_delete_args_MCAR:
   expect_error(

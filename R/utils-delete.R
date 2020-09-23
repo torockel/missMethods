@@ -106,36 +106,25 @@ delete_values <- function(mechanism, mech_type, ...) {
     }
   }
 
-  ## Check arguments ----------------------------------------------------------
-  # Remove missing arguments
-  args <- args[!(args == "args_eval_missing_arg")]
+  # Remove deprecated arguments
+  args <- args[!(names(args) %in% c("miss_cols", "ctrl_cols"))]
 
-  # Check arguments
-  if (mechanism == "MAR") {
-    check_delete_args_MAR(
-      ds = args$ds, p = args$p, cols_mis = args$cols_mis,
-      cols_ctrl = args$cols_ctrl, stochastic = args$stochastic
-    )
+  ## Check and adjust arguments -----------------------------------------------
+  check_delete_args_general(args$ds, args$p, args$cols_mis, args$stochastic)
+
+  if (mechanism == "MCAR") {
+    check_args_MCAR(args$p, args$p_overall)
+  } else if (mechanism == "MAR") {
+    check_args_MAR(args$ds, args$cols_mis, args$cols_ctrl)
   } else if (mechanism == "MNAR") {
-    check_delete_args_MNAR(
-      ds = args$ds, p = args$p, cols_mis = args$cols_mis,
-      stochastic = args$stochastic
-    )
+    check_args_MNAR(args$ds, args$cols_mis)
     args$cols_ctrl <- args$cols_mis
-  } else if (mechanism == "MCAR") {
-    check_delete_args_MCAR(
-      ds = args$ds, p = args$p, cols_mis = args$cols_mis,
-      stochastic = args$stochastic, p_overall = args$p_overall
-    )
-    check_delete_args(
-      ds = args$ds, p = args$p, cols_mis = args$cols_mis,
-      stochastic = args$stochastic
-    )
   } else {
     stop("mechanism must be one of MCAR, MAR or MNAR")
   }
 
   args$p <- adjust_p(args$p, args$cols_mis)
+
 
   ## Call delete function -----------------------------------------------------
   fun_name <- if (mechanism == "MCAR") {
@@ -148,11 +137,8 @@ delete_values <- function(mechanism, mech_type, ...) {
 
 
 # checking arguments --------------------------------------
-
 # args checking for all mechanisms
-# normally called from check_delete_args_MCAR, check_delete_args_MAR or
-# check_delete_args_MNAR
-check_delete_args <- function(ds, p, cols_mis, stochastic) {
+check_delete_args_general <- function(ds, p, cols_mis, stochastic) {
   # check ds ------------------------------------
   if (!is_df_or_matrix(ds)) {
     stop("ds must be a data.frame or a matrix")
@@ -200,29 +186,16 @@ check_delete_args <- function(ds, p, cols_mis, stochastic) {
   }
 }
 
-check_delete_args_MCAR <- function(ds, p, cols_mis, stochastic, p_overall) {
-  # general checking
-  check_delete_args(
-    ds = ds, p = p, cols_mis = cols_mis,
-    stochastic = stochastic
-  )
-
+check_args_MCAR <- function(p, p_overall) {
   # special case: p_overall
-  if (!is.logical(p_overall) | length(p_overall) != 1L) {
+  if (!is.logical(p_overall) || length(p_overall) != 1L) {
     stop("p_overall must be logical of length 1")
-  } else if (p_overall & !stochastic & length(p) != 1L) {
+  } else if (p_overall && length(p) != 1L) {
     stop("if p_overall = TRUE, then length(p) must be 1")
   }
 }
 
-check_delete_args_MAR <- function(ds, p, cols_mis, cols_ctrl, stochastic) {
-  # general checking
-  check_delete_args(
-    ds = ds, p = p, cols_mis = cols_mis,
-    stochastic = stochastic
-  )
-
-
+check_args_MAR <- function(ds, cols_mis, cols_ctrl) {
   # check cols_ctrl -----------------------------
   if (!is.null(cols_ctrl)) {
     if (is.numeric(cols_ctrl)) {
@@ -256,9 +229,7 @@ check_delete_args_MAR <- function(ds, p, cols_mis, cols_ctrl, stochastic) {
   }
 }
 
-check_delete_args_MNAR <- function(ds, p, cols_mis, stochastic) {
-  # general checking
-  check_delete_args(ds = ds, p = p, cols_mis = cols_mis, stochastic = stochastic)
+check_args_MNAR <- function(ds, cols_mis) {
   #  no NA in cols_mis
   if (any(is.na(ds[, cols_mis]))) {
     stop("cols_mis must be completely observed; no NAs in ds[, cols_mis] allowed")
