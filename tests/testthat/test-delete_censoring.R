@@ -1,4 +1,4 @@
-test_that("delete_MAR_censoring() and delete_cutoff(), which is called by
+test_that("delete_MAR_censoring() and delete_censoring(), which is called by
           delete_MAR_censoring(), work", {
   set.seed(12345)
 
@@ -129,6 +129,50 @@ test_that("delete_MAR_censoring() (and delete_censoring(), which is called by
   )
   expect_equal(count_NA(tbl_mis), c(X = 10, Y = 20, Z = 0))
   expect_equal(count_NA(tbl_mis[1:20, ]), c(X = 10, Y = 20, Z = 0))
+})
+
+test_that("delete_censoring() works with stochastic = TRUE and sorting", {
+  N <- 1000
+  set.seed(12345)
+
+  # where = "lower"
+  dfs_mis <- replicate(
+    N,
+    delete_MNAR_censoring(matrix(1:5, ncol = 1), 0.42, 1,
+      stochastic = TRUE, where = "lower"
+    )
+  )
+  expect_true(all(is.na(dfs_mis[1:2, , ])))
+  expect_false(anyNA(dfs_mis[4:5, , ]))
+  n_mis <- sum(is.na(dfs_mis[3, , ]))
+  expect_true(stats::qbinom(1e-10, N, 0.42 * 5 - 2) <= n_mis)
+  expect_true(n_mis <= stats::qbinom(1e-10, N, 0.42 * 5 - 2, FALSE))
+
+  # where = "upper"
+  dfs_mis <- replicate(
+    N,
+    delete_MNAR_censoring(matrix(1:5, ncol = 1), 0.42, 1,
+      stochastic = TRUE, where = "upper"
+    )
+  )
+  expect_true(all(is.na(dfs_mis[4:5, , ])))
+  expect_false(anyNA(dfs_mis[1:2, , ]))
+  n_mis <- sum(is.na(dfs_mis[3, , ]))
+  expect_true(stats::qbinom(1e-10, N, 0.42 * 5 - 2) <= n_mis)
+  expect_true(n_mis <= stats::qbinom(1e-10, N, 0.42 * 5 - 2, FALSE))
+
+  # where = "both"
+  dfs_mis <- replicate(
+    N,
+    delete_MNAR_censoring(matrix(1:5, ncol = 1), 0.42, 1,
+      stochastic = TRUE, where = "both"
+    )
+  )
+  expect_true(all(is.na(dfs_mis[c(1, 5), , ])))
+  expect_false(anyNA(dfs_mis[3:4, , ]))
+  n_mis <- sum(is.na(dfs_mis[2, , ]))
+  expect_true(stats::qbinom(1e-10, N, 0.42 * 5 - 2) <= n_mis)
+  expect_true(n_mis <= stats::qbinom(1e-10, N, 0.42 * 5 - 2, FALSE))
 })
 
 # check delete_MNAR_censoring -----------------------------
