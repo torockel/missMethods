@@ -138,6 +138,30 @@ test_that("delete_values() calls check_delete_args_general()", {
 })
 
 
+test_that("delete_values() calls check_args_MCAR()", {
+  expect_error(
+    delete_MCAR(df_XY_2, 0.3, p_overall = "asdf"),
+    "p_overall must be logical of length 1"
+  )
+})
+
+
+test_that("delete_values() calls check_args_MAR()", {
+  expect_error(
+    delete_MAR_rank(df_XY_2, 0.3, 1, cols_ctrl = 42),
+    "indices in cols_ctrl must be in 1:ncol\\(ds)"
+  )
+})
+
+
+test_that("delete_values() calls check_args_MNAR()", {
+  expect_error(
+    delete_MNAR_rank(df_XY_X_mis, 0.3, cols_mis = "X"),
+    "cols_mis must be completely observed; no NAs in ds\\[, cols_mis] allowed"
+  )
+})
+
+
 test_that("delete_values() adjusts p", {
   expect_equal(
     count_NA(delete_values(
@@ -149,8 +173,8 @@ test_that("delete_values() adjusts p", {
 })
 
 
-# check_delete_args_general() -------------------------------------------------
-test_that("check_delete_args_general()", {
+## check_delete_args_general() ------------------------------------------------
+test_that("check_delete_args_general() works", {
   # ds ----------------------------------------------------
     expect_error(
       delete_MCAR(array(1:6, dim = c(1, 2, 3)), 0.3),
@@ -205,8 +229,9 @@ test_that("check_delete_args_general()", {
   )
 })
 
-# check_delete_args_MCAR ----------------------------------
-test_that("check_delete_args_MCAR() works", {
+
+## check_args_MCAR() ----------------------------------------------------------
+test_that("check_args_MCAR() works", {
   expect_error(
     delete_MCAR(df_XY_100, 0.1, p_overall = "A"),
     "p_overall must be logical of length 1"
@@ -218,8 +243,8 @@ test_that("check_delete_args_MCAR() works", {
 })
 
 
-# check_delete_args_MAR -----------------------------------
-test_that("check_delete_args_MAR() works", {
+## check_args_MAR() -----------------------------------------------------------
+test_that("check_args_MAR() works", {
   # cols_ctrl (special errors) ----------------------------
   expect_error(
     delete_MAR_1_to_x(df_XY_100, 0.1, 1, cols_ctrl = 3, x = 2),
@@ -250,8 +275,9 @@ test_that("check_delete_args_MAR() works", {
   )
 })
 
-# check_delete_args_MNAR ----------------------------------
-test_that("check_delete_args_MCAR() works", {
+
+## check_args_MNAR() ----------------------------------------------------------
+test_that("check_args_MNAR() works", {
   expect_error(
     delete_MNAR_1_to_x(df_XY_X_mis, 0.1, "X", x = 3),
     "cols_mis must be completely observed; no NAs in ds\\[, cols_mis\\] allowed"

@@ -1,12 +1,3 @@
-# check if delete_MCAR() calls check_delete_args_MCAR -----
-test_that("delete_MCAR() calls check_delete_args_MCAR()", {
-  # special error only from check_delete_args_MCAR:
-  expect_error(
-    delete_MCAR(df_XY_100, 0.1, p_overall = "A"),
-    "p_overall must be logical of length 1"
-  )
-})
-
 # delete_MCAR ---------------------------------------------
 test_that("delete_MCAR() creates MCAR", {
   set.seed(123454)

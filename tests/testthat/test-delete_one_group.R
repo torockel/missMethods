@@ -1,10 +1,3 @@
-test_that("delete_MAR_one_group() calls check_delete_args_MAR()", {
-  expect_error(
-    delete_MAR_one_group(df_XY_100, 0.1, 1, cols_ctrl = 3),
-    "indices in cols_ctrl must be in 1:ncol\\(ds)"
-  )
-})
-
 test_that("delete_one_group() and delete_MAR_one_group() works", {
   set.seed(12345)
 
@@ -181,12 +174,6 @@ test_that("delete_MAR_one_group() (and delete_one_group(), which is called by
 
 # check delete_MNAR_one_group -----------------------------
 test_that("delete_MNAR_one_group() works", {
-  # check that delete_MNAR_one_group() calls check_delete_args_MNAR()
-  expect_error(
-    delete_MNAR_one_group(df_XY_X_mis, 0.1, "X"),
-    "cols_mis must be completely observed; no NAs in ds\\[, cols_mis\\] allowed"
-  )
-
   df_mis <- delete_MNAR_one_group(df_XY_100, c(0.3, 0.1), c("X", "Y"))
   expect_equal(count_NA(df_mis), c(X = 30, Y = 10))
 })

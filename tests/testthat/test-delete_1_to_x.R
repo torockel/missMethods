@@ -1,11 +1,3 @@
-# delete_1_to_x and delete_MAR_1_to_x ---------------------
-test_that("delete_MAR_1_to_x() calls check_delete_args_MAR()", {
-  expect_error(
-    delete_MAR_1_to_x(df_XY_100, 0.1, 1, cols_ctrl = 3, x = 2),
-    "indices in cols_ctrl must be in 1:ncol\\(ds)"
-  )
-})
-
 test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
           delete_MAR_1_to_x()) works for data.frames", {
   set.seed(12345)
@@ -265,13 +257,7 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 # delete_MNAR_1_to_x only calls delete_1_to_x() with cols_ctrl = cols_mis
 # so we only test if the missing values are in the correct variables.
 # The rest of delete_1_to_x() is tested with delete_MAR_1_to_x()
-test_that("delete_MNAR_1_to_x", {
-  # check that delete_MNAR_1_to_x() calls check_delete_args_MNAR()
-  expect_error(
-    delete_MNAR_1_to_x(df_XY_X_mis, 0.1, "X", x = 3),
-    "cols_mis must be completely observed; no NAs in ds\\[, cols_mis\\] allowed"
-  )
-
+test_that("delete_MNAR_1_to_x() works", {
   expect_equal(
     count_NA(delete_MNAR_1_to_x(df_XYZ_100, 0.1, c("X", "Z"), x = 3)),
     c("X" = 10, "Y" = 0, "Z" = 10)
