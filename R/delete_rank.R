@@ -22,10 +22,16 @@ delete_rank <- function(ds, p, cols_mis, cols_ctrl, n_mis_stochastic,
 #' @template MAR
 #'
 #' @details
-#' The probability for a missing value in a row of \code{cols_mis[i]} is
+#' At first, the probability for a value to be missing is calculated. This
+#' probability for a missing value in a row of \code{cols_mis[i]} is
 #' proportional to the rank of the value in \code{cols_ctrl[i]} in the same row.
-#' In total \code{round(nrow(ds) * p[i])} missing values are created in
-#' \code{cols_mis[i]}.
+#' If \code{n_mis_stochastic = FALSE} these probabilities are given to the
+#' \code{prob} argument of \code{\link[base]{sample}}. If \code{n_mis_stochastic
+#' = TRUE}, they are scaled to sum up to \code{nrow(ds) * p[i]}. Then for each
+#' probability a uniformly distributed random number is generated. If this
+#' random number is less than the probability, the value in \code{cols_mis[i]}
+#' is set \code{NA}.
+#'
 #' The ranks are calculated via \code{\link[base]{rank}}.
 #' The argument \code{ties.method} is directly passed to this function.
 #' Possible choices for \code{ties.method} are documented in
