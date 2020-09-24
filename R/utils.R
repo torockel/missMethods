@@ -88,9 +88,8 @@ check_renamed_arg <- function(old, new) {
     assign(new_name, old, pos = parent.frame(1))
   } else { # both are not missing!
     stop(
-      old_name, " is deprecated and replaced by ", new_name, ". ",
-      "Please supply only a value to ", new_name,
-      " and not to both arguments!",
+      old_name, " is deprecated and replaced by ", new_name, "; ",
+      "supply only a value to ", new_name,
       call. = FALSE
     )
   }

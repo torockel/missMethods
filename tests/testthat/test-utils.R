@@ -77,7 +77,7 @@ test_that("check_renamed_arg() works", {
   # Both args are used
   expect_error(
     f_two_args(42, 3),
-    "old_arg is deprecated and replaced by new_arg. Please supply"
+    "old_arg is deprecated and replaced by new_arg; supply only a value to new"
   )
 
   # No arg is used
