@@ -13,10 +13,11 @@ delete_MAR_one_group(
   prop = 0.5,
   use_lpSolve = TRUE,
   ordered_as_unordered = FALSE,
-  stochastic = FALSE,
+  n_mis_stochastic = FALSE,
   ...,
   miss_cols,
-  ctrl_cols
+  ctrl_cols,
+  stochastic
 )
 }
 \arguments{
@@ -44,13 +45,22 @@ groups, if \code{cols_ctrl[i]} is an unordered factor.}
 \item{ordered_as_unordered}{Logical; should ordered factors be treated as
 unordered factors.}
 
-\item{stochastic}{Logical; see details.}
+\item{n_mis_stochastic}{Logical, should the number of missing values be
+stochastic? If \code{n_mis_stochastic = TRUE}, the number of missing values
+for a column with missing values \code{cols_mis[i]} is a random variable
+with expected value \code{nrow(ds) * p[i]}. If \code{n_mis_stochastic =
+FALSE}, the number of missing values will be deterministic. Normally, the
+number of missing values for a column with missing values
+\code{cols_mis[i]} is \code{round(nrow(ds) * p[i])}. Possible deviations
+from this value, if any exists, are documented in Details.}
 
 \item{...}{Further arguments passed to \code{cutoff_fun}.}
 
 \item{miss_cols}{Deprecated, use cols_mis instead.}
 
 \item{ctrl_cols}{Deprecated, use cols_ctrl instead.}
+
+\item{stochastic}{Deprecated, use \code{n_mis_stochastic} instead.}
 }
 \value{
 An object of the same class as \code{ds} with missing values.
@@ -90,14 +100,13 @@ Now one of these two groups is chosen randomly.
 In the chosen group, values are deleted in \code{cols_mis[i]}.
 In the other group, no missing values will be created in \code{cols_mis[i]}.
 
-If \code{stochastic = FALSE} (the default), then \code{floor(nrow(ds) * p[i])}
-or \code{ceiling(nrow(ds) * p[i])} values will be set \code{NA} in
-column \code{cols_mis[i]} (depending on the grouping).
-If \code{stochastic = TRUE}, each value in the group with missing values
-will have a probability to be missing, to meet a proportion of
-\code{p[i]} of missing values in \code{cols_mis[i]} in expectation.
-The effect of \code{stochastic} is further discussed in
-\code{\link{delete_MCAR}}.
+If \code{p} is too high, it is possible that a group contains not enough
+objects to reach \code{nrow(ds) * p} missing values. In this case, a warning
+is given and \code{p} is reduced to the maximum possible value (given the
+(random) group with missing data). Obviously this error will occur regularly,
+if \code{p > 0.5}. Therefore, this function should normally not be called
+with \code{p > 0.5}. However, the error can also occur for smaller values of
+\code{p} (depending on the grouping).
 }
 \section{Treatment of factors}{
 

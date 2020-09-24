@@ -1,6 +1,6 @@
 ## Indices for deleting -------------------------------------------------------
 
-get_NA_indices <- function(n_mis_stochastic, n = length(indices), p,
+get_NA_indices <- function(n_mis_stochastic, n = length(indices), p = n_mis / n,
                            prob = NULL,
                            n_mis = round(n * p),
                            indices = seq_len(n)) {
@@ -12,6 +12,17 @@ get_NA_indices <- function(n_mis_stochastic, n = length(indices), p,
     n == length(indices)
   )
 
+  ## Check for too high p -----------------------------------------------------
+  n_mis_max <- sum(prob > 0)
+  if (!is.null(prob) && n_mis_max < n * p) {
+    max_p <- n_mis_max / n
+    warning("p = ", p, " is too high for the chosen mechanims (and data);",
+            "it will be reduced to ", max_p)
+    p <- max_p
+    n_mis <- n_mis_max
+  }
+
+  ## Get NA indices -----------------------------------------------------------
   if (n_mis_stochastic) {
     if (is.null(prob)) {
       na_indices <- sample(c(TRUE, FALSE), n, replace = TRUE, prob = c(p, 1 - p))
@@ -31,17 +42,19 @@ get_NA_indices <- function(n_mis_stochastic, n = length(indices), p,
           prob[neq_0_not_scaled] <- prob[neq_0_not_scaled] *
             (1 - sum(scaled) * 1 / (n * p)) / sum(prob[neq_0_not_scaled])
         } else {
-          # We have to delete values from objects with prob == 0, to get
-          # (expected) n * p missing values
-          prob[prob == 0] <- (1 - sum(scaled) * 1 / (n * p)) / sum(prob == 0)
+          # We would have to delete values from objects with prob == 0!
+          # This should never happen (check for too high p!)!
+          # prob[prob == 0] <- (1 - sum(scaled) * 1 / (n * p)) / sum(prob == 0)
           break()
         }
       }
       # After this loop all probs should be <= 1/(n*p) and sum(prob) == 1
-      prob <- prob * n * p
-      if (any(prob > 1) || isFALSE(all.equal(sum(prob), n * p))) {
+      if (any(prob > 1 / (n * p)) || isFALSE(all.equal(sum(prob), 1))) {
         stop("We have a problem with prob; did you specify 'p' correctly?")
       }
+
+      prob <- prob * n * p
+
       # get NA indices
       na_indices <- stats::runif(n) < prob
     }

@@ -31,14 +31,6 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
       isTRUE(all.equal(count_NA(df_mis[1:50, ]), c(X = 0, Y = 0, Z = 0)))
   )
 
-  # to high p
-  expect_warning(
-    df_mis <- delete_MAR_one_group(df_XYZ_100, 0.9, "X", "Y"),
-    "not enough objects in miss_group in column Y to reach p"
-  )
-  expect_equal(count_NA(df_mis), c(X = 50, Y = 0, Z = 0))
-
-
   # check cutoff_fun ---------------------------------------------
   # median via stats::quantile()
   df_mis <- delete_MAR_one_group(df_XYZ_100, 0.2, "X", "Y",
@@ -142,6 +134,14 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
   # expect_equal(count_NA(delete_MAR_one_group(df_XY_X_one_outlier, 0.2,
   #                                         cols_mis = "Y", cols_ctrl = "X")),
   #              c(X = 0, Y = 4))
+})
+
+test_that("delete_one_group() works with high p", {
+  df_mis <- expect_warning(
+     delete_MAR_one_group(df_XY_20, 0.7, "X", "Y"),
+    "p = 0.7 is too high for the chosen mechanims \\(and data);it will be reduced to 0.5"
+  )
+  expect_equal(count_NA(df_mis), c(X = 10, Y = 0))
 })
 
 test_that("delete_MAR_one_group() (and delete_one_group(), which is called by

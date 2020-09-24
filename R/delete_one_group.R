@@ -23,19 +23,10 @@ delete_one_group <- function(ds, p, cols_mis, cols_ctrl,
       )
     } else {
       miss_group <- groups[[sample.int(2, 1)]]
-      if (length(miss_group) < round(nrow(ds) * p[i], 0)) {
-        warning(
-          "not enough objects in miss_group in column ", cols_ctrl[i],
-          " to reach p"
-        )
-        ds[miss_group, cols_mis[i]] <- NA
-      } else {
-        eff_p <- p[i] * nrow(ds) / length(miss_group)
-        ds[miss_group, cols_mis[i]] <- delete_MCAR_vec(
-          ds[miss_group, cols_mis[i], drop = TRUE],
-          eff_p, n_mis_stochastic
-        )
-      }
+      prob_weights <- rep(0, nrow(ds))
+      prob_weights[miss_group] <- 1
+      na_indices <- get_NA_indices(n_mis_stochastic, n = nrow(ds), p = p[i], prob = prob_weights)
+      ds[na_indices, cols_mis[i]] <- NA
     }
   }
   ds
@@ -67,16 +58,13 @@ delete_one_group <- function(ds, p, cols_mis, cols_ctrl,
 #' In the chosen group, values are deleted in \code{cols_mis[i]}.
 #' In the other group, no missing values will be created in \code{cols_mis[i]}.
 #'
-#' If \code{n_mis_stochastic = FALSE} (the default), then \code{floor(nrow(ds) * p[i])}
-#' or \code{ceiling(nrow(ds) * p[i])} values will be set \code{NA} in
-#' column \code{cols_mis[i]} (depending on the grouping).
-#' If \code{n_mis_stochastic = TRUE}, each value in the group with missing values
-#' will have a probability to be missing, to meet a proportion of
-#' \code{p[i]} of missing values in \code{cols_mis[i]} in expectation.
-#' The effect of \code{n_mis_stochastic} is further discussed in
-#' \code{\link{delete_MCAR}}.
-#'
-#'
+#' If \code{p} is too high, it is possible that a group contains not enough
+#' objects to reach \code{nrow(ds) * p} missing values. In this case, a warning
+#' is given and \code{p} is reduced to the maximum possible value (given the
+#' (random) group with missing data). Obviously this error will occur regularly,
+#' if \code{p > 0.5}. Therefore, this function should normally not be called
+#' with \code{p > 0.5}. However, the error can also occur for smaller values of
+#' \code{p} (depending on the grouping).
 #'
 #' @inheritParams delete_MAR_1_to_x
 #'
