@@ -45,7 +45,7 @@ delete_censoring <- function(ds, p, cols_mis, cols_ctrl,
       }
     } else { # no sorting -> using quantile()
       if (n_mis_stochastic) {
-        stop("n_mis_stochastic = TRUE ist not meaningfull for sorting = FALSE!")
+        stop("n_mis_stochastic = TRUE ist not implemented for sorting = FALSE!")
       }
       if (length(unique(ds_cols_ctrl_i)) == 1L) {
         warning(
@@ -98,20 +98,30 @@ delete_censoring <- function(ds, p, cols_mis, cols_ctrl,
 #' @template delete
 #' @template MAR
 #'
-#' @details If \code{sorting = TRUE} (the default), the column
-#' \code{cols_ctrl[i]} will be sorted. Then the rows with the
-#' \code{round(nrow(ds) * p[i])} smallest values will be selected (if
-#' \code{where = "lower"} (the default)). Now missing values will be created in
-#' the column \code{cols_mis[i]} in these rows. This effectively censors the
-#' proportion of \code{p[i]} rows of smallest values in \code{cols_ctrl[i]} in
-#' \code{cols_mis[i]}.
+#' @details
+#' The default behavior (\code{sorting = TRUE}) of this function is to first
+#' sort the column \code{cols_ctrl[i]}. Then missing values in
+#' \code{cols_mis[i]} are created in the rows with the \code{round(nrow(ds) *
+#' p[i])} smallest values. This censors approximately the proportion of
+#' \code{p[i]} rows of smallest values in \code{cols_ctrl[i]} in
+#' \code{cols_mis[i]}. Hence, the name of the function.
 #'
 #' If \code{where = "upper"}, instead of the rows with the smallest values, the
 #' rows with the highest values will be selected. For \code{where = "both"}, the
 #' one half of the \code{round(nrow(ds) * p[i])} rows with missing values will
 #' be the rows with the smallest values and the other half will be the rows with
 #' the highest values. So the censoring rows are dived to the highest and
-#' smallest values of \code{cols_ctrl[i]}.
+#' smallest values of \code{cols_ctrl[i]}. For odd \code{round(nrow(ds) * p[i])}
+#' one more value is set \code{NA} among the smallest values.
+#'
+#' If \code{n_mis_stochastic = TRUE} and \code{sorting = TRUE} the procedure is
+#' lightly altered. In this case, at first the \code{floor(nrow(ds) * p[i])}
+#' rows with the smallest values (\code{where = "lower"}) are set NA. If
+#' \code{nrow(ds) * p[i] > floor(nrow(ds) * p[i])}, the row with the next
+#' greater value will be set NA with a probability to get expected
+#' \code{nrow(ds) * p[i]} missing values. For \code{where = "upper"} this
+#' "random" missing value will be the next smallest. For \code{where = "both"}
+#' this "random" missing value will be the next greatest of the smallest values.
 #'
 #' If \code{sorting = FALSE}, the rows of \code{ds} will not be sorted. Instead,
 #' a quantile will be calculated (using \code{\link[stats]{quantile}}). If
@@ -126,14 +136,19 @@ delete_censoring <- function(ds, p, cols_mis, cols_ctrl,
 #' quantile or above the second quantile will have missing values in
 #' \code{cols_mis[i]}.
 #'
-#' The option \code{sorting = TRUE} will always create exactly
-#' \code{round(nrow(ds) * p[i])} missing values in \code{cols_mis[i]}. For
-#' \code{sorting = FALSE}, the number of missing values will normally be close
-#' to \code{nrow(ds) * p[i]}. But for \code{cols_ctrl} with many duplicates the
-#' choice \code{sorting = FALSE} can be problematic, because of the calculation
-#' of \code{quantile(ds[, cols_ctrl[i]], p[i])} and setting values \code{NA}
-#' below this threshold (see examples). So, in most cases \code{sorting = TRUE}
-#' is recommended.
+#' For \code{sorting = FALSE} only \code{n_mis_stochastic = FALSE} is
+#' implemented at the moment.
+#'
+#' The option \code{sorting = TRUE} with \code{n_mis_stochastic = FALSE} will
+#' always create exactly \code{round(nrow(ds) * p[i])} missing values in
+#' \code{cols_mis[i]}. With \code{n_mis_stochastic = TRUE}) sorting will result
+#' in \code{floor(nrow(ds) * p[i])} or \code{ceiling(nrow(ds) * p[i])} missing
+#' values in \code{cols_mis[i]}. For \code{sorting = FALSE}, the number of
+#' missing values will normally be close to \code{nrow(ds) * p[i]}. But for
+#' \code{cols_ctrl} with many duplicates the choice \code{sorting = FALSE} can
+#' be problematic, because of the calculation of \code{quantile(ds[,
+#' cols_ctrl[i]], p[i])} and setting values \code{NA} below this threshold (see
+#' examples). So, in most cases \code{sorting = TRUE} is recommended.
 #'
 #'
 #' @param where Controls where missing values are created; one of "lower",
