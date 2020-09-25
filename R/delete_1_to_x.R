@@ -4,6 +4,7 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
                           prop = 0.5, use_lpSolve = TRUE,
                           ordered_as_unordered = FALSE,
                           n_mis_stochastic = FALSE,
+                          x_stochastic = FALSE,
                           add_realized_x = FALSE, ...) {
 
   # General checking of arguments is done in delete_values().
@@ -21,6 +22,16 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
     stop("x must be greater than 0 and finite")
   }
 
+  # Check x_stochastic
+  stopifnot(is.logical(x_stochastic), length(x_stochastic) == 1L)
+  if (!x_stochastic && n_mis_stochastic) {
+    warning("x_stochastic is set to TRUE because x_stochastic = FALSE",
+    " is only meaningful for n_mis_stochastic = FALSE.",
+    " If you want x_stochastic = FALSE, set n_mis_stochastic = FALSE, which is",
+    " TRUE right now.")
+    x_stochastic <- TRUE
+  }
+
 
   # create missing values -----------------------
   n <- nrow(ds)
@@ -32,13 +43,17 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
     )
     if (is.null(groups$g2)) {
       warning("column ", cols_ctrl[i], " is constant, effectively MCAR")
-      ds[, cols_mis[i]] <- delete_MCAR_vec(
-        ds[, cols_mis[i], drop = TRUE],
-        p[i], n_mis_stochastic
-      )
+      na_indices <- get_NA_indices(n_mis_stochastic, n = nrow(ds), p = p[i])
+      # ds[, cols_mis[i]] <- delete_MCAR_vec(
+      #   ds[, cols_mis[i], drop = TRUE],
+      #   p[i], n_mis_stochastic
+      # )
       true_odds[i] <- 0
-    } else {
-
+    } else if (x_stochastic) {
+        prob = rep(1, nrow(ds))
+        prob[groups$g2] <- x
+        na_indices <- get_NA_indices(n_mis_stochastic, nrow(ds), p = p[i], prob = prob)
+    } else if (!n_mis_stochastic) {
       # calculate p_mis for group 1 and group 2
       nr_g1 <- length(groups$g1)
       nr_g2 <- length(groups$g2)
@@ -78,10 +93,13 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
         na_indices_g2 <- get_NA_indices(n_mis_stochastic, n_mis = n_mis_g2, indices = groups$g2)
       }
       na_indices <- c(na_indices_g1, na_indices_g2)
-      ds[na_indices, cols_mis[i]] <- NA
+
       true_odds[i] <- (length(na_indices_g1) / nr_g1) /
         (length(na_indices_g2) / nr_g2)
+    } else {
+      stop("something went wrong. Please contact package maintainer.")
     }
+    ds[na_indices, cols_mis[i]] <- NA
   }
 
   if (add_realized_x) {
@@ -221,6 +239,7 @@ delete_MAR_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
                               use_lpSolve = TRUE,
                               ordered_as_unordered = FALSE,
                               n_mis_stochastic = FALSE,
+                              x_stochastic = FALSE,
                               add_realized_x = FALSE, ...,
                               miss_cols, ctrl_cols, stochastic) {
   do.call(delete_values, c(
@@ -246,6 +265,7 @@ delete_MNAR_1_to_x <- function(ds, p, cols_mis, x,
                                use_lpSolve = TRUE,
                                ordered_as_unordered = FALSE,
                                n_mis_stochastic = FALSE,
+                               x_stochastic = FALSE,
                                add_realized_x = FALSE, ...,
                                miss_cols, stochastic) {
   do.call(delete_values, c(
