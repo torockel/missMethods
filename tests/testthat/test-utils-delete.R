@@ -61,6 +61,40 @@ test_that("get_NA_indices() works with comibinations of n_mis_stochastic and pro
 
 })
 
+test_that("get_NA_indices() check and adjust too high p and n_mis", {
+  # Too high p
+  NA_indices <- expect_warning(
+    get_NA_indices(FALSE, 5, p = 0.9, prob = c(20, 0, 0, 2, 1)),
+    "p = 0.9 is too high for the chosen mechanims \\(and data);it will be reduced to 0.6"
+  )
+  expect_equal(NA_indices, c(1, 4, 5))
+
+  # Too high n_mis
+  NA_indices <- expect_warning(
+    get_NA_indices(FALSE, 5, prob = c(0, 0, 0, 2, 1), n_mis = 3),
+    "p = 0.6 is too high for the chosen mechanims \\(and data);it will be reduced to 0.4"
+  )
+  expect_true(NA_indices == c(4L, 5L) || NA_indices == c(5L, 4L))
+})
+
+test_that("get_NA_indices() works with infinite prob", {
+  N <- 1000
+  # More inf prob as expected n_mis
+  NA_indices <- replicate(N, get_NA_indices(TRUE, 5, p = 0.4, prob = c(Inf, 0, Inf, Inf, 3)))
+  n_mis <- sum(vapply(NA_indices, length, integer(1)))
+  expect_true(stats::qbinom(1e-10, 3 * N, 2 /3) <= n_mis)
+  expect_true(n_mis <= stats::qbinom(1e-10, 3 * N, 2/3, FALSE))
+  expect_equal(calc_n_index(NA_indices, 2), 0)
+  expect_equal(calc_n_index(NA_indices, 5), 0)
+
+  # Less inf prob as expected n_mis
+  NA_indices <- replicate(N, get_NA_indices(TRUE, 5, p = 0.4, prob = c(Inf, 0, 1:3)))
+  n_mis <- sum(vapply(NA_indices, length, integer(1)))
+  expect_true(N + stats::qbinom(1e-10, 4*N, 0.25) <= n_mis)
+  expect_true(n_mis <= N + stats::qbinom(1e-10, 4*N, 0.25, FALSE))
+  expect_equal(calc_n_index(NA_indices, 1), N)
+})
+
 test_that("get_NA_indices() scales prob correctly", {
 
   N <- 1000

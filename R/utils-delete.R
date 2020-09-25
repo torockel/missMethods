@@ -12,7 +12,7 @@ get_NA_indices <- function(n_mis_stochastic, n = length(indices), p = n_mis / n,
     n == length(indices)
   )
 
-  ## Check for too high p -----------------------------------------------------
+  ## Check for too high p or n_mis (and just it) ------------------------------
   n_mis_max <- sum(prob > 0)
   if (!is.null(prob) && n_mis_max < n * p) {
     max_p <- n_mis_max / n
@@ -20,6 +20,31 @@ get_NA_indices <- function(n_mis_stochastic, n = length(indices), p = n_mis / n,
             "it will be reduced to ", max_p)
     p <- max_p
     n_mis <- n_mis_max
+  }
+
+  ## Check for Inf in prob ----------------------------------------------------
+  prob_inf <- is.infinite(prob)
+  if (!is.null(prob) && any(prob_inf)) {
+    n_inf <- sum(prob_inf)
+    if (n_inf >= n_mis) {
+      # Only indices with prob == Inf should have missing values
+      p <- p * n / n_inf
+      return(Recall(
+        n_mis_stochastic, p = p, n_mis = n_mis,
+        indices = which(prob_inf), prob = NULL
+      ))
+    } else { # Less prob_inf then missing values
+      # All indices with prob == Inf should be NA
+      na_indices_inf <- which(prob_inf)
+      # Remove this indices and probs
+      indices <- indices[!prob_inf]
+      prob <- prob[!prob_inf]
+      # Adjust p and n_mis
+      p <- (n * p - n_inf) / (n - n_inf)
+      n_mis <- n_mis - n_inf
+      further_na_indices <- Recall(n_mis_stochastic, p = p, prob = prob, n_mis = n_mis, indices = indices)
+      return(c(na_indices_inf, further_na_indices))
+    }
   }
 
   ## Get NA indices -----------------------------------------------------------
