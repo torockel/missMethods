@@ -82,6 +82,11 @@ The ranks are calculated via \code{\link[base]{rank}}.
 The argument \code{ties.method} is directly passed to this function.
 Possible choices for \code{ties.method} are documented in
 \code{\link[base]{rank}}.
+
+For high values of \code{p} it is mathematically not possible to get
+probabilities proportional to the ranks. In this case, a warning is given.
+This warning can be silenced by setting the option
+\code{missMethods.warn.too.high.p} to false.
 }
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)

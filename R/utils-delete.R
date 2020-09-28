@@ -3,7 +3,8 @@
 get_NA_indices <- function(n_mis_stochastic, n = length(indices), p = n_mis / n,
                            prob = NULL,
                            n_mis = round(n * p),
-                           indices = seq_len(n)) {
+                           indices = seq_len(n),
+                           warn = getOption("missMethods.warn.too.high.p")) {
   stopifnot(
     is.logical(n_mis_stochastic), length(n_mis_stochastic) == 1L,
     missing(p) || (is.numeric(p) && length(p) == 1L),
@@ -16,8 +17,10 @@ get_NA_indices <- function(n_mis_stochastic, n = length(indices), p = n_mis / n,
   n_mis_max <- sum(prob > 0)
   if (!is.null(prob) && n_mis_max < n * p) {
     max_p <- n_mis_max / n
-    warning("p = ", p, " is too high for the chosen mechanims (and data);",
-            "it will be reduced to ", max_p)
+    if (warn) {
+      warning("p = ", p, " is too high for the chosen mechanims (and data);",
+              "it will be reduced to ", max_p)
+    }
     p <- max_p
     n_mis <- n_mis_max
   }
@@ -49,8 +52,9 @@ get_NA_indices <- function(n_mis_stochastic, n = length(indices), p = n_mis / n,
 
   ## Check for too high prob values -------------------------------------------
   prob_scaled <- prob / sum(prob)
-  if(!is.null(prob) && any(prob_scaled > 1 / (n * p))) {
-    waring("some prob values are too high and will be scaled down.")
+  if(!is.null(prob) && any(prob_scaled > 1 / (n * p)) && warn) {
+    warning("p or some prob values are too high;",
+            " the too high prob values will be scaled down.")
   }
 
   ## Get NA indices -----------------------------------------------------------

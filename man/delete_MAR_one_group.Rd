@@ -101,12 +101,13 @@ In the chosen group, values are deleted in \code{cols_mis[i]}.
 In the other group, no missing values will be created in \code{cols_mis[i]}.
 
 If \code{p} is too high, it is possible that a group contains not enough
-objects to reach \code{nrow(ds) * p} missing values. In this case, a warning
-is given and \code{p} is reduced to the maximum possible value (given the
-(random) group with missing data). Obviously this error will occur regularly,
-if \code{p > 0.5}. Therefore, this function should normally not be called
-with \code{p > 0.5}. However, the error can also occur for smaller values of
-\code{p} (depending on the grouping).
+objects to reach \code{nrow(ds) * p} missing values. In this case, \code{p}
+is reduced to the maximum possible value (given the (random) group with
+missing data) and a warning is given. Obviously this case will occur
+regularly, if \code{p > 0.5}. Therefore, this function should normally not be
+called with \code{p > 0.5}. However, this can occur for smaller values
+of \code{p}, too (depending on the grouping). The warning can be silenced by
+setting the option \code{missMethods.warn.too.high.p} to false.
 }
 \section{Treatment of factors}{
 

@@ -62,6 +62,7 @@ test_that("get_NA_indices() works with comibinations of n_mis_stochastic and pro
 })
 
 test_that("get_NA_indices() check and adjust too high p and n_mis", {
+  old <- options("missMethods.warn.too.high.p" = TRUE)
   # Too high p
   NA_indices <- expect_warning(
     get_NA_indices(FALSE, 5, p = 0.9, prob = c(20, 0, 0, 2, 1)),
@@ -75,6 +76,7 @@ test_that("get_NA_indices() check and adjust too high p and n_mis", {
     "p = 0.6 is too high for the chosen mechanims \\(and data);it will be reduced to 0.4"
   )
   expect_true(NA_indices == c(4L, 5L) || NA_indices == c(5L, 4L))
+  options(old)
 })
 
 test_that("get_NA_indices() works with infinite prob", {
@@ -102,6 +104,16 @@ test_that("get_NA_indices() scales prob correctly", {
   p <- 3 / 4
   set.seed(12345)
 
+  # Check for warning
+  old <- options("missMethods.warn.too.high.p" = TRUE)
+  expect_warning(
+    get_NA_indices(n_mis_stochastic = TRUE, n = n, p = p, prob = seq_len(n)),
+    "p or some prob values are too high; the too high prob"
+  )
+
+  # Silence warnings
+  options("missMethods.warn.too.high.p" = FALSE)
+
   # n_mis_stochastic + prob = seq_len(n)
   NA_indices <- replicate(
     N, get_NA_indices(n_mis_stochastic = TRUE, n = n, p = p, prob = seq_len(n))
@@ -118,6 +130,9 @@ test_that("get_NA_indices() scales prob correctly", {
               stats::qbinom(1e-10, N, 2/3, FALSE))
   expect_equal(calc_n_index(NA_indices, 4), N)
   expect_equal(calc_n_index(NA_indices, 3), N)
+
+  # reset option
+  options(old)
 
   # n_mis_stochastic = FALSE + prob = seq_len(n)
   # prob is directly passed to base::sample()
@@ -138,24 +153,23 @@ test_that("get_NA_indices() scales prob correctly", {
 # https://stat.ethz.ch/pipermail/r-help/2008-February/153698.html
 # https://stat.ethz.ch/pipermail/r-help/2007-October/144645.html
 
-test_that("weighted sampling without replacement works", {
-  N <- 10000
-  set.seed(12345)
-  res <- matrix(nrow = N, ncol = 2)
-  for (i in seq_len(N)) {
-    df_mis <- delete_MNAR_1_to_x(
-      df_XY_20, 0.3, "X", x = 10,
-      x_stochastic = TRUE, n_mis_stochastic = FALSE
-    )
-    res[i, 1] <- sum(is.na(df_mis[, "X"]))
-    res[i, 2] <- sum(is.na(df_mis[1:10, "X"]))
-  }
-  expect_true(all(res[, 1] == 6L))
-  n_g1_mis <- sum(res[, 2])
-  expect_true(stats::qbinom(1e-10, N * 10, 2/11 * 0.3) <= n_g1_mis)
-  expect_true(n_g1_mis <= stats::qbinom(1e-10, N * 10, 2/11 * 0.3, FALSE))
-
-})
+# test_that("weighted sampling without replacement works", {
+#   N <- 10000
+#   set.seed(12345)
+#   res <- matrix(nrow = N, ncol = 2)
+#   for (i in seq_len(N)) {
+#     df_mis <- delete_MNAR_1_to_x(
+#       df_XY_20, 0.3, "X", x = 10,
+#       x_stochastic = TRUE, n_mis_stochastic = FALSE
+#     )
+#     res[i, 1] <- sum(is.na(df_mis[, "X"]))
+#     res[i, 2] <- sum(is.na(df_mis[1:10, "X"]))
+#   }
+#   expect_true(all(res[, 1] == 6L))
+#   n_g1_mis <- sum(res[, 2])
+#   expect_true(stats::qbinom(1e-10, N * 10, 2/11 * 0.3) <= n_g1_mis)
+#   expect_true(n_g1_mis <= stats::qbinom(1e-10, N * 10, 2/11 * 0.3, FALSE))
+# })
 
 
 

@@ -37,6 +37,11 @@ delete_rank <- function(ds, p, cols_mis, cols_ctrl, n_mis_stochastic,
 #' Possible choices for \code{ties.method} are documented in
 #' \code{\link[base]{rank}}.
 #'
+#' For high values of \code{p} it is mathematically not possible to get
+#' probabilities proportional to the ranks. In this case, a warning is given.
+#' This warning can be silenced by setting the option
+#' \code{missMethods.warn.too.high.p} to false.
+#'
 #' @param ties.method How ties are handled. Passed to \code{\link[base]{rank}}.
 #'
 #' @export
