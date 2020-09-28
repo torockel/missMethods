@@ -47,6 +47,12 @@ get_NA_indices <- function(n_mis_stochastic, n = length(indices), p = n_mis / n,
     }
   }
 
+  ## Check for too high prob values -------------------------------------------
+  prob_scaled <- prob / sum(prob)
+  if(!is.null(prob) && any(prob_scaled > 1 / (n * p))) {
+    waring("some prob values are too high and will be scaled down.")
+  }
+
   ## Get NA indices -----------------------------------------------------------
   if (n_mis_stochastic) {
     if (is.null(prob)) {

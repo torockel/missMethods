@@ -125,6 +125,41 @@ test_that("get_NA_indices() scales prob correctly", {
 
 })
 
+## n_mis_stochastic = FALSE and prob not NULL ---------------------------------
+# or in other terms: weighted sampling without replacement
+# base::sample() is problematic for this situation:
+
+# from ?sample:
+# "If replace is false, these probabilities are applied sequentially, that is the
+# probability of choosing the next item is proportional to the weights amongst
+# the remaining items. The number of nonzero weights must be at least size in
+# this case"
+# This will lead to wrong prob, see for example:
+# https://stat.ethz.ch/pipermail/r-help/2008-February/153698.html
+# https://stat.ethz.ch/pipermail/r-help/2007-October/144645.html
+
+test_that("weighted sampling without replacement works", {
+  N <- 10000
+  set.seed(12345)
+  res <- matrix(nrow = N, ncol = 2)
+  for (i in seq_len(N)) {
+    df_mis <- delete_MNAR_1_to_x(
+      df_XY_20, 0.3, "X", x = 10,
+      x_stochastic = TRUE, n_mis_stochastic = FALSE
+    )
+    res[i, 1] <- sum(is.na(df_mis[, "X"]))
+    res[i, 2] <- sum(is.na(df_mis[1:10, "X"]))
+  }
+  expect_true(all(res[, 1] == 6L))
+  n_g1_mis <- sum(res[, 2])
+  expect_true(stats::qbinom(1e-10, N * 10, 2/11 * 0.3) <= n_g1_mis)
+  expect_true(n_g1_mis <= stats::qbinom(1e-10, N * 10, 2/11 * 0.3, FALSE))
+
+})
+
+
+
+
 
 # check find_groups ---------------------------------------
 test_that("find_groups() issues a warning for constant x", {

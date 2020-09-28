@@ -44,15 +44,10 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
     if (is.null(groups$g2)) {
       warning("column ", cols_ctrl[i], " is constant, effectively MCAR")
       na_indices <- get_NA_indices(n_mis_stochastic, n = nrow(ds), p = p[i])
-      # ds[, cols_mis[i]] <- delete_MCAR_vec(
-      #   ds[, cols_mis[i], drop = TRUE],
-      #   p[i], n_mis_stochastic
-      # )
-      true_odds[i] <- 0
     } else if (x_stochastic) {
-        prob = rep(1, nrow(ds))
-        prob[groups$g2] <- x
-        na_indices <- get_NA_indices(n_mis_stochastic, nrow(ds), p = p[i], prob = prob)
+      prob = rep(1, nrow(ds))
+      prob[groups$g2] <- x
+      na_indices <- get_NA_indices(n_mis_stochastic, nrow(ds), p = p[i], prob = prob)
     } else if (!n_mis_stochastic) {
       # calculate p_mis for group 1 and group 2
       nr_g1 <- length(groups$g1)
@@ -93,13 +88,12 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
         na_indices_g2 <- get_NA_indices(n_mis_stochastic, n_mis = n_mis_g2, indices = groups$g2)
       }
       na_indices <- c(na_indices_g1, na_indices_g2)
-
-      true_odds[i] <- (length(na_indices_g1) / nr_g1) /
-        (length(na_indices_g2) / nr_g2)
     } else {
       stop("something went wrong. Please contact package maintainer.")
     }
     ds[na_indices, cols_mis[i]] <- NA
+    true_odds[i] <- sum(na_indices %in% groups$g1) * length(groups$g2) /
+      (length(groups$g1) * sum(na_indices %in% groups$g2))
   }
 
   if (add_realized_x) {

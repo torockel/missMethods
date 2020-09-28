@@ -148,12 +148,6 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   expect_true(mean(test_max_x) < 9 && mean(test_max_x) > 7)
 
   # check special ctrl_col cases --------------------------
-  # ctrl_col constant
-  df_mis <- expect_warning(
-    delete_MAR_1_to_x(df_XY_X_constant, 0.2, cols_mis = "Y", cols_ctrl = "X", x = 3),
-    "is constant"
-  )
-  expect_equal(count_NA(df_mis), c(X = 0, Y = 4))
   # ctr_col nearly constant
   expect_equal(
     count_NA(delete_MAR_1_to_x(df_XY_X_one_outlier, 0.2,
@@ -211,6 +205,47 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   )
   expect_true(attributes(df_mis)$realized_x > 0)
   expect_true(is.finite(attributes(df_mis)$realized_x) > 0)
+})
+
+test_that("delete_1_to_x() checks x_stochastic", {
+  expect_warning(
+    delete_MNAR_1_to_x(
+      df_XY_2, 0.2, "X", 3, n_mis_stochastic = TRUE, x_stochastic = FALSE
+    ),
+    "x_stochastic is set to TRUE because x_stochastic = FALSE is only"
+  )
+})
+
+test_that("delete_1_to_x() works with constant control column", {
+  df_mis <- expect_warning(
+    delete_MAR_1_to_x(df_XY_X_constant, 0.2, cols_mis = "Y", cols_ctrl = "X", x = 3),
+    "is constant"
+  )
+  expect_equal(count_NA(df_mis), c(X = 0, Y = 4))
+})
+
+test_that("delete_1_to_x() works with x_stochastic = TRUE", {
+  # n_mis_stochastic = TRUE
+  N <- 1000
+  set.seed(1234)
+  res <- matrix(nrow = N, ncol = 2)
+  for (i in seq_len(N)) {
+    df_mis <- delete_MNAR_1_to_x(
+      df_XY_20, 0.3, "X", x = 10,
+      x_stochastic = TRUE, n_mis_stochastic = TRUE
+    )
+    res[i, 1] <- sum(is.na(df_mis[, "X"]))
+    res[i, 2] <- sum(is.na(df_mis[1:10, "X"]))
+  }
+  n_mis <- sum(res[, 1])
+  n_g1_mis <- sum(res[, 2])
+  expect_true(stats::qbinom(1e-10, N * 20, 0.3) <= n_mis)
+  expect_true(n_mis <= stats::qbinom(1e-10, N * 20, 0.3, FALSE))
+  expect_true(stats::qbinom(1e-10, N * 10, 2/11 * 0.3) <= n_g1_mis)
+  expect_true(n_g1_mis <= stats::qbinom(1e-10, N * 10, 2/11 * 0.3, FALSE))
+
+  # n_mis_stochastic = FALSE just calls base::sample()!
+  # see notes in tests for get_NA_indices()
 })
 
 test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
