@@ -13,10 +13,12 @@ delete_MNAR_1_to_x(
   prop = 0.5,
   use_lpSolve = TRUE,
   ordered_as_unordered = FALSE,
-  stochastic = FALSE,
+  n_mis_stochastic = FALSE,
+  x_stochastic = FALSE,
   add_realized_x = FALSE,
   ...,
-  miss_cols
+  miss_cols,
+  stochastic
 )
 }
 \arguments{
@@ -44,7 +46,16 @@ groups, if \code{cols_ctrl[i]} is an unordered factor.}
 \item{ordered_as_unordered}{Logical; should ordered factors be treated as
 unordered factors.}
 
-\item{stochastic}{Logical; see details.}
+\item{n_mis_stochastic}{Logical, should the number of missing values be
+stochastic? If \code{n_mis_stochastic = TRUE}, the number of missing values
+for a column with missing values \code{cols_mis[i]} is a random variable
+with expected value \code{nrow(ds) * p[i]}. If \code{n_mis_stochastic =
+FALSE}, the number of missing values will be deterministic. Normally, the
+number of missing values for a column with missing values
+\code{cols_mis[i]} is \code{round(nrow(ds) * p[i])}. Possible deviations
+from this value, if any exists, are documented in Details.}
+
+\item{x_stochastic}{Logical; should the odds be stochastic or deterministic.}
 
 \item{add_realized_x}{Logical; if TRUE the realized odds for cols_mis will
 be returned (as attribute).}
@@ -52,6 +63,8 @@ be returned (as attribute).}
 \item{...}{Further arguments passed to \code{cutoff_fun}.}
 
 \item{miss_cols}{Deprecated, use cols_mis instead.}
+
+\item{stochastic}{Deprecated, use \code{n_mis_stochastic} instead.}
 }
 \value{
 An object of the same class as \code{ds} with missing values.

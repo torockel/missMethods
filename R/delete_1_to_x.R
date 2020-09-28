@@ -5,7 +5,9 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
                           ordered_as_unordered = FALSE,
                           n_mis_stochastic = FALSE,
                           x_stochastic = FALSE,
-                          add_realized_x = FALSE, ...) {
+                          add_realized_x = FALSE,
+                          warn_p = getOption("missMethods.warn.too.high.p"),
+                          ...) {
 
   # General checking of arguments is done in delete_values().
   # Only special cases are checked here.
@@ -57,18 +59,22 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
       # check if p_mis_g1 or p_mis_g2 is out of range (>1)
       if (p_mis_g2 > 1) {
         x_max_i <- nr_g2 / (n * p[i] - nr_g1)
-        warning(
-          "p (or x) is too high; x is set to ", x_max_i,
-          " to get expected n * p missing values"
-        )
+        if (warn_p) {
+          warning(
+            "p (or x) is too high; x is set to ", x_max_i,
+            " to get expected n * p missing values"
+          )
+        }
         p_mis_g2 <- 1 # setting x = x_max_i results in p_mis_g2 = 1
         p_mis_g1 <- (p[i] * n - nr_g2) / nr_g1
       } else if (p_mis_g1 > 1) {
         x_min_i <- (n * p[i] - nr_g2) / nr_g1
-        warning(
-          "p is too high or x to low; x is set to ", x_min_i,
-          " to get expected n * p missing values"
-        )
+        if (warn_p) {
+          warning(
+            "p is too high or x to low; x is set to ", x_min_i,
+            " to get expected n * p missing values"
+          )
+        }
         p_mis_g1 <- 1
         p_mis_g2 <- (p[i] * n - nr_g1) / nr_g2
       }
@@ -89,7 +95,7 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
       }
       na_indices <- c(na_indices_g1, na_indices_g2)
     } else {
-      stop("something went wrong. Please contact package maintainer.")
+      stop("something went wrong. Please contact maintainer.")
     }
     ds[na_indices, cols_mis[i]] <- NA
     true_odds[i] <- sum(na_indices %in% groups$g1) * length(groups$g2) /
@@ -157,7 +163,7 @@ check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
 #' But there are some restrictions, which can lead to some deviations from the
 #' odds 1:x (see below).
 #'
-#' If \code{n_mis_stochastic = FALSE} (the default),
+#' If \code{x_stochastic} and \code{n_mis_stochastic} are false (the default),
 #' then exactly \code{round(nrow(ds) * p[i])} values will be set \code{NA} in
 #' column \code{cols_mis[i]}.
 #' To achieve this, it is possible that the true odds differ from 1:x.
@@ -165,13 +171,15 @@ check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
 #' chosen to minimize the absolute difference between the realized odds and 1:x.
 #' Furthermore, if \code{round(nrow(ds) * p[i])} == 0, then no missing value
 #' will be created in \code{cols_mis[i]}.
-#' If \code{n_mis_stochastic = TRUE}, the number of missing values in
-#' \code{cols_mis[i]} is a random variable.
-#' This random variable is a sum of two binomial distributed variables (one for
-#' group 1 and one for group 2).
-#' If \code{p} is not too high and \code{x} is not too high or to low (see
-#' below), then the odds 1:x will be met in expectation.
-#' But in a single dataset the odds will be unequal to 1:x most of the time.
+#'
+#' If \code{x_stochastic} is true, the rows from the two groups will get
+#' sampling weights proportional to 1 (group 1) and x (group 2). If
+#' \code{n_mis_stochastic} is false, these weights are given to
+#' \code{\link{sample}} via the argument \code{prob} and exactly
+#' \code{round(nrow(ds) * p[i])} values will be set \code{NA}. If
+#' \code{n_mis_stochastic} is true, the sampling weights will be scaled and
+#' compared to uniform random numbers. The scaling is done in such a way to get
+#' expected \code{nrow(ds) * p[i]} missing values in \code{cols_mis[i]}.
 #'
 #' If \code{p} is high and \code{x} is too high or too low, it is possible that
 #' the odds 1:x and the proportion of missing values \code{p} cannot be
@@ -182,16 +190,17 @@ check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
 #' If a combination of \code{p} and \code{x} that cannot be realized together
 #' is given to \code{delete_MAR_1_to_x}, then a warning will be generated and
 #' \code{x} will be adjusted in such a way that \code{p} can be realized as
-#' given to the function.
+#' given to the function. The warning can be silenced by setting the option
+#' \code{missMethods.warn.too.high.p} to false.
 #'
 #' The argument \code{add_realized_x} controls whether the x of the realized
 #' odds are added to the return value or not.
 #' If \code{add_realized_x = TRUE}, then the realized x values for all
 #' \code{cols_mis} will be added as an attribute to the returned object.
-#' For \code{n_mis_stochastic = TRUE} these realized x will differ from the given
+#' For \code{x_stochastic = TRUE} these realized x will differ from the given
 #' \code{x} most of the time and will change if the function is rerun without
 #' setting a seed.
-#' For \code{n_mis_stochastic = FALSE}, it is also possible that the realized odds
+#' For \code{x_stochastic = FALSE}, it is also possible that the realized odds
 #' differ (see above). However, the realized odds will be constant over multiple
 #' runs.
 #'
@@ -208,6 +217,7 @@ check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
 #'   groups, if \code{cols_ctrl[i]} is an unordered factor.
 #' @param ordered_as_unordered Logical; should ordered factors be treated as
 #'   unordered factors.
+#' @param x_stochastic Logical; should the odds be stochastic or deterministic.
 #' @param ... Further arguments passed to \code{cutoff_fun}.
 #'
 #' @export
@@ -216,7 +226,7 @@ check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
 #' @examples
 #' ds <- data.frame(X = 1:20, Y = 101:120)
 #' delete_MAR_1_to_x(ds, 0.2, "X", "Y", 3)
-#' # beware of small datasets and n_mis_stochastic = FALSE
+#' # beware of small datasets and x_stochastic = FALSE
 #' attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 3, add_realized_x = TRUE), "realized_x")
 #' attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 4, add_realized_x = TRUE), "realized_x")
 #' attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 5, add_realized_x = TRUE), "realized_x")
@@ -226,7 +236,6 @@ check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
 #' # 7 above and 1 below (x = 7)
 #' # Too high combination of p and x:
 #' delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3)
-#' delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3, n_mis_stochastic = TRUE)
 delete_MAR_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
                               cutoff_fun = median,
                               prop = 0.5,

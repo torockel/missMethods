@@ -14,11 +14,13 @@ delete_MAR_1_to_x(
   prop = 0.5,
   use_lpSolve = TRUE,
   ordered_as_unordered = FALSE,
-  stochastic = FALSE,
+  n_mis_stochastic = FALSE,
+  x_stochastic = FALSE,
   add_realized_x = FALSE,
   ...,
   miss_cols,
-  ctrl_cols
+  ctrl_cols,
+  stochastic
 )
 }
 \arguments{
@@ -50,7 +52,16 @@ groups, if \code{cols_ctrl[i]} is an unordered factor.}
 \item{ordered_as_unordered}{Logical; should ordered factors be treated as
 unordered factors.}
 
-\item{stochastic}{Logical; see details.}
+\item{n_mis_stochastic}{Logical, should the number of missing values be
+stochastic? If \code{n_mis_stochastic = TRUE}, the number of missing values
+for a column with missing values \code{cols_mis[i]} is a random variable
+with expected value \code{nrow(ds) * p[i]}. If \code{n_mis_stochastic =
+FALSE}, the number of missing values will be deterministic. Normally, the
+number of missing values for a column with missing values
+\code{cols_mis[i]} is \code{round(nrow(ds) * p[i])}. Possible deviations
+from this value, if any exists, are documented in Details.}
+
+\item{x_stochastic}{Logical; should the odds be stochastic or deterministic.}
 
 \item{add_realized_x}{Logical; if TRUE the realized odds for cols_mis will
 be returned (as attribute).}
@@ -60,6 +71,8 @@ be returned (as attribute).}
 \item{miss_cols}{Deprecated, use cols_mis instead.}
 
 \item{ctrl_cols}{Deprecated, use cols_ctrl instead.}
+
+\item{stochastic}{Deprecated, use \code{n_mis_stochastic} instead.}
 }
 \value{
 An object of the same class as \code{ds} with missing values.
@@ -106,7 +119,7 @@ group 1 divided by the number of NAs in group 2 should equal 1 divided by x.
 But there are some restrictions, which can lead to some deviations from the
 odds 1:x (see below).
 
-If \code{stochastic = FALSE} (the default),
+If \code{x_stochastic} and \code{n_mis_stochastic} are false (the default),
 then exactly \code{round(nrow(ds) * p[i])} values will be set \code{NA} in
 column \code{cols_mis[i]}.
 To achieve this, it is possible that the true odds differ from 1:x.
@@ -114,13 +127,15 @@ The number of observations that are deleted in group 1 and group 2 are
 chosen to minimize the absolute difference between the realized odds and 1:x.
 Furthermore, if \code{round(nrow(ds) * p[i])} == 0, then no missing value
 will be created in \code{cols_mis[i]}.
-If \code{stochastic = TRUE}, the number of missing values in
-\code{cols_mis[i]} is a random variable.
-This random variable is a sum of two binomial distributed variables (one for
-group 1 and one for group 2).
-If \code{p} is not too high and \code{x} is not too high or to low (see
-below), then the odds 1:x will be met in expectation.
-But in a single dataset the odds will be unequal to 1:x most of the time.
+
+If \code{x_stochastic} is true, the rows from the two groups will get
+sampling weights proportional to 1 (group 1) and x (group 2). If
+\code{n_mis_stochastic} is false, these weights are given to
+\code{\link{sample}} via the argument \code{prob} and exactly
+\code{round(nrow(ds) * p[i])} values will be set \code{NA}. If
+\code{n_mis_stochastic} is true, the sampling weights will be scaled and
+compared to uniform random numbers. The scaling is done in such a way to get
+expected \code{nrow(ds) * p[i]} missing values in \code{cols_mis[i]}.
 
 If \code{p} is high and \code{x} is too high or too low, it is possible that
 the odds 1:x and the proportion of missing values \code{p} cannot be
@@ -131,16 +146,17 @@ the values are above the cutoff value in \code{cols_ctrl[i]}).
 If a combination of \code{p} and \code{x} that cannot be realized together
 is given to \code{delete_MAR_1_to_x}, then a warning will be generated and
 \code{x} will be adjusted in such a way that \code{p} can be realized as
-given to the function.
+given to the function. The warning can be silenced by setting the option
+\code{missMethods.warn.too.high.p} to false.
 
 The argument \code{add_realized_x} controls whether the x of the realized
 odds are added to the return value or not.
 If \code{add_realized_x = TRUE}, then the realized x values for all
 \code{cols_mis} will be added as an attribute to the returned object.
-For \code{stochastic = TRUE} these realized x will differ from the given
+For \code{x_stochastic = TRUE} these realized x will differ from the given
 \code{x} most of the time and will change if the function is rerun without
 setting a seed.
-For \code{stochastic = FALSE}, it is also possible that the realized odds
+For \code{x_stochastic = FALSE}, it is also possible that the realized odds
 differ (see above). However, the realized odds will be constant over multiple
 runs.
 }
@@ -173,7 +189,7 @@ will be grouped via \code{cutoff_fun} as described in Details.
 \examples{
 ds <- data.frame(X = 1:20, Y = 101:120)
 delete_MAR_1_to_x(ds, 0.2, "X", "Y", 3)
-# beware of small datasets and stochastic = FALSE
+# beware of small datasets and x_stochastic = FALSE
 attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 3, add_realized_x = TRUE), "realized_x")
 attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 4, add_realized_x = TRUE), "realized_x")
 attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 5, add_realized_x = TRUE), "realized_x")
@@ -183,7 +199,6 @@ attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 7, add_realized_x = TRUE), "realized_x
 # 7 above and 1 below (x = 7)
 # Too high combination of p and x:
 delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3)
-delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3, stochastic = TRUE)
 }
 \references{
 Santos, M. S., Pereira, R. C., Costa, A. F., Soares, J. P.,
