@@ -1,4 +1,4 @@
-.onLoad <- function(libname, pgkname) {
+.onLoad <- function(libname, pkgname) {
   op <- options()
   op.missMethods <- list(
     missMethods.warn.too.high.p = TRUE

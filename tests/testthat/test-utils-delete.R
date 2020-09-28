@@ -75,7 +75,7 @@ test_that("get_NA_indices() check and adjust too high p and n_mis", {
     get_NA_indices(FALSE, 5, prob = c(0, 0, 0, 2, 1), n_mis = 3),
     "p = 0.6 is too high for the chosen mechanims \\(and data);it will be reduced to 0.4"
   )
-  expect_true(NA_indices == c(4L, 5L) || NA_indices == c(5L, 4L))
+  expect_true(any(NA_indices == c(4L, 5L), NA_indices == c(5L, 4L)))
   options(old)
 })
 
