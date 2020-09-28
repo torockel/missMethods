@@ -56,9 +56,9 @@ from this value, if any exists, are documented in Details.}
 
 \item{...}{Further arguments passed to \code{cutoff_fun}.}
 
-\item{miss_cols}{Deprecated, use cols_mis instead.}
+\item{miss_cols}{Deprecated, use \code{cols_mis} instead.}
 
-\item{ctrl_cols}{Deprecated, use cols_ctrl instead.}
+\item{ctrl_cols}{Deprecated, use \code{cols_ctrl} instead.}
 
 \item{stochastic}{Deprecated, use \code{n_mis_stochastic} instead.}
 }

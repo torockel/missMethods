@@ -37,7 +37,7 @@ from this value, if any exists, are documented in Details.}
 
 \item{sorting}{Logical; should sorting be used or a quantile as a threshold.}
 
-\item{miss_cols}{Deprecated, use cols_mis instead.}
+\item{miss_cols}{Deprecated, use \code{cols_mis} instead.}
 }
 \value{
 An object of the same class as \code{ds} with missing values.

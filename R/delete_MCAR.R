@@ -10,7 +10,7 @@
 #' The proportion of missing values is specified with \code{p}.
 #' The columns in which missing values are created can be set via \code{cols_mis}.
 #' If \code{cols_mis} is not specified, then missing values are created in
-#' every column.
+#' all columns of \code{ds}.
 #'
 #  part about p copied from man-roxygen/MAR.R !!!!!!
 #

@@ -11,7 +11,7 @@
 #'   number of missing values for a column with missing values
 #'   \code{cols_mis[i]} is \code{round(nrow(ds) * p[i])}. Possible deviations
 #'   from this value, if any exists, are documented in Details.
-#' @param miss_cols Deprecated, use cols_mis instead.
+#' @param miss_cols Deprecated, use \code{cols_mis} instead.
 #'
 #'
 #' @return An object of the same class as \code{ds} with missing values.

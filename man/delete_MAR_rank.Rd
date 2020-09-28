@@ -39,9 +39,9 @@ from this value, if any exists, are documented in Details.}
 
 \item{ties.method}{How ties are handled. Passed to \code{\link[base]{rank}}.}
 
-\item{miss_cols}{Deprecated, use cols_mis instead.}
+\item{miss_cols}{Deprecated, use \code{cols_mis} instead.}
 
-\item{ctrl_cols}{Deprecated, use cols_ctrl instead.}
+\item{ctrl_cols}{Deprecated, use \code{cols_ctrl} instead.}
 }
 \value{
 An object of the same class as \code{ds} with missing values.

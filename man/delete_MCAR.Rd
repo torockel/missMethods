@@ -34,7 +34,7 @@ from this value, if any exists, are documented in Details.}
 
 \item{p_overall}{Logical; see details.}
 
-\item{miss_cols}{Deprecated, use cols_mis instead.}
+\item{miss_cols}{Deprecated, use \code{cols_mis} instead.}
 
 \item{stochastic}{Deprecated, use \code{n_mis_stochastic} instead.}
 }
@@ -50,7 +50,7 @@ the dataset \code{ds}.
 The proportion of missing values is specified with \code{p}.
 The columns in which missing values are created can be set via \code{cols_mis}.
 If \code{cols_mis} is not specified, then missing values are created in
-every column.
+all columns of \code{ds}.
 
 The probability for missing values is controlled by \code{p}. If \code{p} is
 a single number, then the overall probability for a value to be missing will
