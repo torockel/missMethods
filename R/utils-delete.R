@@ -1,5 +1,30 @@
 ## Indices for deleting -------------------------------------------------------
 
+#' Get NA indices
+#'
+#' This function determines the (row) indices, for NA values.
+#'
+#' If `n_mis_stochastic` is false and `prob` is not NULL, the call to `sample()`
+#' can be problematic. Details are documented in the test file (weighted
+#' sampling without replacement).
+#'
+#' @param n_mis_stochastic Logical; as always (see for example `delete_MCAR()`).
+#' @param n integer(1); number of objects
+#' @param p probability for a value to be missing. 0 <= p <= 1
+#' @param prob sampling weights for the indices. Probability for a index to be
+#'   missing is proportional to `prob`. For too high values of `p` some of these
+#'   can be scaled down. 0 and `Inf` are possible. Indices with prob == 0 will
+#'   never be returned. Indices with infinite prob will be considered first.
+#'   Only if there are less indices with infinite prob than `n_mis`, the other
+#'   indices will be considered for missing values.
+#' @param n_mis The number of missing values. Normally, `p` should be supplied
+#'   instead of `n_mis`.
+#' @param indices Indices, which could be set NA.
+#' @param warn Should warnings be given?
+#'
+#' @return (row) indices for setting NA
+#'
+#' @noRd
 get_NA_indices <- function(n_mis_stochastic, n = length(indices), p = n_mis / n,
                            prob = NULL,
                            n_mis = round(n * p),
