@@ -20,6 +20,7 @@ controls if the *number of missing values* is stochastic or deterministic.
 ## Miscellaneous
 
 * Evaluation functions can now compare a data frame with a matrix (thanks to Marie Feldhoff for the suggestion).
+* `impute_EM()` now returns the number of performed EM iterations as attribute.
 * `delete_rank()` now hands the agrument `ties.method` over to `rank()`.
 * Fix two tests for `delete_one_group()` (wrong argument `FUN` instead of `cutoff_fun`).
 

@@ -28,6 +28,8 @@ to \code{\link[norm:em.norm]{norm::em.norm()}}.}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values.
+
+The number of EM iterations are added as an attribute (\code{iterations}).
 }
 \description{
 Impute missing values in a data frame or a matrix using parameters estimated

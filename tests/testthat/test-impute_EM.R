@@ -33,13 +33,13 @@ test_that("impute_EM() works (basic test)", {
   expect_equal(
     impute_EM(data.frame(X = 1:4, Y = c(1:3, NA)), stochastic = FALSE),
     data.frame(X = 1:4, Y = 1:4),
-    tolerance = 0.1
+    tolerance = 0.1, check.attributes = FALSE
   )
 
   expect_equal(
     impute_EM(data.frame(X = 1:4, Y = c(1:3, NA)), stochastic = TRUE),
     data.frame(X = 1:4, Y = 1:4),
-    tolerance = 0.2
+    tolerance = 0.2, check.attributes = FALSE
   )
 })
 
@@ -55,7 +55,7 @@ test_that("impute_EM() works with problematic Sigma", {
   )
   expect_equal(ds_imp,
     data.frame(X = 1:5, Y = 11:15, Z = c(21:23, 22.99986, 22.99986)),
-    tolerance = 1e-5
+    tolerance = 1e-5, check.attributes = FALSE
   )
 })
 
@@ -70,4 +70,12 @@ test_that("impute_EM() works (check output of 100 x 7 matrix)", {
     ds_imp
     ds_imp_stoch
   })
+})
+
+test_that("impute_EM() add iterations as attribute", {
+  set.seed(123)
+  ds_orig <- mvtnorm::rmvnorm(20, rep(0, 3))
+  ds_mis <- delete_MCAR(ds_orig, p = 0.2)
+  ds_imp <- impute_EM(ds_mis, stochastic = FALSE)
+  expect_true(is.numeric(attr(ds_imp, "iterations", TRUE)))
 })

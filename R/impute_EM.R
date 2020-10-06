@@ -80,6 +80,8 @@ get_EM_parameters <- function(ds, maxits = 1000, criterion = 0.0001) {
 #'   to [norm::em.norm()].
 #' @param verbose Should messages be given for special cases (see details)?
 #'
+#' @return The number of EM iterations are added as an attribute (`iterations`).
+#'
 #' @export
 #'
 #' @seealso
@@ -99,10 +101,13 @@ impute_EM <- function(ds,
                       verbose = FALSE) {
   EM_parm <- get_EM_parameters(ds, maxits = maxits, criterion = criterion)
 
-  impute_expected_values(ds,
-    mu = EM_parm$mu,
-    S = EM_parm$sigma,
-    stochastic = stochastic,
-    verbose = verbose
+  structure(
+    impute_expected_values(ds,
+      mu = EM_parm$mu,
+      S = EM_parm$sigma,
+      stochastic = stochastic,
+      verbose = verbose
+    ),
+    iterations = attr(EM_parm, "iterations")
   )
 }
