@@ -5,10 +5,9 @@
 
 <!-- badges: start -->
 
-[![R build
-status](https://github.com/torockel/missMethods/workflows/R-CMD-check/badge.svg)](https://github.com/torockel/missMethods/actions)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/missMethods)](https://CRAN.R-project.org/package=missMethods)
+[![R-CMD-check](https://github.com/torockel/missMethods/workflows/R-CMD-check/badge.svg)](https://github.com/torockel/missMethods/actions)
 <!-- badges: end -->
 
 The goal of missMethods is to make the creation and handling of missing
@@ -34,9 +33,9 @@ devtools::install_github("torockel/missMethods")
 
 missMethods mainly provides three types of functions:
 
-  - `delete_` functions for generating missing values
-  - `impute_` functions for imputing missing values
-  - `evaluate_` functions for evaluating missing data methods
+-   `delete_` functions for generating missing values
+-   `impute_` functions for imputing missing values
+-   `evaluate_` functions for evaluating missing data methods
 
 Run `help(package = "missMethods")` to see all functions. More details
 for the `delete_` functions are given in a vignette (run

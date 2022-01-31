@@ -16,8 +16,8 @@ knitr::opts_chunk$set(
 # missMethods
 
 <!-- badges: start -->
-[![R build status](https://github.com/torockel/missMethods/workflows/R-CMD-check/badge.svg)](https://github.com/torockel/missMethods/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/missMethods)](https://CRAN.R-project.org/package=missMethods)
+[![R-CMD-check](https://github.com/torockel/missMethods/workflows/R-CMD-check/badge.svg)](https://github.com/torockel/missMethods/actions)
 <!-- badges: end -->
 
 The goal of missMethods is to make the creation and handling of missing data as well as the evaluation of missing data methods easier.
