@@ -29,11 +29,11 @@ median} for ordered factors (see below) and overwrites the error message for
 unordered factors from \code{\link[=median]{median.default}} (hence, the
 function name is median.factor and not median.ordered).
 
-If the length of \code{x} is even, then the median will be the middle value
+If the length of \code{x} is odd, then the median will be the middle value
 of the sorted list of elements from \code{x}. If the length of \code{x} is
-odd and the two middle values of the sorted list of elements from \code{x}
+even and the two middle values of the sorted list of elements from \code{x}
 are equal, then the median is one of these (equal) middle values. The only
-problematic case is an odd length \code{x} with unequal middle values. In
+problematic case is an even length \code{x} with unequal middle values. In
 this case, the median of a numeric vector is normally defined as the mean of
 the two middle values. However, for ordered factors the mean is not defined.
 The argument \code{ordered_low} cures this problem. If \code{ordered_low =
