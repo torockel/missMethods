@@ -1,11 +1,4 @@
 test_that("weighted_av_gmc() works", {
-  gmc_parameters_2d_2k <- list(
-    lambda = c(0.3, 0.7),
-    mu = list(c(0, 0), c(3, 3)),
-    sigma = list(
-      diag(1, 2),
-      diag(1, 2)
-    ))
   expect_equal(
     weighted_av_gmc(list(c(1, 1), c(1, 1)), gmc_parameters_2d_2k, 2),
     c(1, 1)
@@ -30,5 +23,12 @@ test_that("weighted_av_gmc() works", {
   expect_equal(
     weighted_av_gmc(list(c(3, -1), c(3, 7)), gmc_parameters_2d_2k, 2),
     (c(3, -1) * w1 + c(3, 7) * w2) / (w1 + w2)
+  )
+})
+
+test_that("impute_gmc_estimate() works for k = 1", {
+  expect_equal(
+    impute_gmc_estimate(df_XY_X_mis, gmc_parameters_2d_2k, k = 1),
+    impute_expected_values(df_XY_X_mis, gmc_parameters_2d_2k$mu[[1]], S = gmc_parameters_2d_2k$sigma[[1]])
   )
 })
