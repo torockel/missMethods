@@ -1,4 +1,6 @@
-weighted_av_gmc <- function(row_values, gmc_parameters, k) {
+weighted_av_gmc <- function(row_values, gmc_parameters, k,
+                            tolerance_denominator = .Machine$double.xmin,
+                            warn_low_denominator = FALSE) {
   denominator <- 0
   numerator <- 0
   for (i in seq_len(k)) {
@@ -7,14 +9,24 @@ weighted_av_gmc <- function(row_values, gmc_parameters, k) {
     denominator <- denominator + weighted_density_i
     numerator <- numerator + row_values[[i]] * weighted_density_i
   }
-  numerator / denominator
+  if (denominator < tolerance_denominator) { # all densities * lambda close to 0
+    if (warn_low_denominator) {
+      warning("denominator was too low")
+    }
+    return(rowMeans(as.data.frame(row_values)))
+  } else {
+    return(numerator / denominator)
+  }
+
 }
 
+# This function is called EM_estimate in Ouyang et al. 2004
 impute_gmc_estimate <- function(ds, gmc_parameters, k, M = is.na(ds)) {
   ds_imp <- as.matrix(ds) # need a matrix for %*%
   rows_incomplete <- which(apply(M, 1, any))
   for(row_ind in rows_incomplete) {
     M_row_inc <- M[row_ind, ]
+    row_values <- list()
     for (i in seq_len(k)) {
       ## Impute expected values for row_ind with the i-th parameter set -------
       mu <- gmc_parameters$mu[[i]]
@@ -40,11 +52,12 @@ impute_gmc_estimate <- function(ds, gmc_parameters, k, M = is.na(ds)) {
 
       ## Calculate imputation values ----------------------------------------
       y_imp <- y_1_mean + S_12 %*% S_22_inv %*% (y_2 - y_2_mean)
-      ds_imp[row_ind, M_row_inc] <- y_imp
       ##### end copied from impute_expected_values() ##########################
+      row_values[[i]] <- ds_imp[row_ind, ]
+      row_values[[i]][M_row_inc] <- y_imp
     }
+    weighted_av_gmc(row_values, gmc_parameters, k)
+    ds_imp[row_ind, ] <- weighted_av_gmc(row_values, gmc_parameters, k)
   }
   assign_imputed_values(ds, ds_imp, M)
 }
-
-

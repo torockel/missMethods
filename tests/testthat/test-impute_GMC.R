@@ -32,3 +32,21 @@ test_that("impute_gmc_estimate() works for k = 1", {
     impute_expected_values(df_XY_X_mis, gmc_parameters_2d_2k$mu[[1]], S = gmc_parameters_2d_2k$sigma[[1]])
   )
 })
+
+test_that("impute_gmc_estimate() works for k = 2", {
+  set.seed(123)
+  ds <- mvtnorm::rmvnorm(20, c(0, 0))
+  ds[c(1, 3, 5), 1] <- NA
+  ds[c(2, 3, 7), 2] <- NA
+  ds_1 <- impute_expected_values(ds, gmc_parameters_2d_2k$mu[[1]], S = gmc_parameters_2d_2k$sigma[[1]])
+  ds_2 <- impute_expected_values(ds, gmc_parameters_2d_2k$mu[[2]], S = gmc_parameters_2d_2k$sigma[[2]])
+  ds_ges <- ds
+  for (i in 1:7) {
+    row_values <- list(ds_1[i, ], ds_2[i, ])
+    ds_ges[i, ] <- weighted_av_gmc(row_values, gmc_parameters_2d_2k, k = 2)
+  }
+  expect_equal(
+    ds_ges,
+    impute_gmc_estimate(ds, gmc_parameters_2d_2k, k = 2)
+  )
+})
