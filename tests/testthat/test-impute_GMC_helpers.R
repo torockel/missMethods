@@ -1,23 +1,3 @@
-test_that("change_nr() works", {
-  a <- c(1, 2, 2, 3, 3, 3)
-  b <- c(3, 2, 2, 1, 1, 1)
-  expect_equal(
-    change_nr(a, b, i = 1),
-    b
-  )
-  expect_equal(
-    change_nr(a, b, i = 4),
-    b
-  )
-  d <- c(5, 3, 1, 1, 1, 4)
-  expect_equal(
-    change_nr(a, d, i = 1),
-    c(5, a[2:length(a)])
-  )
-  d2 <- c(4, 1, 1, 5, 5, 5)
-  change_nr(a, d2, 1)
-})
-
 test_that("are_clusters_identical() works", {
 
   a <- c(1, 2, 2, 3, 3, 3)
