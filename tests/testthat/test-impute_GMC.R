@@ -61,6 +61,26 @@ test_that("K_estimate() initial imputation works", {
   expect_lt(mean(abs(ds_imp - ds_imp_K_est)), 1)
 })
 
+test_that("K_estimate() works for k = 1", {
+  set.seed(123)
+  ds <- ds_rmvnorm_2d
+
+  # no iterations
+  ds_comp_cases <- ds[complete.cases(ds), ]
+  mu <- colMeans(ds_comp_cases)
+  sigma <- stats::cov(ds_comp_cases)
+  ds_imp <- impute_expected_values(ds, mu, sigma)
+  ds_K_estimate <- K_estimate(ds, k = 1, max_iter = 0)
+  expect_equal(ds_imp, ds_K_estimate, check.attributes = FALSE)
+
+  # one iteration
+  mu <- colMeans(ds_imp)
+  sigma <- stats::cov(ds_imp)
+  ds_imp <- impute_expected_values(ds_imp, mu, sigma, M = is.na(ds))
+  ds_K_estimate <- K_estimate(ds, k = 1, max_iter = 1)
+  expect_equal(ds_imp, ds_K_estimate, check.attributes = FALSE)
+})
+
 test_that("K_estimate() works for k = 2", {
   set.seed(123)
   ds <- ds_rmvnorm_2d

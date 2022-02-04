@@ -65,23 +65,40 @@ impute_gmc_estimate <- function(ds, gmc_parameters, k, M = is.na(ds)) {
 K_estimate <- function(ds, k, M = is.na(ds), max_iter = 10L) {
   rows_comp <- !apply(M, 1, any)
   ds_comp_cases <- ds[rows_comp, ]
-  gmc_parameters <- mixtools::mvnormalmixEM(ds_comp_cases, k = k)
-  ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M)
 
   iter <- 0L
-  assigned_cluster <- NULL
   max_iter_stop <- FALSE
-  while(iter < max_iter) {
-    iter <- iter + 1L
-    gmc_parameters <- mixtools::mvnormalmixEM(ds_imp, k = k)
-    ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M) # M is important!
-    old_assigned_cluster <- assigned_cluster
-    assigned_cluster <- apply(gmc_parameters$posterior, 1, which.max)
-    if (!is.null(old_assigned_cluster) &&
-        are_clusters_identical(old_assigned_cluster, assigned_cluster)) {
-      break()
-    } else if (iter == max_iter) {
-      max_iter_stop <- TRUE
+
+  if (k == 1L) { # special treatment, because mixtools do not like k = 1
+    mu <- colMeans(ds_comp_cases)
+    sigma <- stats::cov(ds_comp_cases)
+    ds_imp <- impute_expected_values(ds, mu, sigma, M = M)
+    if (max_iter >= 1L){
+      # no loop needed because cluster do not change (only one "cluster")
+      iter <- 1L
+      mu <- colMeans(ds_imp)
+      sigma <- stats::cov(ds_imp)
+      ds_imp <- impute_expected_values(ds_imp, mu, sigma, M = M)
+    }
+  } else { # k > 1
+    gmc_parameters <- mixtools::mvnormalmixEM(ds_comp_cases, k = k)
+    ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M)
+
+    iter <- 0L
+    assigned_cluster <- NULL
+    max_iter_stop <- FALSE
+    while(iter < max_iter) {
+      iter <- iter + 1L
+      gmc_parameters <- mixtools::mvnormalmixEM(ds_imp, k = k)
+      ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M) # M is important!
+      old_assigned_cluster <- assigned_cluster
+      assigned_cluster <- apply(gmc_parameters$posterior, 1, which.max)
+      if (!is.null(old_assigned_cluster) &&
+          are_clusters_identical(old_assigned_cluster, assigned_cluster)) {
+        break()
+      } else if (iter == max_iter) {
+        max_iter_stop <- TRUE
+      }
     }
   }
   structure(ds_imp, k = k, iterations = iter, max_iter_stop = max_iter_stop)
