@@ -62,6 +62,16 @@ impute_gmc_estimate <- function(ds, gmc_parameters, k, M = is.na(ds)) {
   assign_imputed_values(ds, ds_imp, M)
 }
 
+get_GMC_parameters <- function(ds, k, ...) {
+  gmc_parameters <- tryCatch(
+    mixtools::mvnormalmixEM(ds, k = k, ...),
+    error = function(cond) {
+      NULL
+    }
+  )
+  gmc_parameters
+}
+
 K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L) {
   rows_comp <- !apply(M, 1, any)
   ds_comp_cases <- ds[rows_comp, ]
@@ -70,24 +80,19 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L) {
   max_iter_stop <- FALSE
   mixtools_error <- FALSE
 
-  if (k == 1L) { # special treatment, because mixtools do not like k = 1
+  if (k == 1L) { # special treatment, because mixtools does not like k = 1
     mu <- colMeans(ds_comp_cases)
     sigma <- stats::cov(ds_comp_cases)
     ds_imp <- impute_expected_values(ds, mu, sigma, M = M)
     if (imp_max_iter >= 1L){
-      # no loop needed because cluster do not change (only one "cluster")
+      # no loop needed because clusters do not change (only one "cluster")
       iter <- 1L
       mu <- colMeans(ds_imp)
       sigma <- stats::cov(ds_imp)
       ds_imp <- impute_expected_values(ds_imp, mu, sigma, M = M)
     }
   } else { # k > 1
-    gmc_parameters <- tryCatch(
-      mixtools::mvnormalmixEM(ds_comp_cases, k = k),
-      error = function(cond) {
-        NULL
-      }
-    )
+    gmc_parameters <- get_GMC_parameters(ds_comp_cases, k = k)
     if (is.null(gmc_parameters)) {
       # mixtools did not like the data set...
       ds_imp <- impute_mean(ds)
@@ -102,12 +107,7 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L) {
       iter <- iter + 1L
 
       # Get GMC parameters, if possible ---------------------------------------
-      gmc_parameters <- tryCatch(
-        mixtools::mvnormalmixEM(ds_imp, k = k),
-        error = function(cond) {
-          NULL
-        }
-      )
+      gmc_parameters <- get_GMC_parameters(ds_imp, k = k)
       if (is.null(gmc_parameters)) { # no GMC parameters -> finish loop
         mixtools_error <- TRUE
         break()
