@@ -82,8 +82,18 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L) {
       ds_imp <- impute_expected_values(ds_imp, mu, sigma, M = M)
     }
   } else { # k > 1
-    gmc_parameters <- mixtools::mvnormalmixEM(ds_comp_cases, k = k)
-    ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M)
+    gmc_parameters <- tryCatch(
+      mixtools::mvnormalmixEM(ds_comp_cases, k = k),
+      error = function(cond) {
+        NULL
+      }
+    )
+    if (is.null(gmc_parameters)) {
+      # mixtools did not like the data set...
+      ds_imp <- impute_mean(ds)
+    } else {
+      ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M)
+    }
 
     iter <- 0L
     assigned_cluster <- NULL
