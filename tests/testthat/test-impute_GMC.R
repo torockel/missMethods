@@ -90,3 +90,27 @@ test_that("K_estimate() works for k = 2", {
   expect_false(anyNA(ds_imp))
   expect_true(attr(ds_imp, "mixtools_error"))
 })
+
+test_that("K_estimate() works for k = 3 with three clusters", {
+  set.seed(123)
+  mu_low <- -10
+  mu_mid <- 20
+  mu_high <- -20
+  ds <- rbind(
+    mvtnorm::rmvnorm(50, c(-10, mu_low)),
+    mvtnorm::rmvnorm(50, c(10, mu_mid)),
+    mvtnorm::rmvnorm(50, c(20, mu_high))
+  )
+  ind_mis_low <- c(1, 4, 10)
+  ind_mis_mid <- c(55, 60, 73, 84)
+  ind_mis_high <- c(112, 133)
+  ds[c(ind_mis_low, ind_mis_mid, ind_mis_high), 2] <- NA
+  ds_imp <- K_estimate(ds, k = 3)
+
+  expect_true(mean(abs(ds_imp[ind_mis_low, 2] - mu_low)) < 2)
+  expect_true(mean(abs(ds_imp[ind_mis_mid, 2] - mu_mid)) < 2)
+  expect_true(mean(abs(ds_imp[ind_mis_high, 2] - mu_high)) < 2)
+
+  ds_imp2 <- K_estimate(ds, k = 2) # errors without tryCatch initial imputation
+})
+
