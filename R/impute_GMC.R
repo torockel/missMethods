@@ -62,7 +62,7 @@ impute_gmc_estimate <- function(ds, gmc_parameters, k, M = is.na(ds)) {
   assign_imputed_values(ds, ds_imp, M)
 }
 
-K_estimate <- function(ds, k, M = is.na(ds), max_iter = 10L) {
+K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L) {
   rows_comp <- !apply(M, 1, any)
   ds_comp_cases <- ds[rows_comp, ]
 
@@ -74,7 +74,7 @@ K_estimate <- function(ds, k, M = is.na(ds), max_iter = 10L) {
     mu <- colMeans(ds_comp_cases)
     sigma <- stats::cov(ds_comp_cases)
     ds_imp <- impute_expected_values(ds, mu, sigma, M = M)
-    if (max_iter >= 1L){
+    if (imp_max_iter >= 1L){
       # no loop needed because cluster do not change (only one "cluster")
       iter <- 1L
       mu <- colMeans(ds_imp)
@@ -88,7 +88,7 @@ K_estimate <- function(ds, k, M = is.na(ds), max_iter = 10L) {
     iter <- 0L
     assigned_cluster <- NULL
     max_iter_stop <- FALSE
-    while(iter < max_iter) {
+    while(iter < imp_max_iter) {
       iter <- iter + 1L
 
       # Get GMC parameters, if possible ---------------------------------------
@@ -110,7 +110,7 @@ K_estimate <- function(ds, k, M = is.na(ds), max_iter = 10L) {
       if (!is.null(old_assigned_cluster) &&
           are_clusters_identical(old_assigned_cluster, assigned_cluster)) {
         break()
-      } else if (iter == max_iter) {
+      } else if (iter == imp_max_iter) {
         max_iter_stop <- TRUE
       }
     }

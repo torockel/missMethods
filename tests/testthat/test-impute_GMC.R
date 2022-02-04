@@ -55,7 +55,7 @@ test_that("K_estimate() initial imputation works", {
   ds_comp <- ds[complete.cases(ds), ]
   gmc_paras <- mixtools::mvnormalmixEM(ds_comp, k = 2)
   ds_imp <- impute_gmc_estimate(ds, gmc_paras, k = 2)
-  ds_imp_K_est <- K_estimate(ds, k = 2, max_iter = 0)
+  ds_imp_K_est <- K_estimate(ds, k = 2, imp_max_iter = 0)
   expect_false(anyNA(ds_imp_K_est))
   skip_on_cran() # to random (=risky) for CRAN
   expect_lt(mean(abs(ds_imp - ds_imp_K_est)), 1)
@@ -70,14 +70,14 @@ test_that("K_estimate() works for k = 1", {
   mu <- colMeans(ds_comp_cases)
   sigma <- stats::cov(ds_comp_cases)
   ds_imp <- impute_expected_values(ds, mu, sigma)
-  ds_K_estimate <- K_estimate(ds, k = 1, max_iter = 0)
+  ds_K_estimate <- K_estimate(ds, k = 1, imp_max_iter = 0)
   expect_equal(ds_imp, ds_K_estimate, check.attributes = FALSE)
 
   # one iteration
   mu <- colMeans(ds_imp)
   sigma <- stats::cov(ds_imp)
   ds_imp <- impute_expected_values(ds_imp, mu, sigma, M = is.na(ds))
-  ds_K_estimate <- K_estimate(ds, k = 1, max_iter = 1)
+  ds_K_estimate <- K_estimate(ds, k = 1, imp_max_iter = 1)
   expect_equal(ds_imp, ds_K_estimate, check.attributes = FALSE)
 })
 
