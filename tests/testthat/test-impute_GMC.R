@@ -61,3 +61,14 @@ test_that("K_estimate() initial imputation works", {
   expect_lt(mean(abs(ds_imp - ds_imp_K_est)), 1)
 })
 
+test_that("K_estimate() works for k = 2", {
+  set.seed(123)
+  ds <- ds_rmvnorm_2d
+  ds_imp <- K_estimate(ds, k = 2)
+  expect_false(anyNA(ds_imp))
+  K_estimate(ds, k = 2) # noch ein tryCatch um mixtools
+
+
+})
+
+# k = 1 muss ich extra machen! mvnormalmixEM will kein k = 1

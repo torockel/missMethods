@@ -62,15 +62,27 @@ impute_gmc_estimate <- function(ds, gmc_parameters, k, M = is.na(ds)) {
   assign_imputed_values(ds, ds_imp, M)
 }
 
-K_estimate <- function(ds, k, M = is.na(ds), max_iter = 10) {
+K_estimate <- function(ds, k, M = is.na(ds), max_iter = 10L) {
   rows_comp <- !apply(M, 1, any)
   ds_comp_cases <- ds[rows_comp, ]
   gmc_parameters <- mixtools::mvnormalmixEM(ds_comp_cases, k = k)
   ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M)
 
-  iter <- 1
-  while(iter <= max_iter) {
-    # update ds_imp
+  iter <- 0L
+  assigned_cluster <- NULL
+  max_iter_stop <- FALSE
+  while(iter < max_iter) {
+    iter <- iter + 1L
+    gmc_parameters <- mixtools::mvnormalmixEM(ds_imp, k = k)
+    ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M) # M is important!
+    old_assigned_cluster <- assigned_cluster
+    assigned_cluster <- apply(gmc_parameters$posterior, 1, which.max)
+    if (!is.null(old_assigned_cluster) &&
+        are_clusters_identical(old_assigned_cluster, assigned_cluster)) {
+      break()
+    } else if (iter == max_iter) {
+      max_iter_stop <- TRUE
+    }
   }
-  ds_imp
+  structure(ds_imp, k = k, iterations = iter, max_iter_stop = max_iter_stop)
 }
