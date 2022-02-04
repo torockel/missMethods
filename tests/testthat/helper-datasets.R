@@ -78,6 +78,10 @@ matrix_classes_test <- as.matrix(df_classes_test)
 matrix_100_2_mis <- matrix_100_2
 matrix_100_2_mis[is.na(df_XY_XY_mis)] <- NA
 
+set.seed(123)
+ds_rmvnorm_2d <- mvtnorm::rmvnorm(20, c(0, 0))
+ds_rmvnorm_2d[c(1, 3, 5), 1] <- NA
+ds_rmvnorm_2d[c(2, 3, 7), 2] <- NA
 
 # define some complete tibbles for testing ------------
 tbl_XY_100 <- tibble::tibble(X = 1:100, Y = 101:200)

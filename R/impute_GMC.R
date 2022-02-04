@@ -61,3 +61,16 @@ impute_gmc_estimate <- function(ds, gmc_parameters, k, M = is.na(ds)) {
   }
   assign_imputed_values(ds, ds_imp, M)
 }
+
+K_estimate <- function(ds, k, M = is.na(ds), max_iter = 10) {
+  rows_comp <- !apply(M, 1, any)
+  ds_comp_cases <- ds[rows_comp, ]
+  gmc_parameters <- mixtools::mvnormalmixEM(ds_comp_cases, k = k)
+  ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M)
+
+  iter <- 1
+  while(iter <= max_iter) {
+    # update ds_imp
+  }
+  ds_imp
+}
