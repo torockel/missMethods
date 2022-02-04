@@ -86,7 +86,7 @@ test_that("K_estimate() works for k = 2", {
   ds <- ds_rmvnorm_2d
   ds_imp <- K_estimate(ds, k = 2)
   expect_false(anyNA(ds_imp))
-  ds_imp <- K_estimate(ds, k = 2) # without tryCatch() this throws an error
+  ds_imp <- K_estimate(ds, k = 2, max_tries_restart = 1L) # without tryCatch() this throws an error
   expect_false(anyNA(ds_imp))
   expect_true(attr(ds_imp, "mixtools_error"))
 })
@@ -112,5 +112,6 @@ test_that("K_estimate() works for k = 3 with three clusters", {
   expect_true(mean(abs(ds_imp[ind_mis_high, 2] - mu_high)) < 2)
 
   ds_imp2 <- K_estimate(ds, k = 2) # errors without tryCatch initial imputation
+  expect_false(anyNA(ds_imp2))
 })
 

@@ -62,17 +62,23 @@ impute_gmc_estimate <- function(ds, gmc_parameters, k, M = is.na(ds)) {
   assign_imputed_values(ds, ds_imp, M)
 }
 
-get_GMC_parameters <- function(ds, k, ...) {
-  gmc_parameters <- tryCatch(
-    mixtools::mvnormalmixEM(ds, k = k, ...),
-    error = function(cond) {
-      NULL
-    }
-  )
+get_GMC_parameters <- function(ds, k, max_tries_restart = 3L, ...) {
+  gmc_parameters <- NULL
+  iter <- 0L
+  # what mixtools should have done:
+  while (is.null(gmc_parameters) && iter < max_tries_restart){
+    iter <- iter + 1L
+    gmc_parameters <- tryCatch(
+      mixtools::mvnormalmixEM(ds, k = k, ...),
+      error = function(cond) {
+        NULL
+      }
+    )
+  }
   gmc_parameters
 }
 
-K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L) {
+K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_restart = 3L) {
   rows_comp <- !apply(M, 1, any)
   ds_comp_cases <- ds[rows_comp, ]
 
@@ -92,7 +98,7 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L) {
       ds_imp <- impute_expected_values(ds_imp, mu, sigma, M = M)
     }
   } else { # k > 1
-    gmc_parameters <- get_GMC_parameters(ds_comp_cases, k = k)
+    gmc_parameters <- get_GMC_parameters(ds_comp_cases, k, max_tries_restart = max_tries_restart)
     if (is.null(gmc_parameters)) {
       # mixtools did not like the data set...
       ds_imp <- impute_mean(ds)
@@ -107,7 +113,7 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L) {
       iter <- iter + 1L
 
       # Get GMC parameters, if possible ---------------------------------------
-      gmc_parameters <- get_GMC_parameters(ds_imp, k = k)
+      gmc_parameters <- get_GMC_parameters(ds_imp, k = k, max_tries_restart = max_tries_restart)
       if (is.null(gmc_parameters)) { # no GMC parameters -> finish loop
         mixtools_error <- TRUE
         break()
