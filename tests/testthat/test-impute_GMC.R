@@ -86,9 +86,7 @@ test_that("K_estimate() works for k = 2", {
   ds <- ds_rmvnorm_2d
   ds_imp <- K_estimate(ds, k = 2)
   expect_false(anyNA(ds_imp))
-  K_estimate(ds, k = 2) # noch ein tryCatch um mixtools
-
-
+  ds_imp <- K_estimate(ds, k = 2) # without tryCatch() this throws an error
+  expect_false(anyNA(ds_imp))
+  expect_true(attr(ds_imp, "mixtools_error"))
 })
-
-# k = 1 muss ich extra machen! mvnormalmixEM will kein k = 1

@@ -68,6 +68,7 @@ K_estimate <- function(ds, k, M = is.na(ds), max_iter = 10L) {
 
   iter <- 0L
   max_iter_stop <- FALSE
+  mixtools_error <- FALSE
 
   if (k == 1L) { # special treatment, because mixtools do not like k = 1
     mu <- colMeans(ds_comp_cases)
@@ -89,7 +90,20 @@ K_estimate <- function(ds, k, M = is.na(ds), max_iter = 10L) {
     max_iter_stop <- FALSE
     while(iter < max_iter) {
       iter <- iter + 1L
-      gmc_parameters <- mixtools::mvnormalmixEM(ds_imp, k = k)
+
+      # Get GMC parameters, if possible ---------------------------------------
+      gmc_parameters <- tryCatch(
+        mixtools::mvnormalmixEM(ds_imp, k = k),
+        error = function(cond) {
+          NULL
+        }
+      )
+      if (is.null(gmc_parameters)) { # no GMC parameters -> finish loop
+        mixtools_error <- TRUE
+        break()
+      }
+
+      # Impute with GMC parameters and check for ending loop ------------------
       ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M) # M is important!
       old_assigned_cluster <- assigned_cluster
       assigned_cluster <- apply(gmc_parameters$posterior, 1, which.max)
@@ -101,5 +115,5 @@ K_estimate <- function(ds, k, M = is.na(ds), max_iter = 10L) {
       }
     }
   }
-  structure(ds_imp, k = k, iterations = iter, max_iter_stop = max_iter_stop)
+  structure(ds_imp, k = k, iterations = iter, max_iter_stop = max_iter_stop, mixtools_error = mixtools_error)
 }
