@@ -56,7 +56,6 @@ impute_gmc_estimate <- function(ds, gmc_parameters, k, M = is.na(ds)) {
       row_values[[i]] <- ds_imp[row_ind, ]
       row_values[[i]][M_row_inc] <- y_imp
     }
-    weighted_av_gmc(row_values, gmc_parameters, k)
     ds_imp[row_ind, ] <- weighted_av_gmc(row_values, gmc_parameters, k)
   }
   assign_imputed_values(ds, ds_imp, M)
