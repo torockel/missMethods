@@ -134,9 +134,31 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_resta
   structure(ds_imp, k = k, iterations = iter, max_iter_stop = max_iter_stop, mixtools_error = mixtools_error)
 }
 
+#' Gaussian mixture clustering imputation
+#'
+#' Impute missing values in a data frame or a matrix using parameters estimated
+#' via Gaussian mixture clustering
+#'
+#' @template impute
+#'
+#' @param k_max maximum number of clusters (called `S` by Ouyang et al. (2004))
+#' @param imp_max_iter maximum number of iterations for `K_estimate()`
+#'
+#' @details
+#' This function performs Gaussin mixture clustering (GMC) imputation as
+#' described by Ouyang et al. (2004).
+#'
+#' @references Ouyang, M., Welsh, W. J., Georgopoulos, P. (2004): Gaussian
+#'   Mixture Clustering and Imputation of Microarray Data.
+#'   \emph{Bioinformatics}, 20(6), 917–923
+#'
+#' @export
 impute_GMC <- function(ds, k_max, imp_max_iter = 10L) {
   M <- is.na(ds)
   res <- list()
+  if (!requireNamespace("mixtools", quietly = TRUE)) {
+   stop("Package \"mixtools\" needed. Please, install it.")
+  }
   for (i in seq_len(k_max)) {
     res[[i]] <- K_estimate(ds, k = i, M = M, imp_max_iter = imp_max_iter)
   }
