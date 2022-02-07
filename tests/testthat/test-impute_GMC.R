@@ -115,3 +115,27 @@ test_that("K_estimate() works for k = 3 with three clusters", {
   expect_false(anyNA(ds_imp2))
 })
 
+test_that("impute_GMC() works for k_max = 3", {
+  set.seed(12345)
+  mu_low <- -10
+  mu_mid <- 20
+  mu_high <- -20
+  ds <- rbind(
+    mvtnorm::rmvnorm(50, c(-10, mu_low)),
+    mvtnorm::rmvnorm(50, c(10, mu_mid)),
+    mvtnorm::rmvnorm(50, c(20, mu_high))
+  )
+  ind_mis_low <- c(1, 4, 10)
+  ind_mis_mid <- c(55, 60, 73, 84)
+  ind_mis_high <- c(112, 133)
+  ind_mis <- c(ind_mis_low, ind_mis_mid, ind_mis_high)
+  ds[ind_mis, 2] <- NA
+  ds_imp1 <- K_estimate(ds, k = 1)
+  ds_imp2 <- K_estimate(ds, k = 2)
+  ds_imp3 <- K_estimate(ds, k = 3)
+  ds_test <- (ds_imp1 + ds_imp2 + ds_imp3) / 3
+  ds_imp_GMC <- impute_GMC(ds, 3)
+  expect_false(anyNA(ds_imp_GMC))
+  skip_on_cran() # too risky for CRAN
+  expect_true(mean(abs(ds_test[ind_mis, 2] - ds_imp_GMC[ind_mis, 2])) < 5)
+})

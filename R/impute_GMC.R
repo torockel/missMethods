@@ -20,7 +20,7 @@ weighted_av_gmc <- function(row_values, gmc_parameters, k,
 
 }
 
-# This function is called EM_estimate in Ouyang et al. 2004
+# This function is called EM_estimate() in Ouyang et al. 2004
 impute_gmc_estimate <- function(ds, gmc_parameters, k, M = is.na(ds)) {
   ds_imp <- as.matrix(ds) # need a matrix for %*%
   rows_incomplete <- which(apply(M, 1, any))
@@ -132,4 +132,14 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_resta
     }
   }
   structure(ds_imp, k = k, iterations = iter, max_iter_stop = max_iter_stop, mixtools_error = mixtools_error)
+}
+
+impute_GMC <- function(ds, k_max, imp_max_iter = 10L) {
+  M <- is.na(ds)
+  res <- list()
+  for (i in seq_len(k_max)) {
+    res[[i]] <- K_estimate(ds, k = i, M = M, imp_max_iter = imp_max_iter)
+  }
+  ds_imp <- Reduce("+", res) / k_max
+  assign_imputed_values(ds, ds_imp, M)
 }
