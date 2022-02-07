@@ -170,12 +170,11 @@ test_that("impute_GMC() works for k_max = 3", {
   expect_true(mean(abs(ds_test[ind_mis, 2] - ds_imp_GMC[ind_mis, 2])) < 5)
 })
 
-test_that("impute_GMC() works with no complete obs")
-
 test_that("impute_GMC() works with data frames", {
   expect_false(anyNA(impute_GMC(df_XY_XY_mis, 2)))
-  cbind(df_XY_no_comp_obs, impute_GMC(df_XY_no_comp_obs, 2))
+  expect_false(anyNA(impute_GMC(df_XY_no_comp_obs, 2)))
+})
 
-
-  impute_EM(df_XY_no_comp_obs)
+test_that("impute_GMC() works with tibbles", {
+  expect_false(anyNA(impute_GMC(tbl_XY_XY_mis, 2)))
 })
