@@ -22,7 +22,8 @@ via Gaussian mixture clustering
 }
 \details{
 This function performs Gaussin mixture clustering (GMC) imputation as
-described by Ouyang et al. (2004).
+described by Ouyang et al. (2004). The clustering is done via
+[mixtools::mvnormalmixEM()] and can take some time.
 }
 \references{
 Ouyang, M., Welsh, W. J., Georgopoulos, P. (2004): Gaussian
