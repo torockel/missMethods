@@ -117,6 +117,32 @@ test_that("K_estimate() works for k = 3 with three clusters", {
 
 test_that("K_estimate() works with no complete observation", {
   expect_false(anyNA(K_estimate(df_XY_no_comp_obs, 1)))
+  set.seed(123)
+  mu_low <- -20
+  mu_mid <- 0
+  mu_high <- 20
+  ds <- rbind(
+    mvtnorm::rmvnorm(50, rep(mu_low, 3)),
+    mvtnorm::rmvnorm(50, rep(mu_mid, 3)),
+    mvtnorm::rmvnorm(50, rep(mu_high, 3))
+  )
+  M <- matrix(c(TRUE, FALSE, FALSE,
+                TRUE, TRUE, FALSE,
+                FALSE, TRUE, FALSE,
+                FALSE, FALSE, TRUE,
+                TRUE, FALSE, TRUE),
+              nrow = nrow(ds), ncol = ncol(ds), byrow = TRUE)
+  M <- matrix(c(TRUE, FALSE, FALSE,
+                FALSE, TRUE, FALSE,
+                FALSE, FALSE, TRUE),
+              nrow = nrow(ds), ncol = ncol(ds), byrow = TRUE)
+  ds_no_comp_obs <- ds
+  ds_no_comp_obs[M] <- NA
+  ds_imp <- K_estimate(ds_no_comp_obs, 3)
+  expect_false(anyNA(ds_imp))
+  # but results are not really sensible, gmc does not finde the clusters:
+  # mu_matrix <- matrix(rep(c(mu_low, mu_mid, mu_high), each = 150), nrow = 150, byrow = TRUE)
+  # ds_imp[M] - mu_matrix[M]
 })
 
 test_that("impute_GMC() works for k_max = 3", {
@@ -142,4 +168,14 @@ test_that("impute_GMC() works for k_max = 3", {
   expect_false(anyNA(ds_imp_GMC))
   skip_on_cran() # too risky for CRAN
   expect_true(mean(abs(ds_test[ind_mis, 2] - ds_imp_GMC[ind_mis, 2])) < 5)
+})
+
+test_that("impute_GMC() works with no complete obs")
+
+test_that("impute_GMC() works with data frames", {
+  expect_false(anyNA(impute_GMC(df_XY_XY_mis, 2)))
+  cbind(df_XY_no_comp_obs, impute_GMC(df_XY_no_comp_obs, 2))
+
+
+  impute_EM(df_XY_no_comp_obs)
 })

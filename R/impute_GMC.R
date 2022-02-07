@@ -105,7 +105,7 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_resta
     gmc_parameters <- get_GMC_parameters(ds_comp_cases, k, max_tries_restart = max_tries_restart)
     if (is.null(gmc_parameters)) {
       # mixtools did not like the data set...
-      ds_imp <- impute_mean(ds)
+      ds_imp <- impute_sRHD(ds) # "better" than mean imputation?
     } else {
       ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M)
     }
