@@ -115,6 +115,10 @@ test_that("K_estimate() works for k = 3 with three clusters", {
   expect_false(anyNA(ds_imp2))
 })
 
+test_that("K_estimate() works with no complete observation", {
+  expect_false(anyNA(K_estimate(df_XY_no_comp_obs, 1)))
+})
+
 test_that("impute_GMC() works for k_max = 3", {
   set.seed(12345)
   mu_low <- -10

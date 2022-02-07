@@ -87,9 +87,13 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_resta
   mixtools_error <- FALSE
 
   if (k == 1L) { # special treatment, because mixtools does not like k = 1
-    mu <- colMeans(ds_comp_cases)
-    sigma <- stats::cov(ds_comp_cases)
-    ds_imp <- impute_expected_values(ds, mu, sigma, M = M)
+    if (nrow(ds_comp_cases) <= 3) { # 3 or less comp observed objects
+      ds_imp <- impute_mean(ds)
+    } else {
+      mu <- colMeans(ds_comp_cases)
+      sigma <- stats::cov(ds_comp_cases)
+      ds_imp <- impute_expected_values(ds, mu, sigma, M = M)
+    }
     if (imp_max_iter >= 1L){
       # no loop needed because clusters do not change (only one "cluster")
       iter <- 1L
