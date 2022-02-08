@@ -4,13 +4,7 @@ are_clusters_identical <- function(clus1, clus2) {
   if (length(values_unique1) != length(values_unique2)) {
     return(FALSE)
   }
-  for(i in seq_along(values_unique1)) {
-    # compare "normalized" clusters
-    if (any((clus1 == values_unique1[i]) != (clus2 == values_unique2[i]))) {
-      return(FALSE)
-    }
-  }
-  TRUE
+  all(match(clus1, values_unique1) == match(clus2, values_unique2))
 }
 
 matrix_from_lower_tri_values <- function(lower_tri_values, dim_m) {
