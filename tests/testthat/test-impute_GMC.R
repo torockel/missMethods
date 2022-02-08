@@ -88,7 +88,7 @@ test_that("K_estimate() works for k = 1", {
 test_that("K_estimate() works for k = 2", {
   set.seed(123)
   ds <- ds_rmvnorm_2d
-  ds_imp <- K_estimate(ds, k = 2)
+  ds_imp <- K_estimate(ds, k = 2) # even with tryCatch() this throws an error but it works anyway...
   expect_false(anyNA(ds_imp))
   ds_imp <- K_estimate(ds, k = 2, max_tries_restart = 1L) # without tryCatch() this throws an error
   expect_false(anyNA(ds_imp))
