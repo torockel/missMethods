@@ -5,7 +5,7 @@ weighted_av_gmc <- function(row_values, gmc_parameters, k,
   numerator <- 0
   for (i in seq_len(k)) {
     weighted_density_i <- gmc_parameters$lambda[i] *
-      mixtools::dmvnorm(row_values[[i]], gmc_parameters$mu[[i]], gmc_parameters$sigma[[i]])
+      EMCluster::dmvn(row_values[[i]], gmc_parameters$mu[i, ], gmc_parameters$LTSigma[i, ])
     denominator <- denominator + weighted_density_i
     numerator <- numerator + row_values[[i]] * weighted_density_i
   }
@@ -29,7 +29,7 @@ impute_gmc_estimate <- function(ds, gmc_parameters, k, M = is.na(ds)) {
     row_values <- list()
     for (i in seq_len(k)) {
       ## Impute expected values for row_ind with the i-th parameter set -------
-      mu <- gmc_parameters$mu[[i]]
+      mu <- gmc_parameters$mu[i, ]
       S <- gmc_parameters$sigma[[i]]
       ##### copied from impute_expected_values() ##############################
       y_1_mean <- mu[M_row_inc] # mu for not observed part of row i
@@ -62,19 +62,35 @@ impute_gmc_estimate <- function(ds, gmc_parameters, k, M = is.na(ds)) {
 }
 
 get_GMC_parameters <- function(ds, k, max_tries_restart = 3L, ...) {
+  # gmc_parameters <- EMCluster::emcluster(
+  #   ds,
+  #   emobj = EMCluster::simple.init(ds, nclass = k), EMC = EMCluster::.EMC,
+  #   assign.class = TRUE
+  #   )
   gmc_parameters <- NULL
   iter <- 0L
   # mixtools may fails and needs a manual restart...
   while (is.null(gmc_parameters) && iter < max_tries_restart){
     iter <- iter + 1L
     gmc_parameters <- tryCatch(
-      mixtools::mvnormalmixEM(ds, k = k, ...),
+      EMCluster::emcluster(
+        ds,
+        emobj = EMCluster::simple.init(ds, nclass = k), EMC = EMCluster::.EMC,
+        assign.class = TRUE
+      ),
       error = function(cond) {
         NULL
       }
     )
   }
-  gmc_parameters
+
+  list(
+    lambda = gmc_parameters$pi,
+    mu = gmc_parameters$Mu,
+    sigma = get_cov_matrices(gmc_parameters$LTSigma, ncol(ds)),
+    LTSigma = gmc_parameters$LTSigma,
+    class = gmc_parameters$class
+  )
 }
 
 K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_restart = 3L) {
@@ -125,7 +141,7 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_resta
       # Impute with GMC parameters and check for ending loop ------------------
       ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M) # M is important!
       old_assigned_cluster <- assigned_cluster
-      assigned_cluster <- apply(gmc_parameters$posterior, 1, which.max)
+      assigned_cluster <- gmc_parameters$class
       if (!is.null(old_assigned_cluster) &&
           are_clusters_identical(old_assigned_cluster, assigned_cluster)) {
         break()

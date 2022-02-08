@@ -102,8 +102,10 @@ tbl_XY_XY_mis[c(2, 4, 5, 30:50), "Y"] <- NA
 ## Define some stuff for impute_gmc() -----------------------------------------
 gmc_parameters_2d_2k <- list(
   lambda = c(0.3, 0.7),
-  mu = list(c(0, 0), c(3, 3)),
+  mu = matrix(c(0, 0, 3, 3), nrow = 2, byrow = TRUE),
   sigma = list(
     diag(1, 2),
     diag(1, 2)
-  ))
+  ),
+  LTSigma = matrix(c(1, 0, 1, 1, 0, 1), nrow = 2, byrow = TRUE)
+  )

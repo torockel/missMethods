@@ -23,3 +23,35 @@ test_that("are_clusters_identical() works", {
   expect_false(are_clusters_identical(a, b_not_a3))
 
 })
+
+test_that("matrix_from_lower_tri_values() works", {
+  test_matrix <- matrix(1:49, 7)
+  test_matrix[upper.tri(test_matrix)] <- t(test_matrix)[upper.tri(test_matrix)]
+  expect_true(isSymmetric(test_matrix))
+  expect_equal( # upper.tri() is correct because of order of LTSigma from EMClust
+    matrix_from_lower_tri_values(test_matrix[upper.tri(test_matrix, TRUE)], 7),
+    test_matrix
+  )
+})
+
+test_that("get_cov_matrices() works", {
+  LTSigma <- structure(c(
+    0.0034, 0.0194, 0.0035, -7e-04, 0.0051, -0.0013,
+    0.0022, 0.0141, 0.0016, -0.0023, 0.0084, 0, 0.0012, 0.0012, 7e-04,
+    0.0044, 0.0152, 0.0033
+  ), .Dim = c(3L, 6L))
+  res_expected <- list(structure(c(
+    0.0034, -7e-04, -0.0023, -7e-04, 0.0022, 0.0012,
+    -0.0023, 0.0012, 0.0044
+  ), .Dim = c(3L, 3L)), structure(c(
+    0.0194,
+    0.0051, 0.0084, 0.0051, 0.0141, 0.0012, 0.0084, 0.0012, 0.0152
+  ), .Dim = c(3L, 3L)), structure(c(
+    0.0035, -0.0013, 0, -0.0013,
+    0.0016, 7e-04, 0, 7e-04, 0.0033
+  ), .Dim = c(3L, 3L)))
+  expect_equal(
+    get_cov_matrices(LTSigma, 3),
+    res_expected
+  )
+})
