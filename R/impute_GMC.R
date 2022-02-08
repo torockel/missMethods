@@ -14,7 +14,7 @@ weighted_av_gmc <- function(row_values, gmc_parameters, k,
     if (warn_low_denominator) {
       warning("denominator was too low")
     }
-    return(colMeans(as.data.frame(row_values)))
+    return(rowMeans(as.data.frame(row_values)))
   } else {
     return(numerator / denominator)
   }
@@ -22,39 +22,16 @@ weighted_av_gmc <- function(row_values, gmc_parameters, k,
 
 # This function is called EM_estimate() in Ouyang et al. 2004
 impute_gmc_estimate <- function(ds, gmc_parameters, k, M = is.na(ds)) {
-  ds_imp <- as.matrix(ds) # need a matrix for %*%
+  ds_imp <- as.matrix(ds)
+  ds_imp_k <- list()
+  for (i in seq_len(k)) {
+    ds_imp_k[[i]] <- impute_expected_values(ds_imp, gmc_parameters$mu[i, ], gmc_parameters$sigma[[i]], M = M)
+  }
   rows_incomplete <- which(apply(M, 1, any))
   for(row_ind in rows_incomplete) {
-    M_row_inc <- M[row_ind, ]
     row_values <- list()
     for (i in seq_len(k)) {
-      ## Impute expected values for row_ind with the i-th parameter set -------
-      mu <- gmc_parameters$mu[i, ]
-      S <- gmc_parameters$sigma[[i]]
-      ##### copied from impute_expected_values() ##############################
-      y_1_mean <- mu[M_row_inc] # mu for not observed part of row i
-      y_2_mean <- mu[!M_row_inc] # mu for observed part of row i
-      y_2 <- ds_imp[row_ind, !M_row_inc] # observed part of row row_ind
-      S_12 <- S[M_row_inc, !M_row_inc, drop = FALSE] # part of covariance matrix (not observed, observed)
-      S_22 <- S[!M_row_inc, !M_row_inc, drop = FALSE] # part of covariance matrix (observed, observed)
-
-      ## Calculate S_22_inv -------------------------------------------------
-      S_22_inv <- tryCatch(solve(S_22), # try to invert S_22
-                           error = function(cond) { # S_22 not invertible or no observed value in row i
-                             NULL
-                           }
-      )
-
-      if (is.null(S_22_inv)) { # S_22 was not invertible
-        # Assigning a 0-matrix to S_22_inv will impute mu
-        S_22_inv <- matrix(0, nrow = nrow(S_22), ncol = nrow(S_22))
-      }
-
-      ## Calculate imputation values ----------------------------------------
-      y_imp <- y_1_mean + S_12 %*% S_22_inv %*% (y_2 - y_2_mean)
-      ##### end copied from impute_expected_values() ##########################
-      row_values[[i]] <- ds_imp[row_ind, ]
-      row_values[[i]][M_row_inc] <- y_imp
+      row_values[[i]] <- ds_imp_k[[i]][row_ind, ]
     }
     ds_imp[row_ind, ] <- weighted_av_gmc(row_values, gmc_parameters, k)
   }
