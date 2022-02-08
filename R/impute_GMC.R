@@ -14,11 +14,10 @@ weighted_av_gmc <- function(row_values, gmc_parameters, k,
     if (warn_low_denominator) {
       warning("denominator was too low")
     }
-    return(rowMeans(as.data.frame(row_values)))
+    return(colMeans(as.data.frame(row_values)))
   } else {
     return(numerator / denominator)
   }
-
 }
 
 # This function is called EM_estimate() in Ouyang et al. 2004
