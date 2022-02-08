@@ -120,7 +120,9 @@ test_that("K_estimate() works for k = 3 with three clusters", {
 })
 
 test_that("K_estimate() works with no complete observation", {
-  expect_false(anyNA(K_estimate(df_XY_no_comp_obs, 1)))
+  ds_imp_no_comp <- K_estimate(df_XY_no_comp_obs, 1)
+  expect_equal(dim(ds_imp_no_comp), dim(df_XY_no_comp_obs))
+  expect_false(anyNA(ds_imp_no_comp))
   set.seed(123)
   mu_low <- -20
   mu_mid <- 0
@@ -169,10 +171,17 @@ test_that("impute_GMC() works for k_max = 3", {
 })
 
 test_that("impute_GMC() works with data frames", {
-  expect_false(anyNA(impute_GMC(df_XY_XY_mis, 2)))
-  expect_false(anyNA(impute_GMC(df_XY_no_comp_obs, 2)))
+  ds_imp_df <- impute_GMC(df_XY_XY_mis, 2)
+  expect_equal(dim(ds_imp_df), dim(df_XY_XY_mis))
+  expect_false(anyNA(ds_imp_df))
+  ds_imp_df <- impute_GMC(df_XY_no_comp_obs, 2)
+  expect_equal(dim(ds_imp_df), dim(df_XY_no_comp_obs))
+  expect_false(anyNA(ds_imp_df))
 })
 
 test_that("impute_GMC() works with tibbles", {
-  expect_false(anyNA(impute_GMC(tbl_XY_XY_mis, 2)))
+  ds_imp_tibble <- impute_GMC(tbl_XY_XY_mis, 2)
+  expect_equal(dim(ds_imp_tibble), dim(tbl_XY_XY_mis))
+  expect_false(anyNA(ds_imp_tibble))
 })
+
