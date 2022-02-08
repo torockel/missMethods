@@ -62,14 +62,9 @@ impute_gmc_estimate <- function(ds, gmc_parameters, k, M = is.na(ds)) {
 }
 
 get_GMC_parameters <- function(ds, k, max_tries_restart = 3L, ...) {
-  # gmc_parameters <- EMCluster::emcluster(
-  #   ds,
-  #   emobj = EMCluster::simple.init(ds, nclass = k), EMC = EMCluster::.EMC,
-  #   assign.class = TRUE
-  #   )
   gmc_parameters <- NULL
   iter <- 0L
-  # mixtools may fails and needs a manual restart...
+  # GMC may fails and needs a manual restart...
   while (is.null(gmc_parameters) && iter < max_tries_restart){
     iter <- iter + 1L
     gmc_parameters <- tryCatch(
@@ -80,10 +75,15 @@ get_GMC_parameters <- function(ds, k, max_tries_restart = 3L, ...) {
       ),
       error = function(cond) {
         NULL
+      },
+      warning = function(cond) {
+        NULL
       }
     )
   }
-
+  if(is.null(gmc_parameters)) {
+    return(NULL)
+  }
   list(
     lambda = gmc_parameters$pi,
     mu = gmc_parameters$Mu,
