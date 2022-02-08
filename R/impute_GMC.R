@@ -64,6 +64,10 @@ impute_gmc_estimate <- function(ds, gmc_parameters, k, M = is.na(ds)) {
 get_GMC_parameters <- function(ds, k, max_tries_restart = 3L, ...) {
   gmc_parameters <- NULL
   iter <- 0L
+  if (nrow(ds) <= 2 * k) {
+    return(NULL) # EMCluster does not like such things...
+    # https://github.com/snoweye/EMCluster/issues/9
+  }
   # GMC may fails and needs a manual restart...
   while (is.null(gmc_parameters) && iter < max_tries_restart){
     iter <- iter + 1L

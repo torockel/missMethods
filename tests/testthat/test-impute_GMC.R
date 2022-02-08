@@ -131,12 +131,6 @@ test_that("K_estimate() works with no complete observation", {
     mvtnorm::rmvnorm(50, rep(mu_high, 3))
   )
   M <- matrix(c(TRUE, FALSE, FALSE,
-                TRUE, TRUE, FALSE,
-                FALSE, TRUE, FALSE,
-                FALSE, FALSE, TRUE,
-                TRUE, FALSE, TRUE),
-              nrow = nrow(ds), ncol = ncol(ds), byrow = TRUE)
-  M <- matrix(c(TRUE, FALSE, FALSE,
                 FALSE, TRUE, FALSE,
                 FALSE, FALSE, TRUE),
               nrow = nrow(ds), ncol = ncol(ds), byrow = TRUE)
@@ -144,7 +138,7 @@ test_that("K_estimate() works with no complete observation", {
   ds_no_comp_obs[M] <- NA
   ds_imp <- K_estimate(ds_no_comp_obs, 3)
   expect_false(anyNA(ds_imp))
-  # but results are not really sensible, gmc does not finde the clusters:
+  # but results are not really sensible, gmc does not find the clusters:
   # mu_matrix <- matrix(rep(c(mu_low, mu_mid, mu_high), each = 150), nrow = 150, byrow = TRUE)
   # ds_imp[M] - mu_matrix[M]
 })
