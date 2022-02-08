@@ -93,60 +93,43 @@ get_GMC_parameters <- function(ds, k, max_tries_restart = 3L, ...) {
 }
 
 K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_restart = 3L) {
+
+  # Inital imputation using only the complete rows for GMC --------------------
   rows_comp <- !apply(M, 1, any)
   ds_comp_cases <- ds[rows_comp, ]
 
+  gmc_parameters <- get_GMC_parameters(ds_comp_cases, k, max_tries_restart = max_tries_restart)
+  if (is.null(gmc_parameters)) {
+    # GMC did not like the data set (did not work)...
+    ds_imp <- impute_sRHD(ds) # "better" than mean imputation?
+  } else {
+    ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M)
+  }
+
+  # Iterative imputation ------------------------------------------------------
   iter <- 0L
+  assigned_cluster <- NULL
   max_iter_stop <- FALSE
   gmc_error <- FALSE
+  while(iter < imp_max_iter) {
+    iter <- iter + 1L
 
-  if (k == 1L) { # special treatment, because mixtools does not like k = 1 (is this still needed for EMCLuster?)
-    if (nrow(ds_comp_cases) <= 3) { # 3 or less comp observed objects
-      ds_imp <- impute_mean(ds)
-    } else {
-      mu <- colMeans(ds_comp_cases)
-      sigma <- stats::cov(ds_comp_cases)
-      ds_imp <- impute_expected_values(ds, mu, sigma, M = M)
-    }
-    if (imp_max_iter >= 1L){
-      # no loop needed because clusters do not change (only one "cluster")
-      iter <- 1L
-      mu <- colMeans(ds_imp)
-      sigma <- stats::cov(ds_imp)
-      ds_imp <- impute_expected_values(ds_imp, mu, sigma, M = M)
-    }
-  } else { # k > 1
-    gmc_parameters <- get_GMC_parameters(ds_comp_cases, k, max_tries_restart = max_tries_restart)
-    if (is.null(gmc_parameters)) {
-      # GMC did not like the data set (did not work)...
-      ds_imp <- impute_sRHD(ds) # "better" than mean imputation?
-    } else {
-      ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M)
+    # Get GMC parameters, if possible ---------------------------------------
+    gmc_parameters <- get_GMC_parameters(ds_imp, k = k, max_tries_restart = max_tries_restart)
+    if (is.null(gmc_parameters)) { # no GMC parameters -> finish loop
+      gmc_error <- TRUE
+      break()
     }
 
-    iter <- 0L
-    assigned_cluster <- NULL
-    max_iter_stop <- FALSE
-    while(iter < imp_max_iter) {
-      iter <- iter + 1L
-
-      # Get GMC parameters, if possible ---------------------------------------
-      gmc_parameters <- get_GMC_parameters(ds_imp, k = k, max_tries_restart = max_tries_restart)
-      if (is.null(gmc_parameters)) { # no GMC parameters -> finish loop
-        gmc_error <- TRUE
-        break()
-      }
-
-      # Impute with GMC parameters and check for ending loop ------------------
-      ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M) # M is important!
-      old_assigned_cluster <- assigned_cluster
-      assigned_cluster <- gmc_parameters$class
-      if (!is.null(old_assigned_cluster) &&
-          are_clusters_identical(old_assigned_cluster, assigned_cluster)) {
-        break()
-      } else if (iter == imp_max_iter) {
-        max_iter_stop <- TRUE
-      }
+    # Impute with GMC parameters and check for ending loop ------------------
+    ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M) # M is important!
+    old_assigned_cluster <- assigned_cluster
+    assigned_cluster <- gmc_parameters$class
+    if (!is.null(old_assigned_cluster) &&
+        are_clusters_identical(old_assigned_cluster, assigned_cluster)) {
+      break()
+    } else if (iter == imp_max_iter) {
+      max_iter_stop <- TRUE
     }
   }
   structure(ds_imp, k = k, iterations = iter, max_iter_stop = max_iter_stop, gmc_error = gmc_error)
