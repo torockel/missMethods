@@ -131,11 +131,9 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_resta
 #'
 #' @export
 impute_GMC <- function(ds, k_max, imp_max_iter = 10L) {
+  check_for_packages("EMCluster")
   M <- is.na(ds)
   res <- list()
-  if (!requireNamespace("EMCluster", quietly = TRUE)) {
-   stop("Package \"EMCluster\" needed. Please, install it.")
-  }
   for (i in seq_len(k_max)) {
     res[[i]] <- K_estimate(ds, k = i, M = M, imp_max_iter = imp_max_iter)
   }
