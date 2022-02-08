@@ -21,10 +21,10 @@ BugReports: https://github.com/torockel/missMethods/issues
 Imports: 
     stats
 Suggests: 
+    EMCluster,
     ggplot2,
     knitr,
     lpSolve,
-    mixtools,
     mvtnorm,
     norm,
     rmarkdown,

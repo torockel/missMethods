@@ -34,3 +34,13 @@ get_cov_matrices <- function(LTSigma, dim_m) {
   }
   res
 }
+
+transform_gmc_parameters <- function(gmc_parameters, ds) {
+  list(
+    lambda = gmc_parameters$pi,
+    mu = gmc_parameters$Mu,
+    sigma = get_cov_matrices(gmc_parameters$LTSigma, ncol(ds)),
+    LTSigma = gmc_parameters$LTSigma,
+    class = gmc_parameters$class
+  )
+}

@@ -84,13 +84,7 @@ get_GMC_parameters <- function(ds, k, max_tries_restart = 3L, ...) {
   if(is.null(gmc_parameters)) {
     return(NULL)
   }
-  list(
-    lambda = gmc_parameters$pi,
-    mu = gmc_parameters$Mu,
-    sigma = get_cov_matrices(gmc_parameters$LTSigma, ncol(ds)),
-    LTSigma = gmc_parameters$LTSigma,
-    class = gmc_parameters$class
-  )
+  transform_gmc_parameters(gmc_parameters, ds)
 }
 
 K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_restart = 3L) {
@@ -99,9 +93,9 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_resta
 
   iter <- 0L
   max_iter_stop <- FALSE
-  mixtools_error <- FALSE
+  gmc_error <- FALSE
 
-  if (k == 1L) { # special treatment, because mixtools does not like k = 1
+  if (k == 1L) { # special treatment, because mixtools does not like k = 1 (is this still needed for EMCLuster?)
     if (nrow(ds_comp_cases) <= 3) { # 3 or less comp observed objects
       ds_imp <- impute_mean(ds)
     } else {
@@ -119,7 +113,7 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_resta
   } else { # k > 1
     gmc_parameters <- get_GMC_parameters(ds_comp_cases, k, max_tries_restart = max_tries_restart)
     if (is.null(gmc_parameters)) {
-      # mixtools did not like the data set...
+      # GMC did not like the data set (did not work)...
       ds_imp <- impute_sRHD(ds) # "better" than mean imputation?
     } else {
       ds_imp <- impute_gmc_estimate(ds, gmc_parameters, k = k, M = M)
@@ -134,7 +128,7 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_resta
       # Get GMC parameters, if possible ---------------------------------------
       gmc_parameters <- get_GMC_parameters(ds_imp, k = k, max_tries_restart = max_tries_restart)
       if (is.null(gmc_parameters)) { # no GMC parameters -> finish loop
-        mixtools_error <- TRUE
+        gmc_error <- TRUE
         break()
       }
 
@@ -150,7 +144,7 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_resta
       }
     }
   }
-  structure(ds_imp, k = k, iterations = iter, max_iter_stop = max_iter_stop, mixtools_error = mixtools_error)
+  structure(ds_imp, k = k, iterations = iter, max_iter_stop = max_iter_stop, gmc_error = gmc_error)
 }
 
 #' Gaussian mixture clustering imputation
@@ -165,8 +159,7 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_resta
 #'
 #' @details
 #' This function performs Gaussin mixture clustering (GMC) imputation as
-#' described by Ouyang et al. (2004). The clustering is done via
-#' [mixtools::mvnormalmixEM()] and can take some time.
+#' described by Ouyang et al. (2004).
 #'
 #' @references Ouyang, M., Welsh, W. J., Georgopoulos, P. (2004): Gaussian
 #'   Mixture Clustering and Imputation of Microarray Data.
@@ -176,8 +169,8 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_resta
 impute_GMC <- function(ds, k_max, imp_max_iter = 10L) {
   M <- is.na(ds)
   res <- list()
-  if (!requireNamespace("mixtools", quietly = TRUE)) {
-   stop("Package \"mixtools\" needed. Please, install it.")
+  if (!requireNamespace("EMCluster", quietly = TRUE)) {
+   stop("Package \"EMCluster\" needed. Please, install it.")
   }
   for (i in seq_len(k_max)) {
     res[[i]] <- K_estimate(ds, k = i, M = M, imp_max_iter = imp_max_iter)

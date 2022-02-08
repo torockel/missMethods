@@ -83,6 +83,13 @@ ds_rmvnorm_2d <- mvtnorm::rmvnorm(20, c(0, 0))
 ds_rmvnorm_2d[c(1, 3, 5), 1] <- NA
 ds_rmvnorm_2d[c(2, 3, 7), 2] <- NA
 
+ds_2d_2clust <- rbind(
+  mvtnorm::rmvnorm(50, c(5, 5)),
+  mvtnorm::rmvnorm(50, c(-5, -5))
+)
+ds_2d_2clust[c(1, 5, 55, 80, 91), 1 ] <- NA
+ds_2d_2clust[c(2, 5, 56, 81), 2] <- NA
+
 # define some complete tibbles for testing ------------
 tbl_XY_100 <- tibble::tibble(X = 1:100, Y = 101:200)
 tbl_XY_20 <- tibble::tibble(X = 1:20, Y = 101:120)

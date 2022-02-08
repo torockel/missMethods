@@ -51,14 +51,18 @@ test_that("impute_gmc_estimate() works for k = 2", {
 
 test_that("K_estimate() initial imputation works", {
   set.seed(123)
-  ds <- ds_rmvnorm_2d
+  ds <- ds_2d_2clust
   ds_comp <- ds[complete.cases(ds), ]
-  gmc_paras <- mixtools::mvnormalmixEM(ds_comp, k = 2)
-  # ds_imp <- impute_gmc_estimate(ds, gmc_paras, k = 2)
+  gmc_paras <- EMCluster::emcluster(
+    ds_comp,
+    emobj = EMCluster::simple.init(ds_comp, nclass = 2), EMC = EMCluster::.EMC,
+    assign.class = TRUE
+  )
+  ds_imp <- impute_gmc_estimate(ds, transform_gmc_parameters(gmc_paras, ds), k = 2)
   ds_imp_K_est <- K_estimate(ds, k = 2, imp_max_iter = 0)
   expect_false(anyNA(ds_imp_K_est))
-  # skip_on_cran() # to random (=risky) for CRAN
-  # expect_lt(mean(abs(ds_imp - ds_imp_K_est)), 1)
+  skip_on_cran() # to random (=risky) for CRAN
+  expect_lt(mean(abs(ds_imp - ds_imp_K_est)), 1)
 })
 
 test_that("K_estimate() works for k = 1", {
@@ -88,7 +92,7 @@ test_that("K_estimate() works for k = 2", {
   expect_false(anyNA(ds_imp))
   ds_imp <- K_estimate(ds, k = 2, max_tries_restart = 1L) # without tryCatch() this throws an error
   expect_false(anyNA(ds_imp))
-  expect_true(attr(ds_imp, "mixtools_error"))
+  expect_true(attr(ds_imp, "gmc_error"))
 })
 
 test_that("K_estimate() works for k = 3 with three clusters", {
