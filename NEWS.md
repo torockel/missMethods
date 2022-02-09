@@ -33,6 +33,7 @@
 * Fix two tests for `delete_one_group()` (wrong argument `FUN` instead of 
   `cutoff_fun`).
 * Correct documentation of `median.factor()` (thanks to @labachevskij).
+* Remove LazyData from DESCRIPTION (fix for a CRAN NOTE).
 
 
 # missMethods 0.2.0
