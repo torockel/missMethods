@@ -104,7 +104,6 @@ delete_MNAR_one_group <- function(ds, p, cols_mis,
                                   ordered_as_unordered = FALSE,
                                   n_mis_stochastic = FALSE, ...,
                                   miss_cols, stochastic) {
-
   do.call(delete_values, c(
     list(mechanism = "MNAR", mech_type = "one_group"),
     as.list(environment()), list(...)

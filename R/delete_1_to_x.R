@@ -27,10 +27,12 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
   # Check x_stochastic
   stopifnot(is.logical(x_stochastic), length(x_stochastic) == 1L)
   if (!x_stochastic && n_mis_stochastic) {
-    warning("x_stochastic is set to TRUE because x_stochastic = FALSE",
-    " is only meaningful for n_mis_stochastic = FALSE.",
-    " If you want x_stochastic = FALSE, set n_mis_stochastic = FALSE, which is",
-    " TRUE right now.")
+    warning(
+      "x_stochastic is set to TRUE because x_stochastic = FALSE",
+      " is only meaningful for n_mis_stochastic = FALSE.",
+      " If you want x_stochastic = FALSE, set n_mis_stochastic = FALSE, which is",
+      " TRUE right now."
+    )
     x_stochastic <- TRUE
   }
 
@@ -47,7 +49,7 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
       warning("column ", cols_ctrl[i], " is constant, effectively MCAR")
       na_indices <- get_NA_indices(n_mis_stochastic, n = nrow(ds), p = p[i])
     } else if (x_stochastic) {
-      prob = rep(1, nrow(ds))
+      prob <- rep(1, nrow(ds))
       prob[groups$g2] <- x
       na_indices <- get_NA_indices(n_mis_stochastic, nrow(ds), p = p[i], prob = prob)
     } else if (!n_mis_stochastic) {
@@ -83,7 +85,6 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
       if (n_mis_stochastic) { # n_mis_stochastic = TRUE ------------------
         na_indices_g1 <- get_NA_indices(n_mis_stochastic, p = p_mis_g1, indices = groups$g1)
         na_indices_g2 <- get_NA_indices(n_mis_stochastic, p = p_mis_g2, indices = groups$g2)
-
       } else { # n_mis_stochastic = FALSE ------------------
         n_mis <- round(p[i] * n)
         n_mis_g1 <- calc_n_mis_g1(nr_g1, p_mis_g1, nr_g2, n_mis, x)
@@ -116,7 +117,7 @@ check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
   cols_prob <- integer(0)
   for (k in seq_along(cols_ctrl)) {
     if (!(is.ordered(ds[, cols_ctrl[k], drop = TRUE]) |
-          is.numeric(ds[, cols_ctrl[k], drop = TRUE]))) {
+      is.numeric(ds[, cols_ctrl[k], drop = TRUE]))) {
       cols_prob <- c(cols_prob, cols_ctrl[k])
     }
   }

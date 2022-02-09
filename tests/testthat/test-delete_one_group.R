@@ -139,7 +139,7 @@ test_that("delete_one_group() and delete_MAR_one_group() works", {
 test_that("delete_one_group() works with high p", {
   old <- options("missMethods.warn.too.high.p" = TRUE)
   df_mis <- expect_warning(
-     delete_MAR_one_group(df_XY_20, 0.7, "X", "Y"),
+    delete_MAR_one_group(df_XY_20, 0.7, "X", "Y"),
     "p = 0.7 is too high for the chosen mechanims \\(and data);it will be reduced to 0.5"
   )
   expect_equal(count_NA(df_mis), c(X = 10, Y = 0))

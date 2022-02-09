@@ -58,8 +58,7 @@ delete_MCAR <- function(ds, p, cols_mis = seq_len(ncol(ds)),
 }
 
 .delete_MCAR <- function(ds, p, cols_mis = seq_len(ncol(ds)),
-                        n_mis_stochastic = FALSE, p_overall = FALSE, miss_cols) {
-
+                         n_mis_stochastic = FALSE, p_overall = FALSE, miss_cols) {
   n <- nrow(ds)
   if (!p_overall || n_mis_stochastic) {
     for (i in seq_along((cols_mis))) {

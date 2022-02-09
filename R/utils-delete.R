@@ -43,8 +43,10 @@ get_NA_indices <- function(n_mis_stochastic, n = length(indices), p = n_mis / n,
   if (!is.null(prob) && n_mis_max < n * p) {
     max_p <- n_mis_max / n
     if (warn) {
-      warning("p = ", p, " is too high for the chosen mechanims (and data);",
-              "it will be reduced to ", max_p)
+      warning(
+        "p = ", p, " is too high for the chosen mechanims (and data);",
+        "it will be reduced to ", max_p
+      )
     }
     p <- max_p
     n_mis <- n_mis_max
@@ -58,7 +60,8 @@ get_NA_indices <- function(n_mis_stochastic, n = length(indices), p = n_mis / n,
       # Only indices with prob == Inf should have missing values
       p <- p * n / n_inf
       return(Recall(
-        n_mis_stochastic, p = p, n_mis = n_mis,
+        n_mis_stochastic,
+        p = p, n_mis = n_mis,
         indices = which(prob_inf), prob = NULL
       ))
     } else { # Less prob_inf then missing values
@@ -77,9 +80,11 @@ get_NA_indices <- function(n_mis_stochastic, n = length(indices), p = n_mis / n,
 
   ## Check for too high prob values -------------------------------------------
   prob_scaled <- prob / sum(prob)
-  if(!is.null(prob) && any(prob_scaled > 1 / (n * p)) && warn) {
-    warning("p or some prob values are too high;",
-            " the too high prob values will be scaled down.")
+  if (!is.null(prob) && any(prob_scaled > 1 / (n * p)) && warn) {
+    warning(
+      "p or some prob values are too high;",
+      " the too high prob values will be scaled down."
+    )
   }
 
   ## Get NA indices -----------------------------------------------------------
@@ -205,7 +210,7 @@ find_groups_by_values <- function(x, values) {
 ## More helpers ---------------------------------------------------------------
 
 calc_n_mis_g1 <- function(nr_g1, p_mis_g1,
-                           nr_g2, n_mis, x) {
+                          nr_g2, n_mis, x) {
   if (n_mis == 0L) {
     n_mis_g1 <- 0L
   } else if (nr_g2 == 0L) {

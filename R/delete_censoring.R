@@ -12,7 +12,8 @@ delete_censoring <- function(ds, p, cols_mis, cols_ctrl,
     if (sorting) {
       expected_n_mis <- nrow(ds) * p[i]
       n_mis <- ifelse(n_mis_stochastic,
-                      ceiling(expected_n_mis), round(expected_n_mis))
+        ceiling(expected_n_mis), round(expected_n_mis)
+      )
       if (n_mis > 0) { # to avoid problems with seq and n_mis == 0
         ordered_indices <- order(ds_cols_ctrl_i)
         na_indices <- switch(where,

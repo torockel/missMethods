@@ -210,7 +210,8 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 test_that("delete_1_to_x() checks x_stochastic", {
   expect_warning(
     delete_MNAR_1_to_x(
-      df_XY_2, 0.2, "X", 3, n_mis_stochastic = TRUE, x_stochastic = FALSE
+      df_XY_2, 0.2, "X", 3,
+      n_mis_stochastic = TRUE, x_stochastic = FALSE
     ),
     "x_stochastic is set to TRUE because x_stochastic = FALSE is only"
   )
@@ -231,7 +232,8 @@ test_that("delete_1_to_x() works with x_stochastic = TRUE", {
   res <- matrix(nrow = N, ncol = 2)
   for (i in seq_len(N)) {
     df_mis <- delete_MNAR_1_to_x(
-      df_XY_20, 0.3, "X", x = 10,
+      df_XY_20, 0.3, "X",
+      x = 10,
       x_stochastic = TRUE, n_mis_stochastic = TRUE
     )
     res[i, 1] <- sum(is.na(df_mis[, "X"]))
@@ -241,8 +243,8 @@ test_that("delete_1_to_x() works with x_stochastic = TRUE", {
   n_g1_mis <- sum(res[, 2])
   expect_true(stats::qbinom(1e-10, N * 20, 0.3) <= n_mis)
   expect_true(n_mis <= stats::qbinom(1e-10, N * 20, 0.3, FALSE))
-  expect_true(stats::qbinom(1e-10, N * 10, 2/11 * 0.3) <= n_g1_mis)
-  expect_true(n_g1_mis <= stats::qbinom(1e-10, N * 10, 2/11 * 0.3, FALSE))
+  expect_true(stats::qbinom(1e-10, N * 10, 2 / 11 * 0.3) <= n_g1_mis)
+  expect_true(n_g1_mis <= stats::qbinom(1e-10, N * 10, 2 / 11 * 0.3, FALSE))
 
   # n_mis_stochastic = FALSE just calls base::sample()!
   # see notes in tests for get_NA_indices()
@@ -283,7 +285,8 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 
   # n_mis_stochastic = TRUE
   tbl_mis <- delete_MAR_1_to_x(
-    tbl_XY_100, 0.6, 1, 2, x = 5,
+    tbl_XY_100, 0.6, 1, 2,
+    x = 5,
     n_mis_stochastic = TRUE, x_stochastic = TRUE
   )
   expect_equal(count_NA(tbl_mis[51:100, ]), c(X = 50, Y = 0))

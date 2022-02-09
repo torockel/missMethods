@@ -149,7 +149,7 @@ test_that("calc_evaluation_criterion() accepts a data frame and a matrix", {
       data.frame(X = 1:10, Y = 21:30),
       matrix(c(1:10, 20:29), ncol = 2)
     ),
-    sqrt(1/2)
+    sqrt(1 / 2)
   )
 
   expect_equal(
@@ -157,7 +157,7 @@ test_that("calc_evaluation_criterion() accepts a data frame and a matrix", {
       matrix(c(1:10, 20:29), ncol = 2),
       data.frame(X = 1:10, Y = 21:30)
     ),
-    sqrt(1/2)
+    sqrt(1 / 2)
   )
 })
 
