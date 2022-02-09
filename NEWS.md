@@ -1,28 +1,38 @@
-# missMethods (development version)
+# missMethods 0.3.0
 
 ## Update of delete_ functions
 
 ### User-visible changes
 
-* Now all `delete_` functions have the argument `n_mis_stochastic`. For some
-functions this is only a renaming of the old `stochastic` argument (e. g. `delete_MCAR()`), for others
-this is completely new. The new name emphasis that this argument
-controls if the *number of missing values* is stochastic or deterministic. 
-* The new argument `x_stochastic` is added to `delete_MAR_1_to_x()` and `delete_MNAR_1_to_x()`.
-* Add the (package-wide) option `missMethods.warn.too.high.p` to control the display of warnings for too high values of `p` (the probability for a missing value).
+* All `delete_` functions have the argument `n_mis_stochastic` now. For some
+  functions, this is only a renaming of the old `stochastic` argument (e.g.
+  `delete_MCAR()`), for others this is completely new. The new name emphasis 
+  that this argument controls if the *number of missing values* is stochastic 
+  or deterministic. 
+* `delete_MAR_1_to_x()` and `delete_MNAR_1_to_x()` get a new argument 
+  `x_stochastic` along the line of `n_mis_stochastic`.
+* Add the (package-wide) option `missMethods.warn.too.high.p` to control the 
+  displaying of warnings for too high values of `p` (the probability for a 
+  value to be missing).
 
 ### Internal
 
-* To new function `delete_values()` and `get_NA_indices()` centralize many of the steps of the old (not exported) `delete_` functions.
-* All `delete_MAR_` and `delete_MNAR_` functions and `delete_MCAR()` call the new function `delete_values()`. All common steps of the delete functions are centralized in this new function. This should ease the maintenance of the `delete_` functions.
-* Most of the `delete_` function now use the new `get_NA_indices()` to determine the missing values. 
+* `delete_values()` and `get_NA_indices()` centralize many steps of the old 
+  (not exported) `delete_` functions. 
+* All `delete_MAR_` and `delete_MNAR_` functions and `delete_MCAR()` call the 
+  new `delete_values()` function now. 
+* Most of the `delete_` functions use the new `get_NA_indices()` to determine
+  the missing values. 
 
 ## Miscellaneous
 
-* Evaluation functions can now compare a data frame with a matrix (thanks to Marie Feldhoff for the suggestion).
+* Evaluation functions can now compare a data frame with a matrix (thanks to 
+  Marie Feldhoff for the suggestion).
 * `impute_EM()` now returns the number of performed EM iterations as attribute.
 * `delete_rank()` now hands the agrument `ties.method` over to `rank()`.
-* Fix two tests for `delete_one_group()` (wrong argument `FUN` instead of `cutoff_fun`).
+* Fix two tests for `delete_one_group()` (wrong argument `FUN` instead of 
+  `cutoff_fun`).
+* Correct documentation of `median.factor()` (thanks to @labachevskij).
 
 
 # missMethods 0.2.0
@@ -45,7 +55,7 @@ controls if the *number of missing values* is stochastic or deterministic.
 * rename of `cols` variables: now all should be named `cols_mis`, `cols_ctrl` etc.
 * rename of `ds` variables: now all should be named `ds_imp`, `ds_orig` etc.
 * rename of `pars` variables: now all should be named `pars_est` or `pars_true`
-* sampling of sRHD type `cols_seq` is no correct, if the donor is only one numeric value
+* sampling of sRHD type `cols_seq` is now correct, if the donor is only one numeric value
 * use markdown for documentation of new functions
 
 # missMethods 0.1.0
