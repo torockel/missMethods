@@ -1,6 +1,6 @@
 Package: missMethods
 Title: Methods for Missing Data
-Version: 0.2.0.9000
+Version: 0.3.0
 Authors@R: 
     person("Tobias", "Rockel", , "Rockel.To@gmail.com", role = c("aut", "cre"))
 Description: Supply functions for the creation and handling of missing
