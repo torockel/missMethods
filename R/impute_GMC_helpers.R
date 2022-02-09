@@ -7,24 +7,10 @@ are_clusters_identical <- function(clus1, clus2) {
   all(match(clus1, values_unique1) == match(clus2, values_unique2))
 }
 
-matrix_from_lower_tri_values <- function(lower_tri_values, dim_m) {
-  M <- matrix(0, dim_m, dim_m)
-  ind_values <- 1L
-  for(i in seq_len(dim_m)) {
-    for(j in seq_len(i)) {
-      M[i, j] <- lower_tri_values[ind_values]
-      ind_values <- ind_values + 1L
-    }
-  }
-  # M[lower.tri(M, TRUE)] <- lower_tri_values # does not work because of order of lower_tri_values
-  M[upper.tri(M)] <- t(M)[upper.tri(M)]
-  M
-}
-
 get_cov_matrices <- function(LTSigma, dim_m) {
   res <- list()
   for(i in seq_len(nrow(LTSigma))) {
-    res[[i]] <- matrix_from_lower_tri_values(LTSigma[i, ], dim_m)
+    res[[i]] <- EMCluster::LTsigma2var(LTSigma[i, ], dim_m)
   }
   res
 }
