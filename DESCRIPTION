@@ -2,14 +2,11 @@ Package: missMethods
 Title: Methods for Missing Data
 Version: 0.2.0.9000
 Authors@R: 
-    person(given = "Tobias",
-           family = "Rockel",
-           role = c("aut", "cre"),
-           email = "Rockel.To@gmail.com")
-Description: Supply functions for the creation and handling of
-    missing data as well as tools to evaluate missing data methods. Nearly
-    all possibilities of generating missing data discussed by Santos et
-    al. (2019) <doi:10.1109/ACCESS.2019.2891360> and some additional are
+    person("Tobias", "Rockel", , "Rockel.To@gmail.com", role = c("aut", "cre"))
+Description: Supply functions for the creation and handling of missing
+    data as well as tools to evaluate missing data methods. Nearly all
+    possibilities of generating missing data discussed by Santos et al.
+    (2019) <doi:10.1109/ACCESS.2019.2891360> and some additional are
     implemented.  Functions are supplied to compare parameter estimates
     and imputed values to true values to evaluate missing data methods.
     Evaluations of these types are done, for example, by Cetin-Berber et
@@ -19,7 +16,8 @@ License: GPL-3
 URL: https://github.com/torockel/missMethods
 BugReports: https://github.com/torockel/missMethods/issues
 Imports: 
-    stats
+    stats,
+    utils
 Suggests: 
     ggplot2,
     knitr,
