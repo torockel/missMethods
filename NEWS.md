@@ -1,3 +1,5 @@
+# missMethods (development version)
+
 # missMethods 0.3.0
 
 ## Update of delete_ functions
