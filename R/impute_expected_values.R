@@ -26,6 +26,11 @@
 #'
 #' @export
 #' @md
+#' @examples
+#' ds_orig <- mvtnorm::rmvnorm(100, rep(0, 2))
+#' ds_mis <- delete_MCAR(ds_orig, p = 0.2)
+#' # impute using true parameters:
+#' ds_imp <- impute_expected_values(ds_mis, mu = c(0, 0), diag(1, 2))
 impute_expected_values <- function(ds, mu, S,
                                    stochastic = FALSE,
                                    M = is.na(ds), verbose = FALSE) {

@@ -45,3 +45,9 @@ with (parts of) \code{mu} (plus a residuum, if \code{stochastich = TRUE}). If
 \code{verbose = TRUE}, these cases will be listed in a message. Otherwise, they
 will be imputed silently.
 }
+\examples{
+ds_orig <- mvtnorm::rmvnorm(100, rep(0, 2))
+ds_mis <- delete_MCAR(ds_orig, p = 0.2)
+# impute using true parameters:
+ds_imp <- impute_expected_values(ds_mis, mu = c(0, 0), diag(1, 2))
+}
