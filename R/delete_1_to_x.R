@@ -236,7 +236,7 @@ check_cols_ctrl_1_to_x <- function(ds, cols_ctrl) {
 #' # either 6 above 2 below (x = 3) or
 #' # 7 above and 1 below (x = 7)
 #' # Too high combination of p and x:
-#' delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3)
+#' tryCatch(delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3), warning = function(w) w)
 delete_MAR_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
                               cutoff_fun = median,
                               prop = 0.5,

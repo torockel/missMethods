@@ -198,7 +198,7 @@ attr(delete_MAR_1_to_x(ds, 0.4, "X", "Y", 7, add_realized_x = TRUE), "realized_x
 # either 6 above 2 below (x = 3) or
 # 7 above and 1 below (x = 7)
 # Too high combination of p and x:
-delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3)
+tryCatch(delete_MAR_1_to_x(ds, 0.9, "X", "Y", 3), warning = function(w) w)
 }
 \references{
 Santos, M. S., Pereira, R. C., Costa, A. F., Soares, J. P.,
