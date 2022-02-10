@@ -35,7 +35,7 @@
 #' @md
 impute_LS_adaptive <- function(ds, k = 10, eps = 1e-6, min_common_obs = 5,
                                r_max_min = 100, p_mis_sim = 0.05,
-                               warn_r_max = TRUE,
+                               warn_r_max = FALSE,
                                verbose_gene = FALSE, verbose_array = FALSE,
                                verbose_gene_p = FALSE, verbose_array_p = FALSE) {
 

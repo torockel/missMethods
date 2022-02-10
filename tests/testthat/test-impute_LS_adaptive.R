@@ -29,7 +29,7 @@ test_that("impute_LS_adaptive() works for data frames", {
   set.seed(123)
   ds_mis <- as.data.frame(mvtnorm::rmvnorm(30, rep(0, 9), diag(2, 9)))
   ds_mis <- delete_MCAR(ds_mis, 0.1)
-  ds_imp <- expect_warning(impute_LS_adaptive(ds_mis),
+  ds_imp <- expect_warning(impute_LS_adaptive(ds_mis, warn_r_max = TRUE),
     "Not enough data for r_max_min = 100. r_max_min reduced to 10!",
     fixed = TRUE,
     all = TRUE
@@ -130,7 +130,7 @@ test_that("impute_LS_adaptive() works with dataset triangle miss", {
   ds_triangle_LS_gene_Bo <- readRDS(test_path(file.path("datasets", "ds_triangle_LS_gene_Bo.rds")))
 
   set.seed(1234)
-  ds_imp <- expect_warning(round(impute_LS_adaptive(ds_triangle_mis, min_common_obs = 5), 3),
+  ds_imp <- expect_warning(round(impute_LS_adaptive(ds_triangle_mis, min_common_obs = 5, warn_r_max = TRUE), 3),
     "Not enough data for r_max_min = 100. r_max_min reduced to 24!",
     fixed = TRUE,
     all = TRUE

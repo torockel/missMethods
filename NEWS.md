@@ -33,6 +33,7 @@
 * Fix two tests for `delete_one_group()` (wrong argument `FUN` instead of 
   `cutoff_fun`).
 * Correct documentation of `median.factor()` (thanks to @labachevskij).
+* `impute_LS_adaptive()` has now the default setting `warn_r_max = FALSE`.
 * Remove LazyData from DESCRIPTION (fix for a CRAN NOTE).
 
 
