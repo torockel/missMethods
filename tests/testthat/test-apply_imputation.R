@@ -229,9 +229,30 @@ test_that("apply_imputation() works with tibbles", {
     )
   }
 
-  # All other tests and there possible errors would highly depend on the
+  # All other tests and their possible errors would highly depend on the
   # version of tibble and are omitted.
 })
+
+# tests for mixed data sets -----------------------------------------
+
+test_that("apply_imputation() works with mixed data frames", {
+  df_imp <- impute_mode(df_mixed_mis, type = "columnwise")
+  expect_false(anyNA(df_imp))
+  expect_equal(
+    sapply(df_imp, class),
+    sapply(df_mixed, class)
+  )
+})
+
+test_that("apply_imputation() works with mixed tibbles", {
+  df_imp <- impute_mode(df_mixed_mis, type = "columnwise")
+  expect_false(anyNA(df_imp))
+  expect_equal(
+    sapply(df_imp, class),
+    sapply(df_mixed, class)
+  )
+})
+
 
 # mean imputation -----------------------------------------
 # most of the general checking is done in apply_imputation(),
