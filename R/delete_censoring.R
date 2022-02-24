@@ -173,7 +173,7 @@ delete_MAR_censoring <- function(ds, p, cols_mis, cols_ctrl, n_mis_stochastic = 
                                  where = "lower", sorting = TRUE,
                                  miss_cols, ctrl_cols) {
   do.call(delete_values, c(
-    list(mechanism = "MAR", mech_type = "censoring"),
+    list(mech_type = "MAR_censoring"),
     as.list(environment())
   ))
 }
@@ -194,7 +194,7 @@ delete_MNAR_censoring <- function(ds, p, cols_mis, n_mis_stochastic = FALSE,
                                   where = "lower", sorting = TRUE,
                                   miss_cols) {
   do.call(delete_values, c(
-    list(mechanism = "MNAR", mech_type = "censoring"),
+    list(mech_type = "MNAR_censoring"),
     as.list(environment())
   ))
 }

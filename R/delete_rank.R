@@ -53,7 +53,7 @@ delete_MAR_rank <- function(ds, p, cols_mis, cols_ctrl, n_mis_stochastic = FALSE
                             ties.method = "average",
                             miss_cols, ctrl_cols) {
   do.call(delete_values, c(
-    list(mechanism = "MAR", mech_type = "rank"),
+    list(mech_type = "MAR_rank"),
     as.list(environment())
   ))
 }
@@ -71,7 +71,7 @@ delete_MNAR_rank <- function(ds, p, cols_mis, n_mis_stochastic = FALSE,
                              ties.method = "average",
                              miss_cols) {
   do.call(delete_values, c(
-    list(mechanism = "MNAR", mech_type = "rank"),
+    list(mech_type = "MNAR_rank"),
     as.list(environment())
   ))
 }

@@ -247,7 +247,7 @@ delete_MAR_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
                               add_realized_x = FALSE, ...,
                               miss_cols, ctrl_cols, stochastic) {
   do.call(delete_values, c(
-    list(mechanism = "MAR", mech_type = "1_to_x"),
+    list(mech_type = "MAR_1_to_x"),
     as.list(environment()), list(...)
   ))
 }
@@ -273,7 +273,7 @@ delete_MNAR_1_to_x <- function(ds, p, cols_mis, x,
                                add_realized_x = FALSE, ...,
                                miss_cols, stochastic) {
   do.call(delete_values, c(
-    list(mechanism = "MNAR", mech_type = "1_to_x"),
+    list(mech_type = "MNAR_1_to_x"),
     as.list(environment()), list(...)
   ))
 }
