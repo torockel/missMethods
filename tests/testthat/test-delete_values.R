@@ -36,6 +36,7 @@ test_that("delete_values() deprecate ctrl_cols", {
   )
 })
 
+
 test_that("delete_values() deprecate stochastic", {
   # use delete_MCAR() as calling function (arbitrary choice)
   expect_error(
@@ -85,6 +86,17 @@ test_that("delete_values() adjusts p", {
       cols_mis = c("X", "Z"), cols_ctrl = c("Y", "Y"), n_mis_stochastic = FALSE
     )),
     c(X = 10, Y = 0, Z = 10)
+  )
+})
+
+
+test_that("delete_values() errors for wrong mech_type", {
+  expect_error(
+    delete_values("not_existing_mech",
+      ds = df_XYZ_100, p = 0.1, cols_mis = 1,
+      n_mis_stochastic = FALSE
+    ),
+    "Invalid missing data mechanismus 'not_existing_mech'"
   )
 })
 

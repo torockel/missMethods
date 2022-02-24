@@ -1,5 +1,9 @@
 # missMethods (development version)
 
+### Internal
+
+* `delete_values()` now only takes `mech_type` and derives `mechanism`.
+
 # missMethods 0.3.0
 
 ## Update of delete_ functions
