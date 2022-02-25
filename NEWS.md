@@ -1,5 +1,8 @@
 # missMethods (development version)
 
+## New functions
+* `simulate_data()` simulates a complete and incomplete data set.
+
 ### Internal
 
 * `delete_values()` now only takes `mech_type` and derives `mechanism`.
