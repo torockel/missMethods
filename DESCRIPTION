@@ -16,13 +16,13 @@ License: GPL-3
 URL: https://github.com/torockel/missMethods
 BugReports: https://github.com/torockel/missMethods/issues
 Imports: 
+    mvtnorm,
     stats,
     utils
 Suggests: 
     ggplot2,
     knitr,
     lpSolve,
-    mvtnorm,
     norm,
     rmarkdown,
     testthat (>= 2.1.0),

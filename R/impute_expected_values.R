@@ -34,9 +34,6 @@
 impute_expected_values <- function(ds, mu, S,
                                    stochastic = FALSE,
                                    M = is.na(ds), verbose = FALSE) {
-  if (stochastic) {
-    check_for_packages("mvtnorm")
-  }
 
   ## Define some variables ----------------------------------------------------
   ds_imp <- as.matrix(ds) # need a matrix for %*%
