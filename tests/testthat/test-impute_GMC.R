@@ -90,9 +90,8 @@ test_that("K_estimate() works for k = 2", {
   ds <- ds_rmvnorm_2d
   ds_imp <- K_estimate(ds, k = 2)
   expect_false(anyNA(ds_imp))
-  ds_imp <- K_estimate(ds, k = 2, max_tries_restart = 1L) # without tryCatch() this throws an error
+  ds_imp <- suppressWarnings(K_estimate(ds, k = 2, max_tries_restart = 1L))
   expect_false(anyNA(ds_imp))
-  expect_true(attr(ds_imp, "gmc_error"))
 })
 
 test_that("K_estimate() works for k = 3 with three clusters", {
@@ -171,16 +170,17 @@ test_that("impute_GMC() works for k_max = 3", {
 })
 
 test_that("impute_GMC() works with data frames", {
-  ds_imp_df <- impute_GMC(df_XY_XY_mis, 2)
+  set.seed(123)
+  ds_imp_df <- suppressWarnings(impute_GMC(df_XY_XY_mis, 2))
   expect_equal(dim(ds_imp_df), dim(df_XY_XY_mis))
   expect_false(anyNA(ds_imp_df))
-  ds_imp_df <- impute_GMC(df_XY_no_comp_obs, 2)
+  ds_imp_df <- suppressWarnings(impute_GMC(df_XY_no_comp_obs, 2))
   expect_equal(dim(ds_imp_df), dim(df_XY_no_comp_obs))
   expect_false(anyNA(ds_imp_df))
 })
 
 test_that("impute_GMC() works with tibbles", {
-  ds_imp_tibble <- impute_GMC(tbl_XY_XY_mis, 2)
+  ds_imp_tibble <- suppressWarnings(impute_GMC(tbl_XY_XY_mis, 2))
   expect_equal(dim(ds_imp_tibble), dim(tbl_XY_XY_mis))
   expect_false(anyNA(ds_imp_tibble))
 })
