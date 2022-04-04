@@ -43,20 +43,20 @@ get_GMC_parameters <- function(ds, k, max_tries_restart = 3L, ...) {
   gmc_parameters <- NULL
   iter <- 0L
   # GMC may fails and needs a manual restart...
-  while (is.null(gmc_parameters) && iter < max_tries_restart){
+  while (!is.list(gmc_parameters) && iter < max_tries_restart){
     iter <- iter + 1L
     gmc_parameters <- tryCatch(
       GMCM::EMAlgorithm(ds, m = k),
       error = function(cond) {
-        NULL
+        cond
       },
       warning = function(cond) {
-        NULL
+        cond
       }
     )
   }
-  if (is.null(gmc_parameters)) {
-    return(NULL)
+  if (is(gmc_parameters, "condition")) {
+    return(gmc_parameters)
   }
   transform_gmc_parameters(gmc_parameters, ds)
 }
@@ -68,7 +68,7 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_resta
   ds_comp_cases <- ds[rows_comp, ]
 
   gmc_parameters <- get_GMC_parameters(ds_comp_cases, k, max_tries_restart = max_tries_restart)
-  if (is.null(gmc_parameters)) {
+  if (is(gmc_parameters, "condition")) {
     # GMC did not like the data set (did not work)...
     ds_imp <- impute_sRHD(ds) # "better" than mean imputation?
   } else {
@@ -85,8 +85,9 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_resta
 
     # Get GMC parameters, if possible ---------------------------------------
     gmc_parameters <- get_GMC_parameters(ds_imp, k = k, max_tries_restart = max_tries_restart)
-    if (is.null(gmc_parameters)) { # no GMC parameters -> finish loop
+    if (is(gmc_parameters, "condition")) { # no GMC parameters -> finish loop
       gmc_error <- TRUE
+      warning("For k = ", k, ", GMC errored with message: ", gmc_parameters, call. = FALSE)
       break()
     }
 
