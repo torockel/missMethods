@@ -49,9 +49,6 @@ get_GMC_parameters <- function(ds, k, max_tries_restart = 3L, ...) {
       GMCM::EMAlgorithm(ds, m = k),
       error = function(cond) {
         cond
-      },
-      warning = function(cond) {
-        cond
       }
     )
   }
