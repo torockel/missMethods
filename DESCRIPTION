@@ -21,8 +21,8 @@ BugReports: https://github.com/torockel/missMethods/issues
 Imports: 
     stats
 Suggests: 
-    EMCluster,
     ggplot2,
+    GMCM,
     knitr,
     lpSolve,
     mvtnorm,

@@ -7,20 +7,12 @@ are_clusters_identical <- function(clus1, clus2) {
   all(match(clus1, values_unique1) == match(clus2, values_unique2))
 }
 
-get_cov_matrices <- function(LTSigma, dim_m) {
-  res <- list()
-  for(i in seq_len(nrow(LTSigma))) {
-    res[[i]] <- EMCluster::LTsigma2var(LTSigma[i, ], dim_m)
-  }
-  res
-}
-
 transform_gmc_parameters <- function(gmc_parameters, ds) {
+  mu <- do.call(rbind, gmc_parameters$theta$mu)
   list(
-    lambda = gmc_parameters$pi,
-    mu = gmc_parameters$Mu,
-    sigma = get_cov_matrices(gmc_parameters$LTSigma, ncol(ds)),
-    LTSigma = gmc_parameters$LTSigma,
-    class = gmc_parameters$class
+    lambda = gmc_parameters$theta$pie,
+    mu = mu,
+    sigma = gmc_parameters$theta$sigma,
+    class = apply(gmc_parameters$kappa, 1, which.max)
   )
 }

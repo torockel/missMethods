@@ -53,11 +53,7 @@ test_that("K_estimate() initial imputation works", {
   set.seed(123)
   ds <- ds_2d_2clust
   ds_comp <- ds[complete.cases(ds), ]
-  gmc_paras <- EMCluster::emcluster(
-    ds_comp,
-    emobj = EMCluster::simple.init(ds_comp, nclass = 2), EMC = EMCluster::.EMC,
-    assign.class = TRUE
-  )
+  gmc_paras <- GMCM::EMAlgorithm(ds_comp, m = 2)
   ds_imp <- impute_gmc_estimate(ds, transform_gmc_parameters(gmc_paras, ds), k = 2)
   ds_imp_K_est <- K_estimate(ds, k = 2, imp_max_iter = 0)
   expect_false(anyNA(ds_imp_K_est))

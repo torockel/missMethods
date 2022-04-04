@@ -5,8 +5,9 @@ weighted_av_gmc <- function(row_values, gmc_parameters, k,
   numerator <- 0
   for (i in seq_len(k)) {
     weighted_density_i <- gmc_parameters$lambda[i] *
-      EMCluster::dmvn(row_values[[i]], gmc_parameters$mu[i, ], gmc_parameters$LTSigma[i, ])
-    weighted_density_i <- ifelse(is.finite(weighted_density_i), weighted_density_i, 0) # https://github.com/snoweye/EMCluster/issues/10
+      GMCM::dmvnormal(matrix(row_values[[i]], nrow = 1), gmc_parameters$mu[i, ], gmc_parameters$sigma[[i]])
+    weighted_density_i <- as.vector(weighted_density_i)
+    weighted_density_i <- ifelse(is.finite(weighted_density_i), weighted_density_i, 0) # sometimes this may occur
     denominator <- denominator + weighted_density_i
     numerator <- numerator + row_values[[i]] * weighted_density_i
   }
@@ -123,11 +124,18 @@ K_estimate <- function(ds, k, M = is.na(ds), imp_max_iter = 10L, max_tries_resta
 #'
 #' @export
 impute_GMC <- function(ds, k_max, imp_max_iter = 10L) {
-  check_for_packages("EMCluster")
+  check_for_packages("GMCM")
+  ds_mat <- ds
+  if (!is.matrix(ds_mat)) {
+    ds_mat <- as.matrix(ds_mat)
+  }
+  if (!is.numeric(ds_mat)){
+    stop("ds must be a numeric matrix or convertible to a numeric matrix")
+  }
   M <- is.na(ds)
   res <- list()
   for (i in seq_len(k_max)) {
-    res[[i]] <- K_estimate(ds, k = i, M = M, imp_max_iter = imp_max_iter)
+    res[[i]] <- K_estimate(ds_mat, k = i, M = M, imp_max_iter = imp_max_iter)
   }
   ds_imp <- Reduce("+", res) / k_max
   assign_imputed_values(ds, ds_imp, M)
