@@ -316,18 +316,15 @@ test_that("delete_MNAR_1_to_x() works", {
   )
 })
 
-## Check check_cols_ctrl_1_to_x() ---------------------------------------------
-test_that("check_cols_ctrl_1_to_x()", {
-  expect_true(check_cols_ctrl_1_to_x(df_XY_100, "X"))
-  expect_error(
-    check_cols_ctrl_1_to_x(
-      data.frame(
-        X = letters,
-        Y = 1:26,
-        Z = LETTERS
-      ),
-      c("X", "Y", "Z")
-    ),
-    "ordered factors;\nproblematic column\\(s): X, Z$"
-  )
+
+## Check delete_MAR_1_to_x() works with unordered cols_ctrl --------------------
+test_that("delete_MAR_1_to_x() works with unorded cols_ctrl", {
+  test <- delete_MAR_1_to_x(data.frame(
+    X1 = letters,
+    X2 = as.factor(LETTERS),
+    Y1 = 1:26,
+    Y2 = 27:52
+  ),
+  0.2, cols_mis = c("Y1", "Y2"), cols_ctrl = c("X1", "X2"), x = 2)
+  expect_equal(count_NA(test), c(X1 = 0, X2 = 0, Y1 = 5, Y2 = 5))
 })

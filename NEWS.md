@@ -3,7 +3,11 @@
 ## New functions
 * `simulate_data()` simulates a complete and incomplete data set.
 
-### Internal
+## Bug fixes
+* `delete_MAR_1_to_x()` and `delete_MNAR_1_to_x()`now handle unordered factors
+  as documented (thanks to Steve Roehrig for reporting).
+
+## Internal
 
 * `delete_values()` now only takes `mech_type` and derives `mechanism`.
 

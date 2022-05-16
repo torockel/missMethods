@@ -11,8 +11,6 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
 
   # General checking of arguments is done in delete_values().
   # Only special cases are checked here.
-  # check if cols_ctrl are numeric or ordered factor
-  check_cols_ctrl_1_to_x(ds, cols_ctrl)
 
   # match cutoff_fun
   cutoff_fun <- match.fun(cutoff_fun)
