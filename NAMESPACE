@@ -2,6 +2,7 @@
 
 S3method(median,factor)
 export(apply_imputation)
+export(count_NA)
 export(delete_MAR_1_to_x)
 export(delete_MAR_censoring)
 export(delete_MAR_one_group)

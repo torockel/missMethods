@@ -2,6 +2,8 @@
 
 ## New functions
 * `simulate_data()` simulates a complete and incomplete data set.
+* `count_NA()` counts the number of missing values in a vector, data frame or 
+  matrix.
 
 ## Bug fixes
 * `delete_MAR_1_to_x()` and `delete_MNAR_1_to_x()`now handle unordered factors

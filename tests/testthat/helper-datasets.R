@@ -1,6 +1,3 @@
-count_NA <- function(ds) colSums(is.na(ds))
-
-
 # define some complete data frames for testing ------------
 df_XY_2 <- data.frame(X = 1:2, Y = 101:102)
 df_XY_20 <- data.frame(X = 1:20, Y = 101:120)
