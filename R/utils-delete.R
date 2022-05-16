@@ -140,11 +140,11 @@ find_groups <- function(x, cutoff_fun, prop, use_lpSolve,
   if (nr_unique == 1) {
     warning("grouping not possible, because x is constant")
     groups <- list(g1 = seq_along(x), g2 = NULL)
-  } else if (is.factor(x) && (ordered_as_unordered || !is.ordered(x))) {
-    groups <- find_groups_by_prop(x, prop = prop, use_lpSolve)
-  } else { # not an (unordered) factor and not constant
+  } else if (is.numeric(x) || (is.ordered(x) && !ordered_as_unordered)) {
     cutoff_fun <- match.fun(cutoff_fun)
     groups <- find_groups_by_cutoff_val(x, cutoff_fun(x, ...))
+  } else { # fallback for not (numeric or ordered factor)
+    groups <- find_groups_by_prop(x, prop = prop, use_lpSolve)
   }
   groups
 }

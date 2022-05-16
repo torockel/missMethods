@@ -256,6 +256,17 @@ test_that("find_groups() treats ordered factors correct", {
   )
 })
 
+test_that("find_groups() treats char vectors correct", {
+  expect_equal(
+    find_groups(
+      x = rep(c("a", "b"), each = 3),  cutoff_fun = median, prop = 0.5,
+      use_lpSolve = TRUE, ordered_as_unordered = FALSE
+    ),
+    list(g1 = 1:3, g2 = 4:6)
+  )
+}
+)
+
 # check find_groups_by_cutoff_val -------------------------
 test_that("find_groups_by_cutoff_val()", {
   expect_equal(
