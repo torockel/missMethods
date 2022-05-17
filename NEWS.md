@@ -6,7 +6,7 @@
   matrix.
 
 ## Bug fixes
-* `delete_MAR_1_to_x()` and `delete_MNAR_1_to_x()`now handle unordered factors
+* `delete_MAR_1_to_x()` and `delete_MNAR_1_to_x()` now handle unordered factors
   as documented (thanks to Steve Roehrig for reporting).
 
 ## Internal
