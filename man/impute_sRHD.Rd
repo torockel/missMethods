@@ -18,7 +18,7 @@ completely observed objects can be donors. "sim_part": all objects that
 have no missing values in the missing parts of a recipient can be donors.}
 
 \item{donor_limit}{Numeric of length one or "min"; how many times an object
-can be a donor. default is \code{Inf} (no restriction).}
+can be a donor. Default is \code{Inf} (no restriction).}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values.

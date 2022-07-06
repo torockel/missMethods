@@ -51,7 +51,7 @@
 #'   completely observed objects can be donors. "sim_part": all objects that
 #'   have no missing values in the missing parts of a recipient can be donors.
 #' @param donor_limit Numeric of length one or "min"; how many times an object
-#'   can be a donor. default is \code{Inf} (no restriction).
+#'   can be a donor. Default is \code{Inf} (no restriction).
 #'
 #' @references Andridge, R. R., & Little, R. J. (2010). A review of hot deck
 #'   imputation for survey non-response. \emph{International statistical review},
