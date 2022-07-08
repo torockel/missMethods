@@ -51,7 +51,8 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 
   expect_warning(
     df_small_x <- delete_MAR_1_to_x(df_XYZ_100, 0.6, "X", "Y", x = 1e-5),
-    "p is too high or x to low; x is set to 0.2 to get expected"
+    "p is too high or x to low; x is set to the minimum possible value (0.2) to get expected",
+    fixed = TRUE
   )
   expect_equal(count_NA(df_small_x), c(X = 60, Y = 0, Z = 0))
   expect_equal(count_NA(df_small_x[1:50, ]), c(X = 50, Y = 0, Z = 0))
@@ -63,7 +64,8 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
 
   expect_warning(
     df_big_x <- delete_MAR_1_to_x(df_XYZ_100, 0.6, "X", "Y", x = 1e10),
-    "p \\(or x) is too high; x is set to 5 to get expected"
+    "p (or x) is too high; x is set to the maximum possible value (5) to get expected",
+    fixed = TRUE
   )
   expect_equal(count_NA(df_big_x), c(X = 60, Y = 0, Z = 0))
   expect_equal(count_NA(df_big_x[51:100, ]), c(X = 50, Y = 0, Z = 0))
@@ -71,7 +73,8 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   # too high x, p combination:
   expect_warning(
     df_mis <- delete_MAR_1_to_x(df_XY_100, 0.9, "X", "Y", x = 3),
-    "p \\(or x) is too high; x is set to 1.25"
+    "p (or x) is too high; x is set to the maximum possible value (1.25) to get expected",
+    fixed = TRUE
   )
   expect_equal(count_NA(df_mis), c(X = 90, Y = 0))
   expect_equal(count_NA(df_mis[51:100, ]), c(X = 50, Y = 0))
@@ -79,7 +82,8 @@ test_that("delete_MAR_1_to_x() (and delete_1_to_x(), which is called by
   # too low x (for high p):
   expect_warning(
     df_mis <- delete_MAR_1_to_x(df_XY_100, 0.9, "X", "Y", x = 0.1),
-    "p is too high or x to low; x is set to 0.8"
+    "p is too high or x to low; x is set to the minimum possible value (0.8) to get expected",
+    fixed = TRUE
   )
   expect_equal(count_NA(df_mis), c(X = 90, Y = 0))
   expect_equal(count_NA(df_mis[51:100, ]), c(X = 40, Y = 0))

@@ -58,25 +58,27 @@ delete_1_to_x <- function(ds, p, cols_mis, cols_ctrl, x,
       p_mis_g2 <- p[i] * n * x / (nr_g1 + nr_g2 * x)
       # check if p_mis_g1 or p_mis_g2 is out of range (>1)
       if (p_mis_g2 > 1) {
-        x_max_i <- nr_g2 / (n * p[i] - nr_g1)
-        if (warn_p) {
-          warning(
-            "p (or x) is too high; x is set to ", x_max_i,
-            " to get expected n * p missing values"
-          )
-        }
-        p_mis_g2 <- 1 # setting x = x_max_i results in p_mis_g2 = 1
+        p_mis_g2 <- 1 # setting x = x_max results in p_mis_g2 = 1
         p_mis_g1 <- (p[i] * n - nr_g2) / nr_g1
-      } else if (p_mis_g1 > 1) {
-        x_min_i <- (n * p[i] - nr_g2) / nr_g1
+        x_max <- p_mis_g2 / p_mis_g1
         if (warn_p) {
           warning(
-            "p is too high or x to low; x is set to ", x_min_i,
-            " to get expected n * p missing values"
+            "p (or x) is too high; x is set to the maximum possible value (", x_max,
+            ") to get expected n * p missing values"
           )
         }
+
+      } else if (p_mis_g1 > 1) {
         p_mis_g1 <- 1
         p_mis_g2 <- (p[i] * n - nr_g1) / nr_g2
+        x_min <- p_mis_g2 / p_mis_g1
+        if (warn_p) {
+          warning(
+            "p is too high or x to low; x is set to the minimum possible value (", x_min,
+            ") to get expected n * p missing values"
+          )
+        }
+
       }
 
       # delete values

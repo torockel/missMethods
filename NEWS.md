@@ -5,9 +5,12 @@
 * `count_NA()` counts the number of missing values in a vector, data frame or 
   matrix.
 
-## Bug fixes
+## Fixes
 * `delete_MAR_1_to_x()` and `delete_MNAR_1_to_x()` now handle unordered factors
   as documented (thanks to Steve Roehrig for reporting).
+* `delete_MAR_1_to_x()` and `delete_MNAR_1_to_x()` now display the correct 
+   adjusted `x` value, if it is too high or too low (thanks to Steve Roehrig 
+   for reporting).
 
 ## Internal
 
