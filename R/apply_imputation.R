@@ -119,7 +119,7 @@ apply_imputation <- function(ds, FUN = mean, type = "columnwise", ...) {
           " all values are NA; the row cannot be imputed"
         )
       } else if (any(M_i)) {
-        ds[i, M_i] <- FUN(ds[i, !M_i, drop = TRUE], ...)
+        ds[i, M_i] <- FUN(unlist(ds[i, !M_i, drop = TRUE]), ...)
       }
     }
   } else if (type == "total") { # total -------------------
