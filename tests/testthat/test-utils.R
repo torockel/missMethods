@@ -22,6 +22,17 @@ test_that("assign_imputed_values() assigns the correct values", {
   )
 })
 
+### create_ds_imp_temp --------------------------------------------------------
+test_that("create_ds_imp_temp() converts only tibbles", {
+  expect_true(tibble::is_tibble(tbl_XY_20))
+  df_from_tbl <- create_ds_imp_temp(tbl_XY_20)
+  expect_true(all.equal(df_from_tbl, tbl_XY_20, check.attributes = FALSE))
+  expect_false(tibble::is_tibble(df_from_tbl))
+
+  expect_equal(df_XY_20, create_ds_imp_temp(df_XY_20))
+  expect_equal(matrix_20_2, create_ds_imp_temp(matrix_20_2))
+})
+
 ## is_df_or_matrix ------------------------------------------------------------
 test_that("is_df_or_matrix()", {
   expect_true(is_df_or_matrix(data.frame(X = 1)))

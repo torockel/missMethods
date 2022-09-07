@@ -31,6 +31,17 @@ assign_imputed_values <- function(ds, ds_imp, M = is.na(ds)) {
   ds
 }
 
+# create_ds_imp_temp() is only used to convert a tibble to a data frame which
+# is later "converted back" to a tibble with assign_imputed_values()
+create_ds_imp_temp <- function(ds) {
+  if (requireNamespace("tibble", quietly = TRUE)) {
+    if (tibble::is_tibble(ds)) {
+      ds <- as.data.frame(ds)
+    }
+  }
+  ds
+}
+
 
 is_df_or_matrix <- function(ds) {
   is.data.frame(ds) || is.matrix(ds)
