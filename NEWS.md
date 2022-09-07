@@ -11,6 +11,8 @@
 * `delete_MAR_1_to_x()` and `delete_MNAR_1_to_x()` now display the correct 
    adjusted `x` value, if it is too high or too low (thanks to Steve Roehrig 
    for reporting).
+* `apply_imputation()` type rowwise now works for data frames (thanks to 
+  @khughitt for fixing).
 
 ## Internal
 

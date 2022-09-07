@@ -52,6 +52,17 @@ test_that("apply_imputation() works with data.frames", {
     df_XY_X_mis[is.na(df_XY_X_mis), "Y"]
   )
 
+  df_XYZ_imp <- impute_mean(df_XYZ_100_mis, type = "rowwise")
+  expect_false(anyNA(df_XYZ_imp))
+  expect_equal(
+    df_XYZ_imp[1, 1],
+    mean(unlist(df_XYZ_100_mis[1, ]), na.rm = TRUE)
+  )
+  expect_equal(
+    df_XYZ_imp[2, 2],
+    mean(unlist(df_XYZ_100_mis[2, ]), na.rm = TRUE)
+  )
+
   # check special cases for rowwise -----------------------
   expect_warning(
     impute_mean(df_one_comp_missing_col, type = "rowwise"),

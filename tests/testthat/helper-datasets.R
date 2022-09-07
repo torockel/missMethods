@@ -51,6 +51,9 @@ df_with_ord_factors_mis[12:15, "Y"] <- NA
 
 df_mixed_mis <- delete_MCAR(df_mixed, 0.3)
 
+df_XYZ_100_mis <- df_XYZ_100
+df_XYZ_100_mis[c(1:2, 25:50), "X"] <- NA
+df_XYZ_100_mis[c(2, 3, 20:30), "Y"] <- NA
 
 # define some special cases -------------------------------
 # one completely missing column
