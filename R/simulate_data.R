@@ -18,13 +18,13 @@
 #'  * `ds_comp` the complete data set
 #'  * `pars_true` the true parameters for the simulation of the data set
 #'  *  `ds_mis` the data set with missing values
-#' @export
 #'
 #' @examples
 #' simulate_data(100, rep(0, 3))
 #' # create MNAR censored data with 20 % missing values
 #' simulate_data(100, rep(0, 4), mech_type = "MNAR_censoring", p = 0.2)
 #' @md
+#' @noRd
 simulate_data <- function(n, mean = rep(0, nrow(sigma)), sigma = diag(length(mean)),
                           mech_type = "MCAR", p = 0.1, cols_mis = seq_len(length(mean)),
                           n_mis_stochastic = FALSE, p_overall = FALSE,

@@ -1,7 +1,6 @@
 # missMethods (development version)
 
 ## New functions
-* `simulate_data()` simulates a complete and incomplete data set.
 * `count_NA()` counts the number of missing values in a vector, data frame or 
   matrix.
   
