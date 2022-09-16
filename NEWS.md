@@ -1,4 +1,4 @@
-# missMethods (development version)
+# missMethods 0.4.0
 
 ## New functions
 * `count_NA()` counts the number of missing values in a vector, data frame or 
