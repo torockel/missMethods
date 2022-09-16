@@ -1,5 +1,5 @@
 ## Test environments
-- local windows 10, R 4.1.2
+- local windows 10, R 4.2.1
 - macOS builder 
 - win-builder (devel)
 - R-hub windows-x86_64-devel (r-devel)
@@ -28,7 +28,7 @@ https://doi.org/10.1177%2F0013164418805532
 
 ## revdepcheck results
 
-I checked 1 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+I checked 3 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
 
  * I saw 0 new problems
  * I failed to check 0 packages
