@@ -4,13 +4,16 @@
 \alias{impute_mode}
 \title{Mode imputation}
 \usage{
-impute_mode(ds, type = "columnwise")
+impute_mode(ds, type = "columnwise", convert_tibble = TRUE)
 }
 \arguments{
 \item{ds}{A data frame or matrix with missing values.}
 
 \item{type}{One of: "columnwise", "rowwise", "total", "Two-Way" or "Winer"
 (see details).}
+
+\item{convert_tibble}{If \code{ds} is a tibble, should it be converted
+(see section A note for tibble users).}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values.

@@ -4,13 +4,16 @@
 \alias{impute_mean}
 \title{Mean imputation}
 \usage{
-impute_mean(ds, type = "columnwise")
+impute_mean(ds, type = "columnwise", convert_tibble = TRUE)
 }
 \arguments{
 \item{ds}{A data frame or matrix with missing values.}
 
 \item{type}{One of: "columnwise", "rowwise", "total", "Two-Way" or "Winer"
 (see details).}
+
+\item{convert_tibble}{If \code{ds} is a tibble, should it be converted
+(see section A note for tibble users).}
 }
 \value{
 An object of the same class as \code{ds} with imputed missing values.
@@ -38,13 +41,13 @@ method to Winer (1971).
 "Two-way" imputes the sum of rowwise and columnwise mean minus the total mean.
 This method was suggested by D.B Rubin to Bernaards & Sijtsma, K. (2000).
 }
-\section{A Note for tibble users}{
+\section{A note for tibble users}{
 
-If you use tibbles and an error like \sQuote{Lossy cast from `value` double
-to integer} occurs, you will first need to convert all integer columns
-with missing values to double. Another solution is to convert the tibble with
-as.data.frame() to a data frame. The data frame will automatically convert
-integer columns to double columns, if needed.
+If you use tibbles and \code{convert_tibble} is \code{TRUE} the tibble is
+first converted to a data frame, then imputed and converted back. If
+\code{convert_tibble} is \code{FALSE} no conversion is done. However,
+depending on the tibble and the package version of tibble you use,
+imputation may not be possible and some errors will be thrown.
 }
 
 \examples{

@@ -105,3 +105,12 @@ check_renamed_arg <- function(old, new) {
     )
   }
 }
+
+is_tibble_save <- function(ds) {
+  if (requireNamespace("tibble", quietly = TRUE)) {
+    if (tibble::is_tibble(ds)) {
+      return(TRUE)
+    }
+  }
+  FALSE
+}

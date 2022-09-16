@@ -1,6 +1,7 @@
-#' @section A Note for tibble users:
-#' If you use tibbles and an error like \sQuote{Lossy cast from `value` double
-#' to integer} occurs, you will first need to convert all integer columns
-#' with missing values to double. Another solution is to convert the tibble with
-#' as.data.frame() to a data frame. The data frame will automatically convert
-#' integer columns to double columns, if needed.
+#' @section A note for tibble users:
+#' If you use tibbles and \code{convert_tibble} is \code{TRUE} the tibble is
+#' first converted to a data frame, then imputed and converted back. If
+#' \code{convert_tibble} is \code{FALSE} no conversion is done. However,
+#' depending on the tibble and the package version of tibble you use,
+#' imputation may not be possible and some errors will be thrown.
+

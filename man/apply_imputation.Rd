@@ -4,7 +4,13 @@
 \alias{apply_imputation}
 \title{Apply a function for imputation}
 \usage{
-apply_imputation(ds, FUN = mean, type = "columnwise", ...)
+apply_imputation(
+  ds,
+  FUN = mean,
+  type = "columnwise",
+  convert_tibble = TRUE,
+  ...
+)
 }
 \arguments{
 \item{ds}{A data frame or matrix with missing values.}
@@ -12,6 +18,9 @@ apply_imputation(ds, FUN = mean, type = "columnwise", ...)
 \item{FUN}{The function to be applied for imputation.}
 
 \item{type}{A string specifying the values used for imputation (see details).}
+
+\item{convert_tibble}{If \code{ds} is a tibble, should it be converted
+(see section A note for tibble users).}
 
 \item{...}{Further arguments passed to \code{FUN}.}
 }
@@ -55,13 +64,13 @@ If no value can be given to \code{FUN} (for example, if no value in a column
 is observed and \code{type = "columnwise"}), then a warning will be issued
 and no value will be imputed in the corresponding column or row.
 }
-\section{A Note for tibble users}{
+\section{A note for tibble users}{
 
-If you use tibbles and an error like \sQuote{Lossy cast from `value` double
-to integer} occurs, you will first need to convert all integer columns
-with missing values to double. Another solution is to convert the tibble with
-as.data.frame() to a data frame. The data frame will automatically convert
-integer columns to double columns, if needed.
+If you use tibbles and \code{convert_tibble} is \code{TRUE} the tibble is
+first converted to a data frame, then imputed and converted back. If
+\code{convert_tibble} is \code{FALSE} no conversion is done. However,
+depending on the tibble and the package version of tibble you use,
+imputation may not be possible and some errors will be thrown.
 }
 
 \examples{

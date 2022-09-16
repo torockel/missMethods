@@ -6,6 +6,8 @@
 #' @template impute
 #' @template tibble-cast
 #'
+#' @inheritParams apply_imputation
+#'
 #' @details For every missing value the mean of some observed values is imputed.
 #' The observed values to be used are specified via \code{type}.
 #' For example, \code{type = "columnwise"} (the default) imputes the mean of
@@ -43,8 +45,8 @@
 #' # completely observed columns can be of any type:
 #' ds_mis_char <- cbind(ds_mis, letters[1:20])
 #' ds_imp_char <- impute_mean(ds_mis_char)
-impute_mean <- function(ds, type = "columnwise") {
-  apply_imputation(ds, FUN = mean, type = type)
+impute_mean <- function(ds, type = "columnwise", convert_tibble = TRUE) {
+  apply_imputation(ds, FUN = mean, type = type, convert_tibble = convert_tibble)
 }
 
 
@@ -55,6 +57,8 @@ impute_mean <- function(ds, type = "columnwise") {
 #' @template location-par
 #' @template impute
 #' @template tibble-cast
+#'
+#' @inheritParams apply_imputation
 #'
 #' @details This function behaves exactly like \code{\link{impute_mean}}.
 #' The only difference is that it imputes a median instead of a mean.
@@ -79,8 +83,8 @@ impute_mean <- function(ds, type = "columnwise") {
 #' # completely observed columns can be of any type:
 #' ds_mis_char <- cbind(ds_mis, letters[1:20])
 #' ds_imp_char <- impute_median(ds_mis_char)
-impute_median <- function(ds, type = "columnwise", ordered_low = FALSE) {
-  apply_imputation(ds, FUN = median, ordered_low = ordered_low)
+impute_median <- function(ds, type = "columnwise", ordered_low = FALSE, convert_tibble = TRUE) {
+  apply_imputation(ds, FUN = median, ordered_low = ordered_low, convert_tibble = convert_tibble)
 }
 
 
@@ -90,6 +94,8 @@ impute_median <- function(ds, type = "columnwise", ordered_low = FALSE) {
 #'
 #' @template location-par
 #' @template impute
+#'
+#' @inheritParams apply_imputation
 #'
 #' @details
 #' This function behaves exactly like \code{\link{impute_mean}}. The only
@@ -108,11 +114,11 @@ impute_median <- function(ds, type = "columnwise", ordered_low = FALSE) {
 #' ds <- data.frame(X = c(1:12, rep(8, 8)), Y = 101:120)
 #' ds_mis <- delete_MCAR(ds, 0.2)
 #' ds_imp <- impute_mode(ds_mis)
-impute_mode <- function(ds, type = "columnwise") {
+impute_mode <- function(ds, type = "columnwise", convert_tibble = TRUE) {
   calc_mode <- function(x) {
     unique_x <- unique(x)
     unique_x_freq <- tabulate(match(x, unique_x))
     unique_x[which.max(unique_x_freq)]
   }
-  apply_imputation(ds, FUN = calc_mode, type = type)
+  apply_imputation(ds, FUN = calc_mode, type = type, convert_tibble = convert_tibble)
 }
