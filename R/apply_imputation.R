@@ -30,7 +30,7 @@
 #' \code{ds}.}
 #' \item{"Winer": The mean value from "columnwise" and "rowwise" is used as the
 #' imputation value.}
-#' \item{"Two-way": The sum of the values from "columnwise" and "rowwise" minus
+#' \item{"Two-Way": The sum of the values from "columnwise" and "rowwise" minus
 #' "total" is used as the imputation value.}
 #' }
 #'
@@ -39,7 +39,8 @@
 #' and no value will be imputed in the corresponding column or row.
 #'
 #' @param FUN The function to be applied for imputation.
-#' @param type A string specifying the values used for imputation (see details).
+#' @param type A string specifying the values used for imputation; one of:
+#'    "columnwise", "rowwise", "total", "Two-Way" or "Winer"  (see details).
 #' @param convert_tibble If \code{ds} is a tibble, should it be converted
 #'    (see section A note for tibble users).
 #' @param ... Further arguments passed to \code{FUN}.

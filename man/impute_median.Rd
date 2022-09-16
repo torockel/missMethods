@@ -14,8 +14,8 @@ impute_median(
 \arguments{
 \item{ds}{A data frame or matrix with missing values.}
 
-\item{type}{One of: "columnwise", "rowwise", "total", "Two-Way" or "Winer"
-(see details).}
+\item{type}{A string specifying the values used for imputation; one of:
+"columnwise", "rowwise", "total", "Two-Way" or "Winer"  (see details).}
 
 \item{ordered_low}{Logical; used for the calculation of the median from
 ordered factors (for details see: \link{median.factor}).}

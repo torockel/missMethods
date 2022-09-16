@@ -17,7 +17,8 @@ apply_imputation(
 
 \item{FUN}{The function to be applied for imputation.}
 
-\item{type}{A string specifying the values used for imputation (see details).}
+\item{type}{A string specifying the values used for imputation; one of:
+"columnwise", "rowwise", "total", "Two-Way" or "Winer"  (see details).}
 
 \item{convert_tibble}{If \code{ds} is a tibble, should it be converted
 (see section A note for tibble users).}
@@ -56,7 +57,7 @@ the returned value is used as the imputation value for all missing values of
 \code{ds}.}
 \item{"Winer": The mean value from "columnwise" and "rowwise" is used as the
 imputation value.}
-\item{"Two-way": The sum of the values from "columnwise" and "rowwise" minus
+\item{"Two-Way": The sum of the values from "columnwise" and "rowwise" minus
 "total" is used as the imputation value.}
 }
 

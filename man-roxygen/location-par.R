@@ -1,8 +1,5 @@
 #' @family location parameter imputation functions
 #'
-#' @param type One of: "columnwise", "rowwise", "total", "Two-Way" or "Winer"
-#'   (see details).
-#'
 #' @seealso \code{\link{apply_imputation}} the workhorse for this function.
 #'
 #' @references Beland, S., Pichette, F., & Jolani, S. (2016). Impact on Cronbach's

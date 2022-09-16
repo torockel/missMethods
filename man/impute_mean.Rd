@@ -9,8 +9,8 @@ impute_mean(ds, type = "columnwise", convert_tibble = TRUE)
 \arguments{
 \item{ds}{A data frame or matrix with missing values.}
 
-\item{type}{One of: "columnwise", "rowwise", "total", "Two-Way" or "Winer"
-(see details).}
+\item{type}{A string specifying the values used for imputation; one of:
+"columnwise", "rowwise", "total", "Two-Way" or "Winer"  (see details).}
 
 \item{convert_tibble}{If \code{ds} is a tibble, should it be converted
 (see section A note for tibble users).}
